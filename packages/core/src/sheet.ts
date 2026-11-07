@@ -33,9 +33,50 @@ export function ticketLimitNumber(texts: (string | null | undefined)[]): number 
   return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0]?.[0] ?? null;
 }
 
-/** Una ficha está activa si alguna venta está por llegar (o sin hora confirmada). */
+const FESTIVAL_RE = /\b(festival|fest|weekend|day pass|\d[- ]?day|tagesticket|dagsbillett|dagbillett|abono|pase de \d|camping)\b/i;
+const fold = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+/**
+ * Fechas que pertenecen a la ficha de un artista: sin variantes (VIP, hotel, parking…) ni listados de
+ * festivales ajenos en los que solo actúa (esos van en la ficha del festival).
+ */
+export function sheetShows(artistName: string, shows: Show[]): Show[] {
+  const me = fold(artistName);
+  return shows.filter((s) => !s.isPackage && !(FESTIVAL_RE.test(s.name) && !fold(s.name).includes(me)));
+}
+
+/** Ventana que importa para conseguir entradas: futura y que no sea reventa. */
+const upcoming = (w: SaleWindow, now: Date) => w.kind !== "official_resale" && (!w.startsAt || Date.parse(w.startsAt) > now.getTime());
+
+/** Una ficha está activa si alguna preventa o venta general está por llegar. */
 export function isSheetActive(shows: Show[], now: Date): boolean {
-  return shows.some((s) => s.sales.some((w) => !w.startsAt || Date.parse(w.startsAt) > now.getTime()));
+  return shows.some((s) => s.sales.some((w) => upcoming(w, now)));
+}
+
+/** Datos de enriquecimiento de una ficha (cada uno con su fuente). */
+export interface VenueInfo {
+  capacity: number | null;
+}
+export interface PriceInfo {
+  min: number;
+  max: number;
+  currency: string;
+  source: string;
+}
+export interface ResaleInfo {
+  /** Multiplicador estimado sobre el precio oficial. */
+  low: number;
+  high: number;
+  confidence: "baja" | "media" | "alta";
+  basis: string;
+  market?: { median: number; p25: number; p75: number; currency: string; listings: number; source: string };
+}
+export interface SheetExtras {
+  /** Por id de recinto de Ticketmaster. */
+  venues?: Record<string, VenueInfo>;
+  /** Por id de evento (sourceId). */
+  prices?: Record<string, PriceInfo>;
+  resale?: ResaleInfo | null;
 }
 
 const REQUIREMENT: Record<SaleKind, string> = {
@@ -74,7 +115,6 @@ const dayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: "UTC", weekday: "sho
 const saleDayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: MADRID, weekday: "short", day: "numeric", month: "short" });
 const clean = (s: string) => s.replace(/\./g, "").replace(/,/g, "").replace(/\s+/g, " ").trim();
 const showDay = (localDate: string) => clean(dayFmt.format(new Date(`${localDate}T12:00:00Z`)));
-const millions = (n: number) => `${(n / 1_000_000).toFixed(1).replace(".", ",")} M`;
 
 function mostCommon<T>(xs: T[]): T | undefined {
   const c = new Map<T, number>();
@@ -100,35 +140,82 @@ function pack(blocks: string[], max = 1900): string[] {
   return out;
 }
 
+const CURRENCY: Record<string, string> = { EUR: "€", GBP: "£", USD: "$", CHF: "CHF", SEK: "kr", NOK: "kr", DKK: "kr", PLN: "zł", CZK: "Kč" };
+const num = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+export function money(n: number, currency: string): string {
+  const sym = CURRENCY[currency] ?? currency;
+  return currency === "GBP" || currency === "USD" ? `${sym}${num(n)}` : `${num(n)} ${sym}`;
+}
+const times = (n: number) => `×${n.toFixed(1).replace(".", ",")}`;
+
+/** "45–250 €" por país, a partir de los precios por fecha. */
+function priceLine(live: Show[], prices: Record<string, PriceInfo>): string | null {
+  const byCountry = new Map<string, { min: number; max: number; currency: string }>();
+  for (const s of live) {
+    const p = prices[s.sourceId];
+    if (!p) continue;
+    const c = byCountry.get(s.venue.country);
+    if (!c) byCountry.set(s.venue.country, { min: p.min, max: p.max, currency: p.currency });
+    else if (c.currency === p.currency) byCountry.set(s.venue.country, { ...c, min: Math.min(c.min, p.min), max: Math.max(c.max, p.max) });
+  }
+  if (!byCountry.size) return null;
+  return [...byCountry]
+    .map(([cc, p]) => `${flag(cc)} ${p.min === p.max ? money(p.min, p.currency) : `${money(p.min, p.currency).replace(/ \S+$/, "")}–${money(p.max, p.currency)}`}`)
+    .join(" · ");
+}
+
 /**
  * Ficha de un artista para su canal (estilo Akari, más clara): cabecera con datos y enlaces, y un
- * bloque por preventa y hora con todas sus fechas y enlaces juntos. Solo ventas futuras.
+ * bloque por preventa y hora con todas sus fechas y enlaces juntos. Solo ventas por llegar.
  */
-export function renderArtistSheet(artist: { name: string; deezerFans?: number | null }, shows: Show[], now: Date): string[] {
-  const live = shows.filter((s) => !s.isPackage).sort((a, b) => a.localDate.localeCompare(b.localDate));
+export function renderArtistSheet(artist: { name: string }, shows: Show[], now: Date, extras: SheetExtras = {}): string[] {
+  // Solo las fechas con alguna preventa o venta general por llegar: lo demás ya no es accionable.
+  const live = sheetShows(artist.name, shows)
+    .filter((s) => s.sales.some((w) => upcoming(w, now)))
+    .sort((a, b) => a.localDate.localeCompare(b.localDate));
   const tour = mostCommon(live.map((s) => s.name.replace(/\s*\|.*$/, "").trim())) ?? artist.name;
-  const title = tour.toLowerCase().startsWith(artist.name.toLowerCase()) ? tour.replace(/^[^-–:]*[-–:]\s*/, "") : tour;
+  const title = fold(tour).startsWith(fold(artist.name)) ? tour.slice(artist.name.length).replace(/^\s*[-–:]\s*/, "") || tour : tour;
   const countries = [...new Map(live.map((s) => [s.venue.country, flag(s.venue.country)])).values()];
   const limit = ticketLimitNumber(live.map((s) => s.ticketLimit));
   const official = [...new Map(live.filter((s) => s.artistUrl).map((s) => [ticketerName(s.artistUrl!), s.artistUrl!])).entries()];
-  const q = encodeURIComponent(artist.name);
+  const venues = extras.venues ?? {};
+  const capacity = (s: Show) => venues[s.venue.tmId]?.capacity ?? null;
+  const known = live.filter((s) => capacity(s));
+  const total = known.reduce((n, s) => n + capacity(s)!, 0);
+  const prices = priceLine(live, extras.prices ?? {});
+  const r = extras.resale;
 
   const head = [
     `# 🎤 ${artist.name} — ${title}`,
     `${countries.join(" ")} · ${live.length} ${live.length === 1 ? "fecha" : "fechas"} en Europa`,
     "",
-    `**Límite de entradas:** ${limit ?? "—"}`,
-    `**Precios:** pendiente de publicar`,
-    ...(artist.deezerFans ? [`**Popularidad:** ${millions(artist.deezerFans)} fans en Deezer`] : []),
-    `**Reventa (solo referencia):** [Viagogo](https://www.viagogo.com/secure/search?q=${q}) · [Vivid Seats](https://www.vividseats.com/search?searchTerm=${q})`,
+    `**Límite de entradas:** ${limit ? `${limit} por persona` : "sin confirmar"}`,
+    `**Precios oficiales:** ${prices ?? "aún sin publicar"}`,
+    ...(known.length
+      ? [`**Aforo:** ~${num(total)} entradas en ${known.length === live.length ? "total" : `${known.length} de ${live.length} fechas`} (aforo de cada recinto abajo)`]
+      : []),
+    ...(r
+      ? [
+          `**Reventa estimada:** ${times(r.low)}–${times(r.high)} sobre el oficial · confianza ${r.confidence}`,
+          `-# ${r.basis}`,
+          ...(r.market
+            ? [`**Mercado ahora (${r.market.source}):** mediana ${money(r.market.median, r.market.currency)} · P25–P75 ${money(r.market.p25, r.market.currency)}–${money(r.market.p75, r.market.currency)} · ${r.market.listings} anuncios`]
+            : []),
+        ]
+      : []),
     ...(official.length ? ["", "**Enlaces oficiales**", official.map(([n, u]) => `[${n}](${u})`).join(" · ")] : []),
   ].join("\n");
+
+  const dateLine = (s: Show) => {
+    const cap = capacity(s);
+    return `${flag(s.venue.country)} [${s.venue.city} · ${showDay(s.localDate)}](${s.url}) · ${s.venue.name}${cap ? ` (${num(cap)})` : ""}`;
+  };
 
   // Agrupar ventanas futuras por etiqueta + hora (una venta UK a otra hora va en su propio bloque).
   const groups = new Map<string, { w: SaleWindow; shows: Show[] }>();
   for (const s of live) {
     for (const w of s.sales) {
-      if (w.startsAt && Date.parse(w.startsAt) <= now.getTime()) continue;
+      if (!upcoming(w, now)) continue;
       const k = `${w.label.toLowerCase()}|${w.startsAt ?? ""}`;
       const g = groups.get(k) ?? { w, shows: [] };
       if (!g.shows.includes(s)) g.shows.push(s);
@@ -142,11 +229,7 @@ export function renderArtistSheet(artist: { name: string; deezerFans?: number | 
     const when = w.startsAt
       ? `🇪🇸 **${clean(saleDayFmt.format(new Date(w.startsAt)))}, ${formatHHmm(w.startsAt, MADRID)}** Madrid · 🇬🇧 ${formatHHmm(w.startsAt, LONDON)} Londres · <t:${Date.parse(w.startsAt) / 1000}:F>`
       : "Hora por confirmar";
-    const links = ss.map((s) => `${flag(s.venue.country)} [${s.venue.city} · ${showDay(s.localDate)}](${s.url})`);
-    return [`## 🎟️ ${w.label}`, when, `*${REQUIREMENT[w.kind]}*`, ...links].join("\n");
+    return [`## 🎟️ ${w.label}`, when, `*${REQUIREMENT[w.kind]}*`, ...ss.map(dateLine)].join("\n");
   });
-  if (!blocks.length) {
-    blocks.push(["## ✅ Todas las ventas ya han empezado", ...live.map((s) => `${flag(s.venue.country)} [${s.venue.city} · ${showDay(s.localDate)}](${s.url})`)].join("\n"));
-  }
   return pack([head, ...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
 }

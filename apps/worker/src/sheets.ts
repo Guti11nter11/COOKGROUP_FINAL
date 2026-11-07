@@ -8,6 +8,11 @@ import {
   localDateIn,
   MADRID,
   renderArtistSheet,
+  sheetShows,
+  type PriceInfo,
+  type ResaleInfo,
+  type SheetExtras,
+  type VenueInfo,
   stableHash,
   topicOf,
   type Alert,
@@ -94,6 +99,28 @@ interface SheetRow {
   message_ids: string;
   content_hash: string | null;
   status: "active" | "archived";
+  tracked_sale: number;
+}
+
+const placeholders = (n: number) => Array.from({ length: n }, () => "?").join(",");
+
+/** Aforos, precios y reventa guardados por los trabajos de enriquecimiento. */
+async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<SheetExtras> {
+  const venueIds = [...new Set(shows.map((s) => s.venue.tmId))].slice(0, 90);
+  const showIds = shows.map((s) => s.sourceId).slice(0, 90);
+  const [v, p, r] = await env.DB.batch([
+    env.DB.prepare(`SELECT tm_venue_id, capacity FROM venue_info WHERE capacity IS NOT NULL AND tm_venue_id IN (${placeholders(venueIds.length)})`).bind(...venueIds),
+    env.DB.prepare(`SELECT source_id, min, max, currency, source FROM show_price WHERE source_id IN (${placeholders(showIds.length)})`).bind(...showIds),
+    env.DB.prepare("SELECT json FROM artist_resale WHERE artist_id = ?").bind(artistId),
+  ]);
+  const venues: Record<string, VenueInfo> = {};
+  for (const row of (v!.results ?? []) as { tm_venue_id: string; capacity: number }[]) venues[row.tm_venue_id] = { capacity: row.capacity };
+  const prices: Record<string, PriceInfo> = {};
+  for (const row of (p!.results ?? []) as (PriceInfo & { source_id: string })[]) {
+    prices[row.source_id] = { min: row.min, max: row.max, currency: row.currency, source: row.source };
+  }
+  const resaleRow = (r!.results ?? [])[0] as { json: string } | undefined;
+  return { venues, prices, resale: resaleRow ? (JSON.parse(resaleRow.json) as ResaleInfo) : null };
 }
 
 const dayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: MADRID, weekday: "short", day: "numeric", month: "short" });
@@ -148,20 +175,16 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
   for (let i = 0; i < dirty.length; i++) {
     const { artist_id } = dirty[i]!;
     try {
-    const artist = await env.DB.prepare(
-      "SELECT a.name, a.deezer_fans, COALESCE(f.tier, 1) AS tier FROM artist a LEFT JOIN follow f ON f.artist_id = a.id WHERE a.id = ?",
-    )
-      .bind(artist_id)
-      .first<{ name: string; deezer_fans: number | null; tier: number }>();
+    const artist = await env.DB.prepare("SELECT name FROM artist WHERE id = ?").bind(artist_id).first<{ name: string }>();
     const { results: rows } = await env.DB.prepare("SELECT snapshot_json FROM show WHERE artist_id = ? AND local_date >= ? AND is_package = 0")
       .bind(artist_id, today)
       .all<{ snapshot_json: string }>();
-    const shows = rows.map((r) => JSON.parse(r.snapshot_json) as Show);
+    const shows = artist ? sheetShows(artist.name, rows.map((r) => JSON.parse(r.snapshot_json) as Show)) : [];
     const sheet = await env.DB.prepare("SELECT * FROM sheet WHERE artist_id = ?").bind(artist_id).first<SheetRow>();
-    // Canal mientras la gira tenga fechas futuras (⭐⭐ y ⭐⭐⭐) o, para el resto, mientras quede alguna venta por llegar.
-    const active = shows.length > 0 && ((artist?.tier ?? 1) >= 2 || isSheetActive(shows, now));
+    // Solo interesa lo accionable: canal mientras quede alguna preventa o venta general por llegar.
+    const active = isSheetActive(shows, now);
 
-    if (!artist || (!sheet && !active)) {
+    if (!artist || (!active && sheet?.status !== "active")) {
       await env.DB.prepare("UPDATE delivery SET status = 'failed', last_error = 'sin ventas por llegar' WHERE artist_id = ? AND status = 'pending'").bind(artist_id).run();
       continue;
     }
@@ -170,17 +193,22 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
       break;
     }
 
-    const sport = shows.length > 0 && topicOf(shows[0]!) !== "music" && topicOf(shows[0]!) !== "other";
-    const base = sport ? DEPORTES : GIRAS;
-
-    // Gira terminada: el canal pasa a 📦 ARCHIVO.
-    if (sheet && shows.length === 0) {
-      if (sheet.status === "active") {
+    // Ya no queda ninguna venta por llegar: si GIRA la siguió, el canal pasa a 📦 ARCHIVO; si nunca la
+    // tuvo (canal creado por error), se borra.
+    if (!active && sheet) {
+      if (sheet.tracked_sale) {
         await guild.move(sheet.channel_id, await guild.categoryWithRoom(ARCHIVO));
         await env.DB.prepare("UPDATE sheet SET status = 'archived', updated_at = ? WHERE artist_id = ?").bind(iso, artist_id).run();
+      } else {
+        await guild.remove(sheet.channel_id);
+        await env.DB.prepare("DELETE FROM sheet WHERE artist_id = ?").bind(artist_id).run();
       }
+      await env.DB.prepare("UPDATE delivery SET status = 'failed', last_error = 'sin ventas por llegar' WHERE artist_id = ? AND status = 'pending'").bind(artist_id).run();
       continue;
     }
+
+    const sport = topicOf(shows[0]!) !== "music" && topicOf(shows[0]!) !== "other";
+    const base = sport ? DEPORTES : GIRAS;
 
     let channelId = sheet?.channel_id;
     if (!channelId) {
@@ -205,7 +233,7 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
     }
 
     // Ficha: editar los mensajes existentes en vez de publicar otros nuevos.
-    const msgs = renderArtistSheet({ name: artist.name, deezerFans: artist.deezer_fans }, shows, now);
+    const msgs = renderArtistSheet({ name: artist.name }, shows, now, await loadExtras(env, artist_id, shows));
     const hash = stableHash(msgs.join("\u0000").replace(/-# Actualizado <t:\d+:R>/, ""));
     if (hash !== sheet?.content_hash) {
       const ids: string[] = JSON.parse(sheet?.message_ids ?? "[]");
@@ -224,9 +252,11 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
         next.push(((await r.json()) as { id: string }).id);
       }
       for (const old of ids.slice(msgs.length)) await discordFetch(env, "DELETE", `/channels/${channelId}/messages/${old}`);
-      await env.DB.prepare("UPDATE sheet SET message_ids = ?, content_hash = ?, updated_at = ? WHERE artist_id = ?")
+      await env.DB.prepare("UPDATE sheet SET message_ids = ?, content_hash = ?, tracked_sale = 1, updated_at = ? WHERE artist_id = ?")
         .bind(JSON.stringify(next), hash, iso, artist_id)
         .run();
+    } else if (!sheet?.tracked_sale) {
+      await env.DB.prepare("UPDATE sheet SET tracked_sale = 1 WHERE artist_id = ?").bind(artist_id).run();
     }
 
     // Aviso agrupado (uno por artista) en el canal temático, con enlace al canal del artista.
@@ -239,7 +269,9 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
       const { results: payloads } = await env.DB.prepare(`SELECT payload_json FROM alert WHERE id IN (${claimed.map(() => "?").join(",")})`)
         .bind(...claimed.map((c) => c.alert_id))
         .all<{ payload_json: string }>();
-      const alerts = payloads.map((p) => (JSON.parse(p.payload_json) as { alert: Alert }).alert);
+      // Solo avisos de fechas que están en la ficha (nada de hoteles, festivales ajenos ni ventas pasadas).
+      const inSheet = new Set(shows.filter((s) => s.sales.some((w) => w.kind !== "official_resale" && (!w.startsAt || Date.parse(w.startsAt) > now.getTime()))).map((s) => s.sourceId));
+      const alerts = payloads.map((p) => (JSON.parse(p.payload_json) as { alert: Alert }).alert).filter((a) => inSheet.has(a.sourceId));
       const channels = claimed.map((c) => c.channel);
       const target =
         channels.find((c) => SPORT_CHANNELS.has(c)) ??
@@ -250,7 +282,9 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
         env.DB.prepare(`UPDATE delivery SET status = ?, attempts = attempts + 1, sent_at = ?, last_error = ? WHERE id IN (${ids.map(() => "?").join(",")})`)
           .bind(status, status === "sent" ? iso : null, err, ...ids)
           .run();
-      if (!dest) {
+      if (!alerts.length) {
+        await mark("failed", "fuera de la ficha");
+      } else if (!dest) {
         await mark("failed", `sin canal #${target}`);
       } else {
         const urgent = alerts.some((a) => decideDelivery(a, now) === "now");

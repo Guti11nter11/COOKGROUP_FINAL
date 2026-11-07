@@ -75,7 +75,14 @@ describe("normalizeTmEvent: variantes y enlaces de preventa", () => {
     e.sales.presales[0].url = "https://www.ticketmaster.es/presale/o2?queueittoken=zzz";
     expect(normalizeTmEvent(e)!.sales.find((s) => s.kind === "telco")!.url).toBe("https://www.ticketmaster.es/presale/o2");
   });
-  it.each(["PARKING: U2 - The Greatest Show", "U2 - Hospitality Packages", "Official Platinum Parking - U2"])(
+  it.each([
+    "PARKING: U2 - The Greatest Show",
+    "U2 - Hospitality Packages",
+    "Official Platinum Parking - U2",
+    "Hotellrom - Quality Hotel Tønsberg 25.-27. juni - Robbie Williams Live 27",
+    "Hotel Room Package - Oasis Live 27",
+    "Coach Travel - Robbie Williams - Knebworth",
+  ])(
     "listado accesorio '%s' → variante (no es una fecha)",
     (name) => expect(normalizeTmEvent({ ...a, name })!.isPackage).toBe(true),
   );

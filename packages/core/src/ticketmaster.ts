@@ -34,7 +34,8 @@ export interface Show {
 }
 
 /** Listados accesorios de una fecha (paquetes VIP, hospitality, parking): no son fechas nuevas. */
-const PACKAGE_RE = /\|\s*[^|]*\b(VIP|Packages?|Paquetes?)\b|\b(hospitality|parking|aparcamiento|estacionamento)\b/i;
+const PACKAGE_RE =
+  /\|\s*[^|]*\b(VIP|Packages?|Paquetes?)\b|\b(hospitality|parking|aparcamiento|estacionamento|car park|hotell?rom|hotel ?rooms?|hotelzimmer|hotel package|accommodation|alojamiento|overnatting|shuttle|coach travel|bus package|merch(andise)? bundle|upgrade)\b/i;
 const STATUS: Record<string, ShowStatus> = {
   onsale: "onsale",
   offsale: "offsale",

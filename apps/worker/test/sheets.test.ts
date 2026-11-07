@@ -63,7 +63,7 @@ beforeAll(() => {
 beforeEach(async () => {
   calls = [];
   await env.DB.batch([
-    env.DB.prepare("INSERT INTO artist (id, name, tm_attraction_id, deezer_fans) VALUES ('a1', 'Artista Uno', 'K1', 2500000)"),
+    env.DB.prepare("INSERT INTO artist (id, name, tm_attraction_id) VALUES ('a1', 'Artista Uno', 'K1')"),
     env.DB.prepare("INSERT INTO follow (artist_id, tier) VALUES ('a1', 3)"),
   ]);
 });
@@ -110,14 +110,49 @@ describe("fichas por artista en Discord", () => {
     expect(calls).toEqual([]);
   });
 
-  it("artista ⭐⭐⭐ con gira ya a la venta → tiene canal con todas las fechas y enlaces", async () => {
+  it("artista con todas las ventas ya empezadas → sin canal, aunque el concierto sea futuro", async () => {
     await storeShow(show("1", "2027-05-10", "2026-10-01T09:00:00Z"));
     await env.DB.prepare("INSERT INTO sheet_dirty (artist_id, since) VALUES ('a1', ?)").bind(NOW.toISOString()).run();
     await publishSheets(env, NOW);
-    expect(discordCalls("POST", /\/guilds\//)).toHaveLength(1);
+    expect(calls).toEqual([]);
+  });
+
+  it("canal creado sin ninguna venta por llegar (por error) → se borra, no se archiva", async () => {
+    await storeShow(show("1", "2027-05-10", "2026-10-01T09:00:00Z"));
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO sheet (artist_id, channel_id, updated_at) VALUES ('a1', 'OLDCH', ?)").bind(NOW.toISOString()),
+      env.DB.prepare("INSERT INTO sheet_dirty (artist_id, since) VALUES ('a1', ?)").bind(NOW.toISOString()),
+    ]);
+    await publishSheets(env, NOW);
+    expect(calls.map((c) => `${c.method} ${c.path}`)).toEqual(["DELETE /api/v10/channels/OLDCH"]);
+    expect(await env.DB.prepare("SELECT COUNT(*) n FROM sheet").first()).toEqual({ n: 0 });
+  });
+
+  it("hoteles y pases de festivales ajenos no entran en la ficha", async () => {
+    const a = show("1", "2027-05-10", "2026-11-20T09:00:00Z");
+    await storeShow(a); await alertFor(a);
+    await storeShow(show("2", "2027-06-27", "2026-11-20T09:00:00Z", { name: "Hotellrom - Thon Hotel - Artista Uno Live 27", isPackage: true }));
+    await storeShow(show("3", "2027-06-30", "2026-11-20T09:00:00Z", { name: "Lytham Festival 2027 5 Day Pass" }));
+    await publishSheets(env, NOW);
     const body = discordCalls("POST", /\/channels\/NEW\d+\/messages/).map((c) => c.body.content).join("\n");
-    expect(body).toContain("Todas las ventas ya han empezado");
     expect(body).toContain("https://tm.example/1");
+    expect(body).not.toContain("https://tm.example/2");
+    expect(body).not.toContain("https://tm.example/3");
+  });
+
+  it("muestra aforo, precio y reventa guardados por los trabajos de enriquecimiento", async () => {
+    const a = show("1", "2027-05-10", "2026-11-20T09:00:00Z");
+    await storeShow(a); await alertFor(a);
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO venue_info (tm_venue_id, name, capacity, checked_at) VALUES ('V1', 'Estadio', 70000, ?)").bind(NOW.toISOString()),
+      env.DB.prepare("INSERT INTO show_price (source_id, min, max, currency, source, updated_at) VALUES ('1', 45, 250, 'EUR', 'Ticketmaster', ?)").bind(NOW.toISOString()),
+      env.DB.prepare("INSERT INTO artist_resale (artist_id, json, updated_at) VALUES ('a1', ?, ?)").bind(JSON.stringify({ low: 1.5, high: 2.5, confidence: "baja", basis: "modelo" }), NOW.toISOString()),
+    ]);
+    await publishSheets(env, NOW);
+    const body = discordCalls("POST", /\/channels\/NEW\d+\/messages/).map((c) => c.body.content).join("\n");
+    expect(body).toContain("**Aforo:** ~70.000 entradas en total");
+    expect(body).toContain("**Precios oficiales:** 🇪🇸 45–250 €");
+    expect(body).toContain("**Reventa estimada:** ×1,5–×2,5");
   });
 
   it("cuando pasa la última fecha → el canal se mueve a 📦 ARCHIVO", async () => {
@@ -129,6 +164,7 @@ describe("fichas por artista en Discord", () => {
     const { channel_id } = (await env.DB.prepare("SELECT channel_id FROM sheet").first<{ channel_id: string }>())!;
     await publishSheets(env, new Date("2027-06-01T12:00:00Z"));
     expect(calls.find((c) => c.method === "PATCH" && c.path === `/api/v10/channels/${channel_id}`)?.body).toEqual({ parent_id: "CAT_A" });
+    expect(calls.some((c) => c.method === "DELETE")).toBe(false);
     expect(await env.DB.prepare("SELECT status FROM sheet").first()).toEqual({ status: "archived" });
   });
 });
