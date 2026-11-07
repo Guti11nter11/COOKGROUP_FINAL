@@ -29,7 +29,7 @@ export async function* iterateFeed(countryCode: string, apiKey: string, attempts
       file = path;
     } catch (e) {
       if (i === attempts) throw new Error(`Feed ${countryCode}: ${String(e)}`);
-      await new Promise((r) => setTimeout(r, 5000 * i));
+      await new Promise((r) => setTimeout(r, 30_000 * i)); // 429 de Ticketmaster: esperar más
     }
   }
   try {

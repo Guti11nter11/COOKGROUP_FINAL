@@ -32,6 +32,7 @@ for (const cc of FEED_COUNTRIES) {
   }
   all.push(...mine);
   console.log(`${cc}: ${total} eventos · ${mine.length} de entidades seguidas`);
+  await new Promise((r) => setTimeout(r, 3000)); // no encadenar descargas (evita 429)
 }
 
 const prev = existsSync(STATE) ? (JSON.parse(readFileSync(STATE, "utf8")) as Record<string, string>) : {};
