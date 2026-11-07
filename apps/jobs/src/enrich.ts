@@ -3,6 +3,7 @@ import { gira } from "./gira-client";
 import { findCapacities } from "./enrich-venues";
 import { findPrices } from "./enrich-prices";
 import { findSignups } from "./enrich-signups";
+import { estimateAll } from "./enrich-resale";
 
 /**
  * Enriquecimiento de las fichas activas: aforo de recintos (Wikidata), precios oficiales (prensa con
@@ -15,6 +16,8 @@ const steps: [string, () => Promise<EnrichInput>][] = [
   ["aforos", async () => ({ venues: await findCapacities(todo.venues) })],
   ["registros", async () => ({ signups: await findSignups(todo.artists) })],
   ["precios", async () => ({ prices: await findPrices(todo.shows) })],
+  // La reventa va al final: usa los precios oficiales ya guardados (la siguiente pasada los tiene todos).
+  ["reventa", async () => ({ resale: await estimateAll(todo.artists) })],
 ];
 let failed = 0;
 for (const [name, step] of steps) {

@@ -71,7 +71,10 @@ export interface ResaleInfo {
   high: number;
   confidence: "baja" | "media" | "alta";
   basis: string;
-  market?: { median: number; p25: number; p75: number; currency: string; listings: number; source: string };
+  /** Mercado actual por fecha muestreada (también de otros países, para comparar). */
+  markets?: { country: string; city: string; localDate: string; median: number; p25: number; p75: number; currency: string; listings: number; source: string }[];
+  /** Datos de reventa de giras anteriores (prensa), con su fuente. */
+  history?: { text: string; source: string }[];
 }
 /** Enlace de registro/preventa encontrado en la web oficial del artista (Bandsintown, Laylo, Live Nation…). */
 export interface SignupLink {
@@ -243,10 +246,13 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
     ...(r
       ? [
           `**Reventa estimada:** ${times(r.low)}–${times(r.high)} sobre el oficial · confianza ${r.confidence}`,
+          ...(r.markets?.length ? ["**Mercado de reventa ahora** (precio por entrada)"] : []),
           `-# ${r.basis}`,
-          ...(r.market
-            ? [`**Mercado ahora (${r.market.source}):** mediana ${money(r.market.median, r.market.currency)} · P25–P75 ${money(r.market.p25, r.market.currency)}–${money(r.market.p75, r.market.currency)} · ${r.market.listings} anuncios`]
-            : []),
+          ...(r.markets ?? []).map(
+            (m) =>
+              `${flag(m.country)} ${m.city} ${linkDay(m.localDate)}: mediana **${money(m.median, m.currency)}** · P25–P75 ${money(m.p25, m.currency)}–${money(m.p75, m.currency)} · ${m.listings} anuncios (${m.source})`,
+          ),
+          ...(r.history ?? []).slice(0, 3).map((h) => `🕘 ${h.text} · _${h.source}_`),
         ]
       : []),
     `**Reventa (para comparar):** [Viagogo](https://www.viagogo.com/secure/search?q=${q}) · [StubHub](https://www.stubhub.com/secure/search?q=${q}) · [Vivid Seats](https://www.vividseats.com/search?searchTerm=${q})`,
