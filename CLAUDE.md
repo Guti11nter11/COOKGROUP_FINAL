@@ -76,15 +76,21 @@ precio oficial (face value) y **rango estimado de reventa** (mín.–máx., mult
 oficial) calculado con un modelo propio: demanda (popularidad Last.fm/Deezer, ruido en noticias y
 redes, nº de fechas y fechas extra, aforo, velocidad de agotado), tipo de sección (pista/GA, Inner
 Circle/Red Zone, gradas por anillo) y país. Mostrar siempre como estimación con nivel de
-confianza; sirve para saber lo difícil/caro que será si no se consigue en la venta oficial. No
-scrapear Viagogo/StubHub para esto.
+confianza; sirve para saber lo difícil/caro que será si no se consigue en la venta oficial.
+Además, **leer (solo lectura, vía Apify, con poca frecuencia) los precios publicados en Viagogo y
+StubHub** por sección como dato de mercado. Son precios *pedidos*, no ventas: filtrar anuncios
+absurdos con estadística robusta (mediana y percentiles P25–P75 por sección, descartar valores
+fuera de ~3×IQR y los que no se mueven en días) en vez de un tope fijo, porque en eventos como una
+final del Mundial 10.000 € puede ser lo normal. Mostrar: oficial · mercado (mediana, P25–P75) ·
+estimación del modelo · confianza.
 
 ## Secrets (GitHub → Settings → Secrets and variables → Actions)
 
 `TICKETMASTER_API_KEY`, `DISCORD_BOT_TOKEN`, `DISCORD_APPLICATION_ID`, `DISCORD_PUBLIC_KEY`,
 `GROQ_API_KEY`, `GEMINI_API_KEY`, `NVIDIA_API_KEY`, `OPENAI_API_KEY`, `FIRECRAWL_API_KEY`,
 `APIFY_TOKEN`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `LASTFM_API_KEY`,
-`FOOTBALL_DATA_API_KEY`, `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET` (estas tres, si existen).
+`FOOTBALL_DATA_API_KEY`. Reddit: la API exige aprobación para cuentas nuevas; leerlo vía Apify o
+RSS hasta que haya `REDDIT_CLIENT_ID`/`REDDIT_CLIENT_SECRET`.
 Setlist.fm descartado. Fuentes sin clave: Deezer, MusicBrainz, Wikidata, Jolpica (F1),
 Nager.Date (festivos), Nominatim/OSM, Google News RSS, RSS de YouTube.
 Verificar todas con el workflow `Verificar claves` (`.github/workflows/verify-secrets.yml`).
