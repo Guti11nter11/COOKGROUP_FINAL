@@ -1,0 +1,42 @@
+name: Estado del Worker
+
+# Diagnóstico: CPU por invocación (límite gratis 10 ms), errores y contadores del Worker en las
+# últimas horas, según las métricas de Cloudflare. Solo imprime números.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/magical-franklin-u415fe]
+    paths: [.github/workflows/worker-status.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  status:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - name: Métricas de gira-core (últimas 6 h)
+        shell: python
+        run: |
+          import json, os, urllib.request, datetime as dt
+          now = dt.datetime.now(dt.timezone.utc)
+          q = """query($a:String!,$s:Time!,$e:Time!){viewer{accounts(filter:{accountTag:$a}){
+            workersInvocationsAdaptive(limit:20,filter:{scriptName:"gira-core",datetime_geq:$s,datetime_leq:$e},orderBy:[sum_requests_DESC]){
+              dimensions{eventType status} sum{requests errors subrequests} quantiles{cpuTimeP50 cpuTimeP99 cpuTimeP999}}}}}"""
+          body = {"query": q, "variables": {"a": os.environ["CLOUDFLARE_ACCOUNT_ID"],
+                  "s": (now - dt.timedelta(hours=6)).strftime("%Y-%m-%dT%H:%M:%SZ"), "e": now.strftime("%Y-%m-%dT%H:%M:%SZ")}}
+          req = urllib.request.Request("https://api.cloudflare.com/client/v4/graphql", data=json.dumps(body).encode(),
+                headers={"Authorization": f"Bearer {os.environ['CLOUDFLARE_API_TOKEN']}", "Content-Type": "application/json"})
+          d = json.load(urllib.request.urlopen(req, timeout=30))
+          if d.get("errors"): print("Errores GraphQL:", [e.get("message") for e in d["errors"]])
+          rows = (((d.get("data") or {}).get("viewer") or {}).get("accounts") or [{}])[0].get("workersInvocationsAdaptive") or []
+          for r in rows:
+              q, s, dim = r["quantiles"], r["sum"], r["dimensions"]
+              print(f"{dim['eventType']:10} {dim['status']:22} peticiones={s['requests']:5} errores={s['errors']:3} "
+                    f"subpeticiones={s['subrequests']:5} CPU p50={q['cpuTimeP50']/1000:.1f} ms p99={q['cpuTimeP99']/1000:.1f} ms p99.9={q['cpuTimeP999']/1000:.1f} ms")
+          if not rows: print("Sin datos todavía")
