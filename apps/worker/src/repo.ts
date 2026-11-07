@@ -79,12 +79,16 @@ export interface ShowStat {
   first_seen_at: string;
 }
 
-export async function loadShowStats(db: D1Database, artistIds: string[]): Promise<ShowStat[]> {
+/** Fechas guardadas de esos artistas desde `fromDate` (las pasadas no cuentan como "conocidas"). */
+export async function loadShowStats(db: D1Database, artistIds: string[], fromDate: string): Promise<ShowStat[]> {
   const out: ShowStat[] = [];
   for (const part of chunks(artistIds)) {
     const { results } = await db
-      .prepare(`SELECT source_id, artist_id, country, show_key, is_package, first_seen_at FROM show WHERE artist_id IN (${marks(part.length)})`)
-      .bind(...part)
+      .prepare(
+        `SELECT source_id, artist_id, country, show_key, is_package, first_seen_at FROM show
+         WHERE local_date >= ? AND artist_id IN (${marks(part.length)})`,
+      )
+      .bind(fromDate, ...part)
       .all<ShowStat>();
     out.push(...results);
   }

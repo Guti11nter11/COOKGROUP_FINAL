@@ -1,5 +1,6 @@
 import {
   channelFor,
+  LAYOUT,
   detectAlerts,
   localDateIn,
   MADRID,
@@ -31,7 +32,8 @@ export type Send = (job: SweepJob) => Promise<void>;
 export const PHASE1_COUNTRIES = new Set(
   "GB IE ES PT FR DE IT NL BE LU AT CH DK SE NO FI PL CZ HU GR HR RO SK SI BG EE LV LT IS MT CY RS TR".split(" "),
 );
-const MAX_PAGES = 10;
+/** Ticketmaster no pagina más allá de 1.000 resultados (size 50 → 20 páginas). */
+const MAX_PAGES = 20;
 /** Fechas vistas hace menos de esto forman parte del mismo anuncio (no cuentan como "ya conocidas"). */
 const SAME_ANNOUNCEMENT_MS = 30 * 60 * 1000;
 const day = (now: Date) => now.toISOString().slice(0, 10);
@@ -63,8 +65,9 @@ export async function processPage(
     throw e;
   }
 
+  // Páginas en cadena: cada página encola la siguiente solo tras procesarse, así el arranque
+  // (bootstrap) se marca únicamente cuando todas las páginas del lote se han leído en orden.
   const lastPage = Math.min(fetched.totalPages, MAX_PAGES) - 1;
-  if (job.page === 0) for (let p = 1; p <= lastPage; p++) await send({ ids: job.ids, page: p });
 
   const nowIso = now.toISOString();
   const todayMadrid = localDateIn(now, MADRID);
@@ -78,7 +81,7 @@ export async function processPage(
   }
 
   const stored = await loadShows(env.DB, shows.map((s) => s.show.sourceId));
-  const stats = await loadShowStats(env.DB, [...new Set(shows.map((s) => s.artistId))]);
+  const stats = await loadShowStats(env.DB, [...new Set(shows.map((s) => s.artistId))], todayMadrid);
   const knownBefore = now.getTime() - SAME_ANNOUNCEMENT_MS;
   const stmts: D1PreparedStatement[] = [bumpQuota(env.DB, "ticketmaster", today, 1)];
   let alertCount = 0;
@@ -91,7 +94,7 @@ export async function processPage(
     const key = showKey(show);
     const prev = old ? (JSON.parse(old.snapshot_json) as Show) : null;
     const others = stats.filter((r) => r.artist_id === artistId && r.source_id !== show.sourceId);
-    const sameDateListed = !prev && others.some((r) => r.show_key === key);
+    const sameDateListed = !prev && !show.isPackage && others.some((r) => r.show_key === key && r.is_package === 0);
     const knownDatesInCountry = new Set(
       others
         .filter((r) => r.country === show.venue.country && r.is_package === 0 && Date.parse(r.first_seen_at) < knownBefore)
@@ -131,11 +134,14 @@ export async function processPage(
     }
   }
   await env.DB.batch(stmts);
+  if (job.page < lastPage) await send({ ids: job.ids, page: job.page + 1 });
   return { calls: 1, shows: shows.length, alerts: alertCount };
 }
 
 const CHANNEL_TTL_MS = 24 * 60 * 60 * 1000;
 const MAX_ATTEMPTS = 5;
+
+const GIRA_CATEGORIES = new Set(LAYOUT.map((c) => c.name));
 
 async function channelIds(env: Env, now: Date): Promise<Map<string, string>> {
   const cached = await getChannelIds(env.DB);
@@ -143,44 +149,72 @@ async function channelIds(env: Env, now: Date): Promise<Map<string, string>> {
   if (cached.size && fresh) return new Map([...cached].map(([k, v]) => [k, v.id]));
   const res = await discordFetch(env, "GET", `/guilds/${env.DISCORD_GUILD_ID}/channels`);
   if (!res.ok) throw new Error(`Discord canales HTTP ${res.status}`);
-  const list = (await res.json()) as { id: string; name: string; type: number }[];
-  const text = list.filter((c) => c.type === 0 || c.type === 5);
+  const list = (await res.json()) as { id: string; name: string; type: number; parent_id?: string | null }[];
+  const giraCats = new Set(list.filter((c) => c.type === 4 && GIRA_CATEGORIES.has(c.name)).map((c) => c.id));
+  // Los canales dentro de las categorías de GIRA ganan a homónimos de fuera.
+  const text = list
+    .filter((c) => c.type === 0 || c.type === 5)
+    .sort((x, y) => Number(giraCats.has(x.parent_id ?? "")) - Number(giraCats.has(y.parent_id ?? "")));
+  const map = new Map(text.map((c) => [c.name, c.id]));
   const iso = now.toISOString();
   await env.DB.batch([
     env.DB.prepare("DELETE FROM discord_channel"),
-    ...text.map((c) => env.DB.prepare("INSERT INTO discord_channel (name, channel_id, fetched_at) VALUES (?, ?, ?)").bind(c.name, c.id, iso)),
+    ...[...map].map(([name, id]) => env.DB.prepare("INSERT OR REPLACE INTO discord_channel (name, channel_id, fetched_at) VALUES (?, ?, ?)").bind(name, id, iso)),
   ]);
-  return new Map(text.map((c) => [c.name, c.id]));
+  return map;
 }
 
-/** Envía a Discord los avisos pendientes. Un 429 detiene el envío hasta el ciclo siguiente. */
+const CLAIM_TIMEOUT_MS = 10 * 60 * 1000;
+
+/**
+ * Envía a Discord los avisos pendientes. Reclama las filas de forma atómica (status 'sending'),
+ * así el cron y la cola nunca publican el mismo aviso dos veces. Un 429 no gasta intentos: se
+ * devuelve a 'pending' y se para hasta el ciclo siguiente.
+ */
 export async function deliverPending(env: Env, now: Date, limit = 20): Promise<number> {
-  const { results } = await env.DB.prepare(
-    `SELECT d.id, d.channel, d.attempts, a.payload_json FROM delivery d JOIN alert a ON a.id = d.alert_id
-     WHERE d.status = 'pending' ORDER BY d.id LIMIT ?`,
+  const iso = now.toISOString();
+  const { results: claimed } = await env.DB.prepare(
+    `UPDATE delivery SET status = 'sending', claimed_at = ?
+     WHERE id IN (SELECT id FROM delivery WHERE status = 'pending' OR (status = 'sending' AND claimed_at < ?) ORDER BY id LIMIT ?)
+     RETURNING id, alert_id, channel, attempts`,
   )
-    .bind(limit)
-    .all<{ id: number; channel: string; attempts: number; payload_json: string }>();
-  if (!results.length) return 0;
+    .bind(iso, new Date(now.getTime() - CLAIM_TIMEOUT_MS).toISOString(), limit)
+    .all<{ id: number; alert_id: number; channel: string; attempts: number }>();
+  if (!claimed.length) return 0;
+  claimed.sort((x, y) => x.id - y.id);
+
+  const payloads = new Map<number, string>();
+  const { results: alerts } = await env.DB.prepare(
+    `SELECT id, payload_json FROM alert WHERE id IN (${claimed.map(() => "?").join(",")})`,
+  )
+    .bind(...claimed.map((c) => c.alert_id))
+    .all<{ id: number; payload_json: string }>();
+  for (const a of alerts) payloads.set(a.id, a.payload_json);
 
   const ids = await channelIds(env, now);
   let sent = 0;
-  for (const d of results) {
+  for (let i = 0; i < claimed.length; i++) {
+    const d = claimed[i]!;
     const channelId = ids.get(d.channel);
-    const { alert, show } = JSON.parse(d.payload_json) as { alert: Alert; show: Show };
-    const res = channelId
-      ? await discordFetch(env, "POST", `/channels/${channelId}/messages`, renderAlertMessage(alert, show, now))
-      : null;
-    const attempts = d.attempts + 1;
+    const { alert, show } = JSON.parse(payloads.get(d.alert_id) ?? "{}") as { alert: Alert; show: Show };
+    const res = channelId ? await discordFetch(env, "POST", `/channels/${channelId}/messages`, renderAlertMessage(alert, show, now)) : null;
     if (res?.ok) {
-      await env.DB.prepare("UPDATE delivery SET status = 'sent', attempts = ?, sent_at = ? WHERE id = ?").bind(attempts, now.toISOString(), d.id).run();
+      await env.DB.prepare("UPDATE delivery SET status = 'sent', attempts = ?, sent_at = ? WHERE id = ?").bind(d.attempts + 1, iso, d.id).run();
       sent++;
       continue;
     }
+    if (res?.status === 429) {
+      const rest = claimed.slice(i).map((c) => c.id);
+      await env.DB.prepare(`UPDATE delivery SET status = 'pending', last_error = 'HTTP 429' WHERE id IN (${rest.map(() => "?").join(",")})`)
+        .bind(...rest)
+        .run();
+      break;
+    }
+    const attempts = d.attempts + 1;
     const error = res ? `HTTP ${res.status}` : `sin canal #${d.channel}`;
-    const status = attempts >= MAX_ATTEMPTS ? "failed" : "pending";
-    await env.DB.prepare("UPDATE delivery SET status = ?, attempts = ?, last_error = ? WHERE id = ?").bind(status, attempts, error, d.id).run();
-    if (res?.status === 429) break;
+    await env.DB.prepare("UPDATE delivery SET status = ?, attempts = ?, last_error = ? WHERE id = ?")
+      .bind(attempts >= MAX_ATTEMPTS ? "failed" : "pending", attempts, error, d.id)
+      .run();
   }
   return sent;
 }

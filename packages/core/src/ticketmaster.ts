@@ -16,7 +16,7 @@ export interface Show {
   sourceId: string;
   name: string;
   attractionIds: string[];
-  venue: { tmId: string; name: string; city: string; country: string; tz: string };
+  venue: { tmId: string; name: string; city: string; country: string; tz: string | null };
   startsAt: string | null;
   localDate: string;
   status: ShowStatus;
@@ -26,7 +26,8 @@ export interface Show {
   sales: SaleWindow[];
 }
 
-const PACKAGE_RE = /\|\s*[^|]*\b(VIP|Packages?|Paquetes?|Hospitality)\b/i;
+/** Listados accesorios de una fecha (paquetes VIP, hospitality, parking): no son fechas nuevas. */
+const PACKAGE_RE = /\|\s*[^|]*\b(VIP|Packages?|Paquetes?)\b|\b(hospitality|parking|aparcamiento|estacionamento)\b/i;
 const STATUS: Record<string, ShowStatus> = {
   onsale: "onsale",
   offsale: "offsale",
@@ -71,7 +72,8 @@ export function normalizeTmEvent(raw: unknown): Show | null {
   const sales = obj(e.sales);
   const windows: SaleWindow[] = ((sales.presales as unknown[] | undefined) ?? []).map((p) => {
     const po = obj(p);
-    return saleWindow(str(po.name) ?? "Preventa", po, str(po.url));
+    const url = str(po.url);
+    return saleWindow(str(po.name) ?? "Preventa", po, url ? stripQueueToken(url) : null);
   });
   const pub = obj(sales.public);
   if (str(pub.startDateTime) && pub.startTBD !== true && pub.startTBA !== true) {
@@ -90,7 +92,7 @@ export function normalizeTmEvent(raw: unknown): Show | null {
       name: str(v.name) ?? "",
       city: str(obj(v.city).name) ?? "",
       country: str(obj(v.country).countryCode) ?? "",
-      tz: str(v.timezone) ?? str(obj(e.dates).timezone) ?? "UTC",
+      tz: str(v.timezone) ?? str(obj(e.dates).timezone),
     },
     startsAt: timeUnknown ? null : str(start.dateTime),
     localDate,

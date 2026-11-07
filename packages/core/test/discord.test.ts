@@ -89,3 +89,17 @@ describe("renderAlertMessage", () => {
     expect(renderAlertMessage(alert, show, day).flags).toBeUndefined();
   });
 });
+
+describe("renderAlertMessage: hora del concierto", () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const raw = structuredClone((fixture._embedded.events as any[])[0]);
+  raw._embedded.venues[0] = { ...raw._embedded.venues[0], id: "WEM", name: "Wembley Stadium", timezone: "Europe/London", city: { name: "London" }, country: { countryCode: "GB" } };
+  raw.dates.start = { localDate: "2027-06-12", dateTime: "2027-06-12T18:30:00Z" };
+  const s = normalizeTmEvent(raw)!;
+  const a = detectAlerts(null, s, { bootstrap: false, knownDatesInCountry: 0, artistName: "U2", tier: 3 })[0]!;
+  it("recinto fuera de Madrid → hora local etiquetada y equivalencia en Madrid", () => {
+    const text = JSON.stringify(renderAlertMessage(a, s, new Date("2026-11-08T12:00:00Z")));
+    expect(text).toContain("19:30 (hora local)");
+    expect(text).toContain("20:30 en Madrid");
+  });
+});

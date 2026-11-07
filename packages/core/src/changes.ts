@@ -59,20 +59,27 @@ export function detectAlerts(prev: Show | null, next: Show, ctx: ChangeContext):
   const alerts: Alert[] = [];
   if (prev.status !== next.status) alerts.push(make("status_changed", { before: prev.status, after: next.status }));
 
-  const before = new Map(prev.sales.map((w) => [saleId(w), w]));
+  // Emparejar ventanas: primero las idénticas (etiqueta + hora); las que quedan sueltas con la misma
+  // etiqueta se consideran un cambio de hora; las demás, ventanas nuevas.
+  const exact = (w: SaleWindow) => `${saleId(w)}|${w.startsAt ?? ""}`;
+  const nextKeys = new Set(next.sales.map(exact));
+  const orphans = prev.sales.filter((w) => !nextKeys.has(exact(w)));
+  const prevKeys = new Set(prev.sales.map(exact));
   for (const w of next.sales) {
-    const old = before.get(saleId(w));
-    if (!old) {
+    if (prevKeys.has(exact(w))) continue;
+    const i = orphans.findIndex((o) => saleId(o) === saleId(w));
+    if (i < 0) {
       alerts.push(make("sale_added", { label: w.label, kind: w.kind, at: madrid(w.startsAt) }, w.startsAt));
-    } else if (old.startsAt !== w.startsAt) {
-      alerts.push(
-        make(
-          "sale_changed",
-          { label: w.label, kind: w.kind, before: madrid(old.startsAt), after: madrid(w.startsAt), afterIso: w.startsAt ?? "" },
-          w.startsAt,
-        ),
-      );
+      continue;
     }
+    const old = orphans.splice(i, 1)[0]!;
+    alerts.push(
+      make(
+        "sale_changed",
+        { label: w.label, kind: w.kind, before: madrid(old.startsAt), after: madrid(w.startsAt), afterIso: w.startsAt ?? "" },
+        w.startsAt,
+      ),
+    );
   }
   return alerts;
 }

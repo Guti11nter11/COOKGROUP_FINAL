@@ -15,6 +15,7 @@ export async function fetchTmPage(
 ): Promise<{ events: unknown[]; totalPages: number; rateLimitAvailable: number | null }> {
   const q = new URLSearchParams({
     attractionId: ids.join(","),
+    classificationName: "music",
     size: String(PAGE_SIZE),
     page: String(page),
     sort: "date,asc",

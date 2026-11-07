@@ -68,3 +68,21 @@ describe("normalizeTmEvent", () => {
 describe("showKey", () => {
   it("es artista:recinto:fecha local", () => expect(showKey(normalizeTmEvent(a)!)).toBe("K8vZ91712W7:Z698xZu0Za7F7:2027-06-12"));
 });
+
+describe("normalizeTmEvent: variantes y enlaces de preventa", () => {
+  it("quita queueittoken también de los enlaces de preventa", () => {
+    const e = structuredClone(a);
+    e.sales.presales[0].url = "https://www.ticketmaster.es/presale/o2?queueittoken=zzz";
+    expect(normalizeTmEvent(e)!.sales.find((s) => s.kind === "telco")!.url).toBe("https://www.ticketmaster.es/presale/o2");
+  });
+  it.each(["PARKING: U2 - The Greatest Show", "U2 - Hospitality Packages", "Official Platinum Parking - U2"])(
+    "listado accesorio '%s' → variante (no es una fecha)",
+    (name) => expect(normalizeTmEvent({ ...a, name })!.isPackage).toBe(true),
+  );
+  it("sin zona horaria del recinto → tz null (no se inventa UTC)", () => {
+    const e = structuredClone(a);
+    delete e._embedded.venues[0].timezone;
+    delete e.dates.timezone;
+    expect(normalizeTmEvent(e)!.venue.tz).toBeNull();
+  });
+});

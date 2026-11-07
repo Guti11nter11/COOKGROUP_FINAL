@@ -73,3 +73,31 @@ describe("stableHash", () => {
     expect(stableHash("abc")).toMatch(/^[0-9a-f]{8}$/);
   });
 });
+
+describe("detectAlerts: ventanas con la misma etiqueta", () => {
+  const twoTm = (): Show => {
+    const s = clone(base);
+    s.sales = [
+      { kind: "ticketer", label: "Ticketmaster Presale", startsAt: "2026-11-10T09:00:00Z", endsAt: null, url: null, orderRank: 55 },
+      { kind: "ticketer", label: "Ticketmaster Presale", startsAt: "2026-11-12T09:00:00Z", endsAt: null, url: null, orderRank: 55 },
+    ];
+    return s;
+  };
+  it("dos ventanas con la misma etiqueta y un cambio de estado → solo status_changed", () => {
+    const next = twoTm();
+    next.status = "postponed";
+    expect(detectAlerts(twoTm(), next, ctx).map((a) => a.kind)).toEqual(["status_changed"]);
+  });
+  it("segunda ventana nueva con una etiqueta ya existente → sale_added", () => {
+    const prev = twoTm();
+    prev.sales = prev.sales.slice(0, 1);
+    expect(detectAlerts(prev, twoTm(), ctx).map((a) => a.kind)).toEqual(["sale_added"]);
+  });
+  it("una de las dos cambia de hora → sale_changed con la hora anterior correcta", () => {
+    const next = twoTm();
+    next.sales[1]!.startsAt = "2026-11-12T10:00:00Z";
+    const [a, ...rest] = detectAlerts(twoTm(), next, ctx);
+    expect(rest).toEqual([]);
+    expect(a).toMatchObject({ kind: "sale_changed", detail: { before: "10:00", after: "11:00" } });
+  });
+});

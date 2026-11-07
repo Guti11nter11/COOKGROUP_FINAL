@@ -61,6 +61,10 @@ export default {
     for (const msg of batch.messages) {
       const now = new Date();
       const r = await processPage(env, msg.body, now, async (j) => void (await env.SWEEP_QUEUE.send(j)));
+      if (r.stoppedBy === "rate_limit") {
+        msg.retry({ delaySeconds: 120 }); // Ticketmaster pidió esperar: se reintenta, no se descarta
+        continue;
+      }
       if (r.alerts > 0) await deliverPending(env, now);
       msg.ack();
     }

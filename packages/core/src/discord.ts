@@ -1,7 +1,7 @@
 import type { Alert } from "./changes";
 import { decideDelivery, type AlertKind } from "./quiet";
 import type { Show } from "./ticketmaster";
-import { formatMadridDate, formatTriple } from "./time";
+import { formatDateIn, formatHHmm, formatMadridDate, formatTriple, MADRID } from "./time";
 
 /** Tipos de canal de Discord usados. */
 export const TEXT = 0;
@@ -119,11 +119,18 @@ const STATUS_ES: Record<string, string> = {
   onsale: "a la venta", offsale: "sin venta", cancelled: "cancelado", postponed: "aplazado", rescheduled: "nueva fecha",
 };
 
-function saleLine(label: string, startsAt: string | null, tz: string): string {
+function saleLine(label: string, startsAt: string | null, tz: string | null): string {
   if (!startsAt) return `• **${label}**: hora por confirmar`;
   const t = formatTriple(startsAt, tz);
   const local = t.local ? ` · local ${t.local}` : "";
   return `• **${label}**: ${formatMadridDate(startsAt)} — Madrid ${t.madrid} · Londres ${t.london}${local} (<t:${Date.parse(startsAt) / 1000}:F>)`;
+}
+
+/** Fecha del concierto: hora local del recinto (etiquetada si no es Madrid) y su equivalencia en Madrid. */
+function showWhen(s: Show): string {
+  if (!s.startsAt) return `${s.localDate} (hora por confirmar)`;
+  if (!s.venue.tz || s.venue.tz === MADRID) return formatMadridDate(s.startsAt);
+  return `${formatDateIn(s.startsAt, s.venue.tz)} (hora local) · ${formatHHmm(s.startsAt, MADRID)} en Madrid`;
 }
 
 /** Mensaje de Discord para un aviso. De noche y sin urgencia va en silencio (flags 4096). */
@@ -132,7 +139,7 @@ export function renderAlertMessage(
   s: Show,
   nowUtc: Date,
 ): { content: string; embeds: object[]; flags?: 4096 } {
-  const when = s.startsAt ? formatMadridDate(s.startsAt) : `${s.localDate} (hora por confirmar)`;
+  const when = showWhen(s);
   const fields: { name: string; value: string; inline?: boolean }[] = [];
   if (a.kind === "status_changed") {
     fields.push({ name: "Estado", value: `${STATUS_ES[a.detail.before ?? ""] ?? a.detail.before} → **${STATUS_ES[a.detail.after ?? ""] ?? a.detail.after}**` });
