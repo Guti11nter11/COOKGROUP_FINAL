@@ -76,4 +76,7 @@ Comprobar cuáles faltan antes de depender de ellos; nunca pedirlos por chat.
 - Skills del repo en `.claude/skills/` (ver `THIRD_PARTY.md`): karpathy-guidelines,
   ui-ux-pro-max, design-taste-frontend, `mp-*` de Matt Pocock. Las skills propias de GIRA llevarán
   prefijo `gira-`.
+- MCP del proyecto en `.mcp.json`: servidor oficial de Apify (`mcp.apify.com`). El token NO va en
+  el repo: lo inyecta el proxy del entorno `COOKGROUP` (secretos de red para `api.apify.com` y
+  `mcp.apify.com`). Si Apify responde 401 en sesión, el secreto de red falta o caducó.
 - Rama de trabajo: `claude/vigilant-euler-pkmop0`.
