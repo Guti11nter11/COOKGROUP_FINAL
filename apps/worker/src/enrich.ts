@@ -83,10 +83,11 @@ export async function applyEnrichment(env: Env, input: EnrichInput, now: Date): 
   for (const p of prices) {
     stmts.push(
       env.DB.prepare(
-        `INSERT INTO show_price (source_id, min, max, currency, source, updated_at) VALUES (?, ?, ?, ?, ?, ?)
+        `INSERT INTO show_price (source_id, min, max, currency, source, updated_at, zones_json) VALUES (?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT (source_id) DO UPDATE SET min = excluded.min, max = excluded.max, currency = excluded.currency, source = excluded.source,
-           updated_at = excluded.updated_at WHERE show_price.source <> 'Ticketmaster'`,
-      ).bind(p.sourceId, p.min, p.max, p.currency, p.source, iso),
+           updated_at = excluded.updated_at, zones_json = excluded.zones_json
+         WHERE show_price.source <> 'Ticketmaster' OR (show_price.zones_json IS NULL AND excluded.zones_json IS NOT NULL)`,
+      ).bind(p.sourceId, p.min, p.max, p.currency, p.source, iso, p.zones?.length ? JSON.stringify(p.zones.slice(0, 20)) : null),
     );
   }
   const resale = (input.resale ?? []).filter((r) => r.artistId && r.info && r.info.low > 0 && r.info.high >= r.info.low);

@@ -110,14 +110,14 @@ async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<Sh
   const showIds = shows.map((s) => s.sourceId).slice(0, 90);
   const [v, p, r] = await env.DB.batch([
     env.DB.prepare(`SELECT tm_venue_id, capacity FROM venue_info WHERE capacity IS NOT NULL AND tm_venue_id IN (${placeholders(venueIds.length)})`).bind(...venueIds),
-    env.DB.prepare(`SELECT source_id, min, max, currency, source FROM show_price WHERE source_id IN (${placeholders(showIds.length)})`).bind(...showIds),
+    env.DB.prepare(`SELECT source_id, min, max, currency, source, zones_json FROM show_price WHERE source_id IN (${placeholders(showIds.length)})`).bind(...showIds),
     env.DB.prepare("SELECT json FROM artist_resale WHERE artist_id = ?").bind(artistId),
   ]);
   const venues: Record<string, VenueInfo> = {};
   for (const row of (v!.results ?? []) as { tm_venue_id: string; capacity: number }[]) venues[row.tm_venue_id] = { capacity: row.capacity };
   const prices: Record<string, PriceInfo> = {};
-  for (const row of (p!.results ?? []) as (PriceInfo & { source_id: string })[]) {
-    prices[row.source_id] = { min: row.min, max: row.max, currency: row.currency, source: row.source };
+  for (const row of (p!.results ?? []) as (PriceInfo & { source_id: string; zones_json: string | null })[]) {
+    prices[row.source_id] = { min: row.min, max: row.max, currency: row.currency, source: row.source, ...(row.zones_json ? { zones: JSON.parse(row.zones_json) } : {}) };
   }
   const resaleRow = (r!.results ?? [])[0] as { json: string } | undefined;
   return { venues, prices, resale: resaleRow ? (JSON.parse(resaleRow.json) as ResaleInfo) : null };

@@ -62,6 +62,8 @@ export interface PriceInfo {
   max: number;
   currency: string;
   source: string;
+  /** Precio por zona, si la fuente lo publica. */
+  zones?: { name: string; price: number }[];
 }
 export interface ResaleInfo {
   /** Multiplicador estimado sobre el precio oficial. */
@@ -141,7 +143,10 @@ function pack(blocks: string[], max = 1900): string[] {
 }
 
 const CURRENCY: Record<string, string> = { EUR: "€", GBP: "£", USD: "$", CHF: "CHF", SEK: "kr", NOK: "kr", DKK: "kr", PLN: "zł", CZK: "Kč" };
-const num = (n: number) => String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+const num = (n: number) => {
+  const [int, dec] = (Number.isInteger(n) ? String(n) : n.toFixed(2)).split(".");
+  return int!.replace(/\B(?=(\d{3})+(?!\d))/g, ".") + (dec ? `,${dec}` : "");
+};
 export function money(n: number, currency: string): string {
   const sym = CURRENCY[currency] ?? currency;
   return currency === "GBP" || currency === "USD" ? `${sym}${num(n)}` : `${num(n)} ${sym}`;
@@ -206,6 +211,23 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
     ...(official.length ? ["", "**Enlaces oficiales**", official.map(([n, u]) => `[${n}](${u})`).join(" · ")] : []),
   ].join("\n");
 
+  // Precios por zona: una línea por grupo de ciudades con la misma tabla.
+  const zoneGroups = new Map<string, { cities: string[]; flagCc: string; zones: string; source: string }>();
+  for (const s of live) {
+    const p = extras.prices?.[s.sourceId];
+    if (!p?.zones?.length) continue;
+    const zones = p.zones.map((z) => `${z.name} **${money(z.price, p.currency)}**`).join(" · ");
+    const g = zoneGroups.get(zones) ?? { cities: [], flagCc: s.venue.country, zones, source: p.source };
+    if (!g.cities.includes(s.venue.city)) g.cities.push(s.venue.city);
+    zoneGroups.set(zones, g);
+  }
+  const zoneBlock = zoneGroups.size
+    ? [
+        "## 💶 Precios por zona",
+        ...[...zoneGroups.values()].map((g) => `${flag(g.flagCc)} **${g.cities.join(" · ")}:** ${g.zones}\n-# Fuente: ${g.source}`),
+      ].join("\n")
+    : null;
+
   const dateLine = (s: Show) => {
     const cap = capacity(s);
     return `${flag(s.venue.country)} [${s.venue.city} · ${showDay(s.localDate)}](${s.url}) · ${s.venue.name}${cap ? ` (${num(cap)})` : ""}`;
@@ -231,5 +253,5 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
       : "Hora por confirmar";
     return [`## 🎟️ ${w.label}`, when, `*${REQUIREMENT[w.kind]}*`, ...ss.map(dateLine)].join("\n");
   });
-  return pack([head, ...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
+  return pack([head, ...(zoneBlock ? [zoneBlock] : []), ...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
 }

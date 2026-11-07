@@ -74,8 +74,8 @@ describe("renderArtistSheet: datos de enriquecimiento", () => {
   const msgs = renderArtistSheet(artist, shows, NOW, {
     venues: { V1: { capacity: 70000 }, V2: { capacity: 55926 } },
     prices: {
-      "1": { min: 45, max: 250, currency: "EUR", source: "Ticketmaster" },
-      "2": { min: 55, max: 195, currency: "EUR", source: "Ticketmaster" },
+      "1": { min: 85, max: 255, currency: "EUR", source: "mercadeopop.com", zones: [{ name: "Pista", price: 181.5 }, { name: "PL5 Grada", price: 85 }] },
+      "2": { min: 85, max: 255, currency: "EUR", source: "mercadeopop.com", zones: [{ name: "Pista", price: 181.5 }, { name: "PL5 Grada", price: 85 }] },
       "3": { min: 70, max: 210, currency: "GBP", source: "Ticketmaster" },
     },
     resale: {
@@ -84,7 +84,9 @@ describe("renderArtistSheet: datos de enriquecimiento", () => {
     },
   });
   const head = msgs[0]!;
-  it("precios oficiales por país", () => expect(head).toContain("**Precios oficiales:** 🇪🇸 45–250 € · 🇬🇧 £70–£210"));
+  it("precios oficiales por país", () => expect(head).toContain("**Precios oficiales:** 🇪🇸 85–255 € · 🇬🇧 £70–£210"));
+  it("precios por zona agrupando ciudades con la misma tabla", () =>
+    expect(msgs.join("\n")).toContain("🇪🇸 **Barcelona · Sevilla:** Pista **181,50 €** · PL5 Grada **85 €**\n-# Fuente: mercadeopop.com"));
   it("aforo total y por recinto", () => {
     expect(head).toContain("**Aforo:** ~125.926 entradas en 2 de 3 fechas");
     expect(msgs.join("\n")).toContain("· Estadio Sevilla (70.000)");

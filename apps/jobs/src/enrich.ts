@@ -1,6 +1,7 @@
 import type { EnrichInput, EnrichTodo } from "@gira/core";
 import { gira } from "./gira-client";
 import { findCapacities } from "./enrich-venues";
+import { findPrices } from "./enrich-prices";
 
 /**
  * Enriquecimiento de las fichas activas: aforo de recintos (Wikidata), precios oficiales (prensa con
@@ -9,7 +10,10 @@ import { findCapacities } from "./enrich-venues";
 const todo = await gira<EnrichTodo>("/enrich/todo");
 console.log(`Pendiente: ${todo.venues.length} recintos sin aforo · ${todo.shows.length} fechas sin precio · ${todo.artists.length} artistas`);
 
-const steps: [string, () => Promise<EnrichInput>][] = [["aforos", async () => ({ venues: await findCapacities(todo.venues) })]];
+const steps: [string, () => Promise<EnrichInput>][] = [
+  ["aforos", async () => ({ venues: await findCapacities(todo.venues) })],
+  ["precios", async () => ({ prices: await findPrices(todo.shows) })],
+];
 let failed = 0;
 for (const [name, step] of steps) {
   try {
