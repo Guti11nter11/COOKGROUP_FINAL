@@ -214,8 +214,12 @@ artistas seguidos y la de novedades, cada 30–60 min.
 
 Medido con Google News (últimos 60 días) y lectura directa:
 
-**Francia** — Ticketmaster FR bloquea toda lectura automática (también con navegador real), así
-que no se lee. En su lugar:
+**Francia** — Ticketmaster FR bloquea la lectura directa (403), pero **con Cloudflare Browser
+Run esperando a que la página cargue (`networkidle0`) se lee la web completa** (prueba del
+2026-11-07: portada de 320 KB con su título real). Se leerá así, a baja frecuencia, solo fichas de
+artistas seguidos y novedades, sin resolver captchas: si aparece un reto, se respeta y se apaga.
+Respaldo oficial si algún día bloquea: su programa de afiliados (Plebicom/FlexOffers/Travelpayouts).
+Además:
 
 | Vía | Qué aporta | Estado |
 |---|---|---|
@@ -224,8 +228,11 @@ que no se lee. En su lugar:
 | Cuentas oficiales @TicketmasterFR / @LiveNationFR (X, Instagram) vía Apify | Anuncios de puesta a la venta | R7, con presupuesto |
 | Fnac Spectacles / France Billet | Segunda ticketera francesa | probar con Browser Run en R4 |
 
-**Portugal / MEO Blueticket** — Blueticket tiene **toda** la web (incluido `robots.txt` y el
-sitemap) detrás de una sala de espera Queue-it permanente: no se lee, ni directa ni con navegador.
+**Portugal / MEO Blueticket** — Blueticket devuelve **"Restricted access"** (Queue-it) a la
+lectura directa y también al navegador real de Cloudflare (prueba del 2026-11-07, búsqueda y
+portada). Es un bloqueo explícito: no se lee su web. Pero GIRA **sí cubre lo que vende Blueticket**:
+promotoras, recintos y prensa publican cada evento con su fecha/hora de venta y el **enlace oficial a
+Blueticket**, que GIRA muestra en la ficha.
 En su lugar:
 
 | Vía | Qué aporta | Estado |
