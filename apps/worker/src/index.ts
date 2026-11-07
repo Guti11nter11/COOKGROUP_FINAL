@@ -31,8 +31,22 @@ export default {
         ok: number | null;
         result_json: string | null;
       }>();
+      const today = new Date().toISOString().slice(0, 10);
+      const c = await env.DB.prepare(
+        `SELECT (SELECT COUNT(*) FROM artist) AS artists, (SELECT COUNT(*) FROM show) AS shows, (SELECT COUNT(*) FROM alert) AS alerts,
+                (SELECT COUNT(*) FROM delivery WHERE status = 'sent') AS sent, (SELECT COUNT(*) FROM delivery WHERE status = 'pending') AS pending,
+                (SELECT COALESCE(SUM(calls), 0) FROM quota_usage WHERE service = 'ticketmaster' AND day = ?) AS tmCallsToday`,
+      )
+        .bind(today)
+        .first<Record<string, number>>();
       return Response.json(
-        { ok: true, lastCycleAt: last?.started_at ?? null, lastOk: last?.ok === 1, lastResult: last?.result_json ? JSON.parse(last.result_json) : null },
+        {
+          ok: true,
+          lastCycleAt: last?.started_at ?? null,
+          lastOk: last?.ok === 1,
+          lastResult: last?.result_json ? JSON.parse(last.result_json) : null,
+          counts: c,
+        },
         { headers: { "X-Robots-Tag": "noindex, nofollow" } },
       );
     }
