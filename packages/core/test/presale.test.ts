@@ -1,0 +1,31 @@
+import { it, expect } from "vitest";
+import { classifySaleLabel } from "../src/presale";
+
+it.each([
+  ["Artist Presale", "artist", 20],
+  ["Ticketmaster Presale", "ticketer", 55],
+  ["Preventa Banamex", "card", 30],
+  ["Spotify Presale", "platform", 45],
+  ["MCD Presale", "promoter", 50],
+  ["LIVE NATION PRESALE", "promoter", 50],
+  ["Venue Presale", "venue", 60],
+  ["Priority from O2", "telco", 40],
+  ["Telekom Prio Tickets", "telco", 40],
+  ["PayPal Prio Tickets", "platform", 45],
+  ["Three+ Presale", "telco", 40],
+  ["Promoter Presale", "promoter", 50],
+  ["Citi® Cardmember Presale", "card", 30],
+  ["Citi® Cardmember Preferred Tickets", "card", 30],
+  ["Mastercard Presale", "card", 30],
+  ["Preventa Banco Santander Mastercard", "card", 30],
+  ["American Express Presale", "card", 30],
+  ["Fan Club Presale", "fanclub", 10],
+  ["Official Platinum", "unknown", 99],
+  ["Registro", "registration", 70],
+  ["Verified Fan Registration", "registration", 70],
+  ["General Public", "general", 90],
+  ["Venta general", "general", 90],
+  ["Reventa oficial", "official_resale", 95],
+  ["Ticketmaster Fan-to-Fan Resale", "official_resale", 95],
+  ["Algo raro", "unknown", 99],
+])("%s → %s", (label, kind, rank) => expect(classifySaleLabel(label)).toEqual({ kind, orderRank: rank }));
