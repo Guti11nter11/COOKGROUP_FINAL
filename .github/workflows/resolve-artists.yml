@@ -1,0 +1,36 @@
+name: Resolver artistas
+
+# Busca los IDs de Ticketmaster, MusicBrainz y Deezer de data/artists.seed.json y guarda
+# data/artists.resolved.json en la rama. Los no resueltos quedan "por revisar"; no se adivinan.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/magical-franklin-u415fe]
+    paths: [data/artists.seed.json, .github/workflows/resolve-artists.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Resolver
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+        run: npx tsx apps/jobs/src/resolve-artists.ts
+      - name: Guardar resultado en la rama
+        run: |
+          git config user.name "gira-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/artists.resolved.json
+          git diff --cached --quiet || git commit -m "data: resolve followed artists"
+          git push

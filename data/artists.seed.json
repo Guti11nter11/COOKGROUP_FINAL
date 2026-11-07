@@ -1,0 +1,402 @@
+[
+ {
+  "name": "U2",
+  "tier": 3
+ },
+ {
+  "name": "Harry Styles",
+  "tier": 3
+ },
+ {
+  "name": "Oasis",
+  "tier": 3
+ },
+ {
+  "name": "Bad Bunny",
+  "tier": 3
+ },
+ {
+  "name": "Metallica",
+  "tier": 3
+ },
+ {
+  "name": "The Weeknd",
+  "tier": 3
+ },
+ {
+  "name": "Bruno Mars",
+  "tier": 3
+ },
+ {
+  "name": "Sabrina Carpenter",
+  "tier": 3
+ },
+ {
+  "name": "Olivia Rodrigo",
+  "tier": 3
+ },
+ {
+  "name": "Ariana Grande",
+  "tier": 3
+ },
+ {
+  "name": "Shakira",
+  "tier": 3
+ },
+ {
+  "name": "Bruce Springsteen",
+  "tier": 3
+ },
+ {
+  "name": "Foo Fighters",
+  "tier": 3
+ },
+ {
+  "name": "Guns N' Roses",
+  "tier": 3
+ },
+ {
+  "name": "Radiohead",
+  "tier": 3
+ },
+ {
+  "name": "BTS",
+  "tier": 3
+ },
+ {
+  "name": "TWICE",
+  "tier": 3
+ },
+ {
+  "name": "aespa",
+  "tier": 3
+ },
+ {
+  "name": "Quevedo",
+  "tier": 3
+ },
+ {
+  "name": "RAYE",
+  "tier": 3
+ },
+ {
+  "name": "Olivia Dean",
+  "tier": 3
+ },
+ {
+  "name": "Noah Kahan",
+  "tier": 3
+ },
+ {
+  "name": "Tate McRae",
+  "tier": 3
+ },
+ {
+  "name": "Charli XCX",
+  "tier": 3
+ },
+ {
+  "name": "Celine Dion",
+  "tier": 3
+ },
+ {
+  "name": "Morgan Wallen",
+  "tier": 3
+ },
+ {
+  "name": "Taylor Swift",
+  "tier": 2
+ },
+ {
+  "name": "Coldplay",
+  "tier": 2
+ },
+ {
+  "name": "Beyoncé",
+  "tier": 2
+ },
+ {
+  "name": "Billie Eilish",
+  "tier": 2
+ },
+ {
+  "name": "Dua Lipa",
+  "tier": 2
+ },
+ {
+  "name": "Ed Sheeran",
+  "tier": 2
+ },
+ {
+  "name": "Lady Gaga",
+  "tier": 2
+ },
+ {
+  "name": "ROSALÍA",
+  "tier": 2
+ },
+ {
+  "name": "KAROL G",
+  "tier": 2
+ },
+ {
+  "name": "Rauw Alejandro",
+  "tier": 2
+ },
+ {
+  "name": "Feid",
+  "tier": 2
+ },
+ {
+  "name": "Peso Pluma",
+  "tier": 2
+ },
+ {
+  "name": "Lana Del Rey",
+  "tier": 2
+ },
+ {
+  "name": "SZA",
+  "tier": 2
+ },
+ {
+  "name": "Kendrick Lamar",
+  "tier": 2
+ },
+ {
+  "name": "Travis Scott",
+  "tier": 2
+ },
+ {
+  "name": "Drake",
+  "tier": 2
+ },
+ {
+  "name": "Post Malone",
+  "tier": 2
+ },
+ {
+  "name": "Imagine Dragons",
+  "tier": 2
+ },
+ {
+  "name": "Arctic Monkeys",
+  "tier": 2
+ },
+ {
+  "name": "The Killers",
+  "tier": 2
+ },
+ {
+  "name": "Muse",
+  "tier": 2
+ },
+ {
+  "name": "Green Day",
+  "tier": 2
+ },
+ {
+  "name": "Linkin Park",
+  "tier": 2
+ },
+ {
+  "name": "Red Hot Chili Peppers",
+  "tier": 2
+ },
+ {
+  "name": "Pearl Jam",
+  "tier": 2
+ },
+ {
+  "name": "AC/DC",
+  "tier": 2
+ },
+ {
+  "name": "Iron Maiden",
+  "tier": 2
+ },
+ {
+  "name": "Rammstein",
+  "tier": 2
+ },
+ {
+  "name": "Depeche Mode",
+  "tier": 2
+ },
+ {
+  "name": "Kylie Minogue",
+  "tier": 2
+ },
+ {
+  "name": "Robbie Williams",
+  "tier": 2
+ },
+ {
+  "name": "Lewis Capaldi",
+  "tier": 2
+ },
+ {
+  "name": "Sam Fender",
+  "tier": 2
+ },
+ {
+  "name": "Hozier",
+  "tier": 2
+ },
+ {
+  "name": "Teddy Swims",
+  "tier": 2
+ },
+ {
+  "name": "Benson Boone",
+  "tier": 2
+ },
+ {
+  "name": "Chappell Roan",
+  "tier": 2
+ },
+ {
+  "name": "Gracie Abrams",
+  "tier": 2
+ },
+ {
+  "name": "Doja Cat",
+  "tier": 2
+ },
+ {
+  "name": "Justin Bieber",
+  "tier": 2
+ },
+ {
+  "name": "Katy Perry",
+  "tier": 2
+ },
+ {
+  "name": "P!nk",
+  "tier": 2
+ },
+ {
+  "name": "Miley Cyrus",
+  "tier": 2
+ },
+ {
+  "name": "Shawn Mendes",
+  "tier": 2
+ },
+ {
+  "name": "Alejandro Sanz",
+  "tier": 2
+ },
+ {
+  "name": "Aitana",
+  "tier": 2
+ },
+ {
+  "name": "Estopa",
+  "tier": 2
+ },
+ {
+  "name": "Vetusta Morla",
+  "tier": 2
+ },
+ {
+  "name": "Manuel Carrasco",
+  "tier": 2
+ },
+ {
+  "name": "Pablo Alborán",
+  "tier": 2
+ },
+ {
+  "name": "Melendi",
+  "tier": 2
+ },
+ {
+  "name": "Dani Martín",
+  "tier": 2
+ },
+ {
+  "name": "Leiva",
+  "tier": 2
+ },
+ {
+  "name": "Morat",
+  "tier": 2
+ },
+ {
+  "name": "Sebastián Yatra",
+  "tier": 2
+ },
+ {
+  "name": "Bizarrap",
+  "tier": 2
+ },
+ {
+  "name": "Duki",
+  "tier": 2
+ },
+ {
+  "name": "Myke Towers",
+  "tier": 2
+ },
+ {
+  "name": "J Balvin",
+  "tier": 2
+ },
+ {
+  "name": "Maluma",
+  "tier": 2
+ },
+ {
+  "name": "Stray Kids",
+  "tier": 2
+ },
+ {
+  "name": "BLACKPINK",
+  "tier": 2
+ },
+ {
+  "name": "SEVENTEEN",
+  "tier": 2
+ },
+ {
+  "name": "ENHYPEN",
+  "tier": 2
+ },
+ {
+  "name": "Bring Me The Horizon",
+  "tier": 2
+ },
+ {
+  "name": "Slipknot",
+  "tier": 2
+ },
+ {
+  "name": "The Cure",
+  "tier": 2
+ },
+ {
+  "name": "Florence + The Machine",
+  "tier": 2
+ },
+ {
+  "name": "Paul McCartney",
+  "tier": 2
+ },
+ {
+  "name": "The Rolling Stones",
+  "tier": 2
+ },
+ {
+  "name": "Calvin Harris",
+  "tier": 2
+ },
+ {
+  "name": "Fred again..",
+  "tier": 2
+ },
+ {
+  "name": "Tyler, The Creator",
+  "tier": 2
+ }
+]
