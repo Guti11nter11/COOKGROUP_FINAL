@@ -40,9 +40,11 @@ jobs:
             python3 - "$f" <<'PY'
           import json, subprocess, sys
           sql = open(sys.argv[1]).read()
-          stmts = [s.strip() for s in sql.split(";") if s.strip() and not all(l.strip().startswith("--") for l in s.strip().splitlines())]
+          # Sin líneas de comentario: wrangler tomaría "-- …" por una opción.
+          stmts = ["\n".join(l for l in s.splitlines() if not l.strip().startswith("--")).strip() for s in sql.split(";")]
+          stmts = [s for s in stmts if s]
           for st in stmts:
-              out = subprocess.run(["npx", "wrangler", "d1", "execute", "gira", "--remote", "--json", "--command", st], capture_output=True, text=True).stdout
+              out = subprocess.run(["npx", "wrangler", "d1", "execute", "gira", "--remote", "--json", f"--command={st}"], capture_output=True, text=True).stdout
               try:
                   d = json.loads(out[out.index("["):])
               except Exception:
