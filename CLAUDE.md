@@ -45,8 +45,8 @@ trata de los eventos y de cómo conseguir las entradas.
 - Ticketmaster Discovery API (núcleo, 20+ países). Clave = Consumer Key.
 - Ticketeras sin API (revisar ficha de evento): AXS, Eventim/Fansale/TicketOne, Blueticket,
   See Tickets, Dice, Fnac, eTicketing, Vivaticket, Ticketportal, Puntoticket, LaLiga/clubes…
-- Noticias (Google News RSS, NME, Billboard, Los40, Mondosonoro…), Reddit, feeds RSS de YouTube.
-- Redes vía **Apify** (crédito gratuito ~5 $/mes, dosificar): `apify/instagram-scraper`,
+- Noticias (Google News RSS, NME, Billboard, Los40, Mondosonoro…), feeds RSS de YouTube.
+- Redes vía **Apify** (crédito gratuito 10 $/mes, dosificar): `apify/instagram-scraper`,
   `clockworks/tiktok-scraper`, el mejor scraper de X mantenido. Meta Business Discovery como
   respaldo oficial para Instagram.
 - Popularidad: Last.fm + Deezer (Spotify exige Premium, descartado).
@@ -89,8 +89,9 @@ estimación del modelo · confianza.
 `TICKETMASTER_API_KEY`, `DISCORD_BOT_TOKEN`, `DISCORD_APPLICATION_ID`, `DISCORD_PUBLIC_KEY`,
 `GROQ_API_KEY`, `GEMINI_API_KEY`, `NVIDIA_API_KEY`, `OPENAI_API_KEY`, `FIRECRAWL_API_KEY`,
 `APIFY_TOKEN`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `LASTFM_API_KEY`,
-`FOOTBALL_DATA_API_KEY`. Reddit: la API exige aprobación para cuentas nuevas; leerlo vía Apify o
-RSS hasta que haya `REDDIT_CLIENT_ID`/`REDDIT_CLIENT_SECRET`.
+`FOOTBALL_DATA_API_KEY`. **Reddit: NO usar** (ni API, ni Apify, ni RSS, ni scraping). Su política
+exige aprobación previa y prohíbe extraer datos o usar varias cuentas. Solo se activará si llegan
+`REDDIT_CLIENT_ID`/`REDDIT_CLIENT_SECRET` aprobados oficialmente.
 Setlist.fm descartado. Fuentes sin clave: Deezer, MusicBrainz, Wikidata, Jolpica (F1),
 Nager.Date (festivos), Nominatim/OSM, Google News RSS, RSS de YouTube.
 Verificar todas con el workflow `Verificar claves` (`.github/workflows/verify-secrets.yml`).
