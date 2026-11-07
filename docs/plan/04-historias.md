@@ -214,8 +214,10 @@ me diga qué preventas puedo usar de verdad.
 **H-50 · Enlace correcto por fecha** · Must · R1 · S — enlace a la ficha oficial del evento
 (nunca enlaces con `queueittoken` ni de terceros de reventa).
 
-**H-51 · Hilo de foro por gira** · Must · R2 · M — foro "giras" con etiquetas (región, estado);
-el primer mensaje es la ficha y se **edita** al cambiar; los cambios se publican como respuesta.
+**H-51 · Ficha temporal en el foro** · Must · R2 · M — una publicación en el foro `fichas` solo
+mientras la gira tenga fechas futuras; el primer mensaje es la ficha y se **edita** al cambiar; los
+cambios se publican como respuesta. Al pasar la última fecha: resumen en `#archivo` y se borra la
+publicación. Nunca canales por artista o concierto; nunca conciertos pasados.
 
 **H-52 · Modo Drop** · Should · R3 · M
 - Se activa solo desde T-15 min o a mano: cuenta atrás, relojes, enlaces por fecha/ticketera,

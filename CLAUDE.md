@@ -23,8 +23,11 @@ trata de los eventos y de cómo conseguir las entradas.
    (~1 año) para no volver a identificarse. Nunca pública ni indexable.
 2. **Servidor de Discord "GIRA"** (ID `1568641743853715516`) montado por el bot con categorías:
    INICIO · CALENDARIO (#daily-release, #esta-semana, #recordatorios) · ALERTAS (#nuevas-giras,
-   #fechas-extra, #preventas, #registros-abiertos) · GIRAS (un canal por gira) · POR REGIÓN ·
-   NOTICIAS · TICKETERAS · DEPORTES.
+   #fechas-extra, #preventas, #registros-abiertos) · GIRAS (foro `fichas`) · POR REGIÓN ·
+   NOTICIAS · TICKETERAS · DEPORTES · ARCHIVO. **Nunca un canal por artista ni por concierto**: la
+   información se recopila en canales temáticos; cada gira con fechas futuras tiene una publicación
+   en el foro `fichas` que, al pasar su última fecha, se resume en `#archivo` y se borra. **Solo
+   eventos futuros** (nada de historial pasado). La PWA guarda todo sin límite.
 3. **Calendario `.ics`** suscribible.
 
 **Horas de silencio:** 01:00–08:00 Europe/Madrid. Solo se notifica en ese tramo si es urgente
@@ -36,7 +39,9 @@ trata de los eventos y de cómo conseguir las entradas.
   interacciones de Discord (slash commands). D1 (BD), KV, R2, Queues, Workers AI, AI Gateway,
   Browser Run, Vectorize. Cuenta `61fba2a15c66bf4a4a86477a4d74c51e`.
 - **GitHub Actions** (repo público → minutos ilimitados): noticias, ticketeras sin API, Apify,
-  resúmenes y fichas con IA, resumen diario 21:00 Europe/Madrid.
+  resúmenes y fichas con IA. Los lanza el Worker (`workflow_dispatch`) para que sean puntuales.
+- Resúmenes 21:00 y 08:00 Europe/Madrid: alarmas del Durable Object "Reloj" del Worker.
+- KV solo como caché de lectura (el plan gratuito permite 1.000 escrituras/día).
 - **Cloudflare Pages**: la PWA.
 - IA con fallback en este orden: Groq → Gemini → Workers AI → NVIDIA → OpenAI (de pago, último).
 
@@ -107,4 +112,7 @@ Comprobar cuáles faltan antes de depender de ellos; nunca pedirlos por chat.
 - MCP del proyecto en `.mcp.json`: servidor oficial de Apify (`mcp.apify.com`). El token NO va en
   el repo: lo inyecta el proxy del entorno `COOKGROUP` (secretos de red para `api.apify.com` y
   `mcp.apify.com`). Si Apify responde 401 en sesión, el secreto de red falta o caducó.
-- Rama de trabajo: `claude/vigilant-euler-pkmop0`.
+- Orden de entregas acordado: R0 → R1 → R2 → R4 (España) → R3 (PWA) → R5 → R6 → R7. Ejecución
+  "Native" (Claude implementa; revisión de rama completa al final de cada entrega). Ver
+  `docs/plan/09-roadmap.md`.
+- Rama de trabajo: la que indique la sesión (ahora `claude/magical-franklin-u415fe`).

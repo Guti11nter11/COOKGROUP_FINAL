@@ -17,8 +17,9 @@ estimaciones son orientativas; cada entrega termina con algo que el propietario 
 
 **Total hasta Europa completa (R0–R7): ~18–21 sesiones.**
 
-Orden alternativo recomendado si se prioriza cobertura en España: **R0 → R1 → R2 → R4 → R3 → …**
-(la PWA llega una entrega más tarde, pero los avisos españoles llegan antes).
+**Orden acordado con el propietario (2026-11-07): R0 → R1 → R2 → R4 → R3 → R5 → R6 → R7.**
+España antes que la app del iPhone. **Ejecución: modo Native** (Claude implementa cada tarea en la
+sesión y una revisión completa de la rama al final de cada entrega).
 
 ## Definición de "hecho" (para cada historia)
 

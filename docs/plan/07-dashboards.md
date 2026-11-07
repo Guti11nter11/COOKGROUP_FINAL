@@ -148,12 +148,28 @@ Más: cobertura del mes (⭐ métrica principal), avisos por día, despertares n
 📌 INICIO          #bienvenida (qué es, comandos) · #estado (salud, automático)
 📅 CALENDARIO      #daily-release · #esta-semana (mensaje fijo que se edita) · #recordatorios
 🚨 ALERTAS         #nuevas-giras · #fechas-extra · #preventas · #registros-abiertos
-🎤 GIRAS           📋 foro "giras": un hilo por gira, etiquetas [Europa][EE.UU.]…[confirmado][a la venta][agotado]
+🎤 GIRAS           📋 foro "fichas": solo giras con fechas FUTURAS; etiquetas [Europa][España]…[confirmado][a la venta][agotado]
 🌍 POR REGIÓN      #europa · #reino-unido · #eeuu · #latam · #australia · #asia (se activan por fases)
 📰 NOTICIAS        #noticias · #rumores
 🎟️ TICKETERAS      #ticketmaster · #live-nation · #eventim · #dice · #axs · #otras
 🏟️ DEPORTES        #f1 · #futbol · #tenis · #otros-deportes
+📦 ARCHIVO         #archivo (resumen final de cada gira cuando pasa su última fecha)
 ```
+
+**Reglas acordadas con el propietario (2026-11-07):**
+
+- **Nunca un canal por artista ni por concierto.** La información se va recopilando en los canales
+  temáticos de arriba (por tipo de aviso, región, ticketera, deporte). Un artista que pase 10 años
+  sin gira no aparece en ningún sitio durante esos 10 años.
+- **Solo futuro:** no se publican conciertos que ya han pasado ni se rellena el historial; el primer
+  barrido guarda en silencio.
+- **Fichas temporales:** cada gira con fechas futuras tiene una publicación en el foro `fichas`
+  (las publicaciones de un foro no cuentan como canales). Cuando pasa su última fecha, el bot
+  publica un resumen en `#archivo` y **borra** la publicación del foro.
+- **Tope de seguridad:** si el servidor se acercase al límite de Discord (500 canales / 1.000 hilos
+  activos), el bot borra primero lo más antiguo ya archivado.
+- **La app del iPhone lo guarda todo** sin límite (también el histórico), con buscador.
+- El foro necesita **Comunidad** activada; sin ella, `fichas` se crea como canal de texto normal.
 
 - **Eventos programados de Discord** para cada preventa ⭐⭐⭐: Discord avisa de forma nativa a
   quien marque "Interesado" (límite 100 eventos activos → solo los importantes).

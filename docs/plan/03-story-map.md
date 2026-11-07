@@ -24,7 +24,7 @@ Actividad transversal: **OPERAR** (salud de fuentes, cuotas, coste, privacidad).
 |---|---|---|---|---|---|---|---|---|
 | H-01 Detectar eventos nuevos de artistas seguidos en Europa+UK | H-10 Lista semilla de ~100 artistas con IDs resueltos | H-20 Ficha mínima: fechas, recinto, ciudad, enlaces | H-30 Ventanas de venta (pública + preventas TM) con hora Madrid/UK | H-40 Aviso en #nuevas-giras y #preventas | H-50 Enlace correcto por fecha | — | — | H-80 Montar servidor Discord · H-81 Deduplicación · H-82 Horas de silencio · H-83 Salud mínima |
 
-### R2 · "La ficha" — calendario, resumen y foro de giras
+### R2 · "La ficha" — calendario, resumen y fichas temporales en Discord
 
 | Descubrir | Seguir | Entender | Prepararme | Estar a la hora | Ejecutar | Plan B | Aprender | Operar |
 |---|---|---|---|---|---|---|---|---|

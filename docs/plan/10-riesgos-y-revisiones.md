@@ -59,7 +59,7 @@
 | Qué APIs y permisos tenemos, si falta alguno | 01 §2–§7 (acciones A1–A8) |
 | No elaborar todavía, solo plantear | No se ha escrito código de producto; solo documentos y la ampliación del workflow de verificación |
 
-## Ajustes propuestos al brief (pendientes de que el propietario los acepte)
+## Ajustes al brief (aceptados por el propietario el 2026-11-07)
 
 1. Apify: **5 $/mes**, no 10 $ (medido).
 2. GIRAS en Discord como **foro** (un hilo por gira), no un canal por gira.

@@ -7,9 +7,9 @@ eventos. **Estado: planificación. Aún no hay código de producto.** Fecha: 202
 
 - **Todo listo para empezar**: las 14 claves funcionan; Cloudflare tiene permisos para Workers,
   D1, Pages, KV, Queues, Durable Objects, Vectorize, Workers AI, AI Gateway y Browser Run.
-- **Faltan 2 cosas del propietario antes de desplegar**: abrir *Workers & Pages* en el panel de
-  Cloudflare (crea el subdominio `workers.dev`) y activar **Comunidad** en el servidor de Discord.
-  R2 no está activado (no es imprescindible).
+- **Del propietario**: subdominio `workers.dev` ✅ hecho. Pendiente: activar **Comunidad** en
+  Discord, token fino de GitHub (`GH_DISPATCH_TOKEN`) y renovar el secreto de red de Apify. R2 se
+  deja sin activar (no es imprescindible).
 - **Hallazgo más importante**: Ticketmaster trae casi todas las preventas de Reino Unido/Irlanda
   pero **casi ninguna de España** (3 de 200 eventos) y **nada de Francia ni Portugal**. En España
   la información de preventas sale de la **prensa, Live Nation ES y las promotoras** → la lectura
@@ -37,12 +37,14 @@ eventos. **Estado: planificación. Aún no hay código de producto.** Fecha: 202
 | — | [Glosario](../GLOSARIO.md) | Vocabulario del dominio |
 | — | [Plan R0+R1 paso a paso](../superpowers/plans/2026-11-07-gira-r0-r1.md) | 10 tareas TDD listas para ejecutar |
 
-## Decisiones que necesita el propietario
+## Decisiones tomadas (2026-11-07)
 
-1. **Acciones A1–A2** (5 minutos en total): subdominio de Workers y Comunidad en Discord.
-2. **¿R4 (España) antes que la PWA (R3)?** Recomendado: sí, si importa más enterarse que la
-   interfaz.
-3. **Aceptar los ajustes al brief** (Apify 5 $, foro de giras, resúmenes por el Reloj, KV solo
+1. Orden: **R4 (España) antes que R3 (app)**.
+2. Ajustes al brief **aceptados** (Apify 5 $, fichas en foro, resúmenes por el Reloj, KV solo
    caché, R4 imprescindible, Francia/Portugal con fuentes propias).
-4. **Niveles ⭐⭐⭐**: por defecto los 26 artistas citados en el brief; ajustable después.
-5. **Opcional**: dominio propio (~10 €/año) para el "buzón de preventas".
+3. Discord: **nunca un canal por artista o concierto**; canales temáticos + fichas temporales +
+   `#archivo`; solo eventos futuros. La app guarda todo.
+4. Ejecución en modo **Native**.
+5. Niveles ⭐⭐⭐: por defecto los 26 artistas del brief.
+6. Dominio `cyclevoltlogistics.com`: disponible pero **aplazado** (su DNS y correo están en
+   Squarespace/Google; moverlo tiene riesgo y no es necesario para empezar).

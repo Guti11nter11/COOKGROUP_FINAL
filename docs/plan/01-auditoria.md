@@ -126,13 +126,13 @@ Tickets, PayPal Prio Tickets, Three+ Presale, Promoter Presale, Citi, Mastercard
 
 | # | Qué | Por qué | Bloquea | Coste |
 |---|---|---|---|---|
-| A1 | Abrir *Workers & Pages* en el panel de Cloudflare una vez | Crea el subdominio `workers.dev` | Desplegar el Worker | 0 € |
+| A1 | ✅ **Hecho** (2026-11-07): subdominio `eleven-snk-11.workers.dev` | Crea el subdominio `workers.dev` | — | 0 € |
 | A2 | Activar Comunidad en el servidor de Discord (Ajustes → Habilitar Comunidad) | Los **canales de anuncios y los foros** solo existen en servidores Comunidad | El foro "giras" y #daily-release como anuncios | 0 € |
 | A3 | Decidir sobre **R2** (activarlo en el panel; puede pedir tarjeta aunque tenga capa gratuita) | Guardar HTML crudo y capturas | Nada crítico: sin R2 se guarda un extracto en D1 | 0 € dentro de la capa gratuita |
-| A4 | Crear un **token fino de GitHub** (*fine-grained*, solo este repo, permiso *Actions: write*) y guardarlo como secreto del Worker `GH_DISPATCH_TOKEN` | Que Cloudflare dispare los workflows a la hora exacta (ver arquitectura) | Puntualidad de los trabajos pesados | 0 € |
+| A4 | Crear un **token fino de GitHub** (*fine-grained*, solo este repo, permiso *Actions: write*) y guardarlo como **GitHub Secret** `GH_DISPATCH_TOKEN` (el despliegue lo copia al Worker) | Que Cloudflare dispare los workflows a la hora exacta (ver arquitectura) | Puntualidad de los trabajos pesados | 0 € |
 | A5 | Arreglar el **secreto de red de Apify** del entorno `COOKGROUP` | En esta sesión `api.apify.com` responde 401 y el MCP de Apify no carga | Solo el trabajo interactivo de Claude con Apify; en Actions funciona | 0 € |
 | A6 | Tener **iOS 16.4+** (mejor 18.4+) y añadir GIRA a la pantalla de inicio | Push web en iPhone solo funciona instalada | Notificaciones push | 0 € |
-| A7 | *(Opcional)* Dominio propio en Cloudflare | Email Routing para el "buzón de preventas" y URL bonita | Solo la idea del buzón | ~10 €/año, **fuera del objetivo 0 €** salvo que se decida |
+| A7 | *(Opcional, aplazado)* Dominio `cyclevoltlogistics.com` (ya comprado): hoy usa DNS de Squarespace y correo de Google Workspace (MX `smtp.google.com`) | Email Routing exigiría pasar los DNS a Cloudflare sin romper ese correo; la app puede ir en `*.pages.dev` | Solo el "buzón de preventas" | 0 € (dominio ya pagado) |
 | A8 | *(Opcional)* Meta Business Discovery (cuenta profesional de IG + app de Meta) | Respaldo oficial de Instagram | Nada: Apify cubre | 0 € |
 
 Secretos nuevos que **genera el propio sistema** (no hay que pedirlos): claves VAPID para push,
@@ -152,3 +152,41 @@ secreto de firma de sesiones, ID del RP de passkeys.
 - **Discord**: 500 canales por servidor y 50 por categoría. "Un canal por gira" choca con el
   límite en cuanto haya más de ~40 giras activas → usar **foro** (cada gira es un hilo y los
   hilos no cuentan para el límite de canales).
+
+## 9. Dónde se publican las preventas en España (medido el 2026-11-07)
+
+Barrido de Google News (búsquedas de "preventa", "registro preventa", "cuándo salen a la venta"…,
+últimos 30–90 días) contando qué webs publican los artículos:
+
+| Fuente | Artículos | Feed propio | Uso en GIRA |
+|---|---|---|---|
+| **blog.ticketmaster.es** (blog oficial de Ticketmaster España) | 8 | ✅ RSS (`/feed/`) | **Fuente oficial**: anuncia giras y explica preventas (hoy: U2, Noah Kahan, NFL Madrid) |
+| europafm.com | 24 | — (vía Google News) | "Dónde registrarse para la preventa" |
+| los40.com | 24 | — (403 directo; vía Google News) | Códigos, horarios y precios de preventas |
+| modofestival.es | 7 | ✅ RSS | Precios por zona, abonos, agotados |
+| conciertospormadrid.com | 4 | ✅ RSS | "Cómo acceder a la preventa" en Madrid |
+| mondosonoro.com · mercadeopop.com | — | ✅ RSS | Anuncios y precios |
+| elpais.com · elmundo.es · abc.es · lavanguardia.com · cadenaser.com · elconfidencial.com · 20minutos.es · cadena100.es | 3–6 c/u | — | Confirmaciones y horas de venta |
+| livenation.es | — | HTML (Next.js) | Tipos de preventa oficiales (Santander Mastercard, Registro…) |
+| Clubes de fútbol (realsporting.com, rccelta.es, cordobacf.com…) | 3–6 | — | Ventas de entradas de LaLiga (R6) |
+
+Conclusión: la estrategia de R4 es **Google News RSS por artista + RSS directos** (blog de
+Ticketmaster España, Modo Festival, Conciertos por Madrid, Mondo Sonoro, Mercadeo Pop) **+ Live
+Nation ES**, con extracción por IA con cita literal. Casi todo el contenido útil es legible sin
+saltarse nada.
+
+## 10. Francia, Portugal y ticketeras sin API
+
+| Mercado / ticketera | Qué es | Lectura desde servidor | Plan |
+|---|---|---|---|
+| **Ticketmaster Francia** | Sistema propio heredado de **Ticketnet** (comprado por Live Nation en 2010); no está en Discovery API (0 eventos) | 403 | Prensa francesa (Google News FR) + **Live Nation FR** (legible, con Queue-it en picos) + actor de Apify `ticketmaster-fr-es-scraper` solo si hace falta |
+| **Portugal** | No hay Ticketmaster PT. Líder **MEO Blueticket**, luego **Ticketline**, **BOL** y See Tickets (CTS Eventim). Promotora clave: **Everything is New**. En Portugal la reventa por encima del precio facial está prohibida | Blueticket redirige a una **sala de espera Queue-it** (no se toca); Ticketline no responde; **BOL** legible con `ld+json`; Everything is New y Live Nation PT legibles | Prensa portuguesa (Google News PT) + BOL + promotoras; nunca entrar en la cola de Blueticket |
+| **Eventim / Entradas.com / TicketOne / Fansale** | Grupo CTS Eventim (Entradas.com = Eventim España) | Sin respuesta desde centros de datos (bloqueo) | Prensa + Apify/Browser Run solo para fichas concretas, con moderación |
+| **AXS** | O2 Arena, Wembley… en UK | 403 | Prensa y Ticketmaster/LN cuando revenden lo mismo; Browser Run puntual |
+| **See Tickets** | UK, FR, PT | 403 | Prensa |
+| **Dice** | Salas medianas, festivales | ✅ `ld+json` + Next.js | Lectura directa de fichas |
+| **Fever, Wegow, Taquilla.com** | ES | ✅ con `ld+json` | Lectura directa de fichas |
+| **El Corte Inglés entradas** | ES | 403 | Prensa |
+
+Fuentes: Ticketnet/Live Nation ([FrenchWeb](https://www.frenchweb.fr/ticketnet-rachete-par-lamericain-live-nation-entertainment/7389)),
+mercado portugués ([IQ International Ticketing Report 2025](https://www.iqmagazine.com/publications/international-ticketing-report-2025/portugal/)).
