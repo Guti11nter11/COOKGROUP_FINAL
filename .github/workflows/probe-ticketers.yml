@@ -28,16 +28,10 @@ jobs:
 
           UA = "GIRA/0.1 (+https://github.com/Guti11nter11/COOKGROUP_FINAL) lector moderado de fichas de evento"
           SITES = {
-              "Entradas.com (Eventim ES)": ["https://www.entradas.com/robots.txt", "https://www.entradas.com/"],
-              "Eventim DE": ["https://www.eventim.de/robots.txt", "https://www.eventim.de/"],
-              "TicketOne IT": ["https://www.ticketone.it/robots.txt", "https://www.ticketone.it/"],
-              "Fansale ES": ["https://www.fansale.es/robots.txt"],
-              "AXS UK": ["https://www.axs.com/robots.txt", "https://www.axs.com/uk/events/1171543/"],
-              "See Tickets": ["https://www.seetickets.com/robots.txt", "https://www.seetickets.com/"],
-              "El Corte Inglés entradas": ["https://www.elcorteingles.es/robots.txt", "https://www.elcorteingles.es/entradas/"],
-              "Ticketmaster FR": ["https://www.ticketmaster.fr/robots.txt", "https://www.ticketmaster.fr/"],
-              "Ticketline PT": ["https://ticketline.sapo.pt/robots.txt", "https://ticketline.sapo.pt/"],
-              "Fnac Spectacles": ["https://www.fnacspectacles.com/robots.txt"],
+              "Ticketmaster FR (portada)": ["https://www.ticketmaster.fr/robots.txt", "https://www.ticketmaster.fr/fr"],
+              "Ticketmaster FR (artista U2)": ["https://www.ticketmaster.fr/fr/artiste/u2/idartiste/1131"],
+              "MEO Blueticket (portada)": ["https://blueticket.meo.pt/robots.txt", "https://blueticket.meo.pt/pt/"],
+              "MEO Blueticket (pesquisa U2)": ["https://blueticket.meo.pt/pt/search?q=U2"],
           }
 
           def get(url):
@@ -79,13 +73,15 @@ jobs:
               if u.endswith("robots.txt"): continue
               req = urllib.request.Request(
                   f"https://api.cloudflare.com/client/v4/accounts/{acct}/browser-rendering/content",
-                  data=json.dumps({"url": u, "gotoOptions": {"waitUntil": "domcontentloaded", "timeout": 30000}}).encode(),
+                  data=json.dumps({"url": u, "gotoOptions": {"waitUntil": "networkidle0", "timeout": 45000}}).encode(),
                   headers={"Authorization": f"Bearer {tok}", "Content-Type": "application/json"}, method="POST")
               try:
                   with urllib.request.urlopen(req, timeout=60) as resp:
                       d = json.loads(resp.read())
                       html = (d.get("result") or "").encode()
-                      print(f"✅ {name} · Browser Run 200 · {describe(html)[0]} · {u}")
+                      t = html.decode("utf-8", "ignore")
+                      title = re.search(r"<title[^>]*>(.*?)</title>", t, re.S)
+                      print(f"✅ {name} · Browser Run 200 · {describe(html)[0]} · título={title.group(1).strip()[:80] if title else '-'} · {u}")
               except urllib.error.HTTPError as e:
                   body = e.read().decode("utf-8", "ignore")[:160]
                   print(f"❌ {name} · Browser Run HTTP {e.code} · {body} · {u}")
