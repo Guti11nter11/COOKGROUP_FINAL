@@ -1,0 +1,19 @@
+{
+  "name": "@gira/worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "seed": "node scripts/gen-seed.mjs",
+    "deploy": "wrangler deploy"
+  },
+  "dependencies": {
+    "@gira/core": "*"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.8.71",
+    "@cloudflare/workers-types": "^5.20261107.1",
+    "wrangler": "^4.158.0"
+  }
+}

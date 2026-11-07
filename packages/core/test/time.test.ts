@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { formatTriple, formatMadridDate } from "../src/time";
+import { formatTriple, formatMadridDate, localDateIn } from "../src/time";
 
 describe("formatTriple", () => {
   it("invierno: Madrid UTC+1, Londres UTC+0", () => {
@@ -22,4 +22,10 @@ describe("formatTriple", () => {
   it("fecha legible en Madrid", () => {
     expect(formatMadridDate("2026-12-03T09:00:00Z")).toBe("jue 3 dic 2026, 10:00");
   });
+});
+
+describe("localDateIn", () => {
+  it("23:30 UTC del 7-nov ya es 8-nov en Madrid", () =>
+    expect(localDateIn(new Date("2026-11-07T23:30:00Z"), "Europe/Madrid")).toBe("2026-11-08"));
+  it("acepta ISO", () => expect(localDateIn("2026-11-07T12:00:00Z", "Europe/London")).toBe("2026-11-07"));
 });

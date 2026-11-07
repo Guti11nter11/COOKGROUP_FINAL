@@ -27,3 +27,14 @@ it("sin coincidencia exacta → sin resolver (no se adivina)", () =>
   expect(pickAttraction("Leiva", [music("L", "Leiva y amigos", 2)])).toEqual({ unresolved: "Leiva" }));
 
 it("normalizeName", () => expect(normalizeName("Florence + The Machine")).toBe("florencethemachine"));
+
+it("Deezer: entre homónimos exactos elige el de más fans", async () => {
+  const { pickDeezer } = await import("../src/resolve");
+  expect(
+    pickDeezer("U2", [
+      { id: 174917877, name: "U2", nb_fan: 3226 },
+      { id: 1, name: "U2", nb_fan: 9000000 },
+      { id: 5, name: "U2 Tribute", nb_fan: 99999999 },
+    ]),
+  ).toEqual({ id: 1, fans: 9000000 });
+});

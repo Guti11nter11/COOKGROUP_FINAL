@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { normalizeName, pickAttraction, type Candidate } from "./resolve";
+import { normalizeName, pickAttraction, pickDeezer, type Candidate } from "./resolve";
 
 const TM = process.env.TICKETMASTER_API_KEY;
 if (!TM) throw new Error("Falta TICKETMASTER_API_KEY");
@@ -34,9 +34,8 @@ async function musicbrainz(name: string): Promise<string | null> {
 }
 
 async function deezer(name: string): Promise<{ id: number; fans: number } | null> {
-  const d = await json(`https://api.deezer.com/search/artist?q=${encodeURIComponent(name)}&limit=5`);
-  const hit = (d.data ?? []).find((a: any) => normalizeName(a.name) === normalizeName(name));
-  return hit ? { id: hit.id, fans: hit.nb_fan } : null;
+  const d = await json(`https://api.deezer.com/search/artist?q=${encodeURIComponent(name)}&limit=10`);
+  return pickDeezer(name, d.data ?? []);
 }
 
 const seed: Seed[] = JSON.parse(readFileSync("data/artists.seed.json", "utf8"));

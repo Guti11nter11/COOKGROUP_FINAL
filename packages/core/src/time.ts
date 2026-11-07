@@ -43,3 +43,10 @@ export function formatMadridDate(isoUtc: string): string {
   const clean = (s: string | undefined) => (s ?? "").replace(/\.$/, "");
   return `${clean(p.weekday)} ${p.day} ${clean(p.month)} ${p.year}, ${p.hour}:${p.minute}`;
 }
+
+/** Fecha local "YYYY-MM-DD" de un instante en una zona horaria. */
+export function localDateIn(instant: string | Date, timeZone: string): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(
+    typeof instant === "string" ? new Date(instant) : instant,
+  );
+}

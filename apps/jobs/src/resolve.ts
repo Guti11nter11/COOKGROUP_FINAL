@@ -23,3 +23,9 @@ export function pickAttraction(name: string, candidates: Candidate[]): { id: str
     .sort((a, b) => b.upcomingEvents - a.upcomingEvents)[0];
   return best ? { id: best.id } : { unresolved: name };
 }
+
+/** Deezer: entre los resultados con el nombre exacto, el de más fans (evita homónimos pequeños). */
+export function pickDeezer(name: string, results: { id: number; name: string; nb_fan: number }[]): { id: number; fans: number } | null {
+  const best = results.filter((r) => normalizeName(r.name) === normalizeName(name)).sort((a, b) => b.nb_fan - a.nb_fan)[0];
+  return best ? { id: best.id, fans: best.nb_fan } : null;
+}

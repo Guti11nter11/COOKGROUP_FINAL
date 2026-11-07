@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     branches: [claude/magical-franklin-u415fe]
-    paths: [data/artists.seed.json, .github/workflows/resolve-artists.yml]
+    paths: [data/artists.seed.json, .github/workflows/resolve-artists.yml, apps/jobs/src/resolve.ts, apps/jobs/src/resolve-artists.ts]
 
 permissions:
   contents: write

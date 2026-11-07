@@ -1,0 +1,17 @@
+{
+  "$schema": "../../node_modules/wrangler/config-schema.json",
+  "name": "gira-core",
+  "main": "src/index.ts",
+  "compatibility_date": "2025-09-01",
+  "workers_dev": true,
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "d1_databases": [
+    { "binding": "DB", "database_name": "gira", "database_id": "00000000-0000-0000-0000-000000000000", "migrations_dir": "migrations" }
+  ],
+  "queues": {
+    "producers": [{ "binding": "SWEEP_QUEUE", "queue": "gira-sweep" }],
+    "consumers": [{ "queue": "gira-sweep", "max_batch_size": 1, "max_batch_timeout": 1, "max_retries": 2 }]
+  },
+  "vars": { "DISCORD_GUILD_ID": "1568641743853715516" },
+  "observability": { "enabled": true }
+}

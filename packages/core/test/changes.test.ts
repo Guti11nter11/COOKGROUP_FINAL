@@ -64,3 +64,12 @@ describe("detectAlerts: cambios", () => {
     expect(detectAlerts(base, next2, ctx)[0]!.dedupeKey).not.toBe(k1);
   });
 });
+
+describe("stableHash", () => {
+  it("es estable y distingue contenidos", async () => {
+    const { stableHash } = await import("../src/changes");
+    expect(stableHash("abc")).toBe(stableHash("abc"));
+    expect(stableHash("abc")).not.toBe(stableHash("abd"));
+    expect(stableHash("abc")).toMatch(/^[0-9a-f]{8}$/);
+  });
+});

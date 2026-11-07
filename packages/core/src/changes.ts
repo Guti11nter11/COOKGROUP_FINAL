@@ -22,8 +22,8 @@ export interface ChangeContext {
   tier: 1 | 2 | 3;
 }
 
-/** FNV-1a de 32 bits: huella estable y barata para deduplicar avisos. */
-function fnv1a(text: string): string {
+/** FNV-1a de 32 bits: huella estable y barata (deduplicar avisos, detectar fichas sin cambios). */
+export function stableHash(text: string): string {
   let h = 0x811c9dc5;
   for (let i = 0; i < text.length; i++) {
     h ^= text.charCodeAt(i);
@@ -44,7 +44,7 @@ export function detectAlerts(prev: Show | null, next: Show, ctx: ChangeContext):
     sourceId: next.sourceId,
     artistName: ctx.artistName,
     tier: ctx.tier,
-    dedupeKey: `${kind}:${next.sourceId}:${fnv1a(JSON.stringify(detail))}`,
+    dedupeKey: `${kind}:${next.sourceId}:${stableHash(JSON.stringify(detail))}`,
     ...(startsAt ? { startsAt } : {}),
     detail,
   });
