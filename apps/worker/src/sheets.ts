@@ -34,7 +34,7 @@ const SPORT_CHANNELS = new Set(["nfl", "futbol", "f1", "tenis", "otros-deportes"
 type Channel = { id: string; name: string; type: number; parent_id?: string | null };
 
 /** Canales del servidor, leídos una vez por ejecución y actualizados localmente. */
-class Guild {
+export class Guild {
   private list: Channel[] | null = null;
   constructor(private env: Env) {}
 

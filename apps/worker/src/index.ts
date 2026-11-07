@@ -2,6 +2,7 @@ import { ingestShows, processPage, runCycle } from "./cycle";
 import { publishSheets } from "./sheets";
 import type { EnrichInput } from "@gira/core";
 import { applyEnrichment, enrichTodo } from "./enrich";
+import { announceCalendar, calendarIcs, icsToken, runCalendar } from "./calendar";
 import type { Env, SweepJob } from "./env";
 
 async function scheduled(env: Env, now: Date): Promise<void> {
@@ -10,9 +11,11 @@ async function scheduled(env: Env, now: Date): Promise<void> {
   let ok = 1;
   let result: unknown;
   try {
+    // Primero el reloj (recordatorios puntuales), luego el barrido y las fichas.
+    const calendar = await runCalendar(env, now).catch((e) => ({ error: String(e) }));
     const cycle = await runCycle(env, now, async (j) => void (await env.SWEEP_QUEUE.send(j)));
     const sheets = await publishSheets(env, now);
-    result = { ...cycle, ...sheets };
+    result = { ...cycle, ...sheets, calendar };
   } catch (e) {
     ok = 0;
     result = { error: String(e) };
@@ -59,6 +62,12 @@ export default {
       }
       return new Response("No encontrado", { status: 404 });
     }
+    if (url.pathname === "/calendar.ics") {
+      if (!sameString(url.searchParams.get("t") ?? "", await icsToken(env))) return new Response("No autorizado", { status: 401 });
+      return new Response(await calendarIcs(env, new Date()), {
+        headers: { "content-type": "text/calendar; charset=utf-8", "cache-control": "private, max-age=900", "X-Robots-Tag": "noindex, nofollow" },
+      });
+    }
     if (url.pathname === "/health") {
       const last = await env.DB.prepare("SELECT started_at, finished_at, ok, result_json FROM job_run ORDER BY id DESC LIMIT 1").first<{
         started_at: string;
@@ -74,6 +83,7 @@ export default {
       )
         .bind(today)
         .first<Record<string, number>>();
+      ctx.waitUntil(announceCalendar(env, url.origin).catch(() => undefined));
       return Response.json(
         {
           ok: true,

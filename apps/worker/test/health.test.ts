@@ -1,5 +1,10 @@
-import { env, SELF } from "cloudflare:test";
-import { expect, it } from "vitest";
+import { env, fetchMock, SELF } from "cloudflare:test";
+import { beforeAll, expect, it } from "vitest";
+
+beforeAll(() => {
+  fetchMock.activate();
+  fetchMock.disableNetConnect();
+});
 
 it("/health devuelve estado y contadores, sin indexar", async () => {
   await env.DB.batch([
