@@ -3,6 +3,8 @@ import { publishSheets } from "./sheets";
 import type { EnrichInput } from "@gira/core";
 import { applyEnrichment, enrichTodo } from "./enrich";
 import { ingestNews, type NewsInput } from "./news";
+import { handleAuth } from "./auth";
+import { handleApi } from "./app-api";
 import { announceCalendar, calendarIcs, icsToken, runCalendar } from "./calendar";
 import type { Env, SweepJob } from "./env";
 
@@ -63,6 +65,21 @@ export default {
         return Response.json(await applyEnrichment(env, (await req.json()) as EnrichInput, now));
       }
       return new Response("No encontrado", { status: 404 });
+    }
+    // App GIRA (PWA privada): ficheros públicos sin datos; los datos van por /api con sesión.
+    if (url.pathname === "/robots.txt") return new Response("User-agent: *\nDisallow: /\n", { headers: { "content-type": "text/plain" } });
+    if (url.pathname.startsWith("/api/auth/")) return handleAuth(env, req, url);
+    if (url.pathname.startsWith("/api/")) return handleApi(env, req, url);
+    if (url.pathname === "/app") return Response.redirect(`${url.origin}/app/`, 301);
+    if (url.pathname.startsWith("/app/") && env.ASSETS) {
+      const res = await env.ASSETS.fetch(req);
+      const headers = new Headers(res.headers);
+      headers.set("X-Robots-Tag", "noindex, nofollow");
+      headers.set("Referrer-Policy", "no-referrer");
+      headers.set("X-Content-Type-Options", "nosniff");
+      headers.set("Content-Security-Policy", "default-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; frame-ancestors 'none'");
+      if (url.pathname.endsWith("sw.js")) headers.set("Service-Worker-Allowed", "/app/");
+      return new Response(res.body, { status: res.status, headers });
     }
     if (url.pathname === "/calendar.ics") {
       if (!sameString(url.searchParams.get("t") ?? "", await icsToken(env))) return new Response("No autorizado", { status: 401 });

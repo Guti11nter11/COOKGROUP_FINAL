@@ -9,7 +9,9 @@
     "deploy": "wrangler deploy"
   },
   "dependencies": {
-    "@gira/core": "*"
+    "@block65/webcrypto-web-push": "^2.0.0",
+    "@gira/core": "*",
+    "@simplewebauthn/server": "^13.3.3"
   },
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.8.71",

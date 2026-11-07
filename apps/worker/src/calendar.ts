@@ -16,6 +16,8 @@ import {
 } from "@gira/core";
 import { discordFetch } from "./discord-client";
 import type { Env } from "./env";
+import { setupToken } from "./auth";
+import { pushAll } from "./push";
 import { Guild } from "./sheets";
 
 /** Ventas por llegar de las fichas activas, agrupadas por artista + etiqueta + hora. */
@@ -112,6 +114,14 @@ export async function runCalendar(env: Env, now: Date): Promise<{ reminders: num
       ),
     );
     result.reminders++;
+    if (!silent) {
+      await pushAll(env, {
+        title: `${d.slot.artist} · ${d.reminder.text}`,
+        body: `${d.slot.label} a las ${formatHHmm(d.slot.startsAt, MADRID)} (Madrid) · ${d.slot.dates.map((x) => x.city).filter((c, i, a) => a.indexOf(c) === i).join(", ")}`,
+        url: "/app/",
+        tag: `r-${d.slot.artistId}-${d.reminder.key}`,
+      }).catch(() => 0);
+    }
   }
 
   // 2) Resumen diario a las 21:00 y a las 08:00 (Madrid), una vez.
@@ -171,15 +181,25 @@ export async function calendarIcs(env: Env, now: Date): Promise<string> {
 
 /** Publica una vez en #estado el enlace del calendario para suscribirse desde el iPhone. */
 export async function announceCalendar(env: Env, origin: string): Promise<void> {
-  if (env.DELIVERY_PAUSED === "1" || (await setting(env, "ics_announced"))) return;
+  if (env.DELIVERY_PAUSED === "1" || (await setting(env, "app_announced"))) return;
   const ch = await new Guild(env).byName("estado");
   if (!ch) return;
   const url = `${origin.replace(/^https:/, "webcal:")}/calendar.ics?t=${await icsToken(env)}`;
+  const setup = `${origin}/app/?alta=${await setupToken(env)}`;
   const id = await post(
     env,
     ch.id,
-    `📅 **Calendario de preventas de GIRA**\nEn el iPhone: abre este enlace y pulsa *Suscribirse* (se actualiza solo cada hora):\n${url}\n-# Enlace privado: no lo compartas.`,
+    [
+      "📱 **App GIRA para el iPhone**",
+      `1. Abre en Safari: ${setup}`,
+      "2. Pulsa *Registrar con Face ID* (solo hace falta una vez; la sesión dura un año).",
+      "3. Compartir → *Añadir a pantalla de inicio*, ábrela desde ahí y activa las notificaciones en Ajustes.",
+      "",
+      "📅 **Calendario de preventas** (se actualiza solo cada hora): abre en el iPhone y pulsa *Suscribirse*:",
+      url,
+      "-# Enlaces privados: no los compartas.",
+    ].join("\n"),
     true,
   );
-  if (id) await putSetting(env, "ics_announced", new Date().toISOString());
+  if (id) await putSetting(env, "app_announced", new Date().toISOString());
 }

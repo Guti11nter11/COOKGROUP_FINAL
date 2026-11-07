@@ -5,6 +5,8 @@ export interface SweepJob {
 
 export interface Env {
   DB: D1Database;
+  /** Ficheros de la app (PWA) en public/. */
+  ASSETS?: Fetcher;
   SWEEP_QUEUE: Queue<SweepJob>;
   TICKETMASTER_API_KEY: string;
   DISCORD_BOT_TOKEN: string;

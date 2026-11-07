@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0F1C2E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="GIRA">
+<title>GIRA</title>
+<link rel="manifest" href="/app/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/app/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap">
+<link rel="stylesheet" href="/app/app.css">
+</head>
+<body>
+<header class="top">
+  <span class="mark" aria-label="GIRA">GIRA</span>
+  <span class="updated" id="updated"></span>
+</header>
+<main id="view" tabindex="-1"></main>
+<nav class="tabs" id="tabs" aria-label="Secciones" hidden>
+  <a href="#ventas" data-tab="ventas">Ventas</a>
+  <a href="#giras" data-tab="giras">Giras</a>
+  <a href="#noticias" data-tab="noticias">Noticias</a>
+  <a href="#ajustes" data-tab="ajustes">Ajustes</a>
+</nav>
+<script type="module" src="/app/app.js"></script>
+</body>
+</html>

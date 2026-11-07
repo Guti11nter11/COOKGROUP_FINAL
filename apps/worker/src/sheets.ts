@@ -3,6 +3,7 @@ import {
   decideDelivery,
   flag,
   formatHHmm,
+  isQuietTime,
   isSheetActive,
   LAYOUT,
   localDateIn,
@@ -20,6 +21,7 @@ import {
   type Show,
 } from "@gira/core";
 import { discordFetch } from "./discord-client";
+import { pushAll } from "./push";
 import type { Env } from "./env";
 
 const GIRAS = "🎤 GIRAS";
@@ -307,6 +309,10 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
         if (!res.ok) throw new Error(`Discord aviso HTTP ${res.status}`);
         await mark("sent", null);
         notices++;
+        // Push al iPhone: de noche (01–08) solo si es urgente.
+        if (urgent || !isQuietTime(now)) {
+          await pushAll(env, { title: artist.name, body: noticeText(artist.name, alerts, shows, channelId, now).replace(/\*\*/g, "").replace(/ → <#\d+>$/, ""), url: `/app/#gira-${artist_id}`, tag: `n-${artist_id}` }).catch(() => 0);
+        }
       }
     }
     } catch (e) {
@@ -318,4 +324,16 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
     }
   }
   return { updated: Math.min(touched, maxDiscordArtists), notices };
+}
+
+/** Ficha de un artista tal como se ve en Discord (para la app). Null si no tiene ventas por llegar. */
+export async function renderSheetFor(env: Env, artistId: string, now: Date): Promise<{ name: string; messages: string[] } | null> {
+  const artist = await env.DB.prepare("SELECT name FROM artist WHERE id = ?").bind(artistId).first<{ name: string }>();
+  if (!artist) return null;
+  const { results: rows } = await env.DB.prepare("SELECT snapshot_json FROM show WHERE artist_id = ? AND local_date >= ? AND is_package = 0")
+    .bind(artistId, localDateIn(now, MADRID))
+    .all<{ snapshot_json: string }>();
+  const shows = sheetShows(artist.name, rows.map((r) => JSON.parse(r.snapshot_json) as Show));
+  if (!isSheetActive(shows, now)) return null;
+  return { name: artist.name, messages: renderArtistSheet({ name: artist.name }, shows, now, await loadExtras(env, artistId, shows)) };
 }
