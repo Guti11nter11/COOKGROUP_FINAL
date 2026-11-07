@@ -10,7 +10,7 @@ on:
     - cron: "41 4 * * 1"
   push:
     branches: [claude/magical-franklin-u415fe]
-    paths: [data/entities.manual.json, .github/workflows/build-follows.yml]
+    paths: [data/entities.manual.json, .github/workflows/build-follows.yml, apps/jobs/src/build-follows.ts, apps/jobs/src/tm-feed.ts]
 
 permissions:
   contents: write

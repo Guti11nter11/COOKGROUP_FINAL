@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { localDateIn, MADRID, normalizeFeedEvent, type Show } from "@gira/core";
 import { chunkByArtist, diffFeed, pickFollowed } from "./feed-radar-lib";
-import { downloadFeed, FEED_COUNTRIES } from "./tm-feed";
+import { FEED_COUNTRIES, iterateFeed } from "./tm-feed";
 
 const KEY = process.env.TICKETMASTER_API_KEY;
 const GIRA = process.env.GIRA_URL ?? "https://gira-core.eleven-snk-11.workers.dev";
@@ -16,11 +16,15 @@ const today = localDateIn(new Date(), MADRID);
 
 const all: Show[] = [];
 for (const cc of FEED_COUNTRIES) {
-  const raw = await downloadFeed(cc, KEY);
-  const shows = raw.map(normalizeFeedEvent).filter((s): s is Show => !!s && s.localDate >= today);
-  const mine = pickFollowed(shows, followed);
+  let total = 0;
+  const mine: Show[] = [];
+  for await (const raw of iterateFeed(cc, KEY)) {
+    total++;
+    const s = normalizeFeedEvent(raw);
+    if (s && s.localDate >= today) mine.push(...pickFollowed([s], followed));
+  }
   all.push(...mine);
-  console.log(`${cc}: ${raw.length} eventos · ${mine.length} de entidades seguidas`);
+  console.log(`${cc}: ${total} eventos · ${mine.length} de entidades seguidas`);
 }
 
 const prev = existsSync(STATE) ? (JSON.parse(readFileSync(STATE, "utf8")) as Record<string, string>) : {};

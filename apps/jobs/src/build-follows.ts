@@ -1,7 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { buildAttractionIndex, rankEntities, resolveEntity, type Candidate, type FeedAttraction } from "./follows-lib";
 import { pickAttraction, type Candidate as TmCandidate } from "./resolve";
-import { downloadFeed } from "./tm-feed";
+import { iterateFeed } from "./tm-feed";
 
 const TM = process.env.TICKETMASTER_API_KEY;
 const LASTFM = process.env.LASTFM_API_KEY;
@@ -37,7 +37,7 @@ const mbidOf = new Map(cands.filter((c) => c.mbid).map((c) => [c.name, c.mbid!])
 // 3) Índice de atracciones a partir de los feeds (sin gastar cuota de la API).
 const attractions = new Map<string, FeedAttraction>();
 for (const cc of ["GB", "ES", "FR", "DE", "IT", "NL", "BE", "IE", "US", "MX"]) {
-  for (const e of (await downloadFeed(cc, TM)) as any[]) {
+  for await (const e of iterateFeed(cc, TM) as AsyncIterable<any>) {
     for (const w of e.attractions ?? []) {
       const a = w.attraction ?? {};
       if (!a.attractionId) continue;

@@ -1,0 +1,14 @@
+{
+  "_nota": "Información aportada por el propietario el 2026-11-07. R4 la vigilará (registro abierto/cerrado, nuevas fechas). Las entidades ya están seguidas como ⭐⭐⭐.",
+  "items": [
+    { "entity": "Rush", "kind": "official_site", "url": "https://www.rush.com/sphere/", "note": "Residencia en Sphere (Las Vegas)" },
+    { "entity": "Gracie Abrams", "kind": "registration", "url": "https://signup.livenation.com/gracieabrams" },
+    { "entity": "Noah Kahan", "kind": "registration", "url": "https://signup.ticketmaster.com/noahkahan" },
+    { "entity": "U2", "kind": "tour", "note": "España (Barcelona 13 y 15 may, Sevilla) e Italia con fecha extra" },
+    { "entity": "Tate McRae", "kind": "tour", "note": "Gira de arenas EU/UK 2027" },
+    { "entity": "Olivia Dean", "kind": "drop", "url": "https://laylo.com/oliviadeano/aB8onT" },
+    { "entity": "ATEEZ", "kind": "official_site", "url": "https://ateezlive.com/", "note": "ATEEZ 2027 World Tour" },
+    { "entity": "BIGBANG", "kind": "tour", "note": "Final U.S. show, SoFi Stadium, Los Ángeles, 13-mar-2027 (Fase 2: EE. UU.)" },
+    { "entity": "RAYE", "kind": "tour", "note": "This Symphony May Contain Hope: Royal Albert Hall (agotado) + Italia, China, Suiza, EE. UU., Australia, Ghana (2026–2028)" }
+  ]
+}
