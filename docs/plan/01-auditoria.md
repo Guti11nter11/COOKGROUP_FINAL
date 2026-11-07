@@ -209,3 +209,38 @@ artistas seguidos y la de novedades, cada 30–60 min.
 
 **Opción oficial a medio plazo (acción del propietario, gratis):** darse de alta como *publisher* en
 **Awin** para recibir los feeds de eventos de Eventim (UK/DE), See Tickets y El Corte Inglés.
+
+## 12. Francia y Blueticket (Portugal): vías legítimas (2026-11-07)
+
+Medido con Google News (últimos 60 días) y lectura directa:
+
+**Francia** — Ticketmaster FR bloquea toda lectura automática (también con navegador real), así
+que no se lee. En su lugar:
+
+| Vía | Qué aporta | Estado |
+|---|---|---|
+| Prensa FR vía Google News (*Sortir à Paris* 18 artículos, *Ouest-France* 14, *actu.fr*, *Le Parisien*, *Infoconcert*, *La Voix du Nord*…) | "Dates d'ouverture de la billetterie", préventes, precios (p. ej. U2 Stade de France 5 y 8 de mayo de 2027) | ✅ legible |
+| Live Nation FR | Fichas y préventes Live Nation | ✅ legible (Next.js) |
+| Cuentas oficiales @TicketmasterFR / @LiveNationFR (X, Instagram) vía Apify | Anuncios de puesta a la venta | R7, con presupuesto |
+| Fnac Spectacles / France Billet | Segunda ticketera francesa | probar con Browser Run en R4 |
+
+**Portugal / MEO Blueticket** — Blueticket tiene **toda** la web (incluido `robots.txt` y el
+sitemap) detrás de una sala de espera Queue-it permanente: no se lee, ni directa ni con navegador.
+En su lugar:
+
+| Vía | Qué aporta | Estado |
+|---|---|---|
+| Prensa PT vía Google News (*RFM* 12, *Expresso* 11, *Notícias ao Minuto* 11, *NiT* 10 con RSS propio, *JN*, *Público*, *Observador*, *CM*) | "Pré-venda amanhã, eis o que fazer", precios (U2 Luz: 95–533 €), fechas extra | ✅ legible |
+| Promotoras: Everything is New, Música no Coração, Ritmos & Blues, Live Nation PT | Anuncios oficiales con enlace a Blueticket | ✅ legibles |
+| BOL (Bilheteira Online) | Segunda/tercera ticketera PT | ✅ legible con `ld+json` |
+| Cuentas oficiales de MEO Blueticket (Instagram/Facebook) vía Apify | Avisos de puesta a la venta | R7, con presupuesto |
+
+**Opción oficial para ambos (propuesta):** un **buzón de alertas dedicado** — una cuenta de Gmail
+nueva solo para GIRA, suscrita a las newsletters y alertas oficiales de Ticketmaster FR, Live
+Nation (ES/FR/PT/UK), Blueticket, Eventim/Entradas.com, AXS y See Tickets. GIRA la lee con la API
+de Gmail (gratis) y extrae fechas de venta con citas. Es exactamente el canal que las ticketeras
+ofrecen para esto. Requiere que el propietario cree la cuenta y se suscriba (R4).
+
+**Descartado:** servicios de resolución de captchas (p. ej. CapSolver), proxies residenciales para
+esquivar bloqueos y llamadas a APIs internas protegidas por la cola: incumplen los límites del brief
+y arriesgan baneos de cuenta e IP.
