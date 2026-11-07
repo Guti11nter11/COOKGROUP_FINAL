@@ -3,9 +3,9 @@
   "name": "U2",
   "tier": 3,
   "tmAttractionId": "K8vZ91712W7",
-  "mbid": "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
-  "deezerId": 174917877,
-  "deezerFans": 3226
+  "mbid": null,
+  "deezerId": 163,
+  "deezerFans": 7368845
  },
  {
   "name": "Harry Styles",
@@ -13,23 +13,23 @@
   "tmAttractionId": "K8vZ9174XZ0",
   "mbid": "7eb1ce54-a355-41f9-8d68-e018b096d427",
   "deezerId": 5313805,
-  "deezerFans": 2214911
+  "deezerFans": 2214918
  },
  {
   "name": "Oasis",
   "tier": 3,
   "tmAttractionId": "K8vZ9171fw7",
   "mbid": "39ab1aed-75e0-4140-bd47-540276886b60",
-  "deezerId": 152913482,
-  "deezerFans": 456
+  "deezerId": 927,
+  "deezerFans": 4717574
  },
  {
   "name": "Bad Bunny",
   "tier": 3,
   "tmAttractionId": "K8vZ9174l1f",
-  "mbid": null,
-  "deezerId": 276237911,
-  "deezerFans": 46
+  "mbid": "89aa5ecb-59ad-46f5-b3eb-2d424e941f19",
+  "deezerId": 10583405,
+  "deezerFans": 8070548
  },
  {
   "name": "Metallica",
@@ -37,15 +37,15 @@
   "tmAttractionId": "K8vZ9171G9V",
   "mbid": "65f4f0c5-ef9e-490c-aee3-909e7ae6b2ab",
   "deezerId": 119,
-  "deezerFans": 8182340
+  "deezerFans": 8182342
  },
  {
   "name": "The Weeknd",
   "tier": 3,
   "tmAttractionId": "K8vZ9172Ln7",
-  "mbid": "c8b03190-306c-4120-bb0b-6f2ebfc06ea9",
+  "mbid": null,
   "deezerId": 4050205,
-  "deezerFans": 14786005
+  "deezerFans": 14786026
  },
  {
   "name": "Bruno Mars",
@@ -53,7 +53,7 @@
   "tmAttractionId": "K8vZ917GJc7",
   "mbid": "afb680f2-b6eb-4cd7-a70b-a63b25c763d5",
   "deezerId": 429675,
-  "deezerFans": 12857027
+  "deezerFans": 12857049
  },
  {
   "name": "Sabrina Carpenter",
@@ -61,7 +61,7 @@
   "tmAttractionId": "K8vZ9173-lV",
   "mbid": "1882fe91-cdd9-49c9-9956-8e06a3810bd4",
   "deezerId": 1176900,
-  "deezerFans": 1837673
+  "deezerFans": 1837679
  },
  {
   "name": "Olivia Rodrigo",
@@ -69,7 +69,7 @@
   "tmAttractionId": "K8vZ917_Su0",
   "mbid": "6925db17-f35e-42f3-a4eb-84ee6bf5d4b0",
   "deezerId": 11152580,
-  "deezerFans": 1852752
+  "deezerFans": 1852763
  },
  {
   "name": "Ariana Grande",
@@ -77,15 +77,15 @@
   "tmAttractionId": "K8vZ9172Qo7",
   "mbid": "f4fdbb4c-e4b7-47a0-b83b-d91bbfcfa387",
   "deezerId": 1562681,
-  "deezerFans": 13465307
+  "deezerFans": 13465318
  },
  {
   "name": "Shakira",
   "tier": 3,
   "tmAttractionId": "K8vZ9171xeV",
-  "mbid": "bf24ca37-25f4-4e34-9aec-460b94364cfc",
+  "mbid": null,
   "deezerId": 160,
-  "deezerFans": 11795977
+  "deezerFans": 11795989
  },
  {
   "name": "Bruce Springsteen",
@@ -93,7 +93,7 @@
   "tmAttractionId": "K8vZ9171ug7",
   "mbid": "70248960-cb53-4ea4-943a-edb18f7d336f",
   "deezerId": 4762,
-  "deezerFans": 1821269
+  "deezerFans": 1821276
  },
  {
   "name": "Foo Fighters",
@@ -101,7 +101,7 @@
   "tmAttractionId": "K8vZ91713Y7",
   "mbid": "67f66c07-6e61-4026-ade5-7e782fad3a5d",
   "deezerId": 566,
-  "deezerFans": 4602613
+  "deezerFans": 4602616
  },
  {
   "name": "Guns N' Roses",
@@ -109,31 +109,31 @@
   "tmAttractionId": "K8vZ9171C80",
   "mbid": "eeb1195b-f213-4ce1-b28c-8565211f8e43",
   "deezerId": 663,
-  "deezerFans": 8627399
+  "deezerFans": 8627413
  },
  {
   "name": "Radiohead",
   "tier": 3,
   "tmAttractionId": "K8vZ91713wV",
-  "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
+  "mbid": null,
   "deezerId": 399,
-  "deezerFans": 4117829
+  "deezerFans": 4117836
  },
  {
   "name": "BTS",
   "tier": 3,
   "tmAttractionId": "K8vZ917KpXV",
   "mbid": "0d79fe8e-ba27-4859-bb8c-2f255f346853",
-  "deezerId": 67158112,
-  "deezerFans": 858
+  "deezerId": 6982223,
+  "deezerFans": 3875220
  },
  {
   "name": "TWICE",
   "tier": 3,
   "tmAttractionId": "K8vZ9179jvV",
   "mbid": "8da127cc-c432-418f-b356-ef36210d82ac",
-  "deezerId": 1588014,
-  "deezerFans": 45
+  "deezerId": 161553,
+  "deezerFans": 1362947
  },
  {
   "name": "aespa",
@@ -141,31 +141,31 @@
   "tmAttractionId": "K8vZ917QQn7",
   "mbid": "b51c672b-85e0-48fe-8648-470a2422229f",
   "deezerId": 113547672,
-  "deezerFans": 470818
+  "deezerFans": 470821
  },
  {
   "name": "Quevedo",
   "tier": 3,
   "tmAttractionId": "K8vZ917hv9f",
   "mbid": "ef9bb29f-f466-4e28-8064-32558f4bb2df",
-  "deezerId": 219747485,
-  "deezerFans": 66
+  "deezerId": 6705223,
+  "deezerFans": 304960
  },
  {
   "name": "RAYE",
   "tier": 3,
   "tmAttractionId": "K8vZ917Kvt7",
   "mbid": "8be564c3-dfba-440b-af8c-4ffbceeef45e",
-  "deezerId": 11197900,
-  "deezerFans": 4203
+  "deezerId": 805948,
+  "deezerFans": 492732
  },
  {
   "name": "Olivia Dean",
   "tier": 3,
   "tmAttractionId": "K8vZ917bJN0",
-  "mbid": "15e0d608-0869-429b-898d-3d8db3ecedd5",
+  "mbid": null,
   "deezerId": 75659582,
-  "deezerFans": 167087
+  "deezerFans": 167094
  },
  {
   "name": "Noah Kahan",
@@ -173,7 +173,7 @@
   "tmAttractionId": "K8vZ917pAzf",
   "mbid": "a2a3f910-b188-43e7-81d0-f1ac2a2f3e12",
   "deezerId": 11819131,
-  "deezerFans": 204707
+  "deezerFans": 204709
  },
  {
   "name": "Tate McRae",
@@ -181,7 +181,7 @@
   "tmAttractionId": "K8vZ917bcy0",
   "mbid": "f9133869-f87c-459c-9aa7-2f176cda7e06",
   "deezerId": 13817211,
-  "deezerFans": 621669
+  "deezerFans": 621674
  },
  {
   "name": "Charli XCX",
@@ -189,7 +189,7 @@
   "tmAttractionId": "K8vZ917CDKf",
   "mbid": "260b6184-8828-48eb-945c-bc4cb6fc34ca",
   "deezerId": 1462230,
-  "deezerFans": 1898228
+  "deezerFans": 1898231
  },
  {
   "name": "Celine Dion",
@@ -197,15 +197,15 @@
   "tmAttractionId": "K8vZ9171KH0",
   "mbid": "847e8a0c-cc20-4213-9e16-975515c2a926",
   "deezerId": 198,
-  "deezerFans": 3743593
+  "deezerFans": 3743613
  },
  {
   "name": "Morgan Wallen",
   "tier": 3,
   "tmAttractionId": "K8vZ9174qlV",
   "mbid": "2077273e-eaa1-4f49-903c-f286ededecb9",
-  "deezerId": 386950521,
-  "deezerFans": 1086
+  "deezerId": 7188840,
+  "deezerFans": 307326
  },
  {
   "name": "Taylor Swift",
@@ -213,15 +213,15 @@
   "tmAttractionId": "K8vZ9175Tr0",
   "mbid": "20244d07-534f-4eff-b4d4-930878889970",
   "deezerId": 12246,
-  "deezerFans": 12774460
+  "deezerFans": 12774470
  },
  {
   "name": "Coldplay",
   "tier": 2,
   "tmAttractionId": "K8vZ9171izV",
-  "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+  "mbid": null,
   "deezerId": 892,
-  "deezerFans": 18451194
+  "deezerFans": 18451211
  },
  {
   "name": "Beyoncé",
@@ -229,7 +229,7 @@
   "tmAttractionId": "K8vZ9175rX7",
   "mbid": "859d0860-d480-4efd-970c-c05d5f1776b8",
   "deezerId": 145,
-  "deezerFans": 12874341
+  "deezerFans": 12874344
  },
  {
   "name": "Billie Eilish",
@@ -237,7 +237,7 @@
   "tmAttractionId": "K8vZ9174Za7",
   "mbid": "f4abc0b5-3f7a-4eff-8f78-ac078dbce533",
   "deezerId": 9635624,
-  "deezerFans": 9299786
+  "deezerFans": 9299798
  },
  {
   "name": "Dua Lipa",
@@ -245,7 +245,7 @@
   "tmAttractionId": "K8vZ917fAG7",
   "mbid": "6f1a58bf-9b1b-49cf-a44a-6cefad7ae04f",
   "deezerId": 8706544,
-  "deezerFans": 8810370
+  "deezerFans": 8810377
  },
  {
   "name": "Ed Sheeran",
@@ -253,7 +253,7 @@
   "tmAttractionId": "K8vZ917CAQV",
   "mbid": "b8a7c51f-362c-4dcb-a259-bc6e0095f0a6",
   "deezerId": 384236,
-  "deezerFans": 20960610
+  "deezerFans": 20960620
  },
  {
   "name": "Lady Gaga",
@@ -261,7 +261,7 @@
   "tmAttractionId": "K8vZ917Go7V",
   "mbid": "650e7db6-b795-4eb5-a702-5ea2fc46c848",
   "deezerId": 75491,
-  "deezerFans": 9346627
+  "deezerFans": 9346645
  },
  {
   "name": "ROSALÍA",
@@ -269,7 +269,7 @@
   "tmAttractionId": "K8vZ917pJy7",
   "mbid": "25f3abd9-63b5-471a-bd25-feb9672dfa11",
   "deezerId": 554792,
-  "deezerFans": 1069574
+  "deezerFans": 1069575
  },
  {
   "name": "KAROL G",
@@ -277,7 +277,7 @@
   "tmAttractionId": "K8vZ917p3-V",
   "mbid": "de22adae-f8ac-414f-b653-b0162611bd60",
   "deezerId": 5297021,
-  "deezerFans": 3424121
+  "deezerFans": 3424125
  },
  {
   "name": "Rauw Alejandro",
@@ -293,7 +293,7 @@
   "tmAttractionId": "K8vZ917_cQ7",
   "mbid": "eaee97f6-f2e4-414a-966c-f31a1fb4696a",
   "deezerId": 1166311,
-  "deezerFans": 911367
+  "deezerFans": 911368
  },
  {
   "name": "Peso Pluma",
@@ -301,15 +301,15 @@
   "tmAttractionId": "K8vZ917h54V",
   "mbid": "75e4f8ef-34c3-44fd-8467-88a7d9599f77",
   "deezerId": 80365122,
-  "deezerFans": 512271
+  "deezerFans": 512272
  },
  {
   "name": "Lana Del Rey",
   "tier": 2,
   "tmAttractionId": "K8vZ9172ZIV",
-  "mbid": null,
+  "mbid": "b7539c32-53e7-4908-bda3-81449c367da6",
   "deezerId": 1424821,
-  "deezerFans": 5842871
+  "deezerFans": 5842882
  },
  {
   "name": "SZA",
@@ -317,15 +317,15 @@
   "tmAttractionId": "K8vZ917o6G0",
   "mbid": null,
   "deezerId": 5531258,
-  "deezerFans": 1345168
+  "deezerFans": 1345176
  },
  {
   "name": "Kendrick Lamar",
   "tier": 2,
   "tmAttractionId": "K8vZ917GSg0",
-  "mbid": null,
+  "mbid": "381086ea-f511-4aba-bdf9-71c753dc5077",
   "deezerId": 525046,
-  "deezerFans": 6200353
+  "deezerFans": 6200361
  },
  {
   "name": "Travis Scott",
@@ -333,7 +333,7 @@
   "tmAttractionId": "K8vZ9178bS0",
   "mbid": "e4a51f17-a57b-47b1-b37b-f552d0f8e9e6",
   "deezerId": 4495513,
-  "deezerFans": 3157991
+  "deezerFans": 3157992
  },
  {
   "name": "Drake",
@@ -341,7 +341,7 @@
   "tmAttractionId": "K8vZ917Gp47",
   "mbid": "9fff2f8a-21e6-47de-a2b8-7f449929d43f",
   "deezerId": 246791,
-  "deezerFans": 24128420
+  "deezerFans": 24128428
  },
  {
   "name": "Post Malone",
@@ -349,7 +349,7 @@
   "tmAttractionId": "K8vZ917KjPf",
   "mbid": "b1e26560-60e5-4236-bbdb-9aa5a8d5ee19",
   "deezerId": 7543848,
-  "deezerFans": 4219342
+  "deezerFans": 4219350
  },
  {
   "name": "Imagine Dragons",
@@ -357,15 +357,15 @@
   "tmAttractionId": "K8vZ917GSz7",
   "mbid": "012151a8-0f9a-44c9-997f-ebd68b5389f9",
   "deezerId": 416239,
-  "deezerFans": 9560546
+  "deezerFans": 9560552
  },
  {
   "name": "Arctic Monkeys",
   "tier": 2,
   "tmAttractionId": "K8vZ9175wT0",
-  "mbid": "ada7a83c-e3e1-40f1-93f9-3e73dbc9298a",
+  "mbid": null,
   "deezerId": 1182,
-  "deezerFans": 4980037
+  "deezerFans": 4980045
  },
  {
   "name": "The Killers",
@@ -373,15 +373,15 @@
   "tmAttractionId": "K8vZ9175PMf",
   "mbid": "95e1ead9-4d31-4808-a7ac-32c3614c116b",
   "deezerId": 897,
-  "deezerFans": 2245853
+  "deezerFans": 2245855
  },
  {
   "name": "Muse",
   "tier": 2,
   "tmAttractionId": "K8vZ9175E5V",
   "mbid": "9c9f1380-2516-4fc9-a3e6-f9f61941d090",
-  "deezerId": 136853512,
-  "deezerFans": 63
+  "deezerId": 705,
+  "deezerFans": 5056452
  },
  {
   "name": "Green Day",
@@ -389,7 +389,7 @@
   "tmAttractionId": "K8vZ9171o-f",
   "mbid": "084308bd-1654-436f-ba03-df6697104e19",
   "deezerId": 52,
-  "deezerFans": 5254250
+  "deezerFans": 5254255
  },
  {
   "name": "Linkin Park",
@@ -397,7 +397,7 @@
   "tmAttractionId": "K8vZ9171if7",
   "mbid": "f59c5520-5f46-4d2c-b2c4-822eabf53419",
   "deezerId": 92,
-  "deezerFans": 12272685
+  "deezerFans": 12272686
  },
  {
   "name": "Red Hot Chili Peppers",
@@ -405,7 +405,7 @@
   "tmAttractionId": "K8vZ9171FkV",
   "mbid": "8bfac288-ccc5-448d-9573-c33ea2aa5c30",
   "deezerId": 182,
-  "deezerFans": 7732014
+  "deezerFans": 7732029
  },
  {
   "name": "Pearl Jam",
@@ -413,7 +413,7 @@
   "tmAttractionId": "K8vZ9171FdV",
   "mbid": "83b9cbe7-9857-49e2-ab8e-b57b01038103",
   "deezerId": 1319,
-  "deezerFans": 3554359
+  "deezerFans": 3554360
  },
  {
   "name": "AC/DC",
@@ -421,7 +421,7 @@
   "tmAttractionId": "K8vZ91715hf",
   "mbid": "66c662b6-6e2f-4930-8610-912e24c63ed1",
   "deezerId": 115,
-  "deezerFans": 9970216
+  "deezerFans": 9970220
  },
  {
   "name": "Iron Maiden",
@@ -435,9 +435,9 @@
   "name": "Rammstein",
   "tier": 2,
   "tmAttractionId": "K8vZ9171QH7",
-  "mbid": null,
+  "mbid": "b2d122f9-eadb-4930-a196-8f221eeb0c66",
   "deezerId": 464,
-  "deezerFans": 2735767
+  "deezerFans": 2735768
  },
  {
   "name": "Depeche Mode",
@@ -445,13 +445,13 @@
   "tmAttractionId": "K8vZ9171F00",
   "mbid": "8538e728-ca0b-4321-b7e5-cff6565dd4c0",
   "deezerId": 545,
-  "deezerFans": 3292168
+  "deezerFans": 3292171
  },
  {
   "name": "Kylie Minogue",
   "tier": 2,
   "tmAttractionId": "K8vZ9175tSf",
-  "mbid": null,
+  "mbid": "2fddb92d-24b2-46a5-bf28-3aed46f4684c",
   "deezerId": 479,
   "deezerFans": 1426334
  },
@@ -459,17 +459,17 @@
   "name": "Robbie Williams",
   "tier": 2,
   "tmAttractionId": "K8vZ9171qQ0",
-  "mbid": null,
+  "mbid": "db4624cf-0e44-481e-a9dc-2142b833ec2f",
   "deezerId": 212,
-  "deezerFans": 1921184
+  "deezerFans": 1921190
  },
  {
   "name": "Lewis Capaldi",
   "tier": 2,
   "tmAttractionId": "K8vZ917popf",
-  "mbid": "526aab94-697f-44a9-b630-41d1c0505953",
+  "mbid": null,
   "deezerId": 12088868,
-  "deezerFans": 1215463
+  "deezerFans": 1215465
  },
  {
   "name": "Sam Fender",
@@ -477,7 +477,7 @@
   "tmAttractionId": "K8vZ917pflV",
   "mbid": "3478a5d1-bd96-4584-aa54-4d6e0a329658",
   "deezerId": 12096672,
-  "deezerFans": 87740
+  "deezerFans": 87743
  },
  {
   "name": "Hozier",
@@ -493,7 +493,7 @@
   "tmAttractionId": "K8vZ917bnP0",
   "mbid": "35feae82-8b2c-4f8f-ae7a-af5662848947",
   "deezerId": 64927672,
-  "deezerFans": 433708
+  "deezerFans": 433711
  },
  {
   "name": "Benson Boone",
@@ -501,15 +501,15 @@
   "tmAttractionId": "K8vZ917Qjw0",
   "mbid": "62b914a7-d775-4bb4-bb5e-d46e7df115b5",
   "deezerId": 146543992,
-  "deezerFans": 511813
+  "deezerFans": 511817
  },
  {
   "name": "Chappell Roan",
   "tier": 2,
   "tmAttractionId": "K8vZ917p56f",
-  "mbid": "56a55378-f155-48de-80a5-d80104221267",
+  "mbid": null,
   "deezerId": 12945219,
-  "deezerFans": 320680
+  "deezerFans": 320684
  },
  {
   "name": "Gracie Abrams",
@@ -517,15 +517,15 @@
   "tmAttractionId": "K8vZ917_vc7",
   "mbid": "f7441bc7-d7de-4813-a2fc-31a4033d396d",
   "deezerId": 64874492,
-  "deezerFans": 411348
+  "deezerFans": 411351
  },
  {
   "name": "Doja Cat",
   "tier": 2,
   "tmAttractionId": "K8vZ9173TJf",
-  "mbid": "5df62a88-cac9-490a-b62c-c7c88f4020f4",
+  "mbid": null,
   "deezerId": 5578942,
-  "deezerFans": 2520393
+  "deezerFans": 2520396
  },
  {
   "name": "Justin Bieber",
@@ -533,15 +533,15 @@
   "tmAttractionId": "K8vZ917G9e7",
   "mbid": "e0140a67-e4d1-4f13-8a01-364355bee46e",
   "deezerId": 288166,
-  "deezerFans": 11185892
+  "deezerFans": 11185901
  },
  {
   "name": "Katy Perry",
   "tier": 2,
   "tmAttractionId": "K8vZ917GC17",
-  "mbid": "122d63fc-8671-43e4-9752-34e846d62a9c",
+  "mbid": null,
   "deezerId": 144227,
-  "deezerFans": 9820584
+  "deezerFans": 9820593
  },
  {
   "name": "P!nk",
@@ -549,15 +549,15 @@
   "tmAttractionId": "K8vZ9171Jo7",
   "mbid": "f4d5cc07-3bc9-4836-9b15-88a08359bc63",
   "deezerId": 69925,
-  "deezerFans": 4678062
+  "deezerFans": 4678072
  },
  {
   "name": "Miley Cyrus",
   "tier": 2,
   "tmAttractionId": "ZkDnngzZDdNjk7eFwakXlklGGyIecnK",
-  "mbid": "6950ce3c-f396-44c0-be1c-80bcc4d68b36",
+  "mbid": null,
   "deezerId": 12436,
-  "deezerFans": 7258430
+  "deezerFans": 7258441
  },
  {
   "name": "Shawn Mendes",
@@ -565,7 +565,7 @@
   "tmAttractionId": "K8vZ91739Nf",
   "mbid": "b7d92248-97e3-4450-8057-6fe06738f735",
   "deezerId": 5962948,
-  "deezerFans": 6793022
+  "deezerFans": 6793026
  },
  {
   "name": "Alejandro Sanz",
@@ -579,7 +579,7 @@
   "name": "Aitana",
   "tier": 2,
   "tmAttractionId": "K8vZ917bZ-V",
-  "mbid": null,
+  "mbid": "a24f2bd3-0d1b-4c03-8d91-6297ab5a2811",
   "deezerId": 11928391,
   "deezerFans": 349423
  },
@@ -595,7 +595,7 @@
   "name": "Vetusta Morla",
   "tier": 2,
   "tmAttractionId": "K8vZ917G4N0",
-  "mbid": null,
+  "mbid": "b185451a-9edd-46df-8046-1db7e9594f5a",
   "deezerId": 262717,
   "deezerFans": 82779
  },
@@ -603,7 +603,7 @@
   "name": "Manuel Carrasco",
   "tier": 2,
   "tmAttractionId": "K8vZ917GQYf",
-  "mbid": null,
+  "mbid": "e194045c-6fa4-4508-b9a9-dc928665308f",
   "deezerId": 81127,
   "deezerFans": 149377
  },
@@ -619,7 +619,7 @@
   "name": "Melendi",
   "tier": 2,
   "tmAttractionId": "K8vZ917GpcV",
-  "mbid": null,
+  "mbid": "86d61837-890c-4d04-aeec-30d70ad77298",
   "deezerId": 2697,
   "deezerFans": 613145
  },
@@ -627,7 +627,7 @@
   "name": "Dani Martín",
   "tier": 2,
   "tmAttractionId": "K8vZ91745df",
-  "mbid": null,
+  "mbid": "3dee032d-2eee-4dee-8e04-8028962b2479",
   "deezerId": 460115,
   "deezerFans": 75222
  },
@@ -635,7 +635,7 @@
   "name": "Leiva",
   "tier": 2,
   "tmAttractionId": "K8vZ9174dlV",
-  "mbid": "abe0a421-66ed-4401-9144-1e9aa832ed24",
+  "mbid": null,
   "deezerId": 1582728,
   "deezerFans": 52818
  },
@@ -645,13 +645,13 @@
   "tmAttractionId": "K8vZ9174edf",
   "mbid": "664f5669-a550-49fc-a38c-951594ddc9a4",
   "deezerId": 7327640,
-  "deezerFans": 1097485
+  "deezerFans": 1097486
  },
  {
   "name": "Sebastián Yatra",
   "tier": 2,
   "tmAttractionId": "K8vZ9174WNf",
-  "mbid": "151d9c35-43b8-49b9-a69a-5db6525dbcd2",
+  "mbid": null,
   "deezerId": 5266156,
   "deezerFans": 2380849
  },
@@ -661,15 +661,15 @@
   "tmAttractionId": "K8vZ917QeqV",
   "mbid": "3b6abaef-febf-4cfe-943f-6a20cf0afdad",
   "deezerId": 12487862,
-  "deezerFans": 1127456
+  "deezerFans": 1127457
  },
  {
   "name": "Duki",
   "tier": 2,
   "tmAttractionId": "K8vZ917bvf7",
   "mbid": "44869536-0262-4f22-9c23-b4821c13cd97",
-  "deezerId": 154768631,
-  "deezerFans": 168
+  "deezerId": 4902904,
+  "deezerFans": 824323
  },
  {
   "name": "Myke Towers",
@@ -693,15 +693,15 @@
   "tmAttractionId": "K8vZ917K2wf",
   "mbid": "e8979f75-9110-4df8-ac70-898898d080d1",
   "deezerId": 1424602,
-  "deezerFans": 8082353
+  "deezerFans": 8082356
  },
  {
   "name": "Stray Kids",
   "tier": 2,
   "tmAttractionId": "K8vZ9179Vpf",
-  "mbid": null,
+  "mbid": "142b343d-bf5a-428c-a64f-6d1a7566bbe9",
   "deezerId": 13923487,
-  "deezerFans": 1281647
+  "deezerFans": 1281650
  },
  {
   "name": "BLACKPINK",
@@ -709,47 +709,47 @@
   "tmAttractionId": "K8vZ9179wi7",
   "mbid": "48646387-1664-4c9a-9139-9bfd091b823c",
   "deezerId": 10803980,
-  "deezerFans": 2663016
+  "deezerFans": 2663019
  },
  {
   "name": "SEVENTEEN",
   "tier": 2,
   "tmAttractionId": "K8vZ9174Qw0",
-  "mbid": "e04d239e-9fa8-49b3-b9b7-9e439c3cb1d1",
-  "deezerId": 121746532,
-  "deezerFans": 28
+  "mbid": null,
+  "deezerId": 240582,
+  "deezerFans": 646307
  },
  {
   "name": "ENHYPEN",
   "tier": 2,
   "tmAttractionId": "K8vZ917_T-7",
   "mbid": "95663592-1447-4579-90f7-c94733476667",
-  "deezerId": 267273642,
-  "deezerFans": 59
+  "deezerId": 113915572,
+  "deezerFans": 539984
  },
  {
   "name": "Bring Me The Horizon",
   "tier": 2,
   "tmAttractionId": "K8vZ917Ge97",
-  "mbid": null,
+  "mbid": "074e3847-f67f-49f9-81f1-8c8cea147e8e",
   "deezerId": 12874,
-  "deezerFans": 1319031
+  "deezerFans": 1319035
  },
  {
   "name": "Slipknot",
   "tier": 2,
   "tmAttractionId": "K8vZ9171Lz0",
-  "mbid": null,
+  "mbid": "a466c2a2-6517-42fb-a160-1087c3bafd9f",
   "deezerId": 117,
-  "deezerFans": 4156813
+  "deezerFans": 4156815
  },
  {
   "name": "The Cure",
   "tier": 2,
   "tmAttractionId": "K8vZ9171FN0",
-  "mbid": "69ee3720-a7cb-4402-b48d-a02c366f2bcf",
+  "mbid": null,
   "deezerId": 381,
-  "deezerFans": 2547974
+  "deezerFans": 2547980
  },
  {
   "name": "Florence + The Machine",
@@ -763,31 +763,31 @@
   "name": "Paul McCartney",
   "tier": 2,
   "tmAttractionId": "K8vZ9171uq0",
-  "mbid": "ba550d0e-adac-4864-b88b-407cab5e76af",
+  "mbid": null,
   "deezerId": 1446,
-  "deezerFans": 1808722
+  "deezerFans": 1808725
  },
  {
   "name": "The Rolling Stones",
   "tier": 2,
   "tmAttractionId": "K8vZ917184f",
-  "mbid": "b071f9fa-14b0-4217-8e97-eb41da73f598",
+  "mbid": null,
   "deezerId": 11,
-  "deezerFans": 7124345
+  "deezerFans": 7124354
  },
  {
   "name": "Calvin Harris",
   "tier": 2,
   "tmAttractionId": "K8vZ9175TJ0",
-  "mbid": null,
+  "mbid": "8dd98bdc-80ec-4e93-8509-2f46bafc09a7",
   "deezerId": 12178,
-  "deezerFans": 12346251
+  "deezerFans": 12346257
  },
  {
   "name": "Fred again..",
   "tier": 2,
   "tmAttractionId": "K8vZ917_0xf",
-  "mbid": null,
+  "mbid": "bca46a0c-25c9-42ca-98c2-e64c8a5e337e",
   "deezerId": 76053262,
   "deezerFans": 127807
  },
@@ -797,6 +797,6 @@
   "tmAttractionId": "K8vZ9172De7",
   "mbid": null,
   "deezerId": 1194083,
-  "deezerFans": 1393979
+  "deezerFans": 1393987
  }
 ]
