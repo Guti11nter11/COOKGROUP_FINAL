@@ -1,0 +1,30 @@
+name: Montar servidor de Discord
+
+# Crea las categorías y canales que falten en el servidor GIRA. Idempotente: nunca borra ni
+# renombra nada, y nunca crea canales por artista o por concierto.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/magical-franklin-u415fe]
+    paths: [.github/workflows/discord-setup.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Crear lo que falte
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_GUILD_ID: "1568641743853715516"
+        run: npx tsx apps/jobs/src/discord-setup.ts

@@ -4,3 +4,4 @@ export * from "./presale";
 export * from "./ticketmaster";
 export * from "./sweep";
 export * from "./changes";
+export * from "./discord";
