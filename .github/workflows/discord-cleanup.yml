@@ -1,0 +1,29 @@
+name: Limpiar mensajes del bot
+
+# Borra los mensajes propios del bot publicados en los canales de avisos desde SINCE.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/magical-franklin-u415fe]
+    paths: [.github/workflows/discord-cleanup.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Borrar
+        env:
+          DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          SINCE: "2026-11-07T20:30:00Z"
+        run: npx tsx apps/jobs/src/discord-cleanup.ts
