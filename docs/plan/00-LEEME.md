@@ -1,7 +1,15 @@
 # GIRA · Plan maestro
 
 Plan completo para construir GIRA, el radar personal de conciertos, giras, preventas y grandes
-eventos. **Estado: planificación. Aún no hay código de producto.** Fecha: 2026-11-07.
+eventos. Fecha: 2026-11-07.
+
+**Estado: R0 + R1 desplegados y funcionando.**
+
+- Worker `gira-core` en Cloudflare, ciclo cada 5 min; salud en `https://gira-core.eleven-snk-11.workers.dev/health`.
+- 100 artistas seguidos (26 ⭐⭐⭐).
+- Servidor de Discord montado: 9 categorías, sin canales por artista.
+- Primer barrido completo: 305 fechas futuras en Europa guardadas en silencio. Desde ahora, cada fecha nueva, fecha extra, preventa o cambio llega a Discord.
+- Siguiente entrega: R2 (fichas, Reloj de recordatorios, `.ics`, resúmenes).
 
 ## Resumen en 1 minuto
 
