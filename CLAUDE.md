@@ -2,8 +2,11 @@
 
 Proyecto personal del propietario (habla español; responder siempre en español). Sustituye a un
 "cook group" de pago (Akari, ~75 €/mes) **solo en la parte de información**: qué sale, cuándo,
-dónde registrarse y cómo entrar en cada preventa, para **viajar a conciertos y eventos de todo el
-mundo**. Coste objetivo: 0 € (todo en planes gratuitos).
+dónde registrarse y cómo entrar en cada preventa, con un único objetivo: **conseguir entradas para
+conciertos y eventos de todo el mundo**. El propietario vive en **Madrid**. Coste objetivo: 0 €.
+
+**Fuera de alcance:** planificar viajes, buscar vuelos, hoteles o precios de transporte. GIRA solo
+trata de los eventos y de cómo conseguir las entradas.
 
 ## Límites (no negociables)
 
@@ -15,12 +18,17 @@ mundo**. Coste objetivo: 0 € (todo en planes gratuitos).
 
 ## Salidas
 
-1. **App iPhone (PWA)** instalable desde Safari con notificaciones push — salida principal.
+1. **App iPhone (PWA) "GIRA"** instalable desde Safari con notificaciones push — salida principal.
+   **Privada, solo para el propietario**: registro una vez con passkey (Face ID) y sesión recordada
+   (~1 año) para no volver a identificarse. Nunca pública ni indexable.
 2. **Servidor de Discord "GIRA"** (ID `1568641743853715516`) montado por el bot con categorías:
    INICIO · CALENDARIO (#daily-release, #esta-semana, #recordatorios) · ALERTAS (#nuevas-giras,
    #fechas-extra, #preventas, #registros-abiertos) · GIRAS (un canal por gira) · POR REGIÓN ·
-   NOTICIAS · TICKETERAS · VIAJES · DEPORTES.
+   NOTICIAS · TICKETERAS · DEPORTES.
 3. **Calendario `.ics`** suscribible.
+
+**Horas de silencio:** 01:00–08:00 Europe/Madrid. Solo se notifica en ese tramo si es urgente
+(preventa o venta en < 1 h, sala de espera abierta, fecha extra de un artista seguido).
 
 ## Arquitectura
 
@@ -45,6 +53,8 @@ mundo**. Coste objetivo: 0 € (todo en planes gratuitos).
 
 ## Qué vigilar
 
+- **Cobertura por fases:** 1) Europa (incl. Reino Unido) → 2) EE. UU. → 3) Latinoamérica →
+  4) Australia → 5) Asia. No empezar una región hasta que la anterior funcione bien.
 - ~100 artistas de referencia (ver `docs/` cuando exista): U2, Harry Styles, Oasis, Bad Bunny,
   Metallica, The Weeknd, Bruno Mars, Sabrina Carpenter, Olivia Rodrigo, Ariana Grande, Shakira,
   Springsteen, Foo Fighters, Guns N' Roses, Radiohead, BTS, Twice, aespa, Quevedo, Raye,
@@ -54,19 +64,30 @@ mundo**. Coste objetivo: 0 € (todo en planes gratuitos).
 - Deporte de alta demanda: F1, LaLiga y otras ligas, finales UCL/UEL/UECL, Eurocopa, JJOO LA 2028,
   NFL/NBA internacional, Wimbledon/RG/US Open, UFC, boxeo top, dardos PDC, Euroleague, LoL Worlds.
 
-## Formato de referencia (lo que publicaba Akari, versión para viajar)
+## Formato de referencia (lo que publicaba Akari)
 
 Ficha de gira: límite de entradas, precios por zona, aforo, popularidad, enlaces por ticketera y
 fecha/ciudad, calendario de preventas en orden (Fan club, álbum, VISA, Amex, O2, operadoras,
 artist presale, venta general) con hora de España y Reino Unido, qué hace falta en cada una
-(registro, código, tarjeta, email), fechas extra, avisos de sala de espera y de stock. Sustituir
-los consejos de reventa por consejos de viaje.
+(registro, código, tarjeta, email), fechas extra, avisos de sala de espera y de stock.
+
+**Estimación de precios (solo informativa, sin reventa):** para cada evento y sección/zona,
+precio oficial (face value) y **rango estimado de reventa** (mín.–máx., multiplicador sobre el
+oficial) calculado con un modelo propio: demanda (popularidad Last.fm/Deezer, ruido en noticias y
+redes, nº de fechas y fechas extra, aforo, velocidad de agotado), tipo de sección (pista/GA, Inner
+Circle/Red Zone, gradas por anillo) y país. Mostrar siempre como estimación con nivel de
+confianza; sirve para saber lo difícil/caro que será si no se consigue en la venta oficial. No
+scrapear Viagogo/StubHub para esto.
 
 ## Secrets (GitHub → Settings → Secrets and variables → Actions)
 
 `TICKETMASTER_API_KEY`, `DISCORD_BOT_TOKEN`, `DISCORD_APPLICATION_ID`, `DISCORD_PUBLIC_KEY`,
 `GROQ_API_KEY`, `GEMINI_API_KEY`, `NVIDIA_API_KEY`, `OPENAI_API_KEY`, `FIRECRAWL_API_KEY`,
-`APIFY_TOKEN`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `LASTFM_API_KEY` (opcional).
+`APIFY_TOKEN`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `LASTFM_API_KEY`,
+`FOOTBALL_DATA_API_KEY`, `REDDIT_CLIENT_ID`, `REDDIT_CLIENT_SECRET` (estas tres, si existen).
+Setlist.fm descartado. Fuentes sin clave: Deezer, MusicBrainz, Wikidata, Jolpica (F1),
+Nager.Date (festivos), Nominatim/OSM, Google News RSS, RSS de YouTube.
+Verificar todas con el workflow `Verificar claves` (`.github/workflows/verify-secrets.yml`).
 Comprobar cuáles faltan antes de depender de ellos; nunca pedirlos por chat.
 
 ## Forma de trabajar
