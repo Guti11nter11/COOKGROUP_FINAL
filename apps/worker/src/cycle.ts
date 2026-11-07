@@ -73,7 +73,7 @@ export async function processPage(
 
   const follows = await getFollowsByAttraction(env.DB, job.ids);
   const shows = fetched.events.map(normalizeTmEvent).filter((x): x is Show => x !== null);
-  const { stmts, stored, alerts: alertCount } = await storeShows(env, shows, follows, now);
+  const { stmts, stored, alerts: alertCount } = await storeShows(env, shows, follows, now, "api");
   stmts.unshift(bumpQuota(env.DB, "ticketmaster", today, 1));
   const nowIso = now.toISOString();
 
@@ -101,6 +101,7 @@ export async function storeShows(
   all: Show[],
   follows: Map<string, FollowRow>,
   now: Date,
+  source: "api" | "feed",
 ): Promise<{ stmts: D1PreparedStatement[]; stored: number; alerts: number }> {
   const nowIso = now.toISOString();
   const todayMadrid = localDateIn(now, MADRID);
@@ -133,7 +134,7 @@ export async function storeShows(
     ).size;
     const alerts: Alert[] = sameDateListed
       ? []
-      : detectAlerts(prev, show, { bootstrap: !follow.bootstrapped, knownDatesInCountry, artistName: follow.name, tier: follow.tier });
+      : detectAlerts(prev, show, { bootstrap: !(source === "feed" ? follow.feedBootstrapped : follow.bootstrapped), knownDatesInCountry, artistName: follow.name, tier: follow.tier });
 
     stmts.push(
       env.DB.prepare(
@@ -166,13 +167,13 @@ export async function ingestShows(
   const shows = (body.shows ?? []).slice(0, 80);
   const ids = [...new Set(shows.flatMap((s) => s.attractionIds ?? []))];
   const follows = await getFollowsByAttraction(env.DB, ids);
-  const { stmts, stored, alerts } = await storeShows(env, shows, follows, now);
+  const { stmts, stored, alerts } = await storeShows(env, shows, follows, now, "feed");
   const mark = [...new Set(body.markBootstrapped ?? [])];
   for (let i = 0; i < mark.length; i += 90) {
     const part = mark.slice(i, i + 90);
     stmts.push(
       env.DB.prepare(
-        `UPDATE follow SET bootstrapped_at = ? WHERE bootstrapped_at IS NULL
+        `UPDATE follow SET feed_bootstrapped_at = ? WHERE feed_bootstrapped_at IS NULL
          AND artist_id IN (SELECT id FROM artist WHERE tm_attraction_id IN (${part.map(() => "?").join(",")}))`,
       ).bind(now.toISOString(), ...part),
     );

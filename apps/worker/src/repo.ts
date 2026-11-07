@@ -3,7 +3,8 @@ import type { Follow } from "@gira/core";
 export const TM_DAILY_QUOTA = 5000;
 export const TM_BRAKE = Math.floor(TM_DAILY_QUOTA * 0.8); // 4.000: freno al 80 %
 
-export type FollowRow = Follow & { bootstrapped: boolean };
+/** `bootstrapped`: arrancado por la API; `feedBootstrapped`: arrancado por el Discovery Feed. */
+export type FollowRow = Follow & { bootstrapped: boolean; feedBootstrapped: boolean };
 
 /** D1 admite como mucho 100 parámetros por consulta: troceamos las listas. */
 const CHUNK = 90;
@@ -17,13 +18,13 @@ const marks = (n: number) => Array.from({ length: n }, () => "?").join(",");
 export async function getFollows(db: D1Database, nowIso: string): Promise<FollowRow[]> {
   const { results } = await db
     .prepare(
-      `SELECT a.id AS artistId, a.name, f.tier, a.tm_attraction_id AS tmAttractionId, f.bootstrapped_at AS bootstrappedAt
+      `SELECT a.id AS artistId, a.name, f.tier, a.tm_attraction_id AS tmAttractionId, f.bootstrapped_at AS bootstrappedAt, f.feed_bootstrapped_at AS feedBootstrappedAt
        FROM artist a JOIN follow f ON f.artist_id = a.id
        WHERE a.tm_attraction_id IS NOT NULL AND (f.muted_until IS NULL OR f.muted_until < ?)`,
     )
     .bind(nowIso)
-    .all<{ artistId: string; name: string; tier: 1 | 2 | 3; tmAttractionId: string; bootstrappedAt: string | null }>();
-  return results.map(({ bootstrappedAt, ...r }) => ({ ...r, bootstrapped: bootstrappedAt !== null }));
+    .all<{ artistId: string; name: string; tier: 1 | 2 | 3; tmAttractionId: string; bootstrappedAt: string | null; feedBootstrappedAt: string | null }>();
+  return results.map(({ bootstrappedAt, feedBootstrappedAt, ...r }) => ({ ...r, bootstrapped: bootstrappedAt !== null, feedBootstrapped: feedBootstrappedAt !== null }));
 }
 
 export async function getFollowsByAttraction(db: D1Database, ids: string[]): Promise<Map<string, FollowRow>> {
@@ -31,12 +32,13 @@ export async function getFollowsByAttraction(db: D1Database, ids: string[]): Pro
   for (const part of chunks(ids)) {
     const { results } = await db
       .prepare(
-        `SELECT a.id AS artistId, a.name, f.tier, a.tm_attraction_id AS tmAttractionId, f.bootstrapped_at AS bootstrappedAt
+        `SELECT a.id AS artistId, a.name, f.tier, a.tm_attraction_id AS tmAttractionId, f.bootstrapped_at AS bootstrappedAt, f.feed_bootstrapped_at AS feedBootstrappedAt
          FROM artist a JOIN follow f ON f.artist_id = a.id WHERE a.tm_attraction_id IN (${marks(part.length)})`,
       )
       .bind(...part)
-      .all<{ artistId: string; name: string; tier: 1 | 2 | 3; tmAttractionId: string; bootstrappedAt: string | null }>();
-    for (const { bootstrappedAt, ...r } of results) map.set(r.tmAttractionId, { ...r, bootstrapped: bootstrappedAt !== null });
+      .all<{ artistId: string; name: string; tier: 1 | 2 | 3; tmAttractionId: string; bootstrappedAt: string | null; feedBootstrappedAt: string | null }>();
+    for (const { bootstrappedAt, feedBootstrappedAt, ...r } of results)
+      map.set(r.tmAttractionId, { ...r, bootstrapped: bootstrappedAt !== null, feedBootstrapped: feedBootstrappedAt !== null });
   }
   return map;
 }

@@ -66,7 +66,7 @@ describe("POST /ingest (Discovery Feed)", () => {
     expect(r1.status).toBe(200);
     expect(await count("SELECT COUNT(*) n FROM alert")).toBe(0);
     expect((await ingest({ shows: [], markBootstrapped: ["K8vZ917COCV", "K8vZ9178NNV"] }, t)).status).toBe(200);
-    expect(await count("SELECT COUNT(*) n FROM follow WHERE bootstrapped_at IS NOT NULL")).toBe(2);
+    expect(await count("SELECT COUNT(*) n FROM follow WHERE feed_bootstrapped_at IS NOT NULL")).toBe(2);
     await env.DB.prepare("UPDATE show SET first_seen_at = '2026-01-01T00:00:00Z'").run();
     await ingest({ shows: [future(jake, { eventId: "J2", eventStartLocalDate: "2027-09-01", eventStartDateTime: "2027-09-01T18:30:00Z", venue: { ...jake.venue, venueId: "OTRO", venueCountryCode: "GB", venueTimezone: "Europe/London" } })] }, t);
     // /ingest entrega en segundo plano (waitUntil); esperamos a que llegue el POST.
@@ -94,5 +94,13 @@ describe("POST /ingest (Discovery Feed)", () => {
     const before = await env.DB.prepare("SELECT updated_at FROM show").first<{ updated_at: string }>();
     await ingest({ shows: [{ ...s, url: "https://otra-url", promoters: [] }] }, t);
     expect(await env.DB.prepare("SELECT updated_at FROM show").first()).toEqual(before);
+  });
+
+  it("una entidad arrancada por la API sigue en silencio para el feed hasta su propia lectura completa", async () => {
+    const t = await token();
+    await env.DB.prepare("UPDATE follow SET bootstrapped_at = '2026-11-07T20:00:00Z'").run(); // la API ya la vio
+    await ingest({ shows: [future(jake, { venue: { ...jake.venue, venueCountryCode: "FR", venueTimezone: "Europe/Paris" } })] }, t);
+    expect(await count("SELECT COUNT(*) n FROM show")).toBe(1);
+    expect(await count("SELECT COUNT(*) n FROM alert")).toBe(0);
   });
 });
