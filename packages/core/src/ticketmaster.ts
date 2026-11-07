@@ -31,6 +31,8 @@ export interface Show {
   promoters?: string[];
   /** Página oficial del artista en la ticketera (enlaces de lanzamiento). */
   artistUrl?: string;
+  /** Ticketmaster la marca como evento de alta demanda (feed: hotEvent). */
+  hot?: boolean;
   /** Rango de precio oficial publicado por la ticketera (face value). */
   price?: ShowPrice;
 }

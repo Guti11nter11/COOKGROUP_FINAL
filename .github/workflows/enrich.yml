@@ -1,0 +1,39 @@
+name: Enriquecer fichas
+
+# Aforo de recintos (Wikipedia/Wikidata), precios oficiales y estimación de reventa para las fichas
+# activas. Lee lo pendiente del Worker y le devuelve lo encontrado.
+
+on:
+  schedule:
+    - cron: "41 */3 * * *"
+  workflow_dispatch:
+  push:
+    branches: [claude/magical-franklin-u415fe]
+    paths: [.github/workflows/enrich.yml, apps/jobs/src/enrich*.ts, apps/jobs/src/venues-lib.ts, apps/jobs/src/prices*.ts, apps/jobs/src/resale*.ts]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: enrich
+  cancel-in-progress: false
+
+jobs:
+  enrich:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Enriquecer
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+        run: npx tsx apps/jobs/src/enrich.ts

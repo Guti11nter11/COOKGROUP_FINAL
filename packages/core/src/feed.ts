@@ -68,6 +68,7 @@ export function normalizeFeedEvent(raw: unknown): Show | null {
   const subGenre = meaningful(str(first.classificationSubGenre)) ?? meaningful(str(e.classificationSubGenre));
   const artistUrl = str(first.attractionUrl);
   if (artistUrl) show.artistUrl = artistUrl;
+  if (e.hotEvent === true) show.hot = true;
   const price = priceOf(e);
   if (price) show.price = price;
   if (segment) show.segment = segment;

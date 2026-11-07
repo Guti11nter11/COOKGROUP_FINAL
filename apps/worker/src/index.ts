@@ -1,5 +1,7 @@
 import { ingestShows, processPage, runCycle } from "./cycle";
 import { publishSheets } from "./sheets";
+import type { EnrichInput } from "@gira/core";
+import { applyEnrichment, enrichTodo } from "./enrich";
 import type { Env, SweepJob } from "./env";
 
 async function scheduled(env: Env, now: Date): Promise<void> {
@@ -45,6 +47,17 @@ export default {
       const r = await ingestShows(env, await req.json(), now);
       if (r.stored > 0) ctx.waitUntil(publishSheets(env, now));
       return Response.json(r);
+    }
+    if (url.pathname.startsWith("/enrich")) {
+      const auth = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
+      if (!sameString(auth, await ingestToken(env))) return new Response("No autorizado", { status: 401 });
+      const now = new Date();
+      if (url.pathname === "/enrich/todo" && req.method === "GET") return Response.json(await enrichTodo(env, now));
+      if (url.pathname === "/enrich" && req.method === "POST") {
+        // Las fichas marcadas se regeneran en el siguiente ciclo (cada 5 min), sin ráfagas a Discord.
+        return Response.json(await applyEnrichment(env, (await req.json()) as EnrichInput, now));
+      }
+      return new Response("No encontrado", { status: 404 });
     }
     if (url.pathname === "/health") {
       const last = await env.DB.prepare("SELECT started_at, finished_at, ok, result_json FROM job_run ORDER BY id DESC LIMIT 1").first<{
