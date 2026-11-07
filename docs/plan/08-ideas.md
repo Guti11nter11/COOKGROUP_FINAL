@@ -50,7 +50,7 @@ fecha extra. Es lo que hace que GIRA mejore con el tiempo.
 | 16 | **Calendario con mapa de calor** de la semana de drops | Medio | Bajo | R3 |
 | 17 | **Descubrimiento por similitud** (Vectorize + Last.fm similar): "si sigues a Olivia Dean, Raye anuncia gira" | Medio | Medio | R5 |
 | 18 | **Detector de teasers**: cambios de foto de perfil, posts crípticos, cuentas atrás en webs oficiales, vídeos de anuncio en YouTube RSS | Medio | Medio | R7 |
-| 19 | **Buzón de preventas** (Cloudflare Email Routing): el propietario reenvía los emails de registro/códigos y GIRA los adjunta a la preventa correcta | Alto | Medio | Opcional (requiere dominio, ~10 €/año) |
+| 19 | ~~Buzón de preventas por email~~ — descartado por el propietario (ya lo usa y no sirve) | — | — | — |
 | 20 | **Panel de salud con autodiagnóstico**: si una fuente falla 3 veces, se apaga sola, avisa en #estado y propone el arreglo | Alto | Bajo | R3 |
 | 21 | **Modo festival**: cartel por días, abonos vs. entradas de día, fases de precio (early bird → fase 2) con aviso al cambiar de fase | Medio | Medio | R5 |
 | 22 | **Huella de cambios de precio oficial** (dynamic pricing) por zona y momento | Medio | Medio | R5 |

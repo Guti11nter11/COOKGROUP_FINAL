@@ -67,3 +67,11 @@
 4. KV solo como caché de lectura (1.000 escrituras/día).
 5. R4 (fuentes españolas) es **imprescindible** para la Fase 1, no un añadido.
 6. Francia y Portugal requieren fuentes propias (Ticketmaster Discovery devuelve 0 eventos).
+
+## Afiliación Awin (para el futuro, no ahora)
+
+Si alguna vez hace falta el feed oficial de Eventim / See Tickets / El Corte Inglés: en awin.com
+la opción es **"Affiliate partner" → "Join as a partner"** (tipo *Other Affiliate Partners:
+comparison platform*), región España, pago de verificación ~1 € reembolsable. Awin pide un espacio
+promocional público; como la app de GIRA es privada, habría que crear una **web pública aparte**
+(p. ej. una agenda de conciertos sencilla). Decisión aplazada hasta ver si R4 deja huecos.

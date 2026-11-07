@@ -235,11 +235,10 @@ En su lugar:
 | BOL (Bilheteira Online) | Segunda/tercera ticketera PT | ✅ legible con `ld+json` |
 | Cuentas oficiales de MEO Blueticket (Instagram/Facebook) vía Apify | Avisos de puesta a la venta | R7, con presupuesto |
 
-**Opción oficial para ambos (propuesta):** un **buzón de alertas dedicado** — una cuenta de Gmail
-nueva solo para GIRA, suscrita a las newsletters y alertas oficiales de Ticketmaster FR, Live
-Nation (ES/FR/PT/UK), Blueticket, Eventim/Entradas.com, AXS y See Tickets. GIRA la lee con la API
-de Gmail (gratis) y extrae fechas de venta con citas. Es exactamente el canal que las ticketeras
-ofrecen para esto. Requiere que el propietario cree la cuenta y se suscriba (R4).
+**Recintos grandes (legibles):** Stade de France, Accor Arena, Paris La Défense Arena (FR) y MEO
+Arena, Coliseu de Lisboa (PT) publican su agenda con fechas de venta. Se leen cada 30–60 min.
+
+**Descartado por el propietario:** buzón de correo con newsletters (ya lo usa y no sirve).
 
 **Descartado:** servicios de resolución de captchas (p. ej. CapSolver), proxies residenciales para
 esquivar bloqueos y llamadas a APIs internas protegidas por la cola: incumplen los límites del brief
