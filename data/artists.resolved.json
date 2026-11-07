@@ -3,7 +3,7 @@
   "name": "U2",
   "tier": 3,
   "tmAttractionId": "K8vZ91712W7",
-  "mbid": null,
+  "mbid": "a3cb23fc-acd3-4ce0-8f36-1e5aa6a18432",
   "deezerId": 163,
   "deezerFans": 7368845
  },
@@ -43,7 +43,7 @@
   "name": "The Weeknd",
   "tier": 3,
   "tmAttractionId": "K8vZ9172Ln7",
-  "mbid": null,
+  "mbid": "c8b03190-306c-4120-bb0b-6f2ebfc06ea9",
   "deezerId": 4050205,
   "deezerFans": 14786026
  },
@@ -83,7 +83,7 @@
   "name": "Shakira",
   "tier": 3,
   "tmAttractionId": "K8vZ9171xeV",
-  "mbid": null,
+  "mbid": "bf24ca37-25f4-4e34-9aec-460b94364cfc",
   "deezerId": 160,
   "deezerFans": 11795989
  },
@@ -115,7 +115,7 @@
   "name": "Radiohead",
   "tier": 3,
   "tmAttractionId": "K8vZ91713wV",
-  "mbid": null,
+  "mbid": "a74b1b7f-71a5-4011-9441-d0b5e4122711",
   "deezerId": 399,
   "deezerFans": 4117836
  },
@@ -163,7 +163,7 @@
   "name": "Olivia Dean",
   "tier": 3,
   "tmAttractionId": "K8vZ917bJN0",
-  "mbid": null,
+  "mbid": "15e0d608-0869-429b-898d-3d8db3ecedd5",
   "deezerId": 75659582,
   "deezerFans": 167094
  },
@@ -184,12 +184,12 @@
   "deezerFans": 621674
  },
  {
-  "name": "Charli XCX",
+  "name": "Charli xcx",
   "tier": 3,
   "tmAttractionId": "K8vZ917CDKf",
   "mbid": "260b6184-8828-48eb-945c-bc4cb6fc34ca",
-  "deezerId": 1462230,
-  "deezerFans": 1898231
+  "deezerId": null,
+  "deezerFans": null
  },
  {
   "name": "Celine Dion",
@@ -208,52 +208,36 @@
   "deezerFans": 307326
  },
  {
-  "name": "Taylor Swift",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9175Tr0",
-  "mbid": "20244d07-534f-4eff-b4d4-930878889970",
-  "deezerId": 12246,
-  "deezerFans": 12774470
+  "name": "Gracie Abrams",
+  "tier": 3,
+  "tmAttractionId": "K8vZ917_vc7",
+  "mbid": "f7441bc7-d7de-4813-a2fc-31a4033d396d",
+  "deezerId": 64874492,
+  "deezerFans": 411351
  },
  {
-  "name": "Coldplay",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9171izV",
+  "name": "BIGBANG",
+  "tier": 3,
+  "tmAttractionId": "K8vZ917-fh0",
   "mbid": null,
-  "deezerId": 892,
-  "deezerFans": 18451211
+  "deezerId": null,
+  "deezerFans": null
  },
  {
-  "name": "Beyoncé",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9175rX7",
-  "mbid": "859d0860-d480-4efd-970c-c05d5f1776b8",
-  "deezerId": 145,
-  "deezerFans": 12874344
+  "name": "ATEEZ",
+  "tier": 3,
+  "tmAttractionId": "K8vZ9179g3f",
+  "mbid": "cf0dbc16-4e24-4957-b5b4-955c8978f690",
+  "deezerId": null,
+  "deezerFans": null
  },
  {
-  "name": "Billie Eilish",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9174Za7",
-  "mbid": "f4abc0b5-3f7a-4eff-8f78-ac078dbce533",
-  "deezerId": 9635624,
-  "deezerFans": 9299798
- },
- {
-  "name": "Dua Lipa",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917fAG7",
-  "mbid": "6f1a58bf-9b1b-49cf-a44a-6cefad7ae04f",
-  "deezerId": 8706544,
-  "deezerFans": 8810377
- },
- {
-  "name": "Ed Sheeran",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917CAQV",
-  "mbid": "b8a7c51f-362c-4dcb-a259-bc6e0095f0a6",
-  "deezerId": 384236,
-  "deezerFans": 20960620
+  "name": "Rush",
+  "tier": 3,
+  "tmAttractionId": "K8vZ917184V",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
  },
  {
   "name": "Lady Gaga",
@@ -264,60 +248,12 @@
   "deezerFans": 9346645
  },
  {
-  "name": "ROSALÍA",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917pJy7",
-  "mbid": "25f3abd9-63b5-471a-bd25-feb9672dfa11",
-  "deezerId": 554792,
-  "deezerFans": 1069575
- },
- {
-  "name": "KAROL G",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917p3-V",
-  "mbid": "de22adae-f8ac-414f-b653-b0162611bd60",
-  "deezerId": 5297021,
-  "deezerFans": 3424125
- },
- {
-  "name": "Rauw Alejandro",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917bvcV",
-  "mbid": "197b70c7-8910-4030-ad03-632d82aa40e3",
-  "deezerId": 11289472,
-  "deezerFans": 2144441
- },
- {
-  "name": "Feid",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917_cQ7",
-  "mbid": "eaee97f6-f2e4-414a-966c-f31a1fb4696a",
-  "deezerId": 1166311,
-  "deezerFans": 911368
- },
- {
-  "name": "Peso Pluma",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917h54V",
-  "mbid": "75e4f8ef-34c3-44fd-8467-88a7d9599f77",
-  "deezerId": 80365122,
-  "deezerFans": 512272
- },
- {
   "name": "Lana Del Rey",
   "tier": 2,
   "tmAttractionId": "K8vZ9172ZIV",
   "mbid": "b7539c32-53e7-4908-bda3-81449c367da6",
   "deezerId": 1424821,
   "deezerFans": 5842882
- },
- {
-  "name": "SZA",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917o6G0",
-  "mbid": null,
-  "deezerId": 5531258,
-  "deezerFans": 1345176
  },
  {
   "name": "Kendrick Lamar",
@@ -328,12 +264,12 @@
   "deezerFans": 6200361
  },
  {
-  "name": "Travis Scott",
+  "name": "Arctic Monkeys",
   "tier": 2,
-  "tmAttractionId": "K8vZ9178bS0",
-  "mbid": "e4a51f17-a57b-47b1-b37b-f552d0f8e9e6",
-  "deezerId": 4495513,
-  "deezerFans": 3157992
+  "tmAttractionId": "K8vZ9175wT0",
+  "mbid": "ada7a83c-e3e1-40f1-93f9-3e73dbc9298a",
+  "deezerId": 1182,
+  "deezerFans": 4980045
  },
  {
   "name": "Drake",
@@ -344,52 +280,28 @@
   "deezerFans": 24128428
  },
  {
-  "name": "Post Malone",
+  "name": "Tyler, The Creator",
   "tier": 2,
-  "tmAttractionId": "K8vZ917KjPf",
-  "mbid": "b1e26560-60e5-4236-bbdb-9aa5a8d5ee19",
-  "deezerId": 7543848,
-  "deezerFans": 4219350
+  "tmAttractionId": "K8vZ9172De7",
+  "mbid": "f6beac20-5dfe-4d1f-ae02-0b0a740aafd6",
+  "deezerId": 1194083,
+  "deezerFans": 1393987
  },
  {
-  "name": "Imagine Dragons",
+  "name": "Taylor Swift",
   "tier": 2,
-  "tmAttractionId": "K8vZ917GSz7",
-  "mbid": "012151a8-0f9a-44c9-997f-ebd68b5389f9",
-  "deezerId": 416239,
-  "deezerFans": 9560552
+  "tmAttractionId": "K8vZ9175Tr0",
+  "mbid": "20244d07-534f-4eff-b4d4-930878889970",
+  "deezerId": 12246,
+  "deezerFans": 12774470
  },
  {
-  "name": "Arctic Monkeys",
+  "name": "Billie Eilish",
   "tier": 2,
-  "tmAttractionId": "K8vZ9175wT0",
-  "mbid": null,
-  "deezerId": 1182,
-  "deezerFans": 4980045
- },
- {
-  "name": "The Killers",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9175PMf",
-  "mbid": "95e1ead9-4d31-4808-a7ac-32c3614c116b",
-  "deezerId": 897,
-  "deezerFans": 2245855
- },
- {
-  "name": "Muse",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9175E5V",
-  "mbid": "9c9f1380-2516-4fc9-a3e6-f9f61941d090",
-  "deezerId": 705,
-  "deezerFans": 5056452
- },
- {
-  "name": "Green Day",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9171o-f",
-  "mbid": "084308bd-1654-436f-ba03-df6697104e19",
-  "deezerId": 52,
-  "deezerFans": 5254255
+  "tmAttractionId": "K8vZ9174Za7",
+  "mbid": "f4abc0b5-3f7a-4eff-8f78-ac078dbce533",
+  "deezerId": 9635624,
+  "deezerFans": 9299798
  },
  {
   "name": "Linkin Park",
@@ -400,6 +312,118 @@
   "deezerFans": 12272686
  },
  {
+  "name": "Doja Cat",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9173TJf",
+  "mbid": "5df62a88-cac9-490a-b62c-c7c88f4020f4",
+  "deezerId": 5578942,
+  "deezerFans": 2520396
+ },
+ {
+  "name": "Katy Perry",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GC17",
+  "mbid": "122d63fc-8671-43e4-9752-34e846d62a9c",
+  "deezerId": 144227,
+  "deezerFans": 9820593
+ },
+ {
+  "name": "The Cure",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171FN0",
+  "mbid": "69ee3720-a7cb-4402-b48d-a02c366f2bcf",
+  "deezerId": 381,
+  "deezerFans": 2547980
+ },
+ {
+  "name": "Justin Bieber",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917G9e7",
+  "mbid": "e0140a67-e4d1-4f13-8a01-364355bee46e",
+  "deezerId": 288166,
+  "deezerFans": 11185901
+ },
+ {
+  "name": "Chappell Roan",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917p56f",
+  "mbid": "56a55378-f155-48de-80a5-d80104221267",
+  "deezerId": 12945219,
+  "deezerFans": 320684
+ },
+ {
+  "name": "Travis Scott",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9178bS0",
+  "mbid": "e4a51f17-a57b-47b1-b37b-f552d0f8e9e6",
+  "deezerId": 4495513,
+  "deezerFans": 3157992
+ },
+ {
+  "name": "Coldplay",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171izV",
+  "mbid": "cc197bad-dc9c-440d-a5b5-d52ba2e14234",
+  "deezerId": 892,
+  "deezerFans": 18451211
+ },
+ {
+  "name": "SZA",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917o6G0",
+  "mbid": "272989c8-5535-492d-a25c-9f58803e027f",
+  "deezerId": 5531258,
+  "deezerFans": 1345176
+ },
+ {
+  "name": "Beyoncé",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175rX7",
+  "mbid": "859d0860-d480-4efd-970c-c05d5f1776b8",
+  "deezerId": 145,
+  "deezerFans": 12874344
+ },
+ {
+  "name": "System Of A Down",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171_N0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Green Day",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171o-f",
+  "mbid": "084308bd-1654-436f-ba03-df6697104e19",
+  "deezerId": 52,
+  "deezerFans": 5254255
+ },
+ {
+  "name": "LE SSERAFIM",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917hgr0",
+  "mbid": "1ee37742-1e3d-4e61-84d2-bc85f4c1459a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Muse",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175E5V",
+  "mbid": "9c9f1380-2516-4fc9-a3e6-f9f61941d090",
+  "deezerId": 705,
+  "deezerFans": 5056452
+ },
+ {
+  "name": "Calvin Harris",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175TJ0",
+  "mbid": "8dd98bdc-80ec-4e93-8509-2f46bafc09a7",
+  "deezerId": 12178,
+  "deezerFans": 12346257
+ },
+ {
   "name": "Red Hot Chili Peppers",
   "tier": 2,
   "tmAttractionId": "K8vZ9171FkV",
@@ -408,36 +432,68 @@
   "deezerFans": 7732029
  },
  {
-  "name": "Pearl Jam",
+  "name": "The Killers",
   "tier": 2,
-  "tmAttractionId": "K8vZ9171FdV",
-  "mbid": "83b9cbe7-9857-49e2-ab8e-b57b01038103",
-  "deezerId": 1319,
-  "deezerFans": 3554360
+  "tmAttractionId": "K8vZ9175PMf",
+  "mbid": "95e1ead9-4d31-4808-a7ac-32c3614c116b",
+  "deezerId": 897,
+  "deezerFans": 2245855
  },
  {
-  "name": "AC/DC",
+  "name": "Dua Lipa",
   "tier": 2,
-  "tmAttractionId": "K8vZ91715hf",
-  "mbid": "66c662b6-6e2f-4930-8610-912e24c63ed1",
-  "deezerId": 115,
-  "deezerFans": 9970220
+  "tmAttractionId": "K8vZ917fAG7",
+  "mbid": "6f1a58bf-9b1b-49cf-a44a-6cefad7ae04f",
+  "deezerId": 8706544,
+  "deezerFans": 8810377
  },
  {
-  "name": "Iron Maiden",
+  "name": "NewJeans",
   "tier": 2,
-  "tmAttractionId": "K8vZ9171G4V",
-  "mbid": "ca891d65-d9b0-4258-89f7-e6ba29d83767",
-  "deezerId": 931,
-  "deezerFans": 3797781
+  "tmAttractionId": "K8vZ917h_R0",
+  "mbid": "49204a7a-ed85-407a-828f-6fd46f1d8126",
+  "deezerId": null,
+  "deezerFans": null
  },
  {
-  "name": "Rammstein",
+  "name": "Post Malone",
   "tier": 2,
-  "tmAttractionId": "K8vZ9171QH7",
-  "mbid": "b2d122f9-eadb-4930-a196-8f221eeb0c66",
-  "deezerId": 464,
-  "deezerFans": 2735768
+  "tmAttractionId": "K8vZ917KjPf",
+  "mbid": "b1e26560-60e5-4236-bbdb-9aa5a8d5ee19",
+  "deezerId": 7543848,
+  "deezerFans": 4219350
+ },
+ {
+  "name": "Lisa",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917jDGf",
+  "mbid": "70198b37-f6c7-4cc7-a728-4224e860a15f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Miley Cyrus",
+  "tier": 2,
+  "tmAttractionId": "ZkDnngzZDdNjk7eFwakXlklGGyIecnK",
+  "mbid": "7e9bd05a-117f-4cce-87bc-e011527a8b18",
+  "deezerId": 12436,
+  "deezerFans": 7258441
+ },
+ {
+  "name": "Slipknot",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171Lz0",
+  "mbid": "a466c2a2-6517-42fb-a160-1087c3bafd9f",
+  "deezerId": 117,
+  "deezerFans": 4156815
+ },
+ {
+  "name": "Bring Me The Horizon",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Ge97",
+  "mbid": "074e3847-f67f-49f9-81f1-8c8cea147e8e",
+  "deezerId": 12874,
+  "deezerFans": 1319035
  },
  {
   "name": "Depeche Mode",
@@ -448,12 +504,364 @@
   "deezerFans": 3292171
  },
  {
+  "name": "Hozier",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917o-E7",
+  "mbid": "b4691384-50c3-4afd-9988-51d3ec5db65d",
+  "deezerId": 5062414,
+  "deezerFans": 1418141
+ },
+ {
+  "name": "The Rolling Stones",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917184f",
+  "mbid": "b071f9fa-14b0-4217-8e97-eb41da73f598",
+  "deezerId": 11,
+  "deezerFans": 7124354
+ },
+ {
+  "name": "Pearl Jam",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171FdV",
+  "mbid": "83b9cbe7-9857-49e2-ab8e-b57b01038103",
+  "deezerId": 1319,
+  "deezerFans": 3554360
+ },
+ {
+  "name": "Imagine Dragons",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GSz7",
+  "mbid": "012151a8-0f9a-44c9-997f-ebd68b5389f9",
+  "deezerId": 416239,
+  "deezerFans": 9560552
+ },
+ {
+  "name": "Shawn Mendes",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91739Nf",
+  "mbid": "b7d92248-97e3-4450-8057-6fe06738f735",
+  "deezerId": 5962948,
+  "deezerFans": 6793026
+ },
+ {
+  "name": "ENHYPEN",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917_T-7",
+  "mbid": "95663592-1447-4579-90f7-c94733476667",
+  "deezerId": 113915572,
+  "deezerFans": 539984
+ },
+ {
+  "name": "Jennie",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917qPV7",
+  "mbid": "d32de3a1-01f0-430e-859a-72307724041c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Florence + The Machine",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GCvf",
+  "mbid": "5fee3020-513b-48c2-b1f7-4681b01db0c6",
+  "deezerId": 183716,
+  "deezerFans": 1699082
+ },
+ {
+  "name": "BLACKPINK",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9179wi7",
+  "mbid": "48646387-1664-4c9a-9139-9bfd091b823c",
+  "deezerId": 10803980,
+  "deezerFans": 2663019
+ },
+ {
+  "name": "Ed Sheeran",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917CAQV",
+  "mbid": "b8a7c51f-362c-4dcb-a259-bc6e0095f0a6",
+  "deezerId": 384236,
+  "deezerFans": 20960620
+ },
+ {
+  "name": "ROSALÍA",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917pJy7",
+  "mbid": "25f3abd9-63b5-471a-bd25-feb9672dfa11",
+  "deezerId": 554792,
+  "deezerFans": 1069575
+ },
+ {
+  "name": "Avenged Sevenfold",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91752Pf",
+  "mbid": "24e1b53c-3085-4581-8472-0b0088d2508c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "KAROL G",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917p3-V",
+  "mbid": "de22adae-f8ac-414f-b653-b0162611bd60",
+  "deezerId": 5297021,
+  "deezerFans": 3424125
+ },
+ {
+  "name": "AC/DC",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91715hf",
+  "mbid": "66c662b6-6e2f-4930-8610-912e24c63ed1",
+  "deezerId": 115,
+  "deezerFans": 9970220
+ },
+ {
+  "name": "Stray Kids",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9179Vpf",
+  "mbid": "142b343d-bf5a-428c-a64f-6d1a7566bbe9",
+  "deezerId": 13923487,
+  "deezerFans": 1281650
+ },
+ {
+  "name": "Rammstein",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171QH7",
+  "mbid": "b2d122f9-eadb-4930-a196-8f221eeb0c66",
+  "deezerId": 464,
+  "deezerFans": 2735768
+ },
+ {
   "name": "Kylie Minogue",
   "tier": 2,
   "tmAttractionId": "K8vZ9175tSf",
   "mbid": "2fddb92d-24b2-46a5-bf28-3aed46f4684c",
   "deezerId": 479,
   "deezerFans": 1426334
+ },
+ {
+  "name": "P!nk",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171Jo7",
+  "mbid": "f4d5cc07-3bc9-4836-9b15-88a08359bc63",
+  "deezerId": 69925,
+  "deezerFans": 4678072
+ },
+ {
+  "name": "Paul McCartney",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171uq0",
+  "mbid": "ba550d0e-adac-4864-b88b-407cab5e76af",
+  "deezerId": 1446,
+  "deezerFans": 1808725
+ },
+ {
+  "name": "Jung Kook",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917hc5V",
+  "mbid": "23c8056b-ee13-4cfc-a772-2f5292e35bb5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bon Jovi",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171u7f",
+  "mbid": "5dcdb5eb-cb72-4e6e-9e63-b7bace604965",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Måneskin",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9179nuf",
+  "mbid": "3862342a-43c4-4cdb-8250-bfdbfb5e1419",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "ROSÉ",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917_k80",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Iron Maiden",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171G4V",
+  "mbid": "ca891d65-d9b0-4258-89f7-e6ba29d83767",
+  "deezerId": 931,
+  "deezerFans": 3797781
+ },
+ {
+  "name": "Fred again..",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917_0xf",
+  "mbid": "bca46a0c-25c9-42ca-98c2-e64c8a5e337e",
+  "deezerId": 76053262,
+  "deezerFans": 127807
+ },
+ {
+  "name": "Rauw Alejandro",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917bvcV",
+  "mbid": "197b70c7-8910-4030-ad03-632d82aa40e3",
+  "deezerId": 11289472,
+  "deezerFans": 2144441
+ },
+ {
+  "name": "Scorpions",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91712cf",
+  "mbid": "c3cceeed-3332-4cf0-8c4c-bbde425147b6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "J Balvin",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917oIlV",
+  "mbid": "5bdeb32d-56a5-4b6d-a768-264101fa0a0a",
+  "deezerId": 4860761,
+  "deezerFans": 10350389
+ },
+ {
+  "name": "Stromae",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917C98f",
+  "mbid": "ab2528d9-719f-4261-8098-21849222a0f2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "SEVENTEEN",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9174Qw0",
+  "mbid": null,
+  "deezerId": 240582,
+  "deezerFans": 646307
+ },
+ {
+  "name": "Sam Fender",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917pflV",
+  "mbid": "3478a5d1-bd96-4584-aa54-4d6e0a329658",
+  "deezerId": 12096672,
+  "deezerFans": 87743
+ },
+ {
+  "name": "NCT 127",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9179Xo0",
+  "mbid": "9d17d14a-e81c-410e-a90b-b02b0a9de6f8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Benson Boone",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Qjw0",
+  "mbid": "62b914a7-d775-4bb4-bb5e-d46e7df115b5",
+  "deezerId": 146543992,
+  "deezerFans": 511817
+ },
+ {
+  "name": "Maluma",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917K2wf",
+  "mbid": "e8979f75-9110-4df8-ac70-898898d080d1",
+  "deezerId": 1424602,
+  "deezerFans": 8082356
+ },
+ {
+  "name": "Aitana",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917bZ-V",
+  "mbid": "a24f2bd3-0d1b-4c03-8d91-6297ab5a2811",
+  "deezerId": 11928391,
+  "deezerFans": 349423
+ },
+ {
+  "name": "Myke Towers",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917bvff",
+  "mbid": "d2945137-b01d-4195-9f82-64d20f8ba657",
+  "deezerId": 12029862,
+  "deezerFans": 1712982
+ },
+ {
+  "name": "Bizarrap",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917QeqV",
+  "mbid": "3b6abaef-febf-4cfe-943f-6a20cf0afdad",
+  "deezerId": 12487862,
+  "deezerFans": 1127457
+ },
+ {
+  "name": "Feid",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917_cQ7",
+  "mbid": "eaee97f6-f2e4-414a-966c-f31a1fb4696a",
+  "deezerId": 1166311,
+  "deezerFans": 911368
+ },
+ {
+  "name": "Duki",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917bvf7",
+  "mbid": "44869536-0262-4f22-9c23-b4821c13cd97",
+  "deezerId": 4902904,
+  "deezerFans": 824323
+ },
+ {
+  "name": "Melendi",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GpcV",
+  "mbid": "86d61837-890c-4d04-aeec-30d70ad77298",
+  "deezerId": 2697,
+  "deezerFans": 613145
+ },
+ {
+  "name": "Estopa",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Gql0",
+  "mbid": "49fc7e46-5441-4b7e-996a-12dddf22a632",
+  "deezerId": 4474,
+  "deezerFans": 227391
+ },
+ {
+  "name": "Peso Pluma",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917h54V",
+  "mbid": "75e4f8ef-34c3-44fd-8467-88a7d9599f77",
+  "deezerId": 80365122,
+  "deezerFans": 512272
+ },
+ {
+  "name": "Alejandro Sanz",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171_60",
+  "mbid": "9bacf78f-9132-43da-8873-8a9eb49da0e9",
+  "deezerId": 4479,
+  "deezerFans": 1417311
+ },
+ {
+  "name": "Aya Nakamura",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9179NS0",
+  "mbid": "cf580d82-3f3e-4b86-8874-7e0fbe794f01",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mylène Farmer",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91737ff",
+  "mbid": "18b23026-ed29-445a-9bb4-4e86598ab5a9",
+  "deezerId": null,
+  "deezerFans": null
  },
  {
   "name": "Robbie Williams",
@@ -472,124 +880,12 @@
   "deezerFans": 1215465
  },
  {
-  "name": "Sam Fender",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917pflV",
-  "mbid": "3478a5d1-bd96-4584-aa54-4d6e0a329658",
-  "deezerId": 12096672,
-  "deezerFans": 87743
- },
- {
-  "name": "Hozier",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917o-E7",
-  "mbid": "b4691384-50c3-4afd-9988-51d3ec5db65d",
-  "deezerId": 5062414,
-  "deezerFans": 1418141
- },
- {
   "name": "Teddy Swims",
   "tier": 2,
   "tmAttractionId": "K8vZ917bnP0",
   "mbid": "35feae82-8b2c-4f8f-ae7a-af5662848947",
   "deezerId": 64927672,
   "deezerFans": 433711
- },
- {
-  "name": "Benson Boone",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917Qjw0",
-  "mbid": "62b914a7-d775-4bb4-bb5e-d46e7df115b5",
-  "deezerId": 146543992,
-  "deezerFans": 511817
- },
- {
-  "name": "Chappell Roan",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917p56f",
-  "mbid": null,
-  "deezerId": 12945219,
-  "deezerFans": 320684
- },
- {
-  "name": "Gracie Abrams",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917_vc7",
-  "mbid": "f7441bc7-d7de-4813-a2fc-31a4033d396d",
-  "deezerId": 64874492,
-  "deezerFans": 411351
- },
- {
-  "name": "Doja Cat",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9173TJf",
-  "mbid": null,
-  "deezerId": 5578942,
-  "deezerFans": 2520396
- },
- {
-  "name": "Justin Bieber",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917G9e7",
-  "mbid": "e0140a67-e4d1-4f13-8a01-364355bee46e",
-  "deezerId": 288166,
-  "deezerFans": 11185901
- },
- {
-  "name": "Katy Perry",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917GC17",
-  "mbid": null,
-  "deezerId": 144227,
-  "deezerFans": 9820593
- },
- {
-  "name": "P!nk",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9171Jo7",
-  "mbid": "f4d5cc07-3bc9-4836-9b15-88a08359bc63",
-  "deezerId": 69925,
-  "deezerFans": 4678072
- },
- {
-  "name": "Miley Cyrus",
-  "tier": 2,
-  "tmAttractionId": "ZkDnngzZDdNjk7eFwakXlklGGyIecnK",
-  "mbid": null,
-  "deezerId": 12436,
-  "deezerFans": 7258441
- },
- {
-  "name": "Shawn Mendes",
-  "tier": 2,
-  "tmAttractionId": "K8vZ91739Nf",
-  "mbid": "b7d92248-97e3-4450-8057-6fe06738f735",
-  "deezerId": 5962948,
-  "deezerFans": 6793026
- },
- {
-  "name": "Alejandro Sanz",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9171_60",
-  "mbid": "9bacf78f-9132-43da-8873-8a9eb49da0e9",
-  "deezerId": 4479,
-  "deezerFans": 1417311
- },
- {
-  "name": "Aitana",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917bZ-V",
-  "mbid": "a24f2bd3-0d1b-4c03-8d91-6297ab5a2811",
-  "deezerId": 11928391,
-  "deezerFans": 349423
- },
- {
-  "name": "Estopa",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917Gql0",
-  "mbid": "49fc7e46-5441-4b7e-996a-12dddf22a632",
-  "deezerId": 4474,
-  "deezerFans": 227391
  },
  {
   "name": "Vetusta Morla",
@@ -614,14 +910,6 @@
   "mbid": "c62936e1-7f2a-4c99-b09b-a5bc85d6c1f3",
   "deezerId": 712271,
   "deezerFans": 950157
- },
- {
-  "name": "Melendi",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917GpcV",
-  "mbid": "86d61837-890c-4d04-aeec-30d70ad77298",
-  "deezerId": 2697,
-  "deezerFans": 613145
  },
  {
   "name": "Dani Martín",
@@ -656,147 +944,7059 @@
   "deezerFans": 2380849
  },
  {
-  "name": "Bizarrap",
+  "name": "Arde Bogotá",
   "tier": 2,
-  "tmAttractionId": "K8vZ917QeqV",
-  "mbid": "3b6abaef-febf-4cfe-943f-6a20cf0afdad",
-  "deezerId": 12487862,
-  "deezerFans": 1127457
- },
- {
-  "name": "Duki",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917bvf7",
-  "mbid": "44869536-0262-4f22-9c23-b4821c13cd97",
-  "deezerId": 4902904,
-  "deezerFans": 824323
- },
- {
-  "name": "Myke Towers",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917bvff",
-  "mbid": "d2945137-b01d-4195-9f82-64d20f8ba657",
-  "deezerId": 12029862,
-  "deezerFans": 1712982
- },
- {
-  "name": "J Balvin",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917oIlV",
-  "mbid": "5bdeb32d-56a5-4b6d-a768-264101fa0a0a",
-  "deezerId": 4860761,
-  "deezerFans": 10350389
- },
- {
-  "name": "Maluma",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917K2wf",
-  "mbid": "e8979f75-9110-4df8-ac70-898898d080d1",
-  "deezerId": 1424602,
-  "deezerFans": 8082356
- },
- {
-  "name": "Stray Kids",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9179Vpf",
-  "mbid": "142b343d-bf5a-428c-a64f-6d1a7566bbe9",
-  "deezerId": 13923487,
-  "deezerFans": 1281650
- },
- {
-  "name": "BLACKPINK",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9179wi7",
-  "mbid": "48646387-1664-4c9a-9139-9bfd091b823c",
-  "deezerId": 10803980,
-  "deezerFans": 2663019
- },
- {
-  "name": "SEVENTEEN",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9174Qw0",
+  "tmAttractionId": "K8vZ917qBwf",
   "mbid": null,
-  "deezerId": 240582,
-  "deezerFans": 646307
+  "deezerId": null,
+  "deezerFans": null
  },
  {
-  "name": "ENHYPEN",
+  "name": "Hombres G",
   "tier": 2,
-  "tmAttractionId": "K8vZ917_T-7",
-  "mbid": "95663592-1447-4579-90f7-c94733476667",
-  "deezerId": 113915572,
-  "deezerFans": 539984
- },
- {
-  "name": "Bring Me The Horizon",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917Ge97",
-  "mbid": "074e3847-f67f-49f9-81f1-8c8cea147e8e",
-  "deezerId": 12874,
-  "deezerFans": 1319035
- },
- {
-  "name": "Slipknot",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9171Lz0",
-  "mbid": "a466c2a2-6517-42fb-a160-1087c3bafd9f",
-  "deezerId": 117,
-  "deezerFans": 4156815
- },
- {
-  "name": "The Cure",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9171FN0",
+  "tmAttractionId": "K8vZ9171sp7",
   "mbid": null,
-  "deezerId": 381,
-  "deezerFans": 2547980
+  "deezerId": null,
+  "deezerFans": null
  },
  {
-  "name": "Florence + The Machine",
+  "name": "Camilo",
   "tier": 2,
-  "tmAttractionId": "K8vZ917GCvf",
-  "mbid": "5fee3020-513b-48c2-b1f7-4681b01db0c6",
-  "deezerId": 183716,
-  "deezerFans": 1699082
- },
- {
-  "name": "Paul McCartney",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9171uq0",
+  "tmAttractionId": "K8vZ917_FzV",
   "mbid": null,
-  "deezerId": 1446,
-  "deezerFans": 1808725
+  "deezerId": null,
+  "deezerFans": null
  },
  {
-  "name": "The Rolling Stones",
+  "name": "Till Lindemann",
   "tier": 2,
-  "tmAttractionId": "K8vZ917184f",
+  "tmAttractionId": "K8vZ917bQCf",
   "mbid": null,
-  "deezerId": 11,
-  "deezerFans": 7124354
+  "deezerId": null,
+  "deezerFans": null
  },
  {
-  "name": "Calvin Harris",
+  "name": "TXT",
   "tier": 2,
-  "tmAttractionId": "K8vZ9175TJ0",
-  "mbid": "8dd98bdc-80ec-4e93-8509-2f46bafc09a7",
-  "deezerId": 12178,
-  "deezerFans": 12346257
- },
- {
-  "name": "Fred again..",
-  "tier": 2,
-  "tmAttractionId": "K8vZ917_0xf",
-  "mbid": "bca46a0c-25c9-42ca-98c2-e64c8a5e337e",
-  "deezerId": 76053262,
-  "deezerFans": 127807
- },
- {
-  "name": "Tyler, The Creator",
-  "tier": 2,
-  "tmAttractionId": "K8vZ9172De7",
+  "tmAttractionId": "K8vZ917hEHf",
   "mbid": null,
-  "deezerId": 1194083,
-  "deezerFans": 1393987
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "G-DRAGON",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9174HJ0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Vasco Rossi",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GOc0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ultimo",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917hZRV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tiziano Ferro",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9174pp0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Laura Pausini",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171H2f",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Eros Ramazzotti",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91719mV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Indochine",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91737NV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Herbert Grönemeyer",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GAA7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Andrea Bocelli",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171bQ0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mad Cool Festival",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917fyyf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Primavera Sound",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Gfb0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sónar",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GfQ7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Resurrection Fest",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917fyS7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rock in Rio Lisboa",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917fQE7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "NOS Alive",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9173MqV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Reading Festival",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171M9V",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Leeds Festival",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GkJ0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Isle of Wight Festival",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175mP7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rock am Ring",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Ghw0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rock im Park",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9173BGf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lollapalooza",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171oxV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Creamfields",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175skV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Roskilde Festival",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GQh0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Hellfest",
+  "tier": 2,
+  "tmAttractionId": "Z7r9jZa9bI",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "I-Days",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917b-i7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pinkpop",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GQt0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tomorrowland",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Kh5V",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Glastonbury Festival",
+  "tier": 2,
+  "tmAttractionId": "ZFr9jZdave",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "NFL",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9178NNV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "NBA",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Gdkf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "UEFA Champions League",
+  "tier": 2,
+  "tmAttractionId": "Z7r9jZa9Qj",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "UEFA Europa League",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917pufV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Wimbledon",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175nB0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Roland Garros",
+  "tier": 2,
+  "tmAttractionId": "Z7r9jZ17734k",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nitto ATP Finals",
+  "tier": 2,
+  "tmAttractionId": "Z7r9jZapK6",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Premier League Darts",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GCM7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "WWE",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91718zf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Real Madrid",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9179pHf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "FC Barcelona",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175c7V",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Atlético de Madrid",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9173Iy0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rihanna",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175gS7",
+  "mbid": "73e5e69d-3554-40d8-8516-00cb38737a1c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Eminem",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171hL0",
+  "mbid": "b95ce3ff-3d05-4e87-9e01-c97b66af13d4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nirvana",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171FU0",
+  "mbid": "5b11f4ce-a62d-471e-81fc-a69a8278c7da",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Gorillaz",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171zxV",
+  "mbid": "e21857d5-3256-4547-afb3-4b6ded592596",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Maroon 5",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917544V",
+  "mbid": "0ab49580-c84f-44d4-875f-d83760ea2cfe",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Britney Spears",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171huf",
+  "mbid": "45a663b5-b1cb-4a91-bff6-2bef7bbfdd76",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Daft Punk",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91719qf",
+  "mbid": "056e4f3e-d505-4dad-8ec1-d04f521cbb56",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Black Eyed Peas",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171hUV",
+  "mbid": "d5be5333-4171-427e-8e12-732087c6b78e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Madonna",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171ub0",
+  "mbid": "79239441-bfd5-4981-a70c-55c3f15c1287",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Strokes",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171UUf",
+  "mbid": "f181961b-20f7-459e-89de-920ef03c7ed0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Paramore",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175DY0",
+  "mbid": "44cf61b8-5197-448a-b82b-cef6ee89fac5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Justin Timberlake",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91754g7",
+  "mbid": "596ffa74-3d08-44ef-b113-765d43d12738",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Adele",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Gku7",
+  "mbid": "cc2c9c3c-b7bc-4b8b-84d8-4fbd8779e493",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "David Bowie",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171uXf",
+  "mbid": "5441c29d-3602-4898-b1a1-b77fa23b8e50",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Weezer",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91713gf",
+  "mbid": "6fe07aa5-fec0-4eca-a456-f29bff451b04",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "MGMT",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917G1AV",
+  "mbid": "c485632c-b784-4ee9-8ea1-c5fb365681fc",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "David Guetta",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917G-90",
+  "mbid": "302bd7b9-d012-4360-897a-93b00c855680",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Avril Lavigne",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91755Zf",
+  "mbid": "0103c1cc-4a09-4a5d-a344-56ad99a77193",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kings of Leon",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175hx7",
+  "mbid": "6ffb8ea9-2370-44d8-b678-e9237bbd347b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fall Out Boy",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175h30",
+  "mbid": "516cef4d-0718-4007-9939-f9b38af3f784",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mariah Carey",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171KB7",
+  "mbid": "494e8d09-f85b-4543-892f-a5096aed1cd4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Usher",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171bMV",
+  "mbid": "3414d446-735a-443c-931f-10634f57e5b9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "OutKast",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171Qh7",
+  "mbid": "73fdb566-a9b1-494c-9f32-51768ec9fd27",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "50 Cent",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175fm7",
+  "mbid": "8e68819d-71be-4e7d-b41d-f1df81b01d3f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Frank Sinatra",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171GOV",
+  "mbid": "197450cd-0124-4164-b723-3c22dd16494d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nelly Furtado",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171EdV",
+  "mbid": "13655113-cd16-4b43-9dca-cadbbf26ee05",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "My Chemical Romance",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175mU7",
+  "mbid": "c07f0676-9143-4217-8a9f-4c26bd636f13",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Franz Ferdinand",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175PN0",
+  "mbid": "aa7a2827-f74b-473c-bd79-03d065835cf7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The White Stripes",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171cjV",
+  "mbid": "11ae9fbb-f3d7-4a47-936f-4c0a04d3b3b5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Cranberries",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171or0",
+  "mbid": "c98d40fd-f6cf-4b26-883e-eaa515ee2851",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Blur",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91716m7",
+  "mbid": "ba853904-ae25-4ebb-89d6-c44cfbd71bd2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Chris Brown",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175MQf",
+  "mbid": "c234fa42-e6a6-443e-937e-2f4b073538a3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nicki Minaj",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GP27",
+  "mbid": "1036b808-f58c-4a3e-b461-a2c4492ecf1b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Aerosmith",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171GBV",
+  "mbid": "3d2b98e5-556f-4451-a3ff-c50ea18d57cb",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kid Cudi",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Gft7",
+  "mbid": "e0e1db18-f7ba-4dee-95ff-7ae8cf545460",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Doors",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175f_0",
+  "mbid": "9efff43b-3b29-4082-824e-bc82f646f93d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Police",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GvLV",
+  "mbid": "9e0e2b01-41db-4008-bd8b-988977d6019a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "blink-182",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171pNf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Evanescence",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175430",
+  "mbid": "f4a31f0a-51dd-4fa7-986d-3095c40c5ed9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Smashing Pumpkins",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171FDV",
+  "mbid": "ba0d6274-db14-4ef5-b28d-657ebde1a396",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Offspring",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91713uV",
+  "mbid": "23a03e33-a603-404e-bcbf-2c00159d7067",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tame Impala",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917uFU7",
+  "mbid": "63aa26c3-d59b-4da4-84ac-716b54f1ef4d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Gwen Stefani",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175S8V",
+  "mbid": "2e41ae9c-afd2-4f20-8f1e-17281ce9b472",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kelly Clarkson",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175_fV",
+  "mbid": "d339efbb-77b9-4147-ba9e-59f2f24550b2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Panic! at the Disco",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175UqV",
+  "mbid": "b9472588-93f3-4922-a1a2-74082cdf9ce8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Christina Aguilera",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171OQ7",
+  "mbid": "b202beb7-99bd-47e7-8b72-195c8d72ebdd",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pitbull",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Gp10",
+  "mbid": "d262ea27-3ffe-40f7-b922-85c42d625e67",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Elvis Presley",
+  "tier": 2,
+  "tmAttractionId": "Z7r9jZa7Lm",
+  "mbid": "01809552-4f87-45b0-afff-2c6f0730a3be",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "ABBA",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917pOK7",
+  "mbid": "d87e52c5-bb8d-4da8-b941-9f4928627dc8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sia",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175tM7",
+  "mbid": "2f548675-008d-4332-876c-108b0c7ab9c5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Snoop Dogg",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171Kt0",
+  "mbid": "f90e8b26-9e52-4669-a5c9-e28529c47894",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Black Sabbath",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91715h0",
+  "mbid": "5182c1d9-c7d2-4dad-afa0-ccfeada921a8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nickelback",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171EXf",
+  "mbid": "bc710bcf-8815-42cf-bad2-3f1d12246aeb",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "R.E.M.",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171F60",
+  "mbid": "ea4dfa26-f633-4da6-a52a-f49ea4897b58",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "OneRepublic",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Gah0",
+  "mbid": "c33c2065-b1c3-4406-b066-d33a9e2ea71a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Frank Ocean",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9172v9f",
+  "mbid": "e520459c-dff4-491d-a6e4-c97be35e0044",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Deftones",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171pP7",
+  "mbid": "7527f6c2-d762-4b88-b5e2-9244f1e34c46",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pixies",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171F7V",
+  "mbid": "b6b2bb8d-54a9-491f-9607-7b546023b433",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bob Dylan",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171ueV",
+  "mbid": "72c536dc-7137-4477-a521-567eeb840fa8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Alicia Keys",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171Uz7",
+  "mbid": "8ef1df30-ae4f-4dbd-9351-1a32b208a01e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Flo Rida",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917G4W7",
+  "mbid": "4593d49a-7f67-46ba-9ec0-126bd676286f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rage Against the Machine",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91714QV",
+  "mbid": "3798b104-01cb-484c-a3b0-56adc6399b80",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "2Pac",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91715uf",
+  "mbid": "382f1005-e9ab-4684-afd4-0bdae4ee37f2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Limp Bizkit",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171bCf",
+  "mbid": "8f9d6bb2-dba4-4cca-9967-cc02b9f4820c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Clash",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9172G7V",
+  "mbid": "8f92558c-2baa-4758-8c38-615519e9deda",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Beck",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171fvf",
+  "mbid": "309c62ba-7a22-4277-9f67-4a162526d18a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Snow Patrol",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175J30",
+  "mbid": "a66999a7-ae5c-460e-ba94-1a01143ae847",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Beach Boys",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917187f",
+  "mbid": "ebfc1398-8d96-47e3-82c3-f782abcdb13d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Neighbourhood",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Kzef",
+  "mbid": "53b06622-ec51-4924-a554-58b0affde6b5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ellie Goulding",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GLN7",
+  "mbid": "33ca19f4-18c8-4411-98df-ac23890ce9f5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Keane",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175NE0",
+  "mbid": "c7020c6d-cae9-4db3-92a7-e5c561cbad50",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Yeah Yeah Yeahs",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175Cnf",
+  "mbid": "584c04d2-4acc-491b-8a0a-e63133f4bfc4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tears for Fears",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91718qV",
+  "mbid": "7c7f9c94-dee8-4903-892b-6cf44652e2de",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jimi Hendrix",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171Cj7",
+  "mbid": "06fb1c8b-566e-4cb2-985b-b467c90781d4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Stevie Wonder",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91715af",
+  "mbid": "1ee18fb3-18a6-4c7f-8ba0-bc41cdd0462e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sufjan Stevens",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175ge7",
+  "mbid": "01d3c51b-9b98-418a-8d8e-37f6fab59d8c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Dr. Dre",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171530",
+  "mbid": "5f6ab597-f57a-40da-be9e-adad48708203",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Wiz Khalifa",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GEEf",
+  "mbid": "f5dfa020-ad69-41cd-b3d4-fd7af0414e94",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Three Days Grace",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175jBV",
+  "mbid": "fabb37f8-eb2a-4cc1-a72a-b56935bbb72d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Childish Gambino",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917uog7",
+  "mbid": "7fb57fba-a6ef-44c2-abab-2fa3bdee607e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jennifer Lopez",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GAT7",
+  "mbid": "f0602f55-1770-483d-89bd-4bae0d0ac086",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "J. Cole",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Gi6V",
+  "mbid": "875203e1-8e58-4b86-8dcb-7190faf411c5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Massive Attack",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917124V",
+  "mbid": "10adbe5e-a2c0-4bf3-8249-2b4cbf6e6ca8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Eagles",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171ob7",
+  "mbid": "f46bd570-5768-462e-b84c-c7c993bbf47e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Marvin Gaye",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91715Zf",
+  "mbid": "afdb7919-059d-43c1-b668-ba1d265e7e42",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Who",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91712T0",
+  "mbid": "9fdaa16b-a6c4-4831-b87c-bc9ca8ce7eaa",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lily Allen",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175BJV",
+  "mbid": "6e0c7c0e-cba5-4c2c-a652-38f71ef5785d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Cardigans",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171hrV",
+  "mbid": "3e55d51d-687f-4a9d-af96-2fabccf802e5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Akon",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175sq7",
+  "mbid": "1138a764-2212-4d0a-b02d-0dc14df91e08",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Foster the People",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GmLV",
+  "mbid": "e0e1a584-dd0a-4bd1-88d1-c4c62895039d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lorde",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917o0Uf",
+  "mbid": "8e494408-8620-4c6a-82c2-c2ca4a1e4f12",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Queens of the Stone Age",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171su7",
+  "mbid": "7dc8f5bd-9d0b-4087-9f73-dc164950bbd8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Death Cab for Cutie",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171NGf",
+  "mbid": "0039c7ae-e1a7-4a7d-9b49-0cbc716821a6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Incubus",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171blf",
+  "mbid": "e3e0abcd-7671-4482-a9d8-462f5acc9be5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "John Mayer",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171SN7",
+  "mbid": "144ef525-85e9-40c3-8335-02c32d0861f3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Papa Roach",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91710D0",
+  "mbid": "c5eb9407-caeb-4303-b383-6929aa94021c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "No Doubt",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171FMf",
+  "mbid": "fbd2a255-1d57-4d31-ac11-65b671c19958",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lil Wayne",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GemV",
+  "mbid": "ac9a487a-d9d2-4f27-bb23-0f4686488345",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mac Miller",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917Giif",
+  "mbid": "a0e8a1b1-5f8f-475a-a253-17415c17d0ff",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nine Inch Nails",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171FUV",
+  "mbid": "b7ffd2af-418f-4be2-bdd1-22f8b48613da",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Moby",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91719O7",
+  "mbid": "8970d868-0723-483b-a75b-51088913d3d4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Timbaland",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917GGbf",
+  "mbid": "daa09819-5da5-4c7a-8bef-eb372bb27ff1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Beach House",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917G6of",
+  "mbid": "d5cc67b8-1cc4-453b-96e8-44487acdebea",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Fray",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175zZV",
+  "mbid": "2ddd167f-5b8a-4372-b350-6ad50493bac0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "3 Doors Down",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171-m0",
+  "mbid": "2386cd66-e923-4e8e-bf14-2eebe2e9b973",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "M83",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175sB7",
+  "mbid": "6d7b7cd4-254b-4c25-83f6-dd20f98ceacd",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bon Iver",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917G4W0",
+  "mbid": "437a0e49-c6ae-42f6-a6c1-84f25ed366bc",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Dire Straits",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171CvV",
+  "mbid": "614e3804-7d34-41ba-857f-811bad7c2b7a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sade",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171uOf",
+  "mbid": "67930b3e-e00b-469f-8c74-fd69f20522ec",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "A$AP Rocky",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917CHaf",
+  "mbid": "25b7b584-d952-4662-a8b9-dd8cdfbfeb64",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Disturbed",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171Eo0",
+  "mbid": "4bb4e4e4-5f66-4509-98af-62dbb90c45c5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Michael Bublé",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175QAf",
+  "mbid": "611700cf-27f0-4dc9-ae80-c513a767853e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Demi Lovato",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917G47f",
+  "mbid": "faf4cefb-036c-4c88-b93a-5b03dd0a0e6b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kate Bush",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9173f9V",
+  "mbid": "4b585938-f271-45e2-b19a-91c634b5e396",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Twenty One Pilots",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917ukw7",
+  "mbid": "a6c6897a-7415-4f8d-b5a5-3a5e05f3be67",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Alice in Chains",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171Fj0",
+  "mbid": "4bd95eea-b9f6-4d70-a36c-cfea77431553",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Blondie",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171Q-V",
+  "mbid": "4d2956d1-a3f7-44bb-9a41-67563e1a0c94",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nelly",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171Yef",
+  "mbid": "811900b2-68fc-4d41-8bad-69b7a1f4d628",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jeff Buckley",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91713s0",
+  "mbid": "e6e879c0-3d56-4f12-b3c5-3ce459661a8e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fergie",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175csf",
+  "mbid": "4f9675d2-f6d5-486c-9b26-33dcca998500",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Björk",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91713-0",
+  "mbid": "87c5dedd-371d-4a53-9f7f-80522fb7f3cb",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Simon & Garfunkel",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175jbf",
+  "mbid": "5d02f264-e225-41ff-83f7-d9b1f0b1874a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Korn",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171fF7",
+  "mbid": "ac865b2e-bba8-4f5a-8756-dd40d5e39f46",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Beastie Boys",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91715CV",
+  "mbid": "9beb62b2-88db-4cea-801e-162cd344ee53",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "a-ha",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175s77",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cage the Elephant",
+  "tier": 2,
+  "tmAttractionId": "K8vZ917G1zf",
+  "mbid": "b41b38d4-ef3e-4f37-8c75-cfe9af999696",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Destiny's Child",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171N50",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sum 41",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9171YT7",
+  "mbid": "f2eef649-a6d5-4114-afba-e50ab26254d2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Verve",
+  "tier": 2,
+  "tmAttractionId": "K8vZ91719J7",
+  "mbid": "d4d17620-fd97-4574-92a8-a2cb7e72ce42",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ne-Yo",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175Ho0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "T.I.",
+  "tier": 2,
+  "tmAttractionId": "K8vZ9175zZ7",
+  "mbid": "f7ba7fbe-c6bd-4ac0-bee9-c25c558d7d62",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Avicii",
+  "tier": 1,
+  "tmAttractionId": "Z7r9jZaAYb",
+  "mbid": "c85cfd6b-b1e9-4a50-bd55-eb725f04f7d5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Soundgarden",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712Rf",
+  "mbid": "153c9281-268f-4cf3-8938-f5a4593e5df4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Train",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171r37",
+  "mbid": "bfd5aec5-62a2-4560-a316-7c46c17babda",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Modest Mouse",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Nd0",
+  "mbid": "a96ac800-bfcb-412a-8a63-0a98df600700",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mitski",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Kkx0",
+  "mbid": "fa58cf24-0e44-421d-8519-8bf461dcfaa5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "M.I.A.",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917-Ha0",
+  "mbid": "7cf0ea9d-86b9-4dad-ba9e-2355a64899ea",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mac DeMarco",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178A1f",
+  "mbid": "f2492c31-54a8-4347-a1fc-f81f72873bbf",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nas",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171j3V",
+  "mbid": "cfbc0924-0035-4d6c-8197-f024653af823",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The All-American Rejects",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175pcV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jimmy Eat World",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171hzV",
+  "mbid": "bbc5b66b-d037-4f26-aecf-0b129e7f876a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Audioslave",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175fGf",
+  "mbid": "020bfbb4-05c3-4c86-b372-17825c262094",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Placebo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Qwf",
+  "mbid": "847e8284-8582-4b0e-9c26-b042a4f49e57",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Portishead",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91719x0",
+  "mbid": "8f6bd1e4-fbe1-4f50-aa9b-94c450ec0f11",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sean Paul",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171WPV",
+  "mbid": "c3da3346-2643-48a7-93cd-011f6834b3d7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "One Direction",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CTtf",
+  "mbid": "1a425bbd-cca4-4b2c-aeb7-71cb176c828a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bloc Party",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175tlV",
+  "mbid": "8c538f11-c141-4588-8ecb-931083524186",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Pussycat Dolls",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175U0V",
+  "mbid": "1fda852b-92e9-4562-82fa-c52820a77b23",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lynyrd Skynyrd",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171287",
+  "mbid": "c544ed4d-2390-4442-a83e-1ea2883b09c8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Future",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172PA0",
+  "mbid": "48262e82-db9f-4a92-b650-dfef979b73ec",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Journey",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712F0",
+  "mbid": "abd506e1-6f2b-4d6f-b937-92c267f6f88b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Steve Lacy",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174s67",
+  "mbid": "ca9766a0-1c30-43e6-a213-bac1334efc4a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Black Keys",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175f_7",
+  "mbid": "d15721d8-56b4-453d-b506-fc915b14cba2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kesha",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GOYV",
+  "mbid": "fab34286-b8e1-4879-bce3-194e1358fbd2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Kinks",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171CN7",
+  "mbid": "17b53d9f-5c63-4a09-a593-dde4608e0db9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Talking Heads",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712gV",
+  "mbid": "a94a7155-c79d-4409-9fcf-220cb0e4dc3a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Phil Collins",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712P7",
+  "mbid": "401c3991-b76b-499d-8082-9f2df958ef78",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "B.o.B",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GJKf",
+  "mbid": "94c338ff-1985-4429-9dc8-997b61bb5932",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Duran Duran",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171FP7",
+  "mbid": "1a1cd7f3-e5df-4eca-bae2-2757c9e656b5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "PinkPantheress",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_TO7",
+  "mbid": "7441014f-f8f5-494f-81db-ff166fbc078d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Selena Gomez",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Gp70",
+  "mbid": "e4bc69e2-a064-4f93-ada1-f7f209cc1cc3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ice Cube",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Ga0",
+  "mbid": "1d11e2a1-4531-4d61-a8c7-7b5c6a608fd2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Crystal Castles",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GxMf",
+  "mbid": "b1570544-93ab-4b2b-8398-131735394202",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lykke Li",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G1R0",
+  "mbid": "cc7d4686-ea02-45fd-956e-94c1a322558c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Notorious B.I.G.",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91713uf",
+  "mbid": "d5d97b2b-b83b-4976-814a-056d9076c8c3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "New Order",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712r7",
+  "mbid": "f1106b17-dcbb-45f6-b938-199ccfab50cc",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Billy Idol",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171uvV",
+  "mbid": "47c8f88b-987a-4b64-9175-2b1b57809727",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jason Derulo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G0l0",
+  "mbid": "6de0f914-3e60-4418-be3b-42e0feb6eb4d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Two Door Cinema Club",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GL50",
+  "mbid": "6f1de078-6684-4792-820d-2ffad64c15ed",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Interpol",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91753Nf",
+  "mbid": "b23e8a63-8f47-4882-b55b-df2c92ef400e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mark Ronson",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175DZ7",
+  "mbid": "c3c82bdc-d9e7-4836-9746-c24ead47ca19",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kali Uchis",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917K490",
+  "mbid": "d0c7656d-8169-4f77-9dbe-b8f24e40105d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Empire of the Sun",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G0z0",
+  "mbid": "ac7e838c-3d95-47c2-92a9-81767ad7c217",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sublime",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jjR7",
+  "mbid": "95f5b748-d370-47fe-85bd-0af2dc450bc0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Imogen Heap",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Q3V",
+  "mbid": "328d146c-79f1-4eb6-9e40-8ee5710c14e5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ozzy Osbourne",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171GQf",
+  "mbid": "8aa5b65a-5b3c-4029-92bf-47a544356934",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sam Smith",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178pt7",
+  "mbid": "5a85c140-dcf9-4dd2-b2c8-aff0471549f3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Marilyn Manson",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91714d0",
+  "mbid": "5dfdca28-9ddc-4853-933c-8bc97d87beec",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Toto",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712y7",
+  "mbid": "aab5c954-cabe-432e-899e-1c4f99757327",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Joji",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179euV",
+  "mbid": "74922d42-c3ec-4f7d-8a24-20da6eda6ba6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Game",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175Ry0",
+  "mbid": "07cc14fb-4784-4a25-804b-2686ed5ef52c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Natasha Bedingfield",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175ng0",
+  "mbid": "8b477559-946e-4ef2-9fe1-446cff8fdd79",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jessie J",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917uMRf",
+  "mbid": "d24fb461-dee8-41fc-bb15-2f13bb2644a6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Carly Rae Jepsen",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172pOV",
+  "mbid": "09887aa7-226e-4ecc-9a0c-02d2ae5777e1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Gotye",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GdY7",
+  "mbid": "6f6fd596-76e0-4b82-aa37-f558ac2d337b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Arcade Fire",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175RcV",
+  "mbid": "52074ba6-e495-4ef3-9bb4-0703888a9f68",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Backstreet Boys",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91719tf",
+  "mbid": "2f569e60-0a1b-4fb9-95a4-3dc1525d1aad",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bryan Adams",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171ugV",
+  "mbid": "4dbf5678-7a31-406a-abbe-232f8ac2cd63",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lenny Kravitz",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712uf",
+  "mbid": "0ef3f425-9bd2-4216-9dd2-219d2fe90f1f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Major Lazer",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GUh7",
+  "mbid": "75be165a-ad83-4d12-bd28-f589a15c479f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Electric Light Orchestra",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171CF7",
+  "mbid": "0c502791-4ee9-4c5f-9696-0602b721ff3b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Clairo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pWBf",
+  "mbid": "d786f59b-1836-4ddb-8393-ab753edbe984",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Aphex Twin",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Cd50",
+  "mbid": "f22942a1-6f70-4f48-866e-238cb2308fbd",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Script",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GGs0",
+  "mbid": "4c98aa1b-34eb-4336-987f-5e50aa059c00",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cyndi Lauper",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171GrV",
+  "mbid": "7bd9e20e-74b9-446a-a2ed-a223f82a36e7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Earth, Wind & Fire",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91711UV",
+  "mbid": "535afeda-2538-435d-9dd1-5e10be586774",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cigarettes After Sex",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fN6V",
+  "mbid": "34557d8f-ee4a-44ab-ae6e-49bb8ac604d0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Van Halen",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91718O0",
+  "mbid": "b665b768-0d83-4363-950c-31ed39317c15",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Skrillex",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GUI7",
+  "mbid": "ae002c5d-aac6-490b-a39a-30aa9e2edf2b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lupe Fiasco",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175W37",
+  "mbid": "cf15719f-51f9-4db8-a15d-5eed9664ce69",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "TV Girl",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91728t0",
+  "mbid": "38f0c7ac-46eb-49ca-b3ab-c785ccd05a60",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nina Simone",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712Q7",
+  "mbid": "2944824d-4c26-476f-a981-be849081942f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Hoobastank",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171raV",
+  "mbid": "2fa0d3ac-b64c-401a-b0a1-4915ba6cc157",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jamiroquai",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171hN7",
+  "mbid": "f4857fb9-e255-4dc6-bd01-e4ca7cc68544",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Prodigy",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Goc0",
+  "mbid": "4a4ee089-93b1-4470-af9a-6ff575d32704",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Elliott Smith",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171bJ7",
+  "mbid": "03ad1736-b7c9-412a-b442-82536d63a5c4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Metric",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175wGf",
+  "mbid": "4449ccf6-c948-4d33-aa97-b6ad98ce4b5b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Halsey",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173YE7",
+  "mbid": "3377f3bb-60fc-4403-aea9-7e800612e060",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Santana",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91718pf",
+  "mbid": "9a3bf45c-347d-4630-894d-7cf3e8e0b632",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Chainsmokers",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172C-f",
+  "mbid": "91a81925-92f9-4fc9-b897-93cf01226282",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "DJ Khaled",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GKL0",
+  "mbid": "081a2d60-9791-4e05-a075-f1890355eeee",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Breaking Benjamin",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91758b7",
+  "mbid": "854a1807-025b-42a8-ba8c-2a39717f1d25",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "XXXTENTACION",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174DsV",
+  "mbid": "61af87f4-16ee-4431-8504-cc06187079fb",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Gym Class Heroes",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175n_V",
+  "mbid": "f4d4b515-0b74-423f-a161-db184330c37c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Eurythmics",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171CU7",
+  "mbid": "b4d32cff-f19e-455f-86c4-f347d824ca61",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Feist",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175NnV",
+  "mbid": "a670e05a-cea8-4b37-bce9-d82daf1a0fa4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rise Against",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171zy0",
+  "mbid": "606bf117-494f-4864-891f-09d63ff6aa4b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sean Kingston",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GFXf",
+  "mbid": "f7eb3be3-1065-4a53-94d4-e2d0c15c0b33",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Gucci Mane",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G-Vf",
+  "mbid": "36494952-f434-45d8-a958-8b4acdbcf8a8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Justice",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171q40",
+  "mbid": "860b2707-6153-4e3a-aa57-74d2b42c55b5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lil Uzi Vert",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Kjp0",
+  "mbid": "8837b875-3689-4646-b3fd-d8b53815c7a8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mazzy Star",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91724Zf",
+  "mbid": "c48d4327-8122-4286-af66-05e1ee6ac4d8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Alanis Morissette",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171K37",
+  "mbid": "4bdcee62-4902-4773-8cd1-e252e2e31225",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Simple Plan",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175egf",
+  "mbid": "b345af35-205e-4eca-8006-029e5c20127e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ciara",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175Rm7",
+  "mbid": "03172286-f7ed-4864-a4db-459cd5ca9790",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Big Sean",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Gn8f",
+  "mbid": "942a9807-9c1a-4a0e-a285-1fde2c5be9d1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Owl City",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G4mV",
+  "mbid": "ad279295-653f-42e1-9aaa-b731df2e78ba",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Miguel",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178th0",
+  "mbid": "285e1285-aecc-478f-a8da-0c8cf69e1217",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pharrell Williams",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175hB7",
+  "mbid": "149f91ef-1287-46da-9a8e-87fee02f1471",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "beabadoobee",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179Xxf",
+  "mbid": "88d17133-abbc-42db-9526-4e2c1db60336",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "TLC",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91715_V",
+  "mbid": "99790314-885a-4975-8614-9c5bc890364d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Swedish House Mafia",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G0e0",
+  "mbid": "99075985-0d80-4692-a15e-b16f78831792",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Neil Young",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712r0",
+  "mbid": "75167b8b-44e4-407b-9d35-effe87b223cf",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Dominic Fike",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bFKV",
+  "mbid": "e337c918-098f-418e-97a2-81dc224b1bf9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tiësto",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Dm0",
+  "mbid": "aabb1d9f-be12-45b3-a84d-a1fc3e8181fd",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Goo Goo Dolls",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91716MV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ramones",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712E7",
+  "mbid": "d6ed7887-a401-47a8-893c-34b967444d26",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Enrique Iglesias",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Q70",
+  "mbid": "35f866dc-c061-48ba-8157-cf2e0eac4857",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fiona Apple",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171bhV",
+  "mbid": "a9ee533f-8871-4f62-a6bb-91eb264abc90",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Grimes",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172SRf",
+  "mbid": "7e5a2a59-6d9f-4a17-b7c2-e1eedb7bd222",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Glass Animals",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917omp7",
+  "mbid": "20395131-fbde-43ce-b141-b700cfdae99c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Hans Zimmer",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917ubK0",
+  "mbid": "e6de1f3b-6484-491c-88dd-6d619f142abc",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lil Nas X",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bKi0",
+  "mbid": "0b30341b-b59d-4979-8130-b66c0e475321",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "DJ Snake",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917oDrV",
+  "mbid": "aa114151-4a17-42b0-8e20-37b434627479",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The 1975",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178147",
+  "mbid": "5b6ebfe0-f72b-4902-bba9-74c8af0f1af0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Zedd",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Ctpf",
+  "mbid": "56c4b861-0922-4c3a-a9b9-3bfcb00f8274",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Clean Bandit",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917op2V",
+  "mbid": "dacc2d64-7e59-42a8-87a9-10c53919aff2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Marshmello",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fCNV",
+  "mbid": "301b45a4-b8b9-410e-8344-4b4eaf96691a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "LMFAO",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GbC0",
+  "mbid": "ed5d9086-e8cd-473a-b96c-d81ad6c98f0d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Don Toliver",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bVK7",
+  "mbid": "a0723a3c-4135-438e-85c5-012712144ede",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pantera",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91715N7",
+  "mbid": "541f16f5-ad7a-428e-af89-9fa1b16d3c9c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Spice Girls",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171bKV",
+  "mbid": "bf0caafc-2b20-4e07-ab85-87e14ff430ce",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sonic Youth",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171FH0",
+  "mbid": "5cbef01b-cc35-4f52-af7b-d0df0c4f61b9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Marías",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pYn0",
+  "mbid": "7a3970c9-ecd8-4eee-a267-4d8c77d97ff3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tool",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171FTf",
+  "mbid": "66fc5bf8-daa4-4241-b378-9bc9077939d2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Daryl Hall & John Oates",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171G-0",
+  "mbid": "debabff3-2559-46e5-862d-ef2a906d7010",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Kid LAROI",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_QGV",
+  "mbid": "80609a00-b394-4a49-975b-2db6b543fa97",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "will.i.am",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rAUf",
+  "mbid": "d574c9bd-46f6-440a-8d6a-8412a283eeb1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "All Time Low",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G5gV",
+  "mbid": "62162215-b023-4f0e-84bd-1e9412d5b32c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mike Posner",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GPC0",
+  "mbid": "5b64e344-b2fb-47bd-bd7b-4c793b17d472",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "girl in red",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179gk7",
+  "mbid": "4ae429fe-735c-4968-8253-a591421b1bd0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Labrinth",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CaP0",
+  "mbid": "dc99e6fd-c710-4f79-b74b-127b4d0b7849",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "fun.",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GE90",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Charlie Puth",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KKd7",
+  "mbid": "525f1f1c-03f0-4bc8-8dfd-e7521f87631b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Lumineers",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917u1F7",
+  "mbid": "bfcb6630-9b31-4e63-b11f-7b0363be72b5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tove Lo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173pH7",
+  "mbid": "56756959-1e78-429c-b897-e1d056cb0225",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Soulja Boy",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G6TV",
+  "mbid": "29eead4d-3793-4625-8727-c03edbb38b8b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Metro Boomin",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KaB7",
+  "mbid": "59db3d82-86ea-451f-881f-dffc8ec387c9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Playboi Carti",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KLZ7",
+  "mbid": "2baf3276-ed6a-4349-8d2e-f4601e7b2167",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Disclosure",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178AT7",
+  "mbid": "5b5aac7b-0c4b-47ad-b814-a513fac6fde1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Stone Temple Pilots",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171FW7",
+  "mbid": "8c32bb01-58a3-453b-8050-8c0620edb0e5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Troye Sivan",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KzW7",
+  "mbid": "e5712ceb-c37a-4c49-a11c-ccf4e21852d4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bullet for My Valentine",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175mG0",
+  "mbid": "d530dbf9-69b1-404f-98f2-0431104f5a1e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Vance Joy",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917ook7",
+  "mbid": "df36f6db-5987-46ed-9d02-0cf36ed4e060",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Creed",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171buf",
+  "mbid": "4b1a830b-0a1f-42e5-b8d5-1d6743912e99",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Zara Larsson",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917otRV",
+  "mbid": "134e6410-6954-45d1-bd4a-0f2d2ad5471d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cults",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GET0",
+  "mbid": "4c671d5a-7027-4398-8055-03e61d1a3967",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cardi B",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fNfV",
+  "mbid": "2f3c4d70-0462-40da-bba3-0aec5772c556",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "George Harrison",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Cy7",
+  "mbid": "42a8f507-8412-4611-854f-926571049fa0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Conan Gray",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179_07",
+  "mbid": "850a8b03-98a7-4fd3-afbd-5e5520b4ef5f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Laufey",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_Qv0",
+  "mbid": "21a89505-10a9-4ac0-8388-833bc07b9f86",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Camila Cabello",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174HQ7",
+  "mbid": "01b8b5bf-06cb-45da-85fb-61ada72fcd69",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mary J. Blige",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91715ZV",
+  "mbid": "db76c5ca-d555-4f09-b1db-baa1b713d875",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rick Ross",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Ga3f",
+  "mbid": "13bcb2bb-db37-4397-baf5-e0f085be2d64",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Daniel Caesar",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fLyV",
+  "mbid": "b46e298d-d3a5-4695-a03e-63e8c523b23e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "LCD Soundsystem",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175st0",
+  "mbid": "2aaf7396-6ab8-40f3-9776-a41c42c8e26b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "A Tribe Called Quest",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171G20",
+  "mbid": "9689aa5a-4471-4fb4-9721-07cecda0fa9f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Foreigner",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171CG7",
+  "mbid": "160629ab-ec18-4931-8c95-02cb92d06186",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Willow",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917ba2V",
+  "mbid": "e1af94bb-71da-4def-b716-731d67acf7df",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Djo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qJjf",
+  "mbid": "83cedfd0-a118-48eb-ad71-72f4c2f95fd2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Seether",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91755R7",
+  "mbid": "fbcd7b29-455f-49e6-9c4f-8249d20a055e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sixpence None the Richer",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171xXV",
+  "mbid": "c2c70ed6-5f10-445c-969f-2c16bc9a4c2e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Wu-Tang Clan",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171P20",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Megan Thee Stallion",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179QyV",
+  "mbid": "ee27b2d8-648c-4a9d-a68c-e55066959975",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bastille",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172ODf",
+  "mbid": "7808accb-6395-4b25-858c-678bbb73896b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cocteau Twins",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Fxf",
+  "mbid": "000fc734-b7e1-4a01-92d1-f544261b43f5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pet Shop Boys",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Fd0",
+  "mbid": "be540c02-7898-4b79-9acc-c8122c7d9e83",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Melanie Martinez",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917oP4f",
+  "mbid": "0df563ec-1a79-486e-a46d-5b9862a40311",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Khalid",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174tq7",
+  "mbid": "0e8496ce-87a0-4529-aed7-8ebd7253bbf7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Marina",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GLKV",
+  "mbid": "b37e091c-d2ee-4707-bfb1-402fc32f29bd",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "alt-J",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172bCf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lord Huron",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GDg7",
+  "mbid": "51c76d97-0635-433c-b26d-66beb81657f8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "21 Savage",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fAP7",
+  "mbid": "37b2cb82-ef79-4d46-a184-a549450aa231",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "d4vd",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hdI0",
+  "mbid": "d8e07579-ff5a-41f2-b7a7-c71880b8287a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "t.A.T.u.",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GkH0",
+  "mbid": "7c20f558-d664-42bd-b6f1-81acf9dbb72d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Estelle",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G1b0",
+  "mbid": "4c7a5854-6b75-4623-a684-6a3d785d9015",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cascada",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175HiV",
+  "mbid": "04af2581-6692-4f14-a7fe-151a36f20368",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "5 Seconds of Summer",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178oX0",
+  "mbid": "830e5c4e-6b7d-431d-86ab-00c751281dc5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Slayer",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171G_0",
+  "mbid": "bdacc37b-8633-4bf8-9dd5-4662ee651aec",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "MF DOOM",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171DIf",
+  "mbid": "188711ed-c99b-439c-844a-ca831f63a727",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Grouplove",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917ufxV",
+  "mbid": "d8e41375-bd8d-4e39-9da7-f0c171e97086",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Dolly Parton",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171F80",
+  "mbid": "1d543e07-d0d2-4834-a8db-d65c50c2a856",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rob Zombie",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171_H7",
+  "mbid": "c995a379-60b9-404b-bd97-a7e2de0751d3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Janet Jackson",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91715w7",
+  "mbid": "6be2828f-6c0d-4059-99d4-fa18acf1a296",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Slowdive",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173nY0",
+  "mbid": "a16371b9-7d36-497a-a9d4-42b0a0440c5e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Daddy Yankee",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175c3V",
+  "mbid": "2f522f5c-111c-4ce8-8bd0-d82e97c227ad",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "ZAYN",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fNP0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Megadeth",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171G97",
+  "mbid": "a9044915-8be3-4c7e-b11f-9e2d2ea0a91e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Eyedress",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91732tf",
+  "mbid": "0b619a94-481c-40ac-abae-85f33f2b1588",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lil Peep",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174U67",
+  "mbid": "92da4329-77a4-425c-8e92-4280110cace9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Far East Movement",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Gt87",
+  "mbid": "6bd5655c-b7fe-48ee-8925-c2d2d8798618",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Staind",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171ORf",
+  "mbid": "777a21a8-0d0f-4cf3-86b4-65bc0eba5649",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "bôa",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Gy9f",
+  "mbid": "ca1dcba2-792c-4550-abf2-7b45396e81ca",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "America",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171oqf",
+  "mbid": "34cf95c7-4be9-4efd-a48a-c2ea4a0bb114",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jeremih",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Gprf",
+  "mbid": "1c009a08-74d1-4682-bc56-8bfbe9e66b62",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Skillet",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GdF7",
+  "mbid": "16a43d5e-c52d-4eaa-9c3b-00b2c1d8e816",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Neutral Milk Hotel",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917oGU0",
+  "mbid": "a506f761-2c22-4b2f-8a94-bd748c2c8f75",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Phoebe Bridgers",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KN9V",
+  "mbid": "96855c21-b832-4366-ba12-0d2330c36a86",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Icona Pop",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178dAf",
+  "mbid": "c5f259d0-abd8-418e-81ee-3965fd4e4e9a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Men I Trust",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fEI0",
+  "mbid": "25ab7547-a4d2-480b-b028-c7f3497bc858",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pierce the Veil",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GHdV",
+  "mbid": "8ed919fb-eaee-45a1-ba99-b3ede9ca5f1d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Frou Frou",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917q2Pf",
+  "mbid": "d614b0ad-fe3a-4927-b413-48cb831a814b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "A Perfect Circle",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171rq0",
+  "mbid": "078a9376-3c04-4280-b7d7-b20e158f345d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bonnie Tyler",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917usU0",
+  "mbid": "0aa8294b-6332-4b65-b677-e3a1f8591d3b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Hole",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171QrV",
+  "mbid": "1dcc8968-f2cd-441c-beda-6270f70f2863",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pavement",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171fZV",
+  "mbid": "36bfa85f-737b-41db-a8fc-b8825850ffc3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Drums",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GO_f",
+  "mbid": "c3ecef5d-84f3-4942-8c24-0a626343c3f4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "G-Eazy",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917uAkf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Drowning Pool",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171WjV",
+  "mbid": "87a73cf0-ebdf-483d-8b5a-3db1e5e72122",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Third Eye Blind",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91719Ef",
+  "mbid": "92a42e82-b36f-4308-82c1-68bad2e03c89",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Meghan Trainor",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173ReV",
+  "mbid": "b2029169-2574-4305-820f-252a5fde3697",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "PJ Harvey",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712J7",
+  "mbid": "e795e03d-b5d5-4a5f-834d-162cfb308a2c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Alex G",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917oh_f",
+  "mbid": "7545a8ca-a3c9-490f-93f9-68886dcddff1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Chris Isaak",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171uzf",
+  "mbid": "479497d4-e7c2-4e78-972e-56e78fac3995",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Diplo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917j9R7",
+  "mbid": "a56bd8f9-8ef8-4d63-89a4-794ed1360dd2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Men at Work",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Gm7",
+  "mbid": "395cc503-63b5-4a0b-a20a-604e3fcacea2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Wallows",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pqZV",
+  "mbid": "9fae44ec-b95c-4b0f-a0a6-f0008613eabf",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Martin Garrix",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917owjf",
+  "mbid": "3e1f2ee4-16be-4406-bf18-6173840cf2b1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Leonard Cohen",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171ubf",
+  "mbid": "65314b12-0e08-43fa-ba33-baaa7b874c15",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Neon Trees",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Gtvf",
+  "mbid": "16243662-8538-4746-a0fb-0d15b5828b8e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Brent Faiyaz",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917phFf",
+  "mbid": "201412c6-7ced-472b-87a9-9259ec3c07d3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Doechii",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_xL7",
+  "mbid": "9f75277c-b283-4846-ac8c-f932255cd0ac",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "*NSYNC",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171b07",
+  "mbid": "603ba565-3967-4be1-931e-9cb945394e86",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Surf Curse",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917faa0",
+  "mbid": "89ea85c2-c90a-46ea-93db-9bed95d5c8f8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Crowded House",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171FN7",
+  "mbid": "9854d99f-d954-4c0f-9ae5-58a0cdd885f5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Thundercat",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CBTV",
+  "mbid": "044fd265-79dd-43eb-afc4-8b20becf7e17",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rex Orange County",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917p_XV",
+  "mbid": "883cbf1f-dcaa-4d17-b9ed-394e1fdabc87",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Baby Keem",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bxe7",
+  "mbid": "81d12ca7-5b89-4d21-8736-860b7400b4eb",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Scissor Sisters",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175J57",
+  "mbid": "4236d929-9a81-4c8e-97c3-8d3306780f50",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Erykah Badu",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171b0f",
+  "mbid": "321531fc-db73-4ffa-a959-61a61a2908c1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Blood Orange",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172_7f",
+  "mbid": "c74877e0-58e0-41dd-a022-29361095d753",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "French Montana",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917uxaf",
+  "mbid": "45dc5f07-6609-4760-a933-8c9e0f858d05",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tom Odell",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178PgV",
+  "mbid": "fee6a7fb-80d9-4290-a171-e48f1f20e381",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tory Lanez",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91788f0",
+  "mbid": "5b8ec72b-9e39-4a06-a2bf-964166b92a71",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Phantogram",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GpL0",
+  "mbid": "dfe78af2-779e-4137-826a-3073a16e3278",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "sombr",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917ji4V",
+  "mbid": "502cf908-9921-48bc-bf0e-265c881c0156",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "PARTYNEXTDOOR",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917oX37",
+  "mbid": "f23ef341-33bd-47c1-b83c-846a78581f05",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "my bloody valentine",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178Jq7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rae Sremmurd",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173tB0",
+  "mbid": "c78c3026-426b-4580-ab23-08490bb8b515",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Robyn",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GkEV",
+  "mbid": "5a8e07d5-d932-4484-a7f7-e700793a9c94",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Hotel Ugly",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QtC0",
+  "mbid": "d1338719-b2e2-45d6-a457-671232f553d4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "ScHoolboy Q",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Cv3V",
+  "mbid": "bce6d667-cde8-485e-b078-c0a05adea36d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Yes",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91718-V",
+  "mbid": "c1d4f2ba-cf39-460c-9528-6b827d3417a1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Capital Cities",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CtLf",
+  "mbid": "119a2c67-e6d6-41cf-a58c-c51b75c80daa",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "3OH!3",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GC1f",
+  "mbid": "125948ec-7f91-4d1a-8b83-accbf50fae3d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Flyleaf",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175M4V",
+  "mbid": "9011971a-df29-4b57-8889-2e5e9a645cbe",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mother Mother",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Gydf",
+  "mbid": "69681b02-05b8-4685-80cb-e98983b7a96f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "VACATIONS",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pNN7",
+  "mbid": "23aa72e4-5865-4f69-a8af-8064229b401a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Blue Öyster Cult",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171uwf",
+  "mbid": "c7423e0c-ab3e-4ab4-be10-cdff5a9d3062",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mötley Crüe",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Gb7",
+  "mbid": "26f07661-e115-471d-a930-206f5c89d17c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Trippie Redd",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917ppmf",
+  "mbid": "8032cf05-d916-4b2a-9c53-6e75d4a24bd8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Chase Atlantic",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pu6f",
+  "mbid": "ecab255c-3af3-4154-87ec-2685041ce297",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Wilco",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Qw7",
+  "mbid": "9e53f84d-ef44-4c16-9677-5fd4d78cbd7d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Flume",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178fMV",
+  "mbid": "35fd8d42-b4a6-4414-9827-8766bd0daa3c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ace of Base",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171KKV",
+  "mbid": "d4a1404d-e00c-4bac-b3ba-e3557f6468d6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fitz and the Tantrums",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GcuV",
+  "mbid": "8560d4e8-05e2-4c20-980b-ad2db445dd5d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Stone Roses",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712S7",
+  "mbid": "b5fa29f1-6c22-4321-a488-b5f363b06b06",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Chevelle",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171cz7",
+  "mbid": "8456e9f7-debf-4579-a86c-33a325a35d2d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Wheatus",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175V3V",
+  "mbid": "741a2892-1c5d-402f-a769-2096356c77d7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Walters",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KMC7",
+  "mbid": "61cdb045-7f89-4eb1-b3ed-35db94d9ab99",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Iggy Azalea",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172950",
+  "mbid": "3a052c99-8c18-484a-8beb-9873b4fb3106",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Young Thug",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917uZFf",
+  "mbid": "1a9cc1a5-51f1-4deb-91fe-da866f6cc6ce",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Le Tigre",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171zdf",
+  "mbid": "2d67239c-aa40-4ad5-a807-9052b66857a6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Migos",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173Anf",
+  "mbid": "0221734a-35a8-40f7-b5c5-2f61a200bc7c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "A Day to Remember",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G170",
+  "mbid": "db008806-16f6-48fc-8521-3d953709689d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Waka Flocka Flame",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GnEV",
+  "mbid": "59eda569-b380-4958-b98c-051d1667b3e1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Suki Waterhouse",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QfmV",
+  "mbid": "8389ff77-a7a4-4ba4-bf1b-17ded47d41a1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ravyn Lenae",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917faHV",
+  "mbid": "94c64122-dbd4-4927-b2fa-f204b0b4b0c2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kodak Black",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fimV",
+  "mbid": "5ec1ecc6-4535-4911-a27a-e26343f4a189",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Don Omar",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175yK0",
+  "mbid": "afbdfac9-2955-4404-ae22-c08bf1c1b51e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "She & Him",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GOa7",
+  "mbid": "fb821608-35fd-4a45-a4b2-1a0537cee111",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Aurora",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173lg7",
+  "mbid": "8487d398-f064-4107-a6aa-1da3e7c45315",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jack Harlow",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fIRV",
+  "mbid": "134cb0bc-06fa-42f7-8078-b0c858349975",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Taking Back Sunday",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91755X0",
+  "mbid": "350bce49-c21b-4137-b50a-0766ded07e4d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Gunna",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917psY7",
+  "mbid": "100b8734-f4f0-4536-9960-47f7c59d1b4c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Used",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91753o0",
+  "mbid": "8262d8e4-9137-4bb3-a787-3caabbbc13e9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Little Mix",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172RI7",
+  "mbid": "38f59974-2f4d-4bfa-b2e3-d2696de1b675",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Faye Webster",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178fLV",
+  "mbid": "ce4a1c08-6912-423f-bf6c-97ce69f5e89f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Current Joys",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fQP7",
+  "mbid": "680a0350-cee3-49d4-a85d-7c9f4657fb97",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Cars",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175Mj0",
+  "mbid": "092b603f-eb4c-4958-b10e-02420de5885b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Alan Walker",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fQVV",
+  "mbid": "71d524e4-2ae2-4a3e-baa0-0c021925db7a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Eve",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171LXV",
+  "mbid": "1ac10f5e-2079-4435-b78f-dda6ecdeba15",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pulp",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171pYf",
+  "mbid": "76b2e842-5e85-4c97-ab62-d5bc315595b5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lil Yachty",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174v57",
+  "mbid": "a668565b-41b8-44a8-9d5c-8e609dbf69fc",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "blackbear",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173Fcf",
+  "mbid": "e07d9474-00ea-4460-ac27-88b46b3d976e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Strawberry Guy",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917j4LV",
+  "mbid": "287cb25a-9b05-474c-9ad1-38046a46c37f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cassie",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175Hc0",
+  "mbid": "4a8ac23a-e27a-44db-814a-f8c31beb68e6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lil Tecca",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917b_y0",
+  "mbid": "e6fdf3f9-8077-4126-b0cf-94da9a8b627e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lauv",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917f0A0",
+  "mbid": "c0ef2ba5-a7b7-40ea-bd27-30acccfcac11",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Chief Keef",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172yfV",
+  "mbid": "9118f524-be76-4eaf-875c-ccf15e2a2ad6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Steely Dan",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712Y0",
+  "mbid": "e01c3376-15fa-40d7-b747-5f219bdefdd7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Meek Mill",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CDv0",
+  "mbid": "31bcadcc-e1da-4cad-bec8-2f4f1d41b095",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Alessia Cara",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917K0e0",
+  "mbid": "97e69730-3791-423b-9770-287261588854",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "HIM",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174Rtf",
+  "mbid": "4cc51547-88ae-49a2-bf7e-0ef65ee7a94c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fetty Wap",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917K8TV",
+  "mbid": "e3492ea0-5997-4241-a7bf-2fd7fb1bfad1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Stranglers",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712wf",
+  "mbid": "a96d82a0-cdca-40bf-b4c8-3d7ec178d85b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Matt Maltese",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174n57",
+  "mbid": "b27d089c-6b08-4067-9293-406cebde0374",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kehlani",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173Ty7",
+  "mbid": "3260ce89-5eb0-4c6a-89c7-379c0dfc2ab9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Joey Bada$$",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172ydf",
+  "mbid": "9757ae7d-44b1-4d63-81ce-b463fe27b9ae",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Summer Walker",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179b17",
+  "mbid": "9167f739-da47-4495-9d63-9c13b40114ac",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bryson Tiller",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KBFf",
+  "mbid": "d8fd8d9b-473b-4f06-83c8-869b1bb9de89",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Malcolm Todd",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jb-V",
+  "mbid": "6c2a79b8-2b5c-4c2d-b495-6a446811bf9d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Azealia Banks",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917257V",
+  "mbid": "0c3505e7-d884-43cf-9028-d318607190a4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Logic",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Cn90",
+  "mbid": "96a83a1f-f78f-4f1c-bf89-9b8dd3d91872",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Yeat",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Q3M0",
+  "mbid": "9e6a6a2f-f696-4cc0-87f1-e4f712e46802",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Madison Beer",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917prs7",
+  "mbid": "749ef494-8518-4b49-b685-63d8e728d25c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ty Dolla $ign",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917ozIV",
+  "mbid": "7bd66c18-cb33-49aa-9279-140acedbdb49",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fifth Harmony",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917o-Vf",
+  "mbid": "e565610b-9a8f-451d-b594-ea658d76f725",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kavinsky",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GMl7",
+  "mbid": "eb6de5f6-98f8-4b5a-bfdc-f87fa4936baa",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tinashe",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173jL7",
+  "mbid": "396a9525-0994-4542-b480-c4587feeb476",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "10cc",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175XH7",
+  "mbid": "f37c537b-3557-4031-bfd6-ab63ced32854",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Big Thief",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917K5F0",
+  "mbid": "9f81247f-7f57-42f3-a8ba-75bef554e591",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "KATSEYE",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917q517",
+  "mbid": "abbf7d85-9a7f-4a6c-80bd-bf71f2c7d520",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Siouxsie and the Banshees",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175dy7",
+  "mbid": "78ea5ea1-3c4d-4b7e-ac5d-68900319ebe2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "FKA twigs",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173N97",
+  "mbid": "1e4e9db7-5068-4a9c-bdd0-5777e47172c8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Keyshia Cole",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175z97",
+  "mbid": "ef73e6ed-9096-4ddb-9799-b94874d0ce33",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ginuwine",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171LWf",
+  "mbid": "9e5fd95d-c0c1-412c-be11-06e7fbe99556",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Addison Rae",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917r4QV",
+  "mbid": "610b71d9-fa78-47d6-9073-083922e73840",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Artemas",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QYD7",
+  "mbid": "0211be88-dc0f-4002-a1de-4001bb359d51",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "BROCKHAMPTON",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fIWV",
+  "mbid": "3ac96b4c-4f42-48c8-b793-84dbf54d7ac6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "JVKE",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_c9V",
+  "mbid": "f29e031f-c6b6-4d52-8edd-dc8e14378e74",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cavetown",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91792L7",
+  "mbid": "7999a8a1-6cbd-4453-8dd4-ebd03a10e44f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lloyd",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917umgf",
+  "mbid": "e9296a90-9c59-4657-9165-1f1b5319de00",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jungle",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173vmf",
+  "mbid": "3dd6a140-4526-4792-94dd-ba271e6ed041",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lil Baby",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pNq0",
+  "mbid": "d42a5768-ada1-4fb6-85fd-f61aba6264e0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Denzel Curry",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173Fz7",
+  "mbid": "5f95440d-7737-4a36-9bcf-c05337f7129b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "A$AP Ferg",
+  "tier": 1,
+  "tmAttractionId": "ZkDnngzZBJE2RoR1aa5_I6YvPQatst",
+  "mbid": "8ab5d936-49d1-415e-92c8-151e0e7dd912",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Duster",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bABf",
+  "mbid": "879d43c6-13a8-42f6-b8df-a9b7d50aa9e2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Solange",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G9N7",
+  "mbid": "410e7fd3-b865-4fa0-bb18-1b7fd53382ca",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Oliver Tree",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174ysV",
+  "mbid": "1fa3bded-908f-47be-9784-3c9ef850682b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ava Max",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179XWV",
+  "mbid": "add5f522-25df-41c4-815e-0ca9f60b83e4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "$uicideboy$",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917f2N7",
+  "mbid": "0d23ca32-6136-4522-8cc2-1b624d0ea2d1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Echo & the Bunnymen",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91716Vf",
+  "mbid": "ccd4879c-5e88-4385-b131-bf65296bf245",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Beach Bunny",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179Vp0",
+  "mbid": "bdb2e504-7372-4f5b-a6c7-d578021c53b5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Thirty Seconds to Mars",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175GpV",
+  "mbid": "d8354b38-e942-4c89-ba93-29323432abc3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "KAYTRANADA",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917ooF0",
+  "mbid": "e56aee57-d90e-40cf-a70d-beb70f6f3c69",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Omar Apollo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91798O0",
+  "mbid": "0b966a38-5ad9-43c1-b86b-c07079523165",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Roar",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178bIV",
+  "mbid": "152e8c18-d65a-4ac5-af97-43a2191d2f64",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Stevie Nicks",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712s0",
+  "mbid": "b7f2cca2-72c6-41fb-ae33-53370fc62fe7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cafuné",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fxc7",
+  "mbid": "91faf71d-89f3-4bd6-8a54-3701a0dd753f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pop Smoke",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917brl7",
+  "mbid": "253c9ae7-850b-46be-8fbb-65e9fa621058",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Gesaffelstein",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CL60",
+  "mbid": "cc3e537d-ff34-423f-8cd6-635a80f4dba7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Roddy Ricch",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179Ig0",
+  "mbid": "5721c227-4caf-48b1-bbfc-1a4ed3276963",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Earl Sweatshirt",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172De0",
+  "mbid": "8b22acd6-20e6-4463-a75c-c14b5cfdb666",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "DaBaby",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179BhV",
+  "mbid": "87ae83df-6173-40cc-a0f2-bad543faa6aa",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mindless Self Indulgence",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175d5V",
+  "mbid": "44f42386-a733-4b51-8298-fe5c807d03aa",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "bbno$",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pHC0",
+  "mbid": "27638856-79a1-4495-b7da-1912899560c7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tyla",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917h2v0",
+  "mbid": "2bf761c6-4bcf-4cfc-a388-8fcb2eea8cc8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Gigi Perez",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917j9-0",
+  "mbid": "8ab64ebd-200e-47af-a3fc-92540e186214",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bebe Rexha",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173lT7",
+  "mbid": "db8fad3a-e131-47a1-8782-c2ee93708cdd",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fugazi",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Ft0",
+  "mbid": "233fc3f3-6de2-465c-985e-e721dbabbace",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rick James",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91715Df",
+  "mbid": "cba9cec2-be8d-41bd-91b4-a1cd7de39b0c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Yot Club",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_J30",
+  "mbid": "7df45a14-19d1-4273-b073-c7292790a6a6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Spandau Ballet",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Gfs0",
+  "mbid": "4c0d9acf-a8a1-4765-9c56-05f92f68c048",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Santigold",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172oQf",
+  "mbid": "97b20fe3-0924-4a5f-9955-d0b5c5f9587f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "NLE Choppa",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bdnf",
+  "mbid": "2873b450-13c6-4ca1-8ca3-646c25af3202",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Magdalena Bay",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_gDf",
+  "mbid": "68c261d5-48c8-4ea9-9466-9fc908dc79bb",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "A Boogie wit da Hoodie",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174hA7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "¥$",
+  "tier": 1,
+  "tmAttractionId": "rZ5wJzynMZyJyZ1Avaf7t",
+  "mbid": "58daf317-be5f-439f-a04d-0d6727f1a3b2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Offset",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179DM7",
+  "mbid": "c0c401e0-eb84-4266-9ccb-9160988e7a8e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lizzy McAlpine",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_p3V",
+  "mbid": "ee0b11de-0c8a-4267-9886-198f4579e1db",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ashnikko",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179bBf",
+  "mbid": "6dee6b6f-aa72-424c-9c8c-0d31ba5ff673",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Beach Weather",
+  "tier": 1,
+  "tmAttractionId": "Z7r9jZa325",
+  "mbid": "ddb0a21a-af9f-4333-aa31-214bdaafad37",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Red Velvet",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179Rx7",
+  "mbid": "4f0cb3b7-6c06-4317-ae35-ddf3106a17ee",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sky Ferreira",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917u9N0",
+  "mbid": "05f3353e-e2d9-4344-a3c9-8009dd8e0427",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lit",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171-y0",
+  "mbid": "5ccb9a53-092d-4806-b337-470a582893d7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "She Wants Revenge",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175M57",
+  "mbid": "f434ae2b-b203-490d-a8ac-aa9cd51c0e73",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jhené Aiko",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178_T0",
+  "mbid": "ceb3f5b7-9f1a-430f-afbe-976fdcf30482",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ms. Lauryn Hill",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Q9f",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Vince Staples",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172yo0",
+  "mbid": "78e854b8-9713-4ff2-9218-6b3784893bff",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Adrianne Lenker",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179jHf",
+  "mbid": "763cb144-afdb-471e-bd86-d4f5b9b58641",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Falling in Reverse",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CEs7",
+  "mbid": "e56ab1ae-1cfa-4d0e-b33b-af31bff677c7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Dave",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173dwV",
+  "mbid": "c7740223-c657-4b0a-a0a4-b8349169e760",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Living Tombstone",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hsO7",
+  "mbid": "3f6ee55e-d523-4dd8-a027-7a6af9909ae1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Alec Benjamin",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174ZZ0",
+  "mbid": "21a14ee3-cede-420a-9d6d-a33517d2f952",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "JID",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174My0",
+  "mbid": "d616b606-cf6a-4b6e-ab0f-e253b8db6610",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fifty Fifty",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917q2hV",
+  "mbid": "0ab64f50-5003-4090-acd0-9b6b83e6ea29",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Car Seat Headrest",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917K_tV",
+  "mbid": "0fabbc1d-8d94-4a61-bd1d-1099ad1e4559",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Montell Fish",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bgif",
+  "mbid": "20634ec0-4bdb-47dc-9bf4-07ed76f8154a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Type O Negative",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171KMV",
+  "mbid": "a63df8c3-28e4-41db-bac2-c6c6e8ff8f28",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ricky Montgomery",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_QXf",
+  "mbid": "c1f1cf38-1fee-4106-871d-ac392a28b91a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Avalanches",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fISf",
+  "mbid": "a6623d39-2d8e-4f70-8242-0a9553b91e50",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jordana",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bwRf",
+  "mbid": "6fb92cac-6739-48dc-87b6-8ad634fc5740",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Yung Lean",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917oiT7",
+  "mbid": "44923a7d-f59e-46f2-8bc7-9f49b7ed0a00",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pinegrove",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917flrf",
+  "mbid": "871fe26f-544d-4275-a5dd-af5442d15b92",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Porter Robinson",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CI-f",
+  "mbid": "4ae36ade-1798-48c4-b06b-cc68b7d3d83f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Magnetic Fields",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171bnV",
+  "mbid": "3ff72a59-f39d-411d-9f93-2d4a86413013",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ween",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171b3V",
+  "mbid": "c0eee88b-47f2-4cd2-ac48-a045e902a432",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Isaiah Rashad",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172HJV",
+  "mbid": "37547347-ea75-45fa-9766-ff36b44d8147",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Flo Milli",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917__9f",
+  "mbid": "21dab5d7-3bda-4f72-a054-6379729dcb62",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ethel Cain",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Q4f7",
+  "mbid": "677e31f1-4035-463c-8ca4-41175440c919",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Liana Flores",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Qts0",
+  "mbid": "9f93c34a-2dc2-400e-ada5-937c3efc3437",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Edward Maya",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Ctqf",
+  "mbid": "257891db-1f69-4660-894d-075e355431a8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Dove Cameron",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KV20",
+  "mbid": "831dcf03-b745-436b-922f-6a2baaf45e57",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Rare Occasions",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pZk7",
+  "mbid": "37177491-dc86-4536-8ac2-51887ccfa0bb",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Panchiko",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Qec7",
+  "mbid": "8f64d6ea-3f6c-408c-b2e0-e5334b28dae9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Wolf Alice",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178c40",
+  "mbid": "3547f34a-db02-4ab7-b4a0-380e1ef951a9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Freddie Gibbs",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GwaV",
+  "mbid": "21645c31-fe1c-45a4-955c-3e172b12c3f9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "NF",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KEwV",
+  "mbid": "5660a8c7-d0d9-4181-89b4-8e125328e31e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ski Mask the Slump God",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174zk7",
+  "mbid": "faf916e0-ffc5-4345-a10b-b79ed8c9b8f6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Quavo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917his7",
+  "mbid": "6143403a-df6c-429e-8ee6-ef869896b0da",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bleachers",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173GO7",
+  "mbid": "58e235fc-f6ea-4614-9ed4-9855a5665ae1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bauhaus",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91719gV",
+  "mbid": "0688add2-c282-4ee2-ba61-223ffdb3c201",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "King Crimson",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171K70",
+  "mbid": "b38225b8-8e5f-42aa-bcdc-7bae5b5bdab3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Title Fight",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GRQ7",
+  "mbid": "1154d345-8061-4d04-a52a-6214288523ac",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Thee Sacred Souls",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bUdV",
+  "mbid": "32b87bbc-2363-457a-97b4-3103a569f3a7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kim Petras",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pWpV",
+  "mbid": "54fc0558-12b5-4854-9d57-9441bcd73a72",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fontaines D.C.",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179LP7",
+  "mbid": "fd87acc7-e0a0-4a45-bc2a-d2ab5c10be68",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "TOMORROW X TOGETHER",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bdF0",
+  "mbid": "9d027d72-790e-40ec-bbb7-61aa613457de",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Japanese Breakfast",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fRQ0",
+  "mbid": "8c529495-91f5-4e2f-b71b-adcb66878d04",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "League of Legends",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KlJ0",
+  "mbid": "c68d3821-4222-4de4-acc3-a838f477433b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Anitta",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179LIV",
+  "mbid": "d606b860-cc03-4959-a3fd-3a24bccf2560",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sleeping With Sirens",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Gmh7",
+  "mbid": "3267d5a3-c72c-4c3b-bafe-ec8a569c0b74",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cuco",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pLe0",
+  "mbid": "6f261103-71d0-42e3-8ea6-9763a8f1ef83",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "CHVRCHES",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178PVf",
+  "mbid": "6a93afbb-257f-4166-b389-9f2a1e5c5df8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "JAŸ-Z",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171Qi7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ashe",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917p84V",
+  "mbid": "36086094-c2a4-49b9-8572-0fbf12fc3409",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "JPEGMAFIA",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179dNV",
+  "mbid": "c42e60f4-4520-4954-b6e4-82bbdf532c11",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Zach Bryan",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_NoV",
+  "mbid": "51e90731-08c0-4f60-89b6-5b78e5844de8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Wolf Parade",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175Hj7",
+  "mbid": "b7ddce8b-9e5c-46bd-9d33-41b134ce1a7f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "YUNGBLUD",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pGgf",
+  "mbid": "97529a9e-4b5a-4a9c-9c08-c42401d1c268",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Polo G",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917b6M7",
+  "mbid": "7e1e5648-1d6a-4248-975a-98603e781848",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lola Young",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_Njf",
+  "mbid": "43b896c5-5652-4b04-bde1-2e4224bc99b3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ken Carson",
+  "tier": 1,
+  "tmAttractionId": "K8vZfZ7t7ak",
+  "mbid": "84d4283e-903a-42c4-a0d2-d3949bfa1f3f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Alvvays",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173Naf",
+  "mbid": "99450990-b24e-4132-bb68-235f8c3e2564",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Radio Dept.",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917udAV",
+  "mbid": "e664d1cd-23ab-48d5-b8fa-e98485daa5be",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lucki",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917K877",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Odetari",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hVlV",
+  "mbid": "2d8be86e-dccf-481a-a01c-faf9e48edd6d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Death Grips",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172tvf",
+  "mbid": "f9133036-ab3d-4e97-bd11-7a2c98ad148a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "American Football",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173E1V",
+  "mbid": "4ebb5ad3-9018-407d-8c24-c03011ab9ac6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Dream, Ivory",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Q5q0",
+  "mbid": "545f2d39-b61b-40a1-8b40-8518577e2e2c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Silverstein",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175NUV",
+  "mbid": "d89de379-665d-425c-b2e9-41b95d1edb36",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rockwell",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917ClRV",
+  "mbid": "1125b8c5-c1a7-46bb-b809-eff0a079262a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mareux",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hAY7",
+  "mbid": "09095919-c549-4f33-9555-70df9dd941e1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "boygenius",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QDlV",
+  "mbid": "3ceeddbd-fba5-4bdb-99f7-2d028ed5afda",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sir Mix-A-Lot",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91715bf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Loona",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jjVV",
+  "mbid": "cb525a30-b590-448f-b94d-fab86e0e8756",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Dresden Dolls",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917u5X0",
+  "mbid": "107c7983-0728-46ea-8550-77e698adf690",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Weyes Blood",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172lJV",
+  "mbid": "469d6414-1f06-43de-80d5-17762d4a356a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "100 gecs",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917brn0",
+  "mbid": "d6d45dda-2377-4faa-947b-e071efa085c0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "keshi",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917b3pf",
+  "mbid": "ee74db56-c264-4c23-9504-29e2d8078f36",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Clams Casino",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174uZV",
+  "mbid": "772a0eb3-fe31-4a08-b583-690296f44900",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tally Hall",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GpL7",
+  "mbid": "407d7ae0-c297-491c-bd19-4185e2b12ef2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nessa Barrett",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_-2f",
+  "mbid": "da0c8f4f-f4f4-4e91-86ca-e31108bb5706",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Poppy",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917fae0",
+  "mbid": "076ee9fe-dd9a-4ddc-8f8d-24409ac6805d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Anderson .Paak",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173YL0",
+  "mbid": "d02dd67e-f655-4600-bc47-f789f59e7367",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sports",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CAcV",
+  "mbid": "b03bbf4e-4c7a-4acc-8d30-71c360d95b4b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "YNW Melly",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179IgV",
+  "mbid": "59d6cea7-3771-4ce6-8c02-395ac5ba927a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "N.E.R.D",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175kg7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Slayyyter",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bAof",
+  "mbid": "9058d01e-8afc-47a4-8664-621fb5f159c0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rina Sawayama",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pgl0",
+  "mbid": "52494f9b-789d-4467-bcaf-9915e70cc8f6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Molchat Doma",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bEp7",
+  "mbid": "11bcbbf4-1252-496a-b747-06942f3d76db",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Wisp",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Csz7",
+  "mbid": "4159ac30-ecce-43a6-b200-b48801968e30",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sonder",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pArf",
+  "mbid": "29e686ca-134e-46d5-8a5b-7193f618ff35",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Danny Brown",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917uLh7",
+  "mbid": "485aafec-d2b9-4eae-9ebe-97e90928a59a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lamp",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178_57",
+  "mbid": "8bff8d1d-2e87-4b97-9909-2bd3404e92b9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "ROLE MODEL",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917be9f",
+  "mbid": "4c76d2ab-cc32-47b9-8bfe-d382bed617f6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Basement",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91735MV",
+  "mbid": "a8c7ff7a-ebc0-42c7-8828-475decf0ccdd",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Caroline Polachek",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917blA7",
+  "mbid": "d8f43dc5-4613-48ac-8c23-a62b82f8c67a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Have a Nice Life",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hZc0",
+  "mbid": "70923a5d-d3ba-4ef7-9064-ea5f709aa076",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "IU",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917j460",
+  "mbid": "b9545342-1e6d-4dae-84ac-013374ad8d7c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Exo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171MTf",
+  "mbid": "6ab10aaf-8812-41eb-b59f-f07b42468f22",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "IVE",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QF9f",
+  "mbid": "a760a4d1-1258-4833-9ed5-fa083902d907",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "mgk",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91784bf",
+  "mbid": "f6af669a-56ea-448a-a044-de76181ada33",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "j-hope",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QNbV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Royal Blood",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917usnf",
+  "mbid": "95ee8d6d-07b8-4588-a405-c64cef1d05b3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "EsDeeKid",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rsCf",
+  "mbid": "3d253cbd-fb66-4752-a8d1-f9b0db75bcea",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Cramps",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174us7",
+  "mbid": "96c1edac-1011-4cb8-882c-27248de35071",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kero Kero Bonito",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Ks_V",
+  "mbid": "5e284bdc-3774-41dc-b5e2-b125d0349acf",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Alex Warren",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hel0",
+  "mbid": "609a2ea3-f446-4e31-8eef-9f7591afb55a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "King Von",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bRk7",
+  "mbid": "a542a08c-9434-4028-8da5-3120c4fdd3fb",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Westside Gunn",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pKZ7",
+  "mbid": "9f42ba3d-3cfc-499c-ba16-7226f56b622f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Machine Girl",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173B40",
+  "mbid": "c7df5ec5-380a-40f9-856f-28fb4a33d946",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nothing But Thieves",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917oXa7",
+  "mbid": "7e2e4e3a-4e85-4d5a-b78e-5e4afd467a3e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jack Stauber",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pIx0",
+  "mbid": "9f4c3bca-4d80-428f-9ed2-0de052d92ecc",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Joey Valence & Brae",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Q0A7",
+  "mbid": "93a4d03b-4f0e-42da-ae0b-a62876e46071",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Skepta",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CKu0",
+  "mbid": "38474d18-9204-4f60-a137-1fcc6750b869",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Young Nudy",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174S70",
+  "mbid": "79c9b9a6-4b78-4738-8b81-95b066321ea9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Gojira",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175Hz0",
+  "mbid": "1c5efd53-d6b6-4d63-9d22-a15025cf5f07",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "ITZY",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bJaV",
+  "mbid": "bce172fc-51bb-43f7-9a25-b406a0a581d5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Superheaven",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917K5b0",
+  "mbid": "16f7e748-59b4-4705-959c-9276be0ebf6a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Death",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171uTV",
+  "mbid": "dbb3b771-ae77-4381-b61c-758b5b7898ec",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Wonder Girls",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174pIf",
+  "mbid": "fcc7e9c8-3474-4221-b83a-27890982e0fa",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Snow Strippers",
+  "tier": 1,
+  "tmAttractionId": "Z7r9jZapDn",
+  "mbid": "33243fef-ce1a-4ba7-a81e-ec72e4c5029a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Reneé Rapp",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917heM7",
+  "mbid": "e4378b7a-6138-441a-aa34-50e11a562066",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Remi Wolf",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917b-ZV",
+  "mbid": "afb6cc6d-a060-4f5e-bc3a-00d4b6832e41",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Dean Blunt",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173F47",
+  "mbid": "a279f977-9f70-4e06-b86c-0a438810eefb",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "BigXthaPlug",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hAT7",
+  "mbid": "d25f6294-686a-4569-b1b9-fe64bfef2519",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bladee",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pWA7",
+  "mbid": "cd689e77-dfdd-4f81-b50c-5e5a3f5e38a4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "BABYMETAL",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173qDV",
+  "mbid": "27e2997f-f7a1-4353-bcc4-57b9274fa9a4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Leon Thomas",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917h8cf",
+  "mbid": "46f70f03-d259-4314-b926-2db36c28d86f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Turnstile",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173bFV",
+  "mbid": "351bee54-3ee7-449d-b68e-c94da6798b97",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Chico Buarque",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jym0",
+  "mbid": "3a5d1cc7-627e-48ea-aba3-fdd20d782c33",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Niki",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179d77",
+  "mbid": "9d67c199-1d6c-4647-966c-f45a4badb43b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Girls' Generation",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Gybf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Modern Baseball",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178Cy7",
+  "mbid": "e3513b4f-2a13-45f5-8ead-e79b1af0bf68",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Xavier Wulf",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KyLf",
+  "mbid": "e167a029-fd9f-43c1-96c2-c3da6b15164f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Motionless in White",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917u750",
+  "mbid": "1c5b9bd6-76e8-4fe7-a6df-3bc0b5a452cc",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Destroy Lonely",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QLi7",
+  "mbid": "987d3d86-0d7a-4292-ae96-a8d59e456436",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Front Bottoms",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CdXf",
+  "mbid": "622b6000-ff0d-4ab3-9e98-c4916f3692c3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Slow Pulp",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bK5V",
+  "mbid": "00505f51-68a8-45fc-b6d6-51be64751378",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "YOASOBI",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jloV",
+  "mbid": "df6c619f-4334-43e2-8b6a-4a32af1e4f85",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Gal Costa",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171zmV",
+  "mbid": "fc63a914-272d-4b95-9221-61adcce6f793",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Loathe",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917p3V0",
+  "mbid": "e9ea0fbc-ccc7-4e98-9290-0a41aa848fa2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "wave to earth",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917h9Jf",
+  "mbid": "89e95aa3-bd49-4af3-9c87-0d88b2093bb0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Akira Yamaoka",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KXv7",
+  "mbid": "23a32153-7314-4359-a5cd-9e584fe83504",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "2hollis",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hYpV",
+  "mbid": "8bd5a8fb-4c25-401d-a597-2c24affdd5c5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bibi",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bY-7",
+  "mbid": "01cfc4db-3407-476c-bfe2-757228bac8ba",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ichiko Aoba",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_P4V",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "SHINee",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Gzy0",
+  "mbid": "70e5098b-c4ae-4cd7-9799-3c1b9b57c753",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kenshi Yonezu",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917q7K0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "XG",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jwk7",
+  "mbid": "8dfe067c-ae90-472e-80f2-fcee9be4e158",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Insane Clown Posse",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171bQ7",
+  "mbid": "7a1eb805-2242-4daa-bd90-c1ed350e2e48",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Leslie Odom Jr.",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Ks90",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jorge Ben Jor",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GxGV",
+  "mbid": "19499124-36d4-4ccc-b28d-04dde3d2076f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sleep Token",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917b81f",
+  "mbid": "775ad383-ac2d-479a-af9d-b561442cb749",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Romeo Santos",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172820",
+  "mbid": "35f343df-3b87-4475-b0e4-d2ba5cc26eea",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Oingo Boingo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712OV",
+  "mbid": "166bc1cb-a2b7-412d-bcd5-5f439d2cf5f1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Julia Wolf",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_xcf",
+  "mbid": "b89456e0-cf8d-4a29-baed-4b2d1fe3ef6a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jin",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175qv7",
+  "mbid": "b1de066c-2766-4d73-86a6-ad28fe951687",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rich Amiri",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Q98f",
+  "mbid": "8ae4189a-67e8-4466-91cb-8902f2b72ab2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Allie X",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KMY7",
+  "mbid": "7c922f2c-9d2b-4f37-a139-cddb83722ab3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Hayley Williams",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bV3f",
+  "mbid": "b4b5b5a7-feff-47d0-9458-83d0d135a692",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rio Romeo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hGGf",
+  "mbid": "2ee5c528-3b6f-468f-bf03-be9d31124423",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Set It Off",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GVq7",
+  "mbid": "3f4fb24a-4832-4b7a-8f39-c0663699ed5c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Dance Gavin Dance",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GLFf",
+  "mbid": "16456fed-c9f2-4adf-b6ea-97b648c474d2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "KMFDM",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91712G0",
+  "mbid": "45074d7c-5307-44a8-854f-ae072e1622ae",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bad Omens",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917f2Zf",
+  "mbid": "8834d8b5-72a4-4a6e-9d35-3a041b8579fa",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tainy",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Qwff",
+  "mbid": "7e92584c-ca97-48bf-8a12-0327db0f6ac8",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Black Box Recorder",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917LNZ7",
+  "mbid": "49302df8-9e4f-42ed-8a9c-5d6f8d6cb83c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sunny Day Real Estate",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171_y7",
+  "mbid": "86b24e8f-a4d9-4c84-83ee-fde0d14ad9fa",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Marisa Monte",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171027",
+  "mbid": "f81f19b9-c76e-43ac-8656-bb56071785fb",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Black Country, New Road",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bRyf",
+  "mbid": "e9403d9c-329b-4108-a26f-564159d441d9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "ivri",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qBk7",
+  "mbid": "d5952849-0b94-4401-ba6f-81559f17f4b9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Arca",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172X8f",
+  "mbid": "c58ea103-44c2-4ff3-a6a5-233b96081063",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "wifiskeleton",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qTkf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Givēon",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_NM7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "NMIXX",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917h7g7",
+  "mbid": "2d623e82-73e2-4179-9c44-e963980f2d58",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Djavan",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91715cf",
+  "mbid": "751e517d-9663-4692-8c20-942e16d484c5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "DIIV",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178ZYV",
+  "mbid": "b5ff61dd-0154-4e80-b46b-c733f87db602",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rachel Chinouriri",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179iX7",
+  "mbid": "bb2b7bbf-75e5-43f8-8a9f-7769ae7d832a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Julie",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_NSf",
+  "mbid": "4b3392b5-704e-461e-95a3-da8e94c9d4e0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Penelope Scott",
+  "tier": 1,
+  "tmAttractionId": "K8vZfZ7IE1k",
+  "mbid": "e04f63b1-997c-4759-af02-2d3324741479",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rita Lee",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91711v0",
+  "mbid": "3f962bf0-42a0-45a0-830f-07b66301d35f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Charlie Brown Jr.",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jyl0",
+  "mbid": "29b550f2-04a3-4733-b6f5-4e347fac7e11",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "yeule",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bUq7",
+  "mbid": "31da7b06-bc30-4a1f-9f4a-c2ac1a84167f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kiss of Life",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qvzf",
+  "mbid": "c0b630b0-7ada-4350-8cb4-ed9b95ae4d03",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Whirr",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172bi7",
+  "mbid": "3474a13f-899f-40ec-9d5c-e44e41a02900",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "ADÉLA",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rmt7",
+  "mbid": "7a683b8b-0c84-4bbe-a9d9-89bb5b4cfb4a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "STAYC",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QJqV",
+  "mbid": "06bb5fcc-f2b3-428d-b8e7-079060311b6d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Masayoshi Takanaka",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917q59f",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ado",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917j6x0",
+  "mbid": "ca195d97-30d9-4870-8a52-7fd3c2e175c3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mom Jeans.",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91798A0",
+  "mbid": "65e60a4a-4e52-48b3-ade4-bdfed2c94b3e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "LSD and the Search for God",
+  "tier": 1,
+  "tmAttractionId": "Z7r9jZa2AW",
+  "mbid": "0e24f776-4158-4934-8b78-b4b1edb3ad62",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "late night drive home",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QIu0",
+  "mbid": "99f3a519-e742-4f9a-bbc7-b3f280c6266f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Shygirl",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bY-f",
+  "mbid": "9385f1a7-8623-4d0c-b171-f1e6e87220c5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ray Parker Jr.",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GcFV",
+  "mbid": "af9c073c-f230-4527-8fcd-2338fe1e129e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Dazey and the Scouts",
+  "tier": 1,
+  "tmAttractionId": "Z7r9jZa8jn",
+  "mbid": "a7fd3cbf-15cc-4a8a-b59f-587b5784feb2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kelela",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91731M7",
+  "mbid": "045494aa-e913-4e62-bf4e-dcc276e0075a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Novulent",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qPU7",
+  "mbid": "4843e5c1-c609-4450-bea3-c65783700032",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "FLO",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172iW0",
+  "mbid": "6ecae756-cfa6-4011-ae56-e8d9c4be447a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "underscores",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_0Z7",
+  "mbid": "ab1a3f85-e0ea-470a-af5c-175447ae774c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kikuo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jQu0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "VIOLENT VIRA",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jCM7",
+  "mbid": "b90bf88d-53bf-4257-a151-95d9848fd90c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sienna Spiro",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qxR7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ecco2K",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bciV",
+  "mbid": "66ab36ce-8f58-46fb-9284-396c2c90ecbd",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Puzzle",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179CBV",
+  "mbid": "122d3fb5-0bcc-4c67-a4dc-5d2a59a64438",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Oklou",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bVl0",
+  "mbid": "13e2db47-3010-48b8-a8b9-667551f37119",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jade",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917ruMf",
+  "mbid": "970ec984-5b9d-49a8-a1b3-3c0d6c7d5c34",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fuerza Regida",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179vO0",
+  "mbid": "e665ce26-6ce9-4c42-8f6a-7a361a0ba328",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "f(x)",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917CDHf",
+  "mbid": "37fa0bfd-8bf7-422c-a97a-f8deda49b3a4",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Clara La San",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pidV",
+  "mbid": "56393a36-155f-4f50-adbe-45f4a26c40bf",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Good Kid",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Q9l0",
+  "mbid": "adab38f4-297d-4af8-9450-4e84697240e7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "CORTIS",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917OaIf",
+  "mbid": "b1dd1370-cdb8-4aae-9aaf-9147df315cc2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Pabllo Vittar",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bZU7",
+  "mbid": "d9550ac2-7bcf-4655-a3fe-24922e254a74",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jane Remover",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Qm5f",
+  "mbid": "f4b6e451-5dce-4842-a555-f793892299b3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "glaive",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_0wV",
+  "mbid": "fd36f43e-5bd1-488e-b844-0e059250ef78",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Geese",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_6ef",
+  "mbid": "16a8a6cc-57d9-4a13-9fb9-c87e359c5abe",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sidney Gish",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pLMf",
+  "mbid": "9cfabb8c-24a3-498d-b383-bb5324cfe30f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Balu Brigada",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bWwf",
+  "mbid": "f9ad56b5-6f41-4cdc-b859-3370c8bff3e2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "fromis_9",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917baNf",
+  "mbid": "705f04e2-fc5b-41ab-b837-1d850d44084a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rebecca Black",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178Z_7",
+  "mbid": "312c7cc1-9b5c-4406-963b-9f73f50674c0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Philip Bailey",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91715A0",
+  "mbid": "f4b25300-be93-49bc-9d44-15f9de480f50",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "PEDRO SAMPAIO",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_m00",
+  "mbid": "796bc8a9-efd1-43e8-bacf-5eba68835928",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "F3miii",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jBi0",
+  "mbid": "0e55d4b1-6a3e-4565-accb-e1da78e83ff3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Luísa Sonza",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917j227",
+  "mbid": "ed667cac-2fdb-4401-973b-81c5b4a1717d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Spiritbox",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_hG0",
+  "mbid": "a39ad456-a697-4f32-aa36-c107f654d318",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Temper City",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917O7xf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "i-dle",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917baAV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "MCCAFFERTY",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pAJ0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "BABYMONSTER",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qpo7",
+  "mbid": "5829cd4f-e693-4b03-abe5-1226243c23d6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Yena",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hmb0",
+  "mbid": "28387ab9-0a6c-4de9-8ebc-852288e3466e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "MASS OF THE FERMENTING DREGS",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GR17",
+  "mbid": "1a19b0cd-fa9d-4363-b130-b3eb394cf373",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "King Gnu",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rEM7",
+  "mbid": "338f5d97-3133-4bf8-a58e-068ff9b5405d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "54 Ultra",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917r4R0",
+  "mbid": "6f4926ae-865e-483b-86f9-9ae3b9584507",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rosa Walton",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917-1M0",
+  "mbid": "9a6273b2-72fa-47a4-a48b-073d6cbe037d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "JT Music",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Qg37",
+  "mbid": "835d26ab-15e3-4db2-8422-20602d72c65e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Part Time",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172xNf",
+  "mbid": "3ab3f4d5-0282-460d-85b6-cf68a471af09",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lyn",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KxQ0",
+  "mbid": "4c9a6b5d-a631-4c28-9c3c-67f4dd2f9845",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "fakemink",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917r-l0",
+  "mbid": "968847c6-2150-419d-b14b-68c672dcde99",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fleshwater",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917h94f",
+  "mbid": "546e82a3-550b-4cf2-8cb8-595d9d32aa49",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Hearts2Hearts",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qWef",
+  "mbid": "066080a4-84c7-46c6-91d3-dc10d572749b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Susannah Joffe",
+  "tier": 1,
+  "tmAttractionId": "Z7r9jZ177d04",
+  "mbid": "02452937-d06b-4e9f-966d-8477bae38ddc",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Anavitória",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917h8f7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Long Faces",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173Xk7",
+  "mbid": "18dab8ad-3d93-46aa-b153-2f22772ea5bc",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "And One",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pma0",
+  "mbid": "f04cc80e-0f59-45b8-aaf4-ac81035644e9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ella Langley",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_mB0",
+  "mbid": "b16c0872-31a7-4db9-8569-0e3146fcecfc",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Ninajirachi",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hOe7",
+  "mbid": "6897b46a-9236-4480-9ed7-300f6b85d62f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Marina Sena",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Qj8V",
+  "mbid": "2b1e7c27-2663-43df-9c23-8601e173e6ef",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Hot Freaks",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QnGf",
+  "mbid": "7137722f-14e1-4084-9baa-37e20251ca47",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "nettspend",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917h0bf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jaydes",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917haf0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tiffany Day",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_zK0",
+  "mbid": "c9e3089c-a7bc-4df5-80f9-9161eaa74a02",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Hum",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171flV",
+  "mbid": "04c5ca8a-4afa-4031-aced-6357440dbc25",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Joost",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917p-p0",
+  "mbid": "08784766-8643-4b8e-bd0b-c61399ff9539",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Quadeca",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hfv7",
+  "mbid": "3a4024dc-cc62-4d9b-8bed-c22426136a52",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Yves",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qOOf",
+  "mbid": "8339c0c3-7a04-4b19-8ca3-b149e0d09222",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "OsamaSon",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hjcV",
+  "mbid": "35214d53-009b-45d9-8a00-6664325b9e2a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Che",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917q1wf",
+  "mbid": "e10ddbc5-dcae-4bbb-8a32-4c9a7228bfab",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Buckshot",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917GMef",
+  "mbid": "7e1216c3-4ccc-48c7-9e18-19f089dbf13b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Madds Buckley",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hOw0",
+  "mbid": "81255601-2efa-4ffc-a4c1-8ca7c9f4c7e9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Summrs",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hJQ0",
+  "mbid": "d538d883-3889-44ad-8f32-6167cf4d85ec",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "BK",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9178lHV",
+  "mbid": "28d7452b-c83b-4f43-98af-e233a146f59d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Autumn!",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QbSf",
+  "mbid": "ccf781c7-0c95-46f9-9272-3c2b017b0b0a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Bella Kay",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rxgf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "P1Harmony",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Qea7",
+  "mbid": "d03d8ba8-065c-41d9-a804-d6c05a949194",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "The Hellp",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917bKv7",
+  "mbid": "ca204bac-2768-4d6f-a5e4-8e8f9080817b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Enjambre",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175RK7",
+  "mbid": "acc7cb5a-8f3a-4f61-b199-a62d45374dec",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "tripleS",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917h0CV",
+  "mbid": "40017bd7-139b-4998-8688-9b2478ad3325",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Jão",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917j8vf",
+  "mbid": "27717b72-90bc-4f4f-9d0e-13a69bdfe00e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Faouzia",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9179zS7",
+  "mbid": "6aed0a74-92a7-47e6-97d1-7b6a72afec4b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Matuê",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QpdV",
+  "mbid": "be42aaaa-9703-41dc-b2eb-de03e30f83b9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Clarion",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917r9a7",
+  "mbid": "a502b211-d923-4adc-8bfb-23473cc84523",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Will Wood",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Q6Q7",
+  "mbid": "1e1b8366-680d-4072-9c85-7f3a277af0d6",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Audrey Hobert",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rPOV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Cameron Winter",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qMp0",
+  "mbid": "79c6b6f4-cb92-4f03-a1ef-82e7aa4eddbb",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "That Handsome Devil",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917uh1V",
+  "mbid": "dc0d5e24-0ab3-4711-a342-a7fc92b35071",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Fcukers",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917h-yf",
+  "mbid": "5e23e428-d9f5-4679-bd7c-8254d6f0a437",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Matt Martians",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9174YGf",
+  "mbid": "1018344f-abc8-4c62-b4fd-37a30fd2dc6f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rochelle Jordan",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91780Af",
+  "mbid": "0e0d5912-4026-47ef-be1c-c876c7108dd2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Lucy Bedroque",
+  "tier": 1,
+  "tmAttractionId": "Z7r9jZ177pQb",
+  "mbid": "bb7959ac-84cc-45c4-8138-d80ee5f2bd9a",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Feng",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rKVf",
+  "mbid": "78ed2202-c6d2-4d66-a637-df378d1c4d10",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Hail The Sun",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91783f7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sematary",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Qn5V",
+  "mbid": "c1d8cc1e-1e45-4b90-bfd7-f413c599c6ac",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "BOYNEXTDOOR",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rG00",
+  "mbid": "656d0024-7b5f-4089-9d3e-ce383f15f1b7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Luvcat",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917q5jf",
+  "mbid": "fdda77a2-1c94-4d0c-ad87-6d7e74a0c091",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Not For Radio",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rYS0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Frost Children",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Qc77",
+  "mbid": "3f1ed758-50e4-401f-8dc6-e0066e546e7c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "femtanyl",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qF-7",
+  "mbid": "eb3c021d-e056-42d6-8fad-064205a90527",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Dexter and The Moonrocks",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hal7",
+  "mbid": "38ed4923-005f-4ba0-baf7-749269dfea29",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "brakence",
+  "tier": 1,
+  "tmAttractionId": "K8vZfZ7JlIk",
+  "mbid": "e636b15f-00c5-45fd-9c33-845a08c8f92d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "xaviersobased",
+  "tier": 1,
+  "tmAttractionId": "Z7r9jZa4NA",
+  "mbid": "155cfd40-dcde-471e-acc0-32179916165c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "After",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172et7",
+  "mbid": "21d75f88-7567-4c31-8171-7d8d2490f9b2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "bassvictim",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917q8T7",
+  "mbid": "4de1756c-e988-4f9f-87bf-bae46f56fefe",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Florence Road",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qCgf",
+  "mbid": "9b189d1b-3d6d-41d1-9053-cf29a487a75e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Glokk40Spaz",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qNbV",
+  "mbid": "7c1faced-d7f7-4002-a553-d67cb1fdd08e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "smokedope2016",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917r1H0",
+  "mbid": "c1456889-98fb-4be6-9580-88dc6667fed2",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "PIXY",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QRR0",
+  "mbid": "42976ddb-0ad5-4baa-9304-f31d7d84e3e0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "XLOV",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917LtlV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "LNGSHOT",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Oh7f",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Slayr",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917L5_0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "ARTMS",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jmJ7",
+  "mbid": "ae98b8c4-d8fc-4ff9-9b4e-4bc1fd8575d1",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Say Now",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917qySV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sophia Stel",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917r840",
+  "mbid": "e137e810-ed64-4d74-b2c8-9e24cff43dd3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "&TEAM",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917oM90",
+  "mbid": "bba737dc-7ec8-482d-b79f-68d949ef2c7f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "cece natalie",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917r8Rf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "pupsies",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917-H50",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "A Heartwell Ending",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917xu5f",
+  "mbid": "6eaccab1-e6b0-42f3-87ee-6163d6f662dc",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nine Vicious",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rC0V",
+  "mbid": "ec63abed-419c-45c8-a189-fb8e1b44f926",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "f5ve",
+  "tier": 1,
+  "tmAttractionId": "Z7r9jZ177Yop",
+  "mbid": "9bdce94a-7c47-4b9a-8e10-f65f5fc63d32",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "daine",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917r7u0",
+  "mbid": "071188f7-fa27-4df5-8704-5e6a55644f7e",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kuru",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172yn0",
+  "mbid": "487ed6f0-2e6a-40f9-962a-e33af4632f61",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "GIRLSET",
+  "tier": 1,
+  "tmAttractionId": "K8vZpZAaJkkk",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Flavor Foley",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917-I_V",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Haute & Freddy",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rLbf",
+  "mbid": "44130072-d72e-4926-8cb7-6163189bc9b0",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "prettifun",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917r9i7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "bleood",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917LqJ0",
+  "mbid": "ce6a32ee-197d-4a59-9dad-37eb21b45c30",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mollie Elizabeth",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917-qU0",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Emperor X",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172enf",
+  "mbid": "e79dde40-8b35-4105-89f8-a5b0afbfd43c",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "pz'",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rSkV",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Petite Meller",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917KlHf",
+  "mbid": "33a60366-7cc8-48bf-8f9f-17aa1aa0d646",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tezzus",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rDtf",
+  "mbid": "1753124e-e4be-4dba-9741-5e50e4dc351f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Junior H",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917_JZV",
+  "mbid": "af1b83bb-3edc-4443-b771-67a1d235e82b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Zoé",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9172eGf",
+  "mbid": "5838185a-0ee6-4a0b-8d4e-76a6e15f7d4b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Natanael Cano",
+  "tier": 1,
+  "tmAttractionId": "K8vZfZ7aEdk",
+  "mbid": "41925f30-8737-4fb8-af65-da918c0e98f3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Kid Yugi",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jn47",
+  "mbid": "3d28b99e-eeae-4728-8923-b0135af26db9",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Mon Laferte",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917Kit0",
+  "mbid": "ab966c0f-e526-46ae-b492-82c27b87f81f",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Caifanes",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917112V",
+  "mbid": "77814bfb-f1b0-47fd-8492-65d6f72c246d",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Babasonicos",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G6ff",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Luis Miguel",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171ajV",
+  "mbid": "90270118-8ed0-4446-bf97-8a09b3f9e8f3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Neton Vega",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917q087",
+  "mbid": "dc1c4d9b-80ab-452b-b316-f201915b29db",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Victor Mendivil",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917rbvf",
+  "mbid": "f06b96ed-0e3f-4182-ab26-df6748cba5f3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Belanova",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9175W87",
+  "mbid": "39153756-5ffa-42a1-9b97-0468839021c3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Soda Stereo",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917G7y7",
+  "mbid": "3f8a5e5b-c24b-4068-9f1c-afad8829e06b",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Miranda!",
+  "tier": 1,
+  "tmAttractionId": "K8vZpZA7tEJk",
+  "mbid": "226ab2f2-592b-4323-94f9-5b3f0ef86158",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Rusowsky",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917r8H0",
+  "mbid": "d836bdef-52ef-4142-baba-573e5b529478",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Latin mafia",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917q2if",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Nsqk",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917hfL7",
+  "mbid": "ed5f6556-a20c-45e1-b743-89d2bb4141a3",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "PASHANIM",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917QfLf",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Tito Double P",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917jBmf",
+  "mbid": "37316157-4e01-4ea8-b897-65a1a5a6bb30",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "C. Tangana",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pf50",
+  "mbid": "46d3689c-23e6-46f7-8ad6-c12f13ac9dea",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Café Tacvba",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9171rI7",
+  "mbid": "c2b37a39-c66a-44b2-b190-a69485ae5d95",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Charly García",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91726rV",
+  "mbid": "dd999ced-1dd4-44b8-ab67-ee5ec23e52b7",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Sfera Ebbasta",
+  "tier": 1,
+  "tmAttractionId": "K8vZ91792s7",
+  "mbid": "2380d705-1af6-4fab-b408-d9c095806a46",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Artie 5ive",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917j747",
+  "mbid": "5a03ca44-0c96-4551-8999-d17033886af5",
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Alvaro Diaz",
+  "tier": 1,
+  "tmAttractionId": "K8vZ9173JU7",
+  "mbid": null,
+  "deezerId": null,
+  "deezerFans": null
+ },
+ {
+  "name": "Damso",
+  "tier": 1,
+  "tmAttractionId": "K8vZ917pL-V",
+  "mbid": "71ff695e-896a-4043-aea4-93eadde08d09",
+  "deezerId": null,
+  "deezerFans": null
  }
 ]
