@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
   push:
     branches: [claude/magical-franklin-u415fe]
-    paths: [.github/workflows/discord-setup.yml]
+    paths: [.github/workflows/discord-setup.yml, packages/core/src/discord.ts]
 
 permissions:
   contents: read

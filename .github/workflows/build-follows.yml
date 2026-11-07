@@ -1,0 +1,51 @@
+name: Construir entidades seguidas
+
+# Genera ~1.000 entidades (artistas por popularidad en Last.fm + lista manual + festivales +
+# deporte), las resuelve contra el Discovery Feed (y la API de TM como respaldo) y guarda
+# data/artists.resolved.json y la semilla SQL del Worker en la rama.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 4 * * 1"
+  push:
+    branches: [claude/magical-franklin-u415fe]
+    paths: [data/entities.manual.json, .github/workflows/build-follows.yml]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Construir
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+          LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
+        run: npx tsx apps/jobs/src/build-follows.ts && npx tsx apps/jobs/src/gen-seed.ts
+      - name: Cargar en D1 (los commits del bot no lanzan el despliegue)
+        working-directory: apps/worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          id=$(npx wrangler d1 list --json | python3 -c "import sys,json;print(next(d['uuid'] for d in json.load(sys.stdin) if d['name']=='gira'))")
+          sed -i "s/00000000-0000-0000-0000-000000000000/$id/" wrangler.jsonc
+          npx wrangler d1 execute gira --remote --file seed/artists.sql --yes >/dev/null
+          npx wrangler d1 execute gira --remote --command "SELECT COUNT(*) AS n FROM artist" --json | python3 -c "import sys,json;print('Entidades en D1:', json.load(sys.stdin)[0]['results'][0]['n'])"
+          git checkout wrangler.jsonc
+      - name: Guardar en la rama
+        run: |
+          git config user.name "gira-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/artists.resolved.json apps/worker/seed/artists.sql
+          git diff --cached --quiet || git commit -m "data: rebuild followed entities"
+          git push

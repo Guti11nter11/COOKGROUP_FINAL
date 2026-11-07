@@ -12,7 +12,7 @@ it("escapa comillas simples y usa ids estables", () => {
   expect(sql).toContain("INSERT INTO follow (artist_id, tier) VALUES ('a_K8vZ9171ob7', 3)");
 });
 
-it("no pisa el nivel que el propietario cambie después (follow: DO NOTHING)", () =>
-  expect(buildSeedSql(artists)).toMatch(/INSERT INTO follow .* ON CONFLICT \(artist_id\) DO NOTHING/));
+it("el nivel solo sube, nunca baja (un imprescindible nuevo sube; nadie se degrada solo)", () =>
+  expect(buildSeedSql(artists)).toContain("ON CONFLICT (artist_id) DO UPDATE SET tier = MAX(tier, excluded.tier);"));
 
 it("omite artistas sin attractionId", () => expect(buildSeedSql(artists)).not.toContain("Sin ID"));
