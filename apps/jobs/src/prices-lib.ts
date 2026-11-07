@@ -34,6 +34,8 @@ const priceForms = (n: number) =>
 export function validPrices(found: ExtractedPrice[], sources: { url: string; text: string }[]): ExtractedPrice[] {
   return found.filter((p) => {
     if (!(p.min > 0 && p.max >= p.min && p.max <= 5000 && p.max / p.min <= 40)) return false;
+    // Un precio único alto suele ser un paquete VIP o una reventa citada: solo vale con zonas.
+    if (p.min === p.max && p.min >= 200 && !p.zones?.length) return false;
     if (!/^[A-Z]{3}$/.test(p.currency)) return false;
     const src = sources.find((s) => s.url === p.url);
     if (!src || !p.quote || p.quote.length < 12) return false;

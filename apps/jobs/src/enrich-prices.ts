@@ -20,6 +20,18 @@ export async function findPrices(shows: EnrichTodo["shows"], maxGroups = 14): Pr
   for (const s of shows) groups.set(`${s.artistId}|${s.country}`, [...(groups.get(`${s.artistId}|${s.country}`) ?? []), s]);
   const out: NonNullable<EnrichInput["prices"]> = [];
   for (const [, list] of [...groups].slice(0, maxGroups)) {
+    try {
+      await priceGroup(list, out);
+    } catch (e) {
+      console.log(`⚠️ ${list[0]!.artist} (${list[0]!.country}): ${String(e)}`);
+    }
+    await pause(1500);
+  }
+  return out;
+}
+
+async function priceGroup(list: EnrichTodo["shows"], out: NonNullable<EnrichInput["prices"]>): Promise<void> {
+  {
     const { artist, country } = list[0]!;
     const items = (await searchNews(`"${artist}" ${PRICE_QUERY[country] ?? "ticket prices"}`, country)).slice(0, 6);
     const sources: { url: string; text: string }[] = [];
@@ -31,7 +43,7 @@ export async function findPrices(shows: EnrichTodo["shows"], maxGroups = 14): Pr
     }
     if (!sources.length) {
       console.log(`· ${artist} (${country}): sin precios en prensa`);
-      continue;
+      return;
     }
     const cities = [...new Set(list.map((s) => s.city))].join(", ");
     const user = `Artista: ${artist}\nCiudades: ${cities}\n\n${sources.map((s) => `Fuente: ${s.url}\n${s.text}`).join("\n\n")}`;
@@ -48,7 +60,5 @@ export async function findPrices(shows: EnrichTodo["shows"], maxGroups = 14): Pr
       out.push({ sourceId, min: p.min, max: p.max, currency: p.currency, source, ...(p.zones ? { zones: p.zones } : {}) });
     }
     console.log(`${assigned.size ? "✓" : "·"} ${artist} (${country}): ${ok.map((p) => `${p.city} ${p.min}-${p.max} ${p.currency}`).join(" · ") || "nada verificable"}`);
-    await pause(1500);
   }
-  return out;
 }

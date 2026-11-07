@@ -15,6 +15,8 @@ describe("precios desde prensa", () => {
     expect(validPrices([{ ...ok, quote: "costarán desde 30 euros hasta 250 euros", min: 30 }], [{ url, text }])).toEqual([]);
     expect(validPrices([{ ...ok, quote: "El grupo tocará también en Barcelona", min: 45 }], [{ url, text }])).toEqual([]);
     expect(validPrices([{ ...ok, max: 99999 }], [{ url, text }])).toEqual([]);
+    const vip = "El paquete de hospitalidad cuesta 437 libras por persona.";
+    expect(validPrices([{ city: "London", min: 437, max: 437, currency: "GBP", quote: "cuesta 437 libras", url }], [{ url, text: vip }])).toEqual([]);
     expect(validPrices([{ ...ok, url: "https://otra" }], [{ url, text }])).toEqual([]);
   });
 

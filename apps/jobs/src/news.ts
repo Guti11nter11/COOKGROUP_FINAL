@@ -75,8 +75,12 @@ const LOCALE: Record<string, { hl: string; gl: string; bing: string }> = {
 };
 
 async function get(url: string): Promise<string | null> {
-  const res = await fetch(url, { headers: { "User-Agent": UA, Accept: "application/rss+xml, text/xml, text/html" } }).catch(() => null);
-  return res?.ok ? await res.text() : null;
+  try {
+    const res = await fetch(url, { headers: { "User-Agent": UA, Accept: "application/rss+xml, text/xml, text/html" }, signal: AbortSignal.timeout(20000) });
+    return res.ok ? await res.text() : null;
+  } catch {
+    return null; // conexión cortada o lenta: se ignora esa fuente
+  }
 }
 
 export async function searchNews(q: string, country = "ES"): Promise<NewsItem[]> {
