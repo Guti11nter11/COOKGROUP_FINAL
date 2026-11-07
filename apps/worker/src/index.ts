@@ -57,7 +57,7 @@ export default {
     ctx.waitUntil(scheduled(env, new Date(controller.scheduledTime)));
   },
 
-  async queue(batch: MessageBatch<SweepJob>, env: Env): Promise<void> {
+  async queue(batch: MessageBatch<SweepJob>, env: Env, _ctx: ExecutionContext): Promise<void> {
     for (const msg of batch.messages) {
       const now = new Date();
       const r = await processPage(env, msg.body, now, async (j) => void (await env.SWEEP_QUEUE.send(j)));

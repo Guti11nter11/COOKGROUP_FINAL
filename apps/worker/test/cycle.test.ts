@@ -239,7 +239,7 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     await waitOnExecutionContext(ctx);
     const result = await getQueueResult(batch, ctx);
     expect(result.explicitAcks).toEqual([]);
-    expect(result.retryMessages.map((m) => m.msgId)).toEqual(["m1"]);
+    expect(result.retryMessages.map((m: { msgId: string }) => m.msgId)).toEqual(["m1"]);
   });
 
   it("11. dos entregas simultáneas publican el aviso una sola vez", async () => {
