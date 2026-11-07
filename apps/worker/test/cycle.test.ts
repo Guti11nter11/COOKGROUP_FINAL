@@ -46,7 +46,7 @@ let tmPaths: string[] = [];
 async function seedArtists() {
   await env.DB.batch([
     env.DB.prepare("INSERT INTO artist (id, name, tm_attraction_id) VALUES ('a1', 'Artista Uno', 'K1'), ('a2', 'Artista Dos', 'K2')"),
-    env.DB.prepare("INSERT INTO follow (artist_id, tier) VALUES ('a1', 3), ('a2', 2)"),
+    env.DB.prepare("INSERT INTO follow (artist_id, tier) VALUES ('a1', 3), ('a2', 3)"),
   ]);
 }
 
