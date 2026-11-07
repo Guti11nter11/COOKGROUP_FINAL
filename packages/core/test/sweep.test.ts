@@ -25,3 +25,8 @@ it("ignora seguidos sin attractionId", () => {
   const f: Follow[] = [{ artistId: "x", name: "x", tier: 3, tmAttractionId: "" }];
   expect(planSweep(f, new Date("2026-11-08T00:00:00Z"))).toEqual([]);
 });
+
+it("los ⭐ (nivel 1) nunca van por la API: se cubren con el Discovery Feed", () => {
+  const f = [...mk(2, 3, "c"), ...mk(3, 1, "d")];
+  expect(planSweep(f, new Date("2026-11-08T00:00:00Z")).flat().sort()).toEqual(["TMc0", "TMc1"]);
+});

@@ -1,4 +1,4 @@
-import { deliverPending, processPage, runCycle } from "./cycle";
+import { deliverPending, ingestShows, processPage, runCycle } from "./cycle";
 import type { Env, SweepJob } from "./env";
 
 async function scheduled(env: Env, now: Date): Promise<void> {
@@ -21,9 +21,30 @@ async function scheduled(env: Env, now: Date): Promise<void> {
   }
 }
 
+/** Token de ingesta derivado de la clave de Ticketmaster (los dos lados lo calculan; nunca viaja en claro en el repo). */
+async function ingestToken(env: Env): Promise<string> {
+  const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`gira-ingest:${env.TICKETMASTER_API_KEY}`));
+  return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
+function sameString(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
 export default {
-  async fetch(req: Request, env: Env): Promise<Response> {
+  async fetch(req: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(req.url);
+    if (url.pathname === "/ingest" && req.method === "POST") {
+      const auth = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
+      if (!sameString(auth, await ingestToken(env))) return new Response("No autorizado", { status: 401 });
+      const now = new Date();
+      const r = await ingestShows(env, await req.json(), now);
+      if (r.alerts > 0) ctx.waitUntil(deliverPending(env, now));
+      return Response.json(r);
+    }
     if (url.pathname === "/health") {
       const last = await env.DB.prepare("SELECT started_at, finished_at, ok, result_json FROM job_run ORDER BY id DESC LIMIT 1").first<{
         started_at: string;

@@ -6,15 +6,17 @@ import {
   MADRID,
   normalizeTmEvent,
   planSweep,
+  semanticHash,
+  topicOf,
   renderAlertMessage,
   showKey,
-  stableHash,
   type Alert,
   type Show,
 } from "@gira/core";
 import { discordFetch } from "./discord-client";
 import type { Env, SweepJob } from "./env";
 import {
+  type FollowRow,
   bumpQuota,
   getChannelIds,
   getFollows,
@@ -69,28 +71,57 @@ export async function processPage(
   // (bootstrap) se marca únicamente cuando todas las páginas del lote se han leído en orden.
   const lastPage = Math.min(fetched.totalPages, MAX_PAGES) - 1;
 
+  const follows = await getFollowsByAttraction(env.DB, job.ids);
+  const shows = fetched.events.map(normalizeTmEvent).filter((x): x is Show => x !== null);
+  const { stmts, stored, alerts: alertCount } = await storeShows(env, shows, follows, now);
+  stmts.unshift(bumpQuota(env.DB, "ticketmaster", today, 1));
+  const nowIso = now.toISOString();
+
+  if (job.page === lastPage || lastPage < 0) {
+    const ids = [...follows.values()].map((f) => f.artistId);
+    if (ids.length) {
+      stmts.push(
+        env.DB.prepare(
+          `UPDATE follow SET bootstrapped_at = ? WHERE bootstrapped_at IS NULL AND artist_id IN (${ids.map(() => "?").join(",")})`,
+        ).bind(nowIso, ...ids),
+      );
+    }
+  }
+  await env.DB.batch(stmts);
+  if (job.page < lastPage) await send({ ids: job.ids, page: job.page + 1 });
+  return { calls: 1, shows: stored, alerts: alertCount };
+}
+
+/**
+ * Compara fechas recién leídas (API o Discovery Feed) con D1 y prepara las escrituras: ficha,
+ * avisos y entregas. Solo fechas futuras de la Fase 1 de entidades seguidas.
+ */
+export async function storeShows(
+  env: Env,
+  all: Show[],
+  follows: Map<string, FollowRow>,
+  now: Date,
+): Promise<{ stmts: D1PreparedStatement[]; stored: number; alerts: number }> {
   const nowIso = now.toISOString();
   const todayMadrid = localDateIn(now, MADRID);
-  const follows = await getFollowsByAttraction(env.DB, job.ids);
-  const shows: { show: Show; artistId: string }[] = [];
-  for (const raw of fetched.events) {
-    const show = normalizeTmEvent(raw);
-    if (!show || !PHASE1_COUNTRIES.has(show.venue.country) || show.localDate < todayMadrid) continue;
+  const shows: { show: Show; follow: FollowRow }[] = [];
+  for (const show of all) {
+    if (!PHASE1_COUNTRIES.has(show.venue.country) || show.localDate < todayMadrid) continue;
     const followId = show.attractionIds.find((id) => follows.has(id));
-    if (followId) shows.push({ show, artistId: follows.get(followId)!.artistId });
+    if (followId) shows.push({ show, follow: follows.get(followId)! });
   }
 
   const stored = await loadShows(env.DB, shows.map((s) => s.show.sourceId));
-  const stats = await loadShowStats(env.DB, [...new Set(shows.map((s) => s.artistId))], todayMadrid);
+  const stats = await loadShowStats(env.DB, [...new Set(shows.map((s) => s.follow.artistId))], todayMadrid);
   const knownBefore = now.getTime() - SAME_ANNOUNCEMENT_MS;
-  const stmts: D1PreparedStatement[] = [bumpQuota(env.DB, "ticketmaster", today, 1)];
+  const stmts: D1PreparedStatement[] = [];
   let alertCount = 0;
 
-  for (const { show, artistId } of shows) {
-    const hash = stableHash(JSON.stringify(show));
+  for (const { show, follow } of shows) {
+    const artistId = follow.artistId;
+    const hash = semanticHash(show);
     const old = stored.get(show.sourceId);
     if (old?.hash === hash) continue;
-    const follow = [...follows.values()].find((f) => f.artistId === artistId)!;
     const key = showKey(show);
     const prev = old ? (JSON.parse(old.snapshot_json) as Show) : null;
     const others = stats.filter((r) => r.artist_id === artistId && r.source_id !== show.sourceId);
@@ -112,30 +143,42 @@ export async function processPage(
            is_package = excluded.is_package, hash = excluded.hash, snapshot_json = excluded.snapshot_json, updated_at = excluded.updated_at`,
       ).bind(show.sourceId, key, artistId, show.venue.country, show.localDate, show.isPackage ? 1 : 0, hash, JSON.stringify(show), nowIso, nowIso),
     );
+    const channel = (a: Alert) => channelFor(a.kind, topicOf(show));
     for (const a of alerts) {
       alertCount++;
       stmts.push(
         env.DB.prepare("INSERT OR IGNORE INTO alert (dedupe_key, kind, source_id, payload_json, created_at) VALUES (?, ?, ?, ?, ?)").bind(
           a.dedupeKey, a.kind, a.sourceId, JSON.stringify({ alert: a, show }), nowIso,
         ),
-        env.DB.prepare("INSERT OR IGNORE INTO delivery (alert_id, channel) SELECT id, ? FROM alert WHERE dedupe_key = ?").bind(channelFor(a.kind), a.dedupeKey),
+        env.DB.prepare("INSERT OR IGNORE INTO delivery (alert_id, channel) SELECT id, ? FROM alert WHERE dedupe_key = ?").bind(channel(a), a.dedupeKey),
       );
     }
   }
+  return { stmts, stored: shows.length, alerts: alertCount };
+}
 
-  if (job.page === lastPage || lastPage < 0) {
-    const ids = [...follows.values()].map((f) => f.artistId);
-    if (ids.length) {
-      stmts.push(
-        env.DB.prepare(
-          `UPDATE follow SET bootstrapped_at = ? WHERE bootstrapped_at IS NULL AND artist_id IN (${ids.map(() => "?").join(",")})`,
-        ).bind(nowIso, ...ids),
-      );
-    }
+/** Ingesta desde el Discovery Feed (GitHub Actions): fechas normalizadas y marcas de arranque. */
+export async function ingestShows(
+  env: Env,
+  body: { shows?: Show[]; markBootstrapped?: string[] },
+  now: Date,
+): Promise<{ stored: number; alerts: number }> {
+  const shows = (body.shows ?? []).slice(0, 80);
+  const ids = [...new Set(shows.flatMap((s) => s.attractionIds ?? []))];
+  const follows = await getFollowsByAttraction(env.DB, ids);
+  const { stmts, stored, alerts } = await storeShows(env, shows, follows, now);
+  const mark = [...new Set(body.markBootstrapped ?? [])];
+  for (let i = 0; i < mark.length; i += 90) {
+    const part = mark.slice(i, i + 90);
+    stmts.push(
+      env.DB.prepare(
+        `UPDATE follow SET bootstrapped_at = ? WHERE bootstrapped_at IS NULL
+         AND artist_id IN (SELECT id FROM artist WHERE tm_attraction_id IN (${part.map(() => "?").join(",")}))`,
+      ).bind(now.toISOString(), ...part),
+    );
   }
-  await env.DB.batch(stmts);
-  if (job.page < lastPage) await send({ ids: job.ids, page: job.page + 1 });
-  return { calls: 1, shows: shows.length, alerts: alertCount };
+  if (stmts.length) await env.DB.batch(stmts);
+  return { stored, alerts };
 }
 
 const CHANNEL_TTL_MS = 24 * 60 * 60 * 1000;
