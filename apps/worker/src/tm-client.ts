@@ -5,7 +5,7 @@ export class RateLimited extends Error {}
 /** Centro de Europa (48N 8E, geohash) y radio que cubre de Islandia y Canarias a Turquía. */
 export const EUROPE_GEOPOINT = "u0t9n4";
 export const EUROPE_RADIUS_KM = 3500;
-export const PAGE_SIZE = 100;
+export const PAGE_SIZE = 50;
 
 /** Una página de eventos de Ticketmaster para un lote de artistas (attractionId separados por comas). */
 export async function fetchTmPage(
