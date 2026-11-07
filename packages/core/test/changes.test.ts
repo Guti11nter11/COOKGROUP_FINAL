@@ -101,3 +101,36 @@ describe("detectAlerts: ventanas con la misma etiqueta", () => {
     expect(a).toMatchObject({ kind: "sale_changed", detail: { before: "10:00", after: "11:00" } });
   });
 });
+
+describe("detectAlerts: solo lo accionable (nada del pasado)", () => {
+  const NOW = new Date("2026-11-08T12:00:00Z");
+  const c = { ...ctx, now: NOW };
+  const withSales = (dates: (string | null)[]): Show => {
+    const s = clone(base);
+    s.sales = dates.map((d, i) => ({ kind: "general", label: `V${i}`, startsAt: d, endsAt: null, url: null, orderRank: 90 }));
+    return s;
+  };
+  it("fecha nueva cuyas ventas ya pasaron hace días → sin aviso", () =>
+    expect(detectAlerts(null, withSales(["2026-10-08T09:00:00Z"]), c)).toEqual([]));
+  it("fecha nueva con venta futura → aviso", () =>
+    expect(detectAlerts(null, withSales(["2026-10-08T09:00:00Z", "2026-11-12T11:00:00Z"]), c).map((a) => a.kind)).toEqual(["new_event"]));
+  it("fecha nueva puesta a la venta hace 3 h → aviso", () =>
+    expect(detectAlerts(null, withSales(["2026-11-08T09:00:00Z"]), c).map((a) => a.kind)).toEqual(["new_event"]));
+  it("fecha nueva sin ventas anunciadas → aviso", () => expect(detectAlerts(null, withSales([]), c).map((a) => a.kind)).toEqual(["new_event"]));
+  it("preventa añadida que ya empezó → sin aviso; futura → aviso", () => {
+    const prev = withSales(["2026-11-20T09:00:00Z"]);
+    const next = withSales(["2026-11-20T09:00:00Z", "2026-10-01T09:00:00Z"]);
+    expect(detectAlerts(prev, next, c)).toEqual([]);
+    const next2 = withSales(["2026-11-20T09:00:00Z", "2026-11-19T09:00:00Z"]);
+    expect(detectAlerts(prev, next2, c).map((a) => a.kind)).toEqual(["sale_added"]);
+  });
+  it("vaivén onsale ↔ offsale → sin aviso; cancelación → aviso", () => {
+    const off = clone(base);
+    off.status = "offsale";
+    expect(detectAlerts(base, off, c)).toEqual([]);
+    expect(detectAlerts(off, base, c)).toEqual([]);
+    const can = clone(base);
+    can.status = "cancelled";
+    expect(detectAlerts(base, can, c).map((a) => a.kind)).toEqual(["status_changed"]);
+  });
+});

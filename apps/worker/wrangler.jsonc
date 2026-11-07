@@ -12,6 +12,6 @@
     "producers": [{ "binding": "SWEEP_QUEUE", "queue": "gira-sweep" }],
     "consumers": [{ "queue": "gira-sweep", "max_batch_size": 1, "max_batch_timeout": 1, "max_retries": 5, "max_concurrency": 1 }]
   },
-  "vars": { "DISCORD_GUILD_ID": "1568641743853715516" },
+  "vars": { "DISCORD_GUILD_ID": "1568641743853715516", "DELIVERY_PAUSED": "1" },
   "observability": { "enabled": true }
 }

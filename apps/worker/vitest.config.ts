@@ -13,7 +13,7 @@ export default defineWorkersConfig(async () => {
           isolatedStorage: true,
           wrangler: { configPath: "./wrangler.jsonc" },
           miniflare: {
-            bindings: { TEST_MIGRATIONS: migrations, TICKETMASTER_API_KEY: "test-key", DISCORD_BOT_TOKEN: "test-token" },
+            bindings: { TEST_MIGRATIONS: migrations, TICKETMASTER_API_KEY: "test-key", DISCORD_BOT_TOKEN: "test-token", DELIVERY_PAUSED: "0" },
           },
         },
       },

@@ -56,15 +56,17 @@ export function bumpQuota(db: D1Database, service: string, day: string, n: numbe
 
 export interface StoredShow {
   source_id: string;
-  hash: string;
-  snapshot_json: string;
+  api_hash: string | null;
+  api_snapshot: string | null;
+  feed_hash: string | null;
+  feed_snapshot: string | null;
 }
 
 export async function loadShows(db: D1Database, sourceIds: string[]): Promise<Map<string, StoredShow>> {
   const map = new Map<string, StoredShow>();
   for (const part of chunks(sourceIds)) {
     const { results } = await db
-      .prepare(`SELECT source_id, hash, snapshot_json FROM show WHERE source_id IN (${marks(part.length)})`)
+      .prepare(`SELECT source_id, api_hash, api_snapshot, feed_hash, feed_snapshot FROM show WHERE source_id IN (${marks(part.length)})`)
       .bind(...part)
       .all<StoredShow>();
     for (const r of results) map.set(r.source_id, r);

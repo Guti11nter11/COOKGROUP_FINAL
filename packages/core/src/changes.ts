@@ -20,7 +20,12 @@ export interface ChangeContext {
   knownDatesInCountry: number;
   artistName: string;
   tier: 1 | 2 | 3;
+  /** Si se indica, solo se avisa de lo accionable: nada cuyas ventas ya hayan pasado. */
+  now?: Date;
 }
+
+const RECENT_ONSALE_MS = 24 * 60 * 60 * 1000;
+const SERIOUS_STATUS = new Set(["cancelled", "postponed", "rescheduled"]);
 
 /** FNV-1a de 32 bits: huella estable y barata (deduplicar avisos, detectar fichas sin cambios). */
 export function stableHash(text: string): string {
@@ -49,15 +54,26 @@ export function detectAlerts(prev: Show | null, next: Show, ctx: ChangeContext):
     detail,
   });
 
+  const now = ctx.now?.getTime();
+  const future = (iso: string | null) => now === undefined || !iso || Date.parse(iso) > now;
+
   if (!prev) {
     if (ctx.bootstrap) return [];
+    // Una fecha "nueva" cuyas ventas pasaron hace más de 24 h no es noticia (ya estaba a la venta).
+    const timed = next.sales.filter((w) => w.startsAt);
+    const actionable =
+      now === undefined || timed.length === 0 || next.sales.some((w) => !w.startsAt || Date.parse(w.startsAt) > now - RECENT_ONSALE_MS);
+    if (!actionable) return [];
     const firstSale = next.sales.find((s) => s.startsAt)?.startsAt ?? null;
     const kind: AlertKind = ctx.knownDatesInCountry > 0 ? "extra_date" : "new_event";
     return [make(kind, { localDate: next.localDate, venue: next.venue.name }, firstSale)];
   }
 
   const alerts: Alert[] = [];
-  if (prev.status !== next.status) alerts.push(make("status_changed", { before: prev.status, after: next.status }));
+  // Solo cambios de estado serios (cancelado, aplazado, nueva fecha); el vaivén onsale ↔ offsale es ruido.
+  if (prev.status !== next.status && (SERIOUS_STATUS.has(next.status) || SERIOUS_STATUS.has(prev.status))) {
+    alerts.push(make("status_changed", { before: prev.status, after: next.status }));
+  }
 
   // Emparejar ventanas: primero las idénticas (etiqueta + hora); las que quedan sueltas con la misma
   // etiqueta se consideran un cambio de hora; las demás, ventanas nuevas.
@@ -68,6 +84,10 @@ export function detectAlerts(prev: Show | null, next: Show, ctx: ChangeContext):
   for (const w of next.sales) {
     if (prevKeys.has(exact(w))) continue;
     const i = orphans.findIndex((o) => saleId(o) === saleId(w));
+    if (!future(w.startsAt)) {
+      if (i >= 0) orphans.splice(i, 1);
+      continue; // ventana que ya empezó: no es accionable
+    }
     if (i < 0) {
       alerts.push(make("sale_added", { label: w.label, kind: w.kind, at: madrid(w.startsAt) }, w.startsAt));
       continue;

@@ -276,4 +276,13 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     await cycleAndDrain(new Date("2026-11-08T13:20:00Z"));
     expect(posts.map((p) => p.path)).toEqual(["/api/v10/channels/C_NUEVAS/messages"]);
   });
+
+  it("14. con DELIVERY_PAUSED=1 no se publica nada en Discord", async () => {
+    mockTicketmaster(page(BASE_EVENTS));
+    await cycleAndDrain();
+    mockTicketmaster(page([...BASE_EVENTS, tmEvent("E4", "K2", "V9", "ES", "2027-07-01")]));
+    await cycleAndDrain(LATER, false);
+    expect(await deliverPending({ ...env, DELIVERY_PAUSED: "1" }, LATER)).toBe(0);
+    expect(posts).toHaveLength(0);
+  });
 });

@@ -68,7 +68,7 @@ describe("POST /ingest (Discovery Feed)", () => {
     expect((await ingest({ shows: [], markBootstrapped: ["K8vZ917COCV", "K8vZ9178NNV"] }, t)).status).toBe(200);
     expect(await count("SELECT COUNT(*) n FROM follow WHERE feed_bootstrapped_at IS NOT NULL")).toBe(2);
     await env.DB.prepare("UPDATE show SET first_seen_at = '2026-01-01T00:00:00Z'").run();
-    await ingest({ shows: [future(jake, { eventId: "J2", eventStartLocalDate: "2027-09-01", eventStartDateTime: "2027-09-01T18:30:00Z", venue: { ...jake.venue, venueId: "OTRO", venueCountryCode: "GB", venueTimezone: "Europe/London" } })] }, t);
+    await ingest({ shows: [future(jake, { eventId: "J2", presales: [], onsaleStartDateTime: "2099-01-01T09:00:00Z", eventStartLocalDate: "2027-09-01", eventStartDateTime: "2027-09-01T18:30:00Z", venue: { ...jake.venue, venueId: "OTRO", venueCountryCode: "GB", venueTimezone: "Europe/London" } })] }, t);
     // /ingest entrega en segundo plano (waitUntil); esperamos a que llegue el POST.
     await vi.waitFor(() => expect(posts).toEqual(["/api/v10/channels/C_NUEVAS/messages"]));
     expect(await deliverPending(env, new Date())).toBe(0);
@@ -77,7 +77,7 @@ describe("POST /ingest (Discovery Feed)", () => {
   it("el deporte va a su canal (NFL → #nfl)", async () => {
     const t = await token();
     await ingest({ shows: [], markBootstrapped: ["K8vZ9178NNV"] }, t);
-    await ingest({ shows: [future(nfl, { eventStartLocalDate: "2027-10-10", eventStartDateTime: "2027-10-10T14:30:00Z" })] }, t);
+    await ingest({ shows: [future(nfl, { onsaleStartDateTime: "2099-01-01T16:00:00Z", eventStartLocalDate: "2027-10-10", eventStartDateTime: "2027-10-10T14:30:00Z" })] }, t);
     await vi.waitFor(() => expect(posts).toEqual(["/api/v10/channels/C_NFL/messages"]));
   });
 
@@ -102,5 +102,22 @@ describe("POST /ingest (Discovery Feed)", () => {
     await ingest({ shows: [future(jake, { venue: { ...jake.venue, venueCountryCode: "FR", venueTimezone: "Europe/Paris" } })] }, t);
     expect(await count("SELECT COUNT(*) n FROM show")).toBe(1);
     expect(await count("SELECT COUNT(*) n FROM alert")).toBe(0);
+  });
+
+  it("API y feed no se corrigen entre sí: cada fuente se compara con su propia lectura anterior", async () => {
+    const t = await token();
+    await env.DB.prepare("UPDATE follow SET bootstrapped_at = '2026-11-07T20:00:00Z', feed_bootstrapped_at = '2026-11-07T20:00:00Z'").run();
+    const s = future(jake, {});
+    // La API guardó la fecha "a la venta" (simulado con la misma ficha y otro estado).
+    await env.DB.prepare(
+      `INSERT INTO show (source_id, show_key, artist_id, country, local_date, is_package, hash, snapshot_json, first_seen_at, updated_at, api_hash, api_snapshot)
+       VALUES (?, 'k', 'a_jake', 'ES', ?, 0, 'h', ?, '2026-01-01T00:00:00Z', '2026-01-01T00:00:00Z', 'h', ?)`,
+    ).bind(s.sourceId, s.localDate, JSON.stringify(s), JSON.stringify(s)).run();
+    // El feed la ve por primera vez con otro estado → línea base, sin aviso.
+    await ingest({ shows: [{ ...s, status: "offsale" }] }, t);
+    expect(await count("SELECT COUNT(*) n FROM alert")).toBe(0);
+    // Un cambio real en el feed respecto a su propia lectura → sí avisa.
+    await ingest({ shows: [{ ...s, status: "cancelled" }] }, t);
+    expect(await env.DB.prepare("SELECT kind, json_extract(payload_json, '$.alert.detail.before') AS b FROM alert").first()).toEqual({ kind: "status_changed", b: "offsale" });
   });
 });

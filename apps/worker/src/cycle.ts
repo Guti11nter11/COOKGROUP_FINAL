@@ -122,27 +122,36 @@ export async function storeShows(
     const artistId = follow.artistId;
     const hash = semanticHash(show);
     const old = stored.get(show.sourceId);
-    if (old?.hash === hash) continue;
+    const ownHash = old ? (source === "api" ? old.api_hash : old.feed_hash) : null;
+    if (old && ownHash === hash) continue;
+    const ownSnapshot = old ? (source === "api" ? old.api_snapshot : old.feed_snapshot) : null;
     const key = showKey(show);
-    const prev = old ? (JSON.parse(old.snapshot_json) as Show) : null;
+    // Cada fuente se compara con su propia lectura anterior. Si la fecha ya existe pero esta fuente
+    // no la había visto, esta lectura es solo su línea base (sin avisos).
+    const prev = ownSnapshot ? (JSON.parse(ownSnapshot) as Show) : null;
+    const baseline = !!old && !prev;
     const others = stats.filter((r) => r.artist_id === artistId && r.source_id !== show.sourceId);
-    const sameDateListed = !prev && !show.isPackage && others.some((r) => r.show_key === key && r.is_package === 0);
+    const sameDateListed = !old && !show.isPackage && others.some((r) => r.show_key === key && r.is_package === 0);
     const knownDatesInCountry = new Set(
       others
         .filter((r) => r.country === show.venue.country && r.is_package === 0 && Date.parse(r.first_seen_at) < knownBefore)
         .map((r) => r.show_key),
     ).size;
-    const alerts: Alert[] = sameDateListed
-      ? []
-      : detectAlerts(prev, show, { bootstrap: !(source === "feed" ? follow.feedBootstrapped : follow.bootstrapped), knownDatesInCountry, artistName: follow.name, tier: follow.tier });
+    const alerts: Alert[] =
+      sameDateListed || baseline
+        ? []
+        : detectAlerts(prev, show, { bootstrap: !(source === "feed" ? follow.feedBootstrapped : follow.bootstrapped), knownDatesInCountry, artistName: follow.name, tier: follow.tier, now });
 
+    const snap = JSON.stringify(show);
+    const col = source === "api" ? "api" : "feed";
     stmts.push(
       env.DB.prepare(
-        `INSERT INTO show (source_id, show_key, artist_id, country, local_date, is_package, hash, snapshot_json, first_seen_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `INSERT INTO show (source_id, show_key, artist_id, country, local_date, is_package, hash, snapshot_json, first_seen_at, updated_at, ${col}_hash, ${col}_snapshot)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
          ON CONFLICT (source_id) DO UPDATE SET show_key = excluded.show_key, country = excluded.country, local_date = excluded.local_date,
-           is_package = excluded.is_package, hash = excluded.hash, snapshot_json = excluded.snapshot_json, updated_at = excluded.updated_at`,
-      ).bind(show.sourceId, key, artistId, show.venue.country, show.localDate, show.isPackage ? 1 : 0, hash, JSON.stringify(show), nowIso, nowIso),
+           is_package = excluded.is_package, hash = excluded.hash, snapshot_json = excluded.snapshot_json, updated_at = excluded.updated_at,
+           ${col}_hash = excluded.${col}_hash, ${col}_snapshot = excluded.${col}_snapshot`,
+      ).bind(show.sourceId, key, artistId, show.venue.country, show.localDate, show.isPackage ? 1 : 0, hash, snap, nowIso, nowIso, hash, snap),
     );
     const channel = (a: Alert) => channelFor(a.kind, topicOf(show));
     for (const a of alerts) {
@@ -216,6 +225,7 @@ const CLAIM_TIMEOUT_MS = 10 * 60 * 1000;
  * devuelve a 'pending' y se para hasta el ciclo siguiente.
  */
 export async function deliverPending(env: Env, now: Date, limit = 20): Promise<number> {
+  if (env.DELIVERY_PAUSED === "1") return 0;
   const iso = now.toISOString();
   const { results: claimed } = await env.DB.prepare(
     `UPDATE delivery SET status = 'sending', claimed_at = ?
