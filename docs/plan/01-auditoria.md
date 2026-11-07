@@ -250,3 +250,21 @@ Arena, Coliseu de Lisboa (PT) publican su agenda con fechas de venta. Se leen ca
 **Descartado:** servicios de resolución de captchas (p. ej. CapSolver), proxies residenciales para
 esquivar bloqueos y llamadas a APIs internas protegidas por la cola: incumplen los límites del brief
 y arriesgan baneos de cuenta e IP.
+
+## 13. Blueticket: búsqueda a fondo de alternativas (2026-11-07)
+
+| Vía probada | Resultado | ¿Se usa? |
+|---|---|---|
+| Web `blueticket.meo.pt` y el dominio nuevo `meoblueticket.pt` (directo, GitHub Actions, navegador real de Cloudflare) | Sala de espera Queue-it permanente / "Restricted access" a servidores | ❌ Bloqueo explícito: se respeta |
+| Buscadores (índice de Google/Brave sobre `blueticket.meo.pt`) | Blueticket no deja indexar sus fichas | ❌ |
+| Actores de Apify específicos de Blueticket | No existen | ❌ |
+| Firecrawl/proxies residenciales/resolver captchas | Sería esquivar el bloqueo | ❌ Prohibido por el brief |
+| **Instagram oficial `@meoblueticket` vía Apify** | ✅ **Funciona.** Publica cada evento que pone a la venta con fecha y hora: *"Venda geral: 13 de novembro, às 10h00, em meoblueticket.pt"* (Midnight Generation, Lisboa ao Vivo, 14-sep-2027). Coste medido: 0,0135 $ por 6 publicaciones | ✅ **Fuente principal de Blueticket** |
+| **Meta Business Discovery** (API oficial de Instagram, gratis) | Misma información sin gastar Apify; exige cuenta profesional de Instagram + página de Facebook + app de Meta del propietario | ✅ Recomendado para no gastar crédito |
+| Prensa PT (RFM, Expresso, NiT…) | ✅ Ej.: U2 Luz 2027 — venta general viernes 6-nov 10:00, registro de preventa hasta el 3-nov 13:00, venta exclusiva en MEO Blueticket | ✅ |
+| Promotoras (Música no Coração enlaza `blueticket.meo.pt/pt/event/16806`), recintos (MEO Arena, Coliseu), Live Nation PT | ✅ Fecha, hora y **enlace oficial a la ficha de Blueticket** | ✅ |
+
+**Diseño para Blueticket (R4):** Instagram oficial `@meoblueticket` cada 6 h con Apify (≈ 2 $/mes)
+o cada hora con Meta Business Discovery (0 €) → la IA extrae "venda geral / pré-venda + fecha +
+hora" con cita literal → se cruza con prensa, promotora y recinto → ficha con el botón al evento de
+Blueticket. El propietario compra en la web o la app de Blueticket como siempre.
