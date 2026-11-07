@@ -127,10 +127,10 @@ Tickets, PayPal Prio Tickets, Three+ Presale, Promoter Presale, Citi, Mastercard
 | # | Qué | Por qué | Bloquea | Coste |
 |---|---|---|---|---|
 | A1 | ✅ **Hecho** (2026-11-07): subdominio `eleven-snk-11.workers.dev` | Crea el subdominio `workers.dev` | — | 0 € |
-| A2 | Activar Comunidad en el servidor de Discord (Ajustes → Habilitar Comunidad) | Los **canales de anuncios y los foros** solo existen en servidores Comunidad | El foro "giras" y #daily-release como anuncios | 0 € |
-| A3 | Decidir sobre **R2** (activarlo en el panel; puede pedir tarjeta aunque tenga capa gratuita) | Guardar HTML crudo y capturas | Nada crítico: sin R2 se guarda un extracto en D1 | 0 € dentro de la capa gratuita |
-| A4 | Crear un **token fino de GitHub** (*fine-grained*, solo este repo, permiso *Actions: write*) y guardarlo como **GitHub Secret** `GH_DISPATCH_TOKEN` (el despliegue lo copia al Worker) | Que Cloudflare dispare los workflows a la hora exacta (ver arquitectura) | Puntualidad de los trabajos pesados | 0 € |
-| A5 | Arreglar el **secreto de red de Apify** del entorno `COOKGROUP` | En esta sesión `api.apify.com` responde 401 y el MCP de Apify no carga | Solo el trabajo interactivo de Claude con Apify; en Actions funciona | 0 € |
+| A2 | ✅ **Hecho** (2026-11-07): servidor con `COMMUNITY` y `NEWS` · Activar Comunidad en el servidor de Discord (Ajustes → Habilitar Comunidad) | Los **canales de anuncios y los foros** solo existen en servidores Comunidad | El foro "giras" y #daily-release como anuncios | 0 € |
+| A3 | ✅ **Hecho** (2026-11-07): R2 activado · Decidir sobre **R2** (activarlo en el panel; puede pedir tarjeta aunque tenga capa gratuita) | Guardar HTML crudo y capturas | Nada crítico: sin R2 se guarda un extracto en D1 | 0 € dentro de la capa gratuita |
+| A4 | ✅ **Hecho** (2026-11-07): `GH_DISPATCH_TOKEN` responde 200 · Crear un **token fino de GitHub** (*fine-grained*, solo este repo, permiso *Actions: write*) y guardarlo como **GitHub Secret** `GH_DISPATCH_TOKEN` (el despliegue lo copia al Worker) | Que Cloudflare dispare los workflows a la hora exacta (ver arquitectura) | Puntualidad de los trabajos pesados | 0 € |
+| A5 | ✅ **Hecho** (2026-11-07): `api.apify.com` responde 200 en sesión · Arreglar el **secreto de red de Apify** del entorno `COOKGROUP` | En esta sesión `api.apify.com` responde 401 y el MCP de Apify no carga | Solo el trabajo interactivo de Claude con Apify; en Actions funciona | 0 € |
 | A6 | Tener **iOS 16.4+** (mejor 18.4+) y añadir GIRA a la pantalla de inicio | Push web en iPhone solo funciona instalada | Notificaciones push | 0 € |
 | A7 | *(Opcional, aplazado)* Dominio `cyclevoltlogistics.com` (ya comprado): hoy usa DNS de Squarespace y correo de Google Workspace (MX `smtp.google.com`) | Email Routing exigiría pasar los DNS a Cloudflare sin romper ese correo; la app puede ir en `*.pages.dev` | Solo el "buzón de preventas" | 0 € (dominio ya pagado) |
 | A8 | *(Opcional)* Meta Business Discovery (cuenta profesional de IG + app de Meta) | Respaldo oficial de Instagram | Nada: Apify cubre | 0 € |
@@ -190,3 +190,22 @@ saltarse nada.
 
 Fuentes: Ticketnet/Live Nation ([FrenchWeb](https://www.frenchweb.fr/ticketnet-rachete-par-lamericain-live-nation-entertainment/7389)),
 mercado portugués ([IQ International Ticketing Report 2025](https://www.iqmagazine.com/publications/international-ticketing-report-2025/portugal/)).
+
+## 11. Prueba real de ticketeras sin API (workflow `Sondear ticketeras`, 2026-11-07)
+
+| Ticketera | Lectura directa (GitHub Actions) | Cloudflare Browser Run (navegador real) | Vía legítima elegida |
+|---|---|---|---|
+| **Entradas.com / Eventim / TicketOne / Fansale** | ❌ el servidor no responde a centros de datos | ✅ 200 (≈ 0,5–0,7 MB de página real) | **Browser Run** a baja frecuencia sobre páginas de artista y de "nuevos a la venta" + afiliación Awin (Eventim UK/DE) como opción oficial |
+| **AXS** | robots ✅, fichas ❌ 403 | ✅ 200 (la ficha carga el script de Queue-it, que no se toca) | **Sitemaps públicos por país** (se actualizan a diario, el artista va en la URL) para detectar eventos nuevos + Browser Run para la ficha |
+| **See Tickets** | ❌ 403 | ✅ 200 | Browser Run + feed oficial de afiliados (Awin, XML con eventos, fechas y artistas) |
+| **El Corte Inglés entradas** | ❌ 403 | ✅ 200 (1,1 MB) | Browser Run + feed de afiliados Awin (ojo: excluye los eventos de alta demanda) |
+| **Ticketmaster FR** | ❌ 403 | ⚠️ 200 pero solo 6 KB (página de bloqueo) | Respetar: prensa francesa + Live Nation FR |
+| **Ticketline PT** | ❌ sin conexión | ❌ timeout | Prensa portuguesa + BOL + promotoras |
+
+**Reglas para Browser Run:** navegador normal, sin técnicas de ocultación, sin resolver retos ni
+captchas, sin entrar en salas de espera; si una web devuelve reto o bloqueo, se respeta y se apaga
+esa fuente. Presupuesto: 10 min/día ≈ 120–200 páginas → cada ticketera, solo las páginas de los
+artistas seguidos y la de novedades, cada 30–60 min.
+
+**Opción oficial a medio plazo (acción del propietario, gratis):** darse de alta como *publisher* en
+**Awin** para recibir los feeds de eventos de Eventim (UK/DE), See Tickets y El Corte Inglés.
