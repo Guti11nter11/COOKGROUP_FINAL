@@ -2,7 +2,8 @@ import { createExecutionContext, createMessageBatch, env, fetchMock, getQueueRes
 import worker from "../src/index";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { SweepJob } from "../src/env";
-import { deliverPending, processPage, runCycle } from "../src/cycle";
+import { processPage, runCycle } from "../src/cycle";
+import { publishSheets } from "../src/sheets";
 
 const GUILD = "1568641743853715516";
 const NOW = new Date("2026-11-08T12:00:00Z"); // minuto 0 → barrido completo, de día
@@ -10,6 +11,8 @@ const LATER = new Date("2026-11-08T13:00:00Z"); // ciclo siguiente, fuera de la 
 const CHANNELS = [
   { id: "C_DECOY", name: "nuevas-giras", type: 0, parent_id: null }, // homónimo fuera de las categorías de GIRA
   { id: "X", name: "🚨 ALERTAS", type: 4, parent_id: null },
+  { id: "CAT_G", name: "🎤 GIRAS", type: 4, parent_id: null },
+  { id: "CAT_A", name: "📦 ARCHIVO", type: 4, parent_id: null },
   { id: "C_NUEVAS", name: "nuevas-giras", type: 0, parent_id: "X" },
   { id: "C_EXTRA", name: "fechas-extra", type: 0, parent_id: "X" },
   { id: "C_PRE", name: "preventas", type: 0, parent_id: "X" },
@@ -40,6 +43,11 @@ const BASE_EVENTS = [
 ];
 
 let posts: { path: string; body: unknown }[];
+let createdChannels: string[] = [];
+let channelSeq = 0;
+const NOTICE = /\/channels\/C_(NUEVAS|EXTRA|PRE)\/messages$/;
+/** Solo los avisos de los canales temáticos (las fichas van a los canales de cada artista). */
+const notices = () => posts.filter((p) => NOTICE.test(p.path));
 let discordPostStatus = 200;
 let tmPaths: string[] = [];
 
@@ -67,6 +75,20 @@ function mockDiscordOnce() {
     .persist();
   fetchMock
     .get("https://discord.com")
+    .intercept({ path: `/api/v10/guilds/${GUILD}/channels`, method: "POST" })
+    .reply((opts) => {
+      const body = JSON.parse(String(opts.body)) as { name: string };
+      createdChannels.push(body.name);
+      return { statusCode: 200, data: JSON.stringify({ id: `NEW${++channelSeq}` }), responseOptions: { headers: { "content-type": "application/json" } } };
+    })
+    .persist();
+  fetchMock
+    .get("https://discord.com")
+    .intercept({ path: (p) => p.startsWith("/api/v10/channels/"), method: "PATCH" })
+    .reply(() => ({ statusCode: discordPostStatus, data: JSON.stringify({}), responseOptions: { headers: { "content-type": "application/json" } } }))
+    .persist();
+  fetchMock
+    .get("https://discord.com")
     .intercept({ path: (p) => p.startsWith("/api/v10/channels/"), method: "POST" })
     .reply((opts) => {
       posts.push({ path: opts.path, body: JSON.parse(String(opts.body)) });
@@ -84,7 +106,7 @@ async function cycleAndDrain(now = NOW, deliver = true) {
   const cycle = await runCycle(env, now, send);
   const results = [];
   while (queue.length) results.push(await processPage(env, queue.shift()!, now, send));
-  const delivered = deliver ? await deliverPending(env, now) : 0;
+  const delivered = deliver ? (await publishSheets(env, now)).notices : 0;
   return { cycle, results, delivered, queue };
 }
 
@@ -98,6 +120,7 @@ beforeAll(() => {
 beforeEach(async () => {
   posts = [];
   tmPaths = [];
+  createdChannels = [];
   discordPostStatus = 200;
   await seedArtists();
 });
@@ -113,7 +136,10 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     await cycleAndDrain();
     expect(await count("SELECT COUNT(*) n FROM show")).toBe(3);
     expect(await count("SELECT COUNT(*) n FROM alert")).toBe(0);
-    expect(posts).toHaveLength(0);
+    expect(notices()).toHaveLength(0);
+    // Sin avisos, pero cada artista con ventas por llegar ya tiene su canal y su ficha.
+    expect(createdChannels.sort()).toEqual(["artista-dos", "artista-uno"]);
+    expect(posts.filter((p) => /\/channels\/NEW\d+\/messages$/.test(p.path)).length).toBeGreaterThanOrEqual(2);
     expect(tmPaths[0]).toContain("classificationName=music");
   });
 
@@ -124,8 +150,9 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     mockTicketmaster(page([...BASE_EVENTS, tmEvent("E4", "K2", "V9", "ES", "2027-07-01")]));
     await cycleAndDrain(LATER);
     expect(await count("SELECT COUNT(*) n FROM alert WHERE kind = 'new_event'")).toBe(1);
-    expect(posts.map((p) => p.path)).toEqual(["/api/v10/channels/C_NUEVAS/messages"]);
-    expect(JSON.stringify(posts[0]!.body)).toContain("Artista Dos");
+    expect(notices().map((p) => p.path)).toEqual(["/api/v10/channels/C_NUEVAS/messages"]);
+    expect(JSON.stringify(notices()[0]!.body)).toContain("Artista Dos");
+    expect(JSON.stringify(notices()[0]!.body)).toMatch(/<#NEW\d+>/);
   });
 
   it("2b. fecha nueva de un artista que ya tiene fechas en el país → #fechas-extra", async () => {
@@ -134,16 +161,17 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     await cycleAndDrain();
     mockTicketmaster(page([...BASE_EVENTS, tmEvent("E5", "K1", "V1", "ES", "2027-05-11")]));
     await cycleAndDrain(LATER);
-    expect(posts.map((p) => p.path)).toEqual(["/api/v10/channels/C_EXTRA/messages"]);
+    expect(notices().map((p) => p.path)).toEqual(["/api/v10/channels/C_EXTRA/messages"]);
   });
 
-  it("2c. varias fechas nuevas del mismo anuncio en un país sin fechas → todas son 'fecha nueva'", async () => {
+  it("2c. varias fechas nuevas del mismo anuncio → UN aviso agrupado con todas", async () => {
     mockTicketmaster(page(BASE_EVENTS));
     mockDiscord();
     await cycleAndDrain();
     mockTicketmaster(page([...BASE_EVENTS, tmEvent("E8", "K2", "V9", "ES", "2027-07-01"), tmEvent("E9", "K2", "V9", "ES", "2027-07-02")]));
     await cycleAndDrain(LATER);
-    expect(posts.map((p) => p.path)).toEqual(["/api/v10/channels/C_NUEVAS/messages", "/api/v10/channels/C_NUEVAS/messages"]);
+    expect(notices().map((p) => p.path)).toEqual(["/api/v10/channels/C_NUEVAS/messages"]);
+    expect(JSON.stringify(notices()[0]!.body)).toContain("2 fechas nuevas");
   });
 
   it("3. repetir el mismo ciclo no duplica avisos ni mensajes", async () => {
@@ -155,7 +183,8 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     await cycleAndDrain(LATER);
     await cycleAndDrain(new Date("2026-11-08T13:20:00Z"));
     expect(await count("SELECT COUNT(*) n FROM alert")).toBe(1);
-    expect(posts).toHaveLength(1);
+    expect(notices()).toHaveLength(1);
+    expect(createdChannels.filter((n) => n === "artista-dos")).toHaveLength(1);
   });
 
   it("3b. otro listado de la misma fecha (mismo recinto y día) no es fecha nueva", async () => {
@@ -207,8 +236,9 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     await cycleAndDrain(LATER);
     expect(await env.DB.prepare("SELECT status, attempts FROM delivery").first()).toEqual({ status: "pending", attempts: 0 });
     mockDiscord(200);
-    expect(await deliverPending(env, LATER)).toBe(1);
-    expect(await deliverPending(env, LATER)).toBe(0);
+    expect((await publishSheets(env, LATER)).notices).toBe(1);
+    expect((await publishSheets(env, LATER)).notices).toBe(0);
+    expect(notices()).toHaveLength(1);
     expect(await env.DB.prepare("SELECT status, attempts FROM delivery").first()).toEqual({ status: "sent", attempts: 1 });
   });
 
@@ -242,14 +272,15 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     expect(result.retryMessages.map((m: { msgId: string }) => m.msgId)).toEqual(["m1"]);
   });
 
-  it("11. dos entregas simultáneas publican el aviso una sola vez", async () => {
+  it("11. dos publicaciones simultáneas: un solo canal por artista y un solo aviso", async () => {
     mockTicketmaster(page(BASE_EVENTS));
     await cycleAndDrain();
     mockTicketmaster(page([...BASE_EVENTS, tmEvent("E4", "K2", "V9", "ES", "2027-07-01")]));
     await cycleAndDrain(LATER, false);
-    const [a, b] = await Promise.all([deliverPending(env, LATER), deliverPending(env, LATER)]);
-    expect(a + b).toBe(1);
-    expect(posts).toHaveLength(1);
+    const [a, b] = await Promise.all([publishSheets(env, LATER), publishSheets(env, LATER)]);
+    expect(a.notices + b.notices).toBe(1);
+    expect(notices()).toHaveLength(1);
+    expect(createdChannels.sort()).toEqual(["artista-dos", "artista-uno"]);
   });
 
   it("12. las fechas ya pasadas no cuentan como conocidas: gira nueva → #nuevas-giras", async () => {
@@ -261,7 +292,7 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     ).run();
     mockTicketmaster(page([...BASE_EVENTS, tmEvent("E4", "K2", "V9", "ES", "2027-07-01")]));
     await cycleAndDrain(LATER);
-    expect(posts.map((p) => p.path)).toEqual(["/api/v10/channels/C_NUEVAS/messages"]);
+    expect(notices().map((p) => p.path)).toEqual(["/api/v10/channels/C_NUEVAS/messages"]);
   });
 
   it("13. un paquete VIP visto antes no oculta la fecha real", async () => {
@@ -269,12 +300,12 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     await cycleAndDrain();
     mockTicketmaster(page([...BASE_EVENTS, tmEvent("E4vip", "K2", "V9", "ES", "2027-07-01", "Show E4 | VIP Packages")]));
     await cycleAndDrain(LATER);
-    expect(posts).toHaveLength(0);
+    expect(notices()).toHaveLength(0);
     mockTicketmaster(
       page([...BASE_EVENTS, tmEvent("E4vip", "K2", "V9", "ES", "2027-07-01", "Show E4 | VIP Packages"), tmEvent("E4", "K2", "V9", "ES", "2027-07-01")]),
     );
     await cycleAndDrain(new Date("2026-11-08T13:20:00Z"));
-    expect(posts.map((p) => p.path)).toEqual(["/api/v10/channels/C_NUEVAS/messages"]);
+    expect(notices().map((p) => p.path)).toEqual(["/api/v10/channels/C_NUEVAS/messages"]);
   });
 
   it("14. con DELIVERY_PAUSED=1 no se publica nada en Discord", async () => {
@@ -282,7 +313,10 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     await cycleAndDrain();
     mockTicketmaster(page([...BASE_EVENTS, tmEvent("E4", "K2", "V9", "ES", "2027-07-01")]));
     await cycleAndDrain(LATER, false);
-    expect(await deliverPending({ ...env, DELIVERY_PAUSED: "1" }, LATER)).toBe(0);
+    posts = [];
+    createdChannels = [];
+    expect(await publishSheets({ ...env, DELIVERY_PAUSED: "1" }, LATER)).toEqual({ updated: 0, notices: 0 });
     expect(posts).toHaveLength(0);
+    expect(createdChannels).toHaveLength(0);
   });
 });

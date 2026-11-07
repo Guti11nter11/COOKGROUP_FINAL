@@ -1,4 +1,5 @@
-import { deliverPending, ingestShows, processPage, runCycle } from "./cycle";
+import { ingestShows, processPage, runCycle } from "./cycle";
+import { publishSheets } from "./sheets";
 import type { Env, SweepJob } from "./env";
 
 async function scheduled(env: Env, now: Date): Promise<void> {
@@ -8,8 +9,8 @@ async function scheduled(env: Env, now: Date): Promise<void> {
   let result: unknown;
   try {
     const cycle = await runCycle(env, now, async (j) => void (await env.SWEEP_QUEUE.send(j)));
-    const delivered = await deliverPending(env, now);
-    result = { ...cycle, delivered };
+    const sheets = await publishSheets(env, now);
+    result = { ...cycle, ...sheets };
   } catch (e) {
     ok = 0;
     result = { error: String(e) };
@@ -42,7 +43,7 @@ export default {
       if (!sameString(auth, await ingestToken(env))) return new Response("No autorizado", { status: 401 });
       const now = new Date();
       const r = await ingestShows(env, await req.json(), now);
-      if (r.alerts > 0) ctx.waitUntil(deliverPending(env, now));
+      if (r.stored > 0) ctx.waitUntil(publishSheets(env, now));
       return Response.json(r);
     }
     if (url.pathname === "/health") {
@@ -86,7 +87,7 @@ export default {
         msg.retry({ delaySeconds: 120 }); // Ticketmaster pidió esperar: se reintenta, no se descarta
         continue;
       }
-      if (r.alerts > 0) await deliverPending(env, now);
+      if (r.shows > 0) await publishSheets(env, now);
       msg.ack();
     }
   },

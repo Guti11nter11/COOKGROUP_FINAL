@@ -1,0 +1,123 @@
+import { env, fetchMock } from "cloudflare:test";
+import { beforeAll, beforeEach, describe, expect, it } from "vitest";
+import type { Show } from "@gira/core";
+import { publishSheets } from "../src/sheets";
+
+const GUILD = "1568641743853715516";
+const NOW = new Date("2026-11-08T12:00:00Z");
+let calls: { method: string; path: string; body: any }[] = [];
+let created = 0;
+
+const show = (id: string, date: string, saleAt: string, extra: Partial<Show> = {}): Show => ({
+  source: "ticketmaster", sourceId: id, name: "Artista Uno - Tour 2027", attractionIds: ["K1"],
+  venue: { tmId: `V${id}`, name: "Estadio", city: "Madrid", country: "ES", tz: "Europe/Madrid" },
+  startsAt: `${date}T19:00:00Z`, localDate: date, status: "onsale", ticketLimit: null, url: `https://tm.example/${id}`, isPackage: false,
+  sales: [{ kind: "general", label: "Venta general", startsAt: saleAt, endsAt: null, url: null, orderRank: 90 }],
+  segment: "Music", ...extra,
+});
+
+async function storeShow(s: Show) {
+  await env.DB.prepare(
+    `INSERT INTO show (source_id, show_key, artist_id, country, local_date, is_package, hash, snapshot_json, first_seen_at, updated_at)
+     VALUES (?, ?, 'a1', ?, ?, 0, 'h', ?, '2026-11-01T00:00:00Z', '2026-11-01T00:00:00Z')
+     ON CONFLICT (source_id) DO UPDATE SET local_date = excluded.local_date, snapshot_json = excluded.snapshot_json`,
+  ).bind(s.sourceId, `K1:V${s.sourceId}:${s.localDate}`, s.venue.country, s.localDate, JSON.stringify(s)).run();
+}
+async function alertFor(s: Show, kind = "new_event") {
+  const payload = JSON.stringify({ alert: { kind, showKey: "k", sourceId: s.sourceId, artistName: "Artista Uno", tier: 3, dedupeKey: `${kind}:${s.sourceId}`, detail: {} }, show: s });
+  await env.DB.batch([
+    env.DB.prepare("INSERT INTO alert (dedupe_key, kind, source_id, payload_json, created_at) VALUES (?, ?, ?, ?, ?)").bind(`${kind}:${s.sourceId}`, kind, s.sourceId, payload, NOW.toISOString()),
+    env.DB.prepare("INSERT INTO delivery (alert_id, channel, artist_id) SELECT id, 'nuevas-giras', 'a1' FROM alert WHERE dedupe_key = ?").bind(`${kind}:${s.sourceId}`),
+    env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES ('a1', ?)").bind(NOW.toISOString()),
+  ]);
+}
+const discordCalls = (method: string, re: RegExp) => calls.filter((c) => c.method === method && re.test(c.path));
+
+beforeAll(() => {
+  fetchMock.activate();
+  fetchMock.disableNetConnect();
+  const ok = (data: unknown) => ({ statusCode: 200, data: JSON.stringify(data), responseOptions: { headers: { "content-type": "application/json" } } });
+  const d = fetchMock.get("https://discord.com");
+  d.intercept({ path: `/api/v10/guilds/${GUILD}/channels`, method: "GET" })
+    .reply(() => ok([
+      { id: "CAT_G", name: "🎤 GIRAS", type: 4, parent_id: null },
+      { id: "CAT_A", name: "📦 ARCHIVO", type: 4, parent_id: null },
+      { id: "CAT_AL", name: "🚨 ALERTAS", type: 4, parent_id: null },
+      { id: "C_NUEVAS", name: "nuevas-giras", type: 0, parent_id: "CAT_AL" },
+      { id: "C_PRE", name: "preventas", type: 0, parent_id: "CAT_AL" },
+    ]))
+    .persist();
+  d.intercept({ path: `/api/v10/guilds/${GUILD}/channels`, method: "POST" })
+    .reply((o) => (calls.push({ method: "POST", path: o.path, body: JSON.parse(String(o.body)) }), ok({ id: `NEW${++created}` })))
+    .persist();
+  d.intercept({ path: (p) => p.startsWith("/api/v10/channels/"), method: "POST" })
+    .reply((o) => (calls.push({ method: "POST", path: o.path, body: JSON.parse(String(o.body)) }), ok({ id: `M${calls.length}` })))
+    .persist();
+  d.intercept({ path: (p) => p.startsWith("/api/v10/channels/"), method: "PATCH" })
+    .reply((o) => (calls.push({ method: "PATCH", path: o.path, body: JSON.parse(String(o.body)) }), ok({})))
+    .persist();
+  d.intercept({ path: (p) => p.startsWith("/api/v10/channels/"), method: "DELETE" })
+    .reply((o) => (calls.push({ method: "DELETE", path: o.path, body: null }), { statusCode: 204, data: "" }))
+    .persist();
+});
+beforeEach(async () => {
+  calls = [];
+  await env.DB.batch([
+    env.DB.prepare("INSERT INTO artist (id, name, tm_attraction_id, deezer_fans) VALUES ('a1', 'Artista Uno', 'K1', 2500000)"),
+    env.DB.prepare("INSERT INTO follow (artist_id, tier) VALUES ('a1', 3)"),
+  ]);
+});
+
+describe("fichas por artista en Discord", () => {
+  it("gira con venta por llegar → crea #artista-uno en GIRAS, publica la ficha y UN aviso agrupado", async () => {
+    const a = show("1", "2027-05-10", "2026-11-20T09:00:00Z");
+    const b = show("2", "2027-05-11", "2026-11-20T09:00:00Z");
+    await storeShow(a); await storeShow(b); await alertFor(a); await alertFor(b);
+    await publishSheets(env, NOW);
+    const ch = discordCalls("POST", /\/guilds\//);
+    expect(ch).toHaveLength(1);
+    expect(ch[0]!.body).toMatchObject({ name: "artista-uno", type: 0, parent_id: "CAT_G" });
+    const sheetPosts = discordCalls("POST", /\/channels\/NEW1\/messages/);
+    expect(sheetPosts.length).toBeGreaterThan(0);
+    expect(sheetPosts[0]!.body.content).toContain("Artista Uno");
+    const notices = discordCalls("POST", /\/channels\/C_NUEVAS\/messages/);
+    expect(notices).toHaveLength(1);
+    expect(notices[0]!.body.content).toContain("<#NEW1>");
+    expect(notices[0]!.body.content).toContain("2 fechas nuevas");
+    expect(await env.DB.prepare("SELECT COUNT(*) n FROM delivery WHERE status = 'sent'").first()).toEqual({ n: 2 });
+  });
+
+  it("sin cambios → no toca Discord; con cambios → edita los mensajes (no publica otros)", async () => {
+    const a = show("1", "2027-05-10", "2026-11-20T09:00:00Z");
+    await storeShow(a); await alertFor(a);
+    await publishSheets(env, NOW);
+    calls = [];
+    await env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES ('a1', ?)").bind(NOW.toISOString()).run();
+    await publishSheets(env, NOW);
+    expect(calls).toEqual([]);
+    await storeShow(show("1", "2027-05-10", "2026-11-21T09:00:00Z"));
+    await env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES ('a1', ?)").bind(NOW.toISOString()).run();
+    await publishSheets(env, NOW);
+    expect(discordCalls("PATCH", /\/messages\//).length).toBeGreaterThan(0);
+    expect(discordCalls("POST", /\/messages/)).toEqual([]);
+  });
+
+  it("artista sin ventas por llegar y sin canal → no se crea canal", async () => {
+    await storeShow(show("1", "2027-05-10", "2026-10-01T09:00:00Z"));
+    await env.DB.prepare("INSERT INTO sheet_dirty (artist_id, since) VALUES ('a1', ?)").bind(NOW.toISOString()).run();
+    await publishSheets(env, NOW);
+    expect(calls).toEqual([]);
+  });
+
+  it("cuando pasa la última fecha → el canal se mueve a 📦 ARCHIVO", async () => {
+    const a = show("1", "2027-05-10", "2026-11-20T09:00:00Z");
+    await storeShow(a); await alertFor(a);
+    await publishSheets(env, NOW);
+    calls = [];
+    await env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES ('a1', ?)").bind(NOW.toISOString()).run();
+    const { channel_id } = (await env.DB.prepare("SELECT channel_id FROM sheet").first<{ channel_id: string }>())!;
+    await publishSheets(env, new Date("2027-06-01T12:00:00Z"));
+    expect(calls.find((c) => c.method === "PATCH" && c.path === `/api/v10/channels/${channel_id}`)?.body).toEqual({ parent_id: "CAT_A" });
+    expect(await env.DB.prepare("SELECT status FROM sheet").first()).toEqual({ status: "archived" });
+  });
+});

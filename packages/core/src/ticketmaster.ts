@@ -29,6 +29,8 @@ export interface Show {
   genre?: string;
   subGenre?: string;
   promoters?: string[];
+  /** Página oficial del artista en la ticketera (enlaces de lanzamiento). */
+  artistUrl?: string;
 }
 
 /** Listados accesorios de una fecha (paquetes VIP, hospitality, parking): no son fechas nuevas. */
@@ -109,6 +111,7 @@ export function normalizeTmEvent(raw: unknown): Show | null {
     isPackage: PACKAGE_RE.test(name),
     sales: windows,
     ...classification((e.classifications as unknown[] | undefined)?.[0]),
+    ...(str(obj((emb.attractions as unknown[] | undefined)?.[0]).url) ? { artistUrl: str(obj((emb.attractions as unknown[] | undefined)?.[0]).url)! } : {}),
   };
 }
 

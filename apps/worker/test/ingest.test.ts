@@ -2,7 +2,7 @@ import { env, fetchMock, SELF } from "cloudflare:test";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { normalizeFeedEvent } from "@gira/core";
 import feed from "../../../packages/core/test/fixtures/feed-events.json";
-import { deliverPending } from "../src/cycle";
+import { publishSheets } from "../src/sheets";
 
 const GUILD = "1568641743853715516";
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,16 +33,23 @@ beforeAll(() => {
       JSON.stringify([
         { id: "CAT_A", name: "🚨 ALERTAS", type: 4, parent_id: null },
         { id: "CAT_D", name: "🏟️ DEPORTES", type: 4, parent_id: null },
+        { id: "CAT_G", name: "🎤 GIRAS", type: 4, parent_id: null },
         { id: "C_NUEVAS", name: "nuevas-giras", type: 0, parent_id: "CAT_A" },
         { id: "C_NFL", name: "nfl", type: 0, parent_id: "CAT_D" },
       ]),
       { headers: { "content-type": "application/json" } },
     )
     .persist();
+  let seq = 0;
+  fetchMock
+    .get("https://discord.com")
+    .intercept({ path: `/api/v10/guilds/${GUILD}/channels`, method: "POST" })
+    .reply(() => ({ statusCode: 200, data: JSON.stringify({ id: `NEW${++seq}` }), responseOptions: { headers: { "content-type": "application/json" } } }))
+    .persist();
   fetchMock
     .get("https://discord.com")
     .intercept({ path: (p) => p.startsWith("/api/v10/channels/"), method: "POST" })
-    .reply((o) => (posts.push(o.path), { statusCode: 200, data: JSON.stringify({ id: "m" }), responseOptions: { headers: { "content-type": "application/json" } } }))
+    .reply((o) => (/\/channels\/C_/.test(o.path) && posts.push(o.path), { statusCode: 200, data: JSON.stringify({ id: "m" }), responseOptions: { headers: { "content-type": "application/json" } } }))
     .persist();
 });
 beforeEach(async () => {
@@ -71,7 +78,7 @@ describe("POST /ingest (Discovery Feed)", () => {
     await ingest({ shows: [future(jake, { eventId: "J2", presales: [], onsaleStartDateTime: "2099-01-01T09:00:00Z", eventStartLocalDate: "2027-09-01", eventStartDateTime: "2027-09-01T18:30:00Z", venue: { ...jake.venue, venueId: "OTRO", venueCountryCode: "GB", venueTimezone: "Europe/London" } })] }, t);
     // /ingest entrega en segundo plano (waitUntil); esperamos a que llegue el POST.
     await vi.waitFor(() => expect(posts).toEqual(["/api/v10/channels/C_NUEVAS/messages"]));
-    expect(await deliverPending(env, new Date())).toBe(0);
+    expect((await publishSheets(env, new Date())).notices).toBe(0);
   });
 
   it("el deporte va a su canal (NFL → #nfl)", async () => {
