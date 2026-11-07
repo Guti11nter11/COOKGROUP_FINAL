@@ -319,4 +319,10 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     expect(posts).toHaveLength(0);
     expect(createdChannels).toHaveLength(0);
   });
+
+  it("15. guarda el precio oficial publicado por Ticketmaster", async () => {
+    mockTicketmaster(page([{ ...tmEvent("E1", "K1", "V1", "ES", "2027-05-10"), priceRanges: [{ type: "standard", currency: "EUR", min: 45, max: 250 }] }]));
+    await cycleAndDrain();
+    expect(await env.DB.prepare("SELECT min, max, currency, source FROM show_price WHERE source_id = 'E1'").first()).toEqual({ min: 45, max: 250, currency: "EUR", source: "Ticketmaster" });
+  });
 });

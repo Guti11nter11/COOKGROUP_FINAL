@@ -1,6 +1,6 @@
 import { stableHash } from "./changes";
 import { classifySaleLabel } from "./presale";
-import { isPackageName, stripQueueToken, type SaleWindow, type Show, type ShowStatus } from "./ticketmaster";
+import { isPackageName, priceOf, stripQueueToken, type SaleWindow, type Show, type ShowStatus } from "./ticketmaster";
 
 type Obj = Record<string, unknown>;
 const obj = (v: unknown): Obj => (v && typeof v === "object" ? (v as Obj) : {});
@@ -68,6 +68,8 @@ export function normalizeFeedEvent(raw: unknown): Show | null {
   const subGenre = meaningful(str(first.classificationSubGenre)) ?? meaningful(str(e.classificationSubGenre));
   const artistUrl = str(first.attractionUrl);
   if (artistUrl) show.artistUrl = artistUrl;
+  const price = priceOf(e);
+  if (price) show.price = price;
   if (segment) show.segment = segment;
   if (genre) show.genre = genre;
   if (subGenre) show.subGenre = subGenre;
@@ -91,5 +93,8 @@ export function topicOf(s: Pick<Show, "segment" | "genre" | "subGenre">): Topic 
 /** Huella de lo que importa de una fecha (estado, fecha, recinto, ventanas): igual venga de la API o del feed. */
 export function semanticHash(s: Show): string {
   const sales = s.sales.map((w) => `${w.kind}|${w.label}|${w.startsAt ?? ""}`).sort();
-  return stableHash(JSON.stringify([s.status, s.startsAt, s.localDate, s.venue.tmId, s.isPackage, sales]));
+  const base: unknown[] = [s.status, s.startsAt, s.localDate, s.venue.tmId, s.isPackage, sales];
+  // El precio solo entra en la huella si existe (las fechas sin precio conservan su huella de siempre).
+  if (s.price) base.push(`${s.price.min}-${s.price.max} ${s.price.currency}`);
+  return stableHash(JSON.stringify(base));
 }

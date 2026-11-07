@@ -31,6 +31,26 @@ export interface Show {
   promoters?: string[];
   /** Página oficial del artista en la ticketera (enlaces de lanzamiento). */
   artistUrl?: string;
+  /** Rango de precio oficial publicado por la ticketera (face value). */
+  price?: ShowPrice;
+}
+
+export interface ShowPrice {
+  min: number;
+  max: number;
+  currency: string;
+}
+
+/** Rango de precios de un evento: `priceRanges` (API) o `minPrice`/`maxPrice` (feed). Null si no es creíble. */
+export function priceOf(raw: unknown): ShowPrice | null {
+  const e = (raw && typeof raw === "object" ? raw : {}) as Record<string, unknown>;
+  const ranges = Array.isArray(e.priceRanges) ? (e.priceRanges as Record<string, unknown>[]) : [];
+  const r = ranges.find((x) => x && x.type === "standard") ?? ranges[0];
+  const min = Number(r ? r.min : e.minPrice);
+  const max = Number(r ? r.max : e.maxPrice);
+  const currency = String((r ? r.currency : e.currency) ?? "");
+  if (!(min > 0) || !(max >= min) || !/^[A-Z]{3}$/.test(currency)) return null;
+  return { min, max, currency };
 }
 
 /** Listados accesorios de una fecha (paquetes VIP, hospitality, parking): no son fechas nuevas. */
@@ -113,6 +133,7 @@ export function normalizeTmEvent(raw: unknown): Show | null {
     sales: windows,
     ...classification((e.classifications as unknown[] | undefined)?.[0]),
     ...(str(obj((emb.attractions as unknown[] | undefined)?.[0]).url) ? { artistUrl: str(obj((emb.attractions as unknown[] | undefined)?.[0]).url)! } : {}),
+    ...(priceOf(e) ? { price: priceOf(e)! } : {}),
   };
 }
 

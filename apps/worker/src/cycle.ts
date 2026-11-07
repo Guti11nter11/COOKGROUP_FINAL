@@ -149,6 +149,16 @@ export async function storeShows(
            ${col}_hash = excluded.${col}_hash, ${col}_snapshot = excluded.${col}_snapshot`,
       ).bind(show.sourceId, key, artistId, show.venue.country, show.localDate, show.isPackage ? 1 : 0, hash, snap, nowIso, nowIso, hash, snap),
     );
+    if (show.price) {
+      // Precio oficial de la ticketera; no pisa un precio de otra fuente revisada.
+      stmts.push(
+        env.DB.prepare(
+          `INSERT INTO show_price (source_id, min, max, currency, source, updated_at) VALUES (?, ?, ?, ?, 'Ticketmaster', ?)
+           ON CONFLICT (source_id) DO UPDATE SET min = excluded.min, max = excluded.max, currency = excluded.currency, updated_at = excluded.updated_at
+           WHERE show_price.source = 'Ticketmaster'`,
+        ).bind(show.sourceId, show.price.min, show.price.max, show.price.currency, nowIso),
+      );
+    }
     // La ficha del artista cambió: hay que regenerarla (y crear su canal si tiene ventas por llegar).
     stmts.push(env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(artistId, nowIso));
     const channel = (a: Alert) => channelFor(a.kind, topicOf(show));

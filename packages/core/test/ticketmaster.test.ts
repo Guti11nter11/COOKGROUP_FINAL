@@ -93,3 +93,13 @@ describe("normalizeTmEvent: variantes y enlaces de preventa", () => {
     expect(normalizeTmEvent(e)!.venue.tz).toBeNull();
   });
 });
+
+describe("priceOf", () => {
+  it("toma el rango estándar de priceRanges", async () => {
+    const { priceOf } = await import("../src/ticketmaster");
+    expect(priceOf({ priceRanges: [{ type: "platinum", min: 300, max: 900, currency: "EUR" }, { type: "standard", min: 45, max: 250, currency: "EUR" }] })).toEqual({ min: 45, max: 250, currency: "EUR" });
+    expect(priceOf({ minPrice: 60, maxPrice: 180, currency: "GBP" })).toEqual({ min: 60, max: 180, currency: "GBP" });
+    expect(priceOf({ priceRanges: [{ min: 0, max: 0, currency: "EUR" }] })).toBeNull();
+    expect(priceOf({})).toBeNull();
+  });
+});
