@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
   push:
     branches: [claude/magical-franklin-u415fe]
-    paths: [.github/workflows/feed-radar.yml]
+    paths: [.github/workflows/feed-radar.yml, apps/jobs/src/feed-radar.ts, apps/jobs/src/tm-feed.ts]
 
 permissions:
   contents: read

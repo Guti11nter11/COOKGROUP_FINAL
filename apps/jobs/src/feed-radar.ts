@@ -15,13 +15,20 @@ const followed = new Set(follows.map((f) => f.tmAttractionId).filter((x): x is s
 const today = localDateIn(new Date(), MADRID);
 
 const all: Show[] = [];
+const failed: string[] = [];
 for (const cc of FEED_COUNTRIES) {
   let total = 0;
   const mine: Show[] = [];
-  for await (const raw of iterateFeed(cc, KEY)) {
-    total++;
-    const s = normalizeFeedEvent(raw);
-    if (s && s.localDate >= today) mine.push(...pickFollowed([s], followed));
+  try {
+    for await (const raw of iterateFeed(cc, KEY)) {
+      total++;
+      const s = normalizeFeedEvent(raw);
+      if (s && s.localDate >= today) mine.push(...pickFollowed([s], followed));
+    }
+  } catch (e) {
+    failed.push(cc);
+    console.log(`⚠️ ${cc}: ${String(e)} — se reintentará en la próxima hora`);
+    continue;
   }
   all.push(...mine);
   console.log(`${cc}: ${total} eventos · ${mine.length} de entidades seguidas`);
@@ -47,9 +54,13 @@ async function post(body: unknown): Promise<{ stored: number; alerts: number }> 
 
 let alerts = 0;
 for (const chunk of chunkByArtist(changed, 40)) alerts += (await post({ shows: chunk })).alerts;
-// Lectura completa sin errores: todas las entidades seguidas quedan "arrancadas" (las que no
-// tienen fechas también, para que su primera gira futura sí avise).
-const ids = [...followed];
-for (let i = 0; i < ids.length; i += 500) await post({ shows: [], markBootstrapped: ids.slice(i, i + 500) });
+// Solo con una lectura completa (todos los países) las entidades quedan "arrancadas" (también las
+// que no tienen fechas, para que su primera gira futura sí avise).
+if (failed.length === 0) {
+  const ids = [...followed];
+  for (let i = 0; i < ids.length; i += 500) await post({ shows: [], markBootstrapped: ids.slice(i, i + 500) });
+} else {
+  console.log(`Arranque pendiente: fallaron ${failed.join(", ")}`);
+}
 writeFileSync(STATE, JSON.stringify(state));
 console.log(`Avisos nuevos: ${alerts}`);
