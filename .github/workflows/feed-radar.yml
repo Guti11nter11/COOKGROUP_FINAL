@@ -1,0 +1,48 @@
+name: Radar Discovery Feed
+
+# Cada hora lee el catálogo completo de Ticketmaster de los países de la Fase 1, se queda con
+# las fechas de las ~1.000 entidades seguidas (artistas, festivales, deporte) y envía al Worker
+# solo lo que cambió. El estado anterior se guarda en la caché de Actions.
+
+on:
+  schedule:
+    - cron: "17 * * * *"
+  workflow_dispatch:
+  push:
+    branches: [claude/magical-franklin-u415fe]
+    paths: [.github/workflows/feed-radar.yml]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: feed-radar
+  cancel-in-progress: false
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Estado anterior
+        uses: actions/cache/restore@v4
+        with:
+          path: .feed-state
+          key: feed-state-${{ github.run_id }}
+          restore-keys: feed-state-
+      - run: mkdir -p .feed-state
+      - name: Leer feeds y enviar cambios
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+        run: npx tsx apps/jobs/src/feed-radar.ts
+      - name: Guardar estado
+        uses: actions/cache/save@v4
+        with:
+          path: .feed-state
+          key: feed-state-${{ github.run_id }}
