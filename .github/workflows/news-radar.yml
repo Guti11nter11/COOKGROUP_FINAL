@@ -1,0 +1,49 @@
+name: Radar de noticias
+
+# Cada 2 h: titulares de los últimos 2 días (Bing/Google News, varios países) de artistas seguidos;
+# la IA confirma y resume lo accionable y el Worker lo publica en #noticias (y en el canal del artista).
+
+on:
+  schedule:
+    - cron: "23 */2 * * *"
+  workflow_dispatch:
+  push:
+    branches: [claude/magical-franklin-u415fe]
+    paths: [.github/workflows/news-radar.yml, apps/jobs/src/news-radar*.ts]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: news-radar
+  cancel-in-progress: false
+
+jobs:
+  radar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Titulares ya vistos
+        uses: actions/cache/restore@v4
+        with:
+          path: .news-state
+          key: news-state-${{ github.run_id }}
+          restore-keys: news-state-
+      - name: Buscar, clasificar y enviar
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npx tsx apps/jobs/src/news-radar.ts
+      - name: Guardar titulares vistos
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .news-state
+          key: news-state-${{ github.run_id }}

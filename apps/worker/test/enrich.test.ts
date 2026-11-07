@@ -85,3 +85,14 @@ describe("/enrich", () => {
     expect(await env.DB.prepare("SELECT min, source FROM show_price WHERE source_id = '1'").first()).toEqual({ min: 50, source: "Ticketmaster" });
   });
 });
+
+describe("/enrich/news", () => {
+  it("guarda noticias nuevas una sola vez", async () => {
+    const body = JSON.stringify({ items: [{ artistName: "artista uno", title: "Fecha extra", url: "https://x.es/n1", source: "x.es", category: "extra_date", summary: "Fecha extra en Madrid" }] });
+    await env.DB.prepare("UPDATE sheet SET status = 'archived'").run(); // sin canal activo: no hace falta Discord
+    const first = (await (await call("/enrich/news", { method: "POST", body })).json()) as { stored: number };
+    const again = (await (await call("/enrich/news", { method: "POST", body })).json()) as { stored: number };
+    expect([first.stored, again.stored]).toEqual([1, 0]);
+    expect(await env.DB.prepare("SELECT artist_id, category FROM news").first()).toEqual({ artist_id: "a1", category: "extra_date" });
+  });
+});

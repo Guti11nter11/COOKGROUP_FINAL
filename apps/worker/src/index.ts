@@ -2,6 +2,7 @@ import { ingestShows, processPage, runCycle } from "./cycle";
 import { publishSheets } from "./sheets";
 import type { EnrichInput } from "@gira/core";
 import { applyEnrichment, enrichTodo } from "./enrich";
+import { ingestNews, type NewsInput } from "./news";
 import { announceCalendar, calendarIcs, icsToken, runCalendar } from "./calendar";
 import type { Env, SweepJob } from "./env";
 
@@ -56,6 +57,7 @@ export default {
       if (!sameString(auth, await ingestToken(env))) return new Response("No autorizado", { status: 401 });
       const now = new Date();
       if (url.pathname === "/enrich/todo" && req.method === "GET") return Response.json(await enrichTodo(env, now));
+      if (url.pathname === "/enrich/news" && req.method === "POST") return Response.json(await ingestNews(env, (await req.json()) as NewsInput, now));
       if (url.pathname === "/enrich" && req.method === "POST") {
         // Las fichas marcadas se regeneran en el siguiente ciclo (cada 5 min), sin ráfagas a Discord.
         return Response.json(await applyEnrichment(env, (await req.json()) as EnrichInput, now));
