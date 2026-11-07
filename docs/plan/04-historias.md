@@ -72,7 +72,7 @@ aceptación (Dado / Cuando / Entonces). Talla: S (≤ ½ sesión), M (1 sesión)
 Quiero enterarme de cada evento nuevo de un artista seguido en Europa y Reino Unido, para no
 depender de mirar webs.
 - Dado un artista seguido con `attractionId` resuelto, cuando Ticketmaster publique un evento nuevo,
-  entonces GIRA lo guarda una sola vez y avisa en ≤ 10 min.
+  entonces GIRA lo guarda una sola vez y avisa en ≤ 10 min (⭐⭐⭐) / ≤ 25 min (resto).
 - Dado un evento ya conocido, cuando vuelva en otra consulta, entonces no se repite el aviso.
 - Dado un evento cancelado o aplazado (`dates.status.code`), entonces se avisa del cambio.
 

@@ -6,7 +6,7 @@ estimaciones son orientativas; cada entrega termina con algo que el propietario 
 | Entrega | Contenido (historias) | Sesiones | Listo cuando… |
 |---|---|---|---|
 | **R0 · Cimientos** | Monorepo TypeScript, CI, esquema D1, despliegue del Worker, acciones del propietario A1–A2 | 1 | CI en verde y el Worker desplegado responde `/health` |
-| **R1 · Primer pitido** | H-01, H-10, H-20, H-30, H-40, H-50, H-80–H-83 | 2 | Durante 7 días, cada evento nuevo de un artista seguido en Europa+UK llega a Discord en ≤ 10 min, sin duplicados |
+| **R1 · Primer pitido** | H-01, H-10, H-20, H-30, H-40, H-50, H-80–H-83 | 2 | Durante 7 días, cada evento nuevo de un artista seguido en Europa+UK llega a Discord en ≤ 10 min (⭐⭐⭐) / ≤ 25 min (resto), sin duplicados |
 | **R2 · La ficha** | H-02, H-11, H-21, H-22, H-31, H-32, H-41–H-43, H-51, H-84 | 2–3 | Foro de giras vivo, recordatorios exactos, `.ics` suscrito en el iPhone, resumen 21:00 |
 | **R3 · En el bolsillo** | H-03, H-12, H-23, H-33, H-34, H-44, H-45, H-52, H-70, H-85, H-86 | 3 | PWA instalada con passkey, push recibido de noche solo si es urgente, Modo Drop probado en una preventa real |
 | **R4 · España de verdad** | H-04–H-06, H-13, H-24, H-25, H-35, H-46, H-71, H-87 | 3 | La gira española grande del momento (p. ej. U2 2027) tiene su calendario completo de preventas con fuentes |

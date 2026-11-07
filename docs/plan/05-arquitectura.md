@@ -35,7 +35,7 @@
 
 | Necesidad | Dónde | Por qué |
 |---|---|---|
-| Detectar en ≤ 10 min (Ticketmaster) | Cron del Worker cada 5 min | Puntual y gratis (1 de los 5 crons de la cuenta) |
+| Detectar en ≤ 10 min (⭐⭐⭐) / ≤ 25 min (resto) (Ticketmaster) | Cron del Worker cada 5 min | Puntual y gratis (1 de los 5 crons de la cuenta) |
 | Avisar a la hora exacta (T-10min, T-0) | **Durable Object "Reloj" con alarmas** | Precisión de segundos; el cron de 5 min no basta |
 | Trabajo pesado (IA, scraping, Apify) | GitHub Actions **disparado por el Worker** (`workflow_dispatch`) | Minutos ilimitados; el cron propio de Actions se retrasa 5–30 min y se apaga a los 60 días sin actividad |
 | Respaldo si el Worker falla | `schedule` de Actions a minutos impares (p. ej. `:17`, `:47`) | Evita la congestión de las horas en punto |

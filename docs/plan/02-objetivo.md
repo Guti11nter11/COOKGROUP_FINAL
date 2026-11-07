@@ -68,7 +68,7 @@ el propietario en otro canal.
 | **Precisión** | % de avisos que el propietario no marca como erróneos | ≥ 95 % |
 | **Ruido** | Notificaciones push por día (media semanal) | ≤ 6 |
 | **Despertares** | Push entre 01:00 y 08:00 | Solo urgentes, ≤ 2 por semana |
-| **Frescura** | Retraso entre publicación en Ticketmaster y aviso | ≤ 10 min |
+| **Frescura** | Retraso entre publicación en Ticketmaster y aviso | ≤ 10 min (⭐⭐⭐) / ≤ 25 min (resto) |
 | **Coste** | € al mes | 0 € (Apify < 5 $) |
 | **Salud** | Fuentes con último éxito < 2× su periodo | 100 % de las críticas |
 
