@@ -103,3 +103,17 @@ describe("renderAlertMessage: hora del concierto", () => {
     expect(text).toContain("20:30 en Madrid");
   });
 });
+
+describe("channelFor con deporte", () => {
+  it.each([
+    ["new_event", "nfl", "nfl"],
+    ["sale_added", "football", "futbol"],
+    ["extra_date", "f1", "f1"],
+    ["new_event", "tennis", "tenis"],
+    ["new_event", "other_sport", "otros-deportes"],
+    ["new_event", "music", "nuevas-giras"],
+    ["sale_added", "other", "preventas"],
+  ] as const)("%s + %s → #%s", (k, t, c) => expect(channelFor(k, t)).toBe(c));
+  it("el layout tiene #nfl en DEPORTES", () =>
+    expect(LAYOUT.find((c) => c.name === "🏟️ DEPORTES")!.channels.map((c) => c.name)).toContain("nfl"));
+});

@@ -24,6 +24,11 @@ export interface Show {
   url: string;
   isPackage: boolean;
   sales: SaleWindow[];
+  /** Clasificación de Ticketmaster (para enrutar música / deporte). */
+  segment?: string;
+  genre?: string;
+  subGenre?: string;
+  promoters?: string[];
 }
 
 /** Listados accesorios de una fecha (paquetes VIP, hospitality, parking): no son fechas nuevas. */
@@ -42,6 +47,8 @@ const obj = (v: unknown): Obj => (v && typeof v === "object" ? (v as Obj) : {});
 const str = (v: unknown): string | null => (typeof v === "string" && v.length > 0 ? v : null);
 
 /** Quita parámetros de cola (`queueittoken`) de una URL oficial: nunca se comparten pases de cola. */
+export const isPackageName = (name: string) => PACKAGE_RE.test(name);
+
 export function stripQueueToken(url: string): string {
   try {
     const u = new URL(url);
@@ -101,7 +108,22 @@ export function normalizeTmEvent(raw: unknown): Show | null {
     url: stripQueueToken(str(e.url) ?? ""),
     isPackage: PACKAGE_RE.test(name),
     sales: windows,
+    ...classification((e.classifications as unknown[] | undefined)?.[0]),
   };
+}
+
+const meaningful = (v: string | null) => (v && v !== "Undefined" && v !== "Miscellaneous" ? v : undefined);
+
+function classification(raw: unknown): { segment?: string; genre?: string; subGenre?: string } {
+  const c = obj(raw);
+  const out: { segment?: string; genre?: string; subGenre?: string } = {};
+  const seg = meaningful(str(obj(c.segment).name));
+  const gen = meaningful(str(obj(c.genre).name));
+  const sub = meaningful(str(obj(c.subGenre).name));
+  if (seg) out.segment = seg;
+  if (gen) out.genre = gen;
+  if (sub) out.subGenre = sub;
+  return out;
 }
 
 /** Identidad de una fecha: artista principal + recinto + día local (agrupa variantes VIP). */

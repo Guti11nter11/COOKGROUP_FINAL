@@ -1,4 +1,5 @@
 import type { Alert } from "./changes";
+import type { Topic } from "./feed";
 import { decideDelivery, type AlertKind } from "./quiet";
 import type { Show } from "./ticketmaster";
 import { formatDateIn, formatHHmm, formatMadridDate, formatTriple, MADRID } from "./time";
@@ -52,6 +53,7 @@ export const LAYOUT: { name: string; channels: ChannelSpec[] }[] = [
     { name: "otras", kind: "text", topic: "See Tickets, Blueticket, El Corte Inglés y demás" },
   ] },
   { name: "🏟️ DEPORTES", channels: [
+    { name: "nfl", kind: "text", topic: "NFL (partidos internacionales en Europa)" },
     { name: "f1", kind: "text", topic: "Fórmula 1" },
     { name: "futbol", kind: "text", topic: "Fútbol" },
     { name: "tenis", kind: "text", topic: "Tenis" },
@@ -89,9 +91,16 @@ export function planGuildLayout(existing: ExistingChannel[], hasCommunity: boole
   return ops;
 }
 
-export type AlertChannel = "nuevas-giras" | "fechas-extra" | "preventas";
+export type AlertChannel = "nuevas-giras" | "fechas-extra" | "preventas" | "nfl" | "futbol" | "f1" | "tenis" | "otros-deportes";
 
-export function channelFor(kind: AlertKind): AlertChannel {
+const SPORT_CHANNEL: Partial<Record<Topic, AlertChannel>> = {
+  nfl: "nfl", football: "futbol", f1: "f1", tennis: "tenis", other_sport: "otros-deportes",
+};
+
+/** Canal de un aviso: el deporte va a su canal; la música, por tipo de aviso. */
+export function channelFor(kind: AlertKind, topic: Topic = "music"): AlertChannel {
+  const sport = SPORT_CHANNEL[topic];
+  if (sport) return sport;
   if (kind === "extra_date") return "fechas-extra";
   if (kind === "new_event" || kind === "status_changed") return "nuevas-giras";
   return "preventas";

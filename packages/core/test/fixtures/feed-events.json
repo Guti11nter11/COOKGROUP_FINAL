@@ -1,0 +1,170 @@
+{
+ "_note": "Eventos reales del Discovery Feed (ES/GB), 2026-11-07, recortados (sin imágenes ni textos de accesibilidad).",
+ "events": [
+  {
+   "eventId": "Z698xZ2qZ1k_y8V-_",
+   "primaryEventUrl": "https://www.ticketmaster.es/event/jake-bugg-alamo--solo-acoustic-tour-entradas/679434859",
+   "eventName": "JAKE BUGG - Alamo – Solo Acoustic Tour",
+   "eventStatus": "onsale",
+   "eventStartDateTime": "2027-04-06T18:30:00Z",
+   "eventStartLocalTime": "20:30",
+   "eventStartLocalDate": "2027-04-06",
+   "venue": {
+    "venueName": "Teatro Eslava",
+    "venueId": "Z598xZ2qZd61k",
+    "venueTimezone": "Europe/Madrid",
+    "venueCity": "Madrid",
+    "venueCountryCode": "ES"
+   },
+   "attractions": [
+    {
+     "attraction": {
+      "attractionId": "K8vZ917COCV",
+      "attractionName": "Jake Bugg",
+      "classificationSegment": "Music",
+      "classificationGenre": "Rock",
+      "classificationSubGenre": "Pop",
+      "externalLinks": {
+       "musicbrainz_id": "0d9905e6-add6-4713-94ca-9f686f9b5e9b"
+      }
+     }
+    }
+   ],
+   "promoters": [
+    {
+     "promoter": {
+      "id": "2727",
+      "name": "Live Nation España S.A.U.",
+      "description": null
+     }
+    }
+   ],
+   "onsaleStartDateTime": "2026-09-11T09:00:00Z",
+   "onsaleEndDateTime": "2027-04-06T18:30:00Z",
+   "classificationSegment": "Music",
+   "classificationGenre": "Rock",
+   "classificationSubGenre": "Pop",
+   "presales": [
+    {
+     "presale": {
+      "name": "Preventa Artista",
+      "description": "Las entradas están disponibles exclusivamente para los fans seleccionados por el artista.",
+      "startDatetime": "2026-09-09T09:00:00Z",
+      "endDatetime": "2026-09-11T08:00:00Z"
+     }
+    },
+    {
+     "presale": {
+      "name": "Preventa Spotify",
+      "description": "Los fans que cumplan los requisitos deberán acceder a esta venta a través del enlace incluido en el correo electrónico enviado por Spotify.",
+      "startDatetime": "2026-09-10T10:00:00Z",
+      "endDatetime": "2026-09-11T08:00:00Z"
+     }
+    }
+   ],
+   "source": "mfx-es",
+   "hotEvent": false,
+   "pleaseNote": null,
+   "officialSeller": true
+  },
+  {
+   "eventId": "Zo98xZ2qZp_7FeeZrrr",
+   "primaryEventUrl": "https://nfl.tmtickets.es/EDP/Event/Index/12?position=1",
+   "eventName": "Madrid Game 2026 - Cincinnati Bengals vs. Atlanta Falcons - NFL",
+   "eventStatus": "onsale",
+   "eventStartDateTime": "2026-11-08T14:30:00Z",
+   "eventStartLocalTime": "15:30",
+   "eventStartLocalDate": "2026-11-08",
+   "venue": {
+    "venueName": "Bernabéu",
+    "venueId": "Z598xZ2qZFvek",
+    "venueTimezone": "Europe/Madrid",
+    "venueCity": "Madrid",
+    "venueCountryCode": "ES"
+   },
+   "attractions": [
+    {
+     "attraction": {
+      "attractionId": "K8vZ9178NNV",
+      "attractionName": "NFL",
+      "classificationSegment": "Sports",
+      "classificationGenre": "Football",
+      "classificationSubGenre": "NFL",
+      "externalLinks": {
+       "musicbrainz_id": null
+      }
+     }
+    }
+   ],
+   "promoters": [],
+   "onsaleStartDateTime": "2026-05-28T16:00:00Z",
+   "onsaleEndDateTime": "2026-11-08T14:30:00Z",
+   "classificationSegment": "Sports",
+   "classificationGenre": "Miscellaneous",
+   "classificationSubGenre": "Miscellaneous",
+   "presales": [],
+   "source": "mfx-external",
+   "hotEvent": false,
+   "pleaseNote": null,
+   "officialSeller": true
+  },
+  {
+   "eventId": "G5dzZ_KJ8Ywfz",
+   "primaryEventUrl": "https://www.ticketmaster.co.uk/the-icicle-works-birmingham-15-05-2027/event/3E00653990C32538",
+   "eventName": "The Icicle Works",
+   "eventStatus": "onsale",
+   "eventStartDateTime": "2027-05-15T18:00:00Z",
+   "eventStartLocalTime": "19:00",
+   "eventStartLocalDate": "2027-05-15",
+   "venue": {
+    "venueName": "O2 Academy2 Birmingham",
+    "venueId": "KovZ9177klf",
+    "venueTimezone": "Europe/London",
+    "venueCity": "Birmingham",
+    "venueCountryCode": "GB"
+   },
+   "attractions": [
+    {
+     "attraction": {
+      "attractionId": "K8vZ9175zvf",
+      "attractionName": "The Icicle Works",
+      "classificationSegment": "Music",
+      "classificationGenre": "Rock",
+      "classificationSubGenre": "Pop",
+      "externalLinks": {
+       "musicbrainz_id": "03143cba-d359-4bd9-8ab3-5ba6590f9933"
+      }
+     }
+    }
+   ],
+   "promoters": [
+    {
+     "promoter": {
+      "id": "3726",
+      "name": "ACADEMY EVENTS",
+      "description": "ACADEMY EVENTS / NTL / GBR"
+     }
+    }
+   ],
+   "onsaleStartDateTime": "2026-10-02T09:00:00Z",
+   "onsaleEndDateTime": "2027-05-15T20:00:00Z",
+   "classificationSegment": "Music",
+   "classificationGenre": "Rock",
+   "classificationSubGenre": "Pop",
+   "presales": [
+    {
+     "presale": {
+      "name": "Priority from O2",
+      "description": "Available to O2 Priority Customers. No presale code is required.",
+      "startDatetime": "2026-09-30T09:00:00Z",
+      "endDatetime": "2026-10-02T08:00:00Z"
+     }
+    }
+   ],
+   "source": "ticketmaster",
+   "hotEvent": false,
+   "pleaseNote": "Age Restrictions: Over 8s only. A max of 12 tickets per person and per household applies. Tickets in excess of 12 will be cancelled.",
+   "officialSeller": true
+  }
+ ]
+}
