@@ -1,0 +1,308 @@
+{
+ "_embedded": {
+  "events": [
+   {
+    "name": "U2 - The Greatest Show On Earth World Tour 2027",
+    "type": "event",
+    "id": "Z698xZu0ZaU2SEV1",
+    "url": "https://www.ticketmaster.es/event/u2-sevilla-entradas/1001?queueittoken=abc&lang=es",
+    "locale": "es-es",
+    "sales": {
+     "public": {
+      "startDateTime": "2026-11-13T09:00:00Z",
+      "startTBD": false,
+      "startTBA": false,
+      "endDateTime": "2027-06-12T18:00:00Z"
+     },
+     "presales": [
+      {
+       "name": "Priority from O2",
+       "startDateTime": "2026-11-11T09:00:00Z",
+       "endDateTime": "2026-11-12T22:00:00Z",
+       "url": "https://www.ticketmaster.es/presale/o2"
+      },
+      {
+       "name": "Artist Presale",
+       "description": "Registro previo en u2.com",
+       "startDateTime": "2026-11-10T08:00:00Z",
+       "endDateTime": "2026-11-11T22:00:00Z"
+      }
+     ]
+    },
+    "dates": {
+     "start": {
+      "localDate": "2027-06-12",
+      "localTime": "20:30:00",
+      "dateTime": "2027-06-12T18:30:00Z",
+      "dateTBD": false,
+      "dateTBA": false,
+      "timeTBA": false,
+      "noSpecificTime": false
+     },
+     "timezone": "Europe/Madrid",
+     "status": {
+      "code": "onsale"
+     },
+     "spanMultipleDays": false
+    },
+    "ticketLimit": {
+     "info": "Límite de 4 entradas por persona."
+    },
+    "_embedded": {
+     "venues": [
+      {
+       "name": "Estadio de La Cartuja",
+       "type": "venue",
+       "id": "Z698xZu0Za7F7",
+       "url": "https://www.ticketmaster.es/venue/estadio-la-cartuja-sevilla",
+       "locale": "es-es",
+       "timezone": "Europe/Madrid",
+       "city": {
+        "name": "Sevilla"
+       },
+       "country": {
+        "name": "Spain",
+        "countryCode": "ES"
+       },
+       "address": {
+        "line1": "Isla de La Cartuja"
+       }
+      }
+     ],
+     "attractions": [
+      {
+       "name": "U2",
+       "type": "attraction",
+       "id": "K8vZ91712W7",
+       "classifications": [
+        {
+         "segment": {
+          "name": "Music"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "name": "U2 - The Greatest Show On Earth World Tour 2027 | VIP Packages",
+    "type": "event",
+    "id": "Z698xZu0ZaU2SEV1VIP",
+    "url": "https://www.ticketmaster.es/event/u2-sevilla-vip/1002",
+    "locale": "es-es",
+    "sales": {
+     "public": {
+      "startDateTime": "2026-11-13T09:00:00Z",
+      "startTBD": false,
+      "startTBA": false,
+      "endDateTime": "2027-06-12T18:00:00Z"
+     },
+     "presales": [
+      {
+       "name": "Priority from O2",
+       "startDateTime": "2026-11-11T09:00:00Z",
+       "endDateTime": "2026-11-12T22:00:00Z",
+       "url": "https://www.ticketmaster.es/presale/o2"
+      },
+      {
+       "name": "Artist Presale",
+       "description": "Registro previo en u2.com",
+       "startDateTime": "2026-11-10T08:00:00Z",
+       "endDateTime": "2026-11-11T22:00:00Z"
+      }
+     ]
+    },
+    "dates": {
+     "start": {
+      "localDate": "2027-06-12",
+      "localTime": "20:30:00",
+      "dateTime": "2027-06-12T18:30:00Z",
+      "dateTBD": false,
+      "dateTBA": false,
+      "timeTBA": false,
+      "noSpecificTime": false
+     },
+     "timezone": "Europe/Madrid",
+     "status": {
+      "code": "onsale"
+     },
+     "spanMultipleDays": false
+    },
+    "ticketLimit": {
+     "info": "Límite de 4 entradas por persona."
+    },
+    "_embedded": {
+     "venues": [
+      {
+       "name": "Estadio de La Cartuja",
+       "type": "venue",
+       "id": "Z698xZu0Za7F7",
+       "url": "https://www.ticketmaster.es/venue/estadio-la-cartuja-sevilla",
+       "locale": "es-es",
+       "timezone": "Europe/Madrid",
+       "city": {
+        "name": "Sevilla"
+       },
+       "country": {
+        "name": "Spain",
+        "countryCode": "ES"
+       },
+       "address": {
+        "line1": "Isla de La Cartuja"
+       }
+      }
+     ],
+     "attractions": [
+      {
+       "name": "U2",
+       "type": "attraction",
+       "id": "K8vZ91712W7",
+       "classifications": [
+        {
+         "segment": {
+          "name": "Music"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "name": "U2 - The Greatest Show On Earth World Tour 2027",
+    "type": "event",
+    "id": "Z698xZu0ZaU2SEV2",
+    "url": "https://www.ticketmaster.es/event/u2-sevilla-entradas/1001?queueittoken=abc&lang=es",
+    "locale": "es-es",
+    "sales": {
+     "public": {
+      "startTBD": true
+     }
+    },
+    "dates": {
+     "start": {
+      "localDate": "2027-06-13",
+      "localTime": "20:30:00",
+      "dateTime": "2027-06-13T18:30:00Z",
+      "dateTBD": false,
+      "dateTBA": false,
+      "timeTBA": false,
+      "noSpecificTime": false
+     },
+     "timezone": "Europe/Madrid",
+     "status": {
+      "code": "canceled"
+     },
+     "spanMultipleDays": false
+    },
+    "_embedded": {
+     "venues": [
+      {
+       "name": "Estadio de La Cartuja",
+       "type": "venue",
+       "id": "Z698xZu0Za7F7",
+       "url": "https://www.ticketmaster.es/venue/estadio-la-cartuja-sevilla",
+       "locale": "es-es",
+       "timezone": "Europe/Madrid",
+       "city": {
+        "name": "Sevilla"
+       },
+       "country": {
+        "name": "Spain",
+        "countryCode": "ES"
+       },
+       "address": {
+        "line1": "Isla de La Cartuja"
+       }
+      }
+     ],
+     "attractions": [
+      {
+       "name": "U2",
+       "type": "attraction",
+       "id": "K8vZ91712W7",
+       "classifications": [
+        {
+         "segment": {
+          "name": "Music"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   },
+   {
+    "name": "U2 - The Greatest Show On Earth World Tour 2027",
+    "type": "event",
+    "id": "NOVENUE",
+    "url": "https://www.ticketmaster.es/event/u2-sevilla-entradas/1001?queueittoken=abc&lang=es",
+    "locale": "es-es",
+    "sales": {
+     "public": {
+      "startDateTime": "2026-11-13T09:00:00Z",
+      "startTBD": false,
+      "startTBA": false,
+      "endDateTime": "2027-06-12T18:00:00Z"
+     },
+     "presales": [
+      {
+       "name": "Priority from O2",
+       "startDateTime": "2026-11-11T09:00:00Z",
+       "endDateTime": "2026-11-12T22:00:00Z",
+       "url": "https://www.ticketmaster.es/presale/o2"
+      },
+      {
+       "name": "Artist Presale",
+       "description": "Registro previo en u2.com",
+       "startDateTime": "2026-11-10T08:00:00Z",
+       "endDateTime": "2026-11-11T22:00:00Z"
+      }
+     ]
+    },
+    "dates": {
+     "start": {
+      "localDate": "2027-06-12",
+      "localTime": "20:30:00",
+      "dateTime": "2027-06-12T18:30:00Z",
+      "dateTBD": false,
+      "dateTBA": false,
+      "timeTBA": false,
+      "noSpecificTime": false
+     },
+     "timezone": "Europe/Madrid",
+     "status": {
+      "code": "onsale"
+     },
+     "spanMultipleDays": false
+    },
+    "ticketLimit": {
+     "info": "Límite de 4 entradas por persona."
+    },
+    "_embedded": {
+     "attractions": [
+      {
+       "name": "U2",
+       "type": "attraction",
+       "id": "K8vZ91712W7",
+       "classifications": [
+        {
+         "segment": {
+          "name": "Music"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "page": {
+  "size": 4,
+  "totalElements": 4,
+  "totalPages": 1,
+  "number": 0
+ }
+}

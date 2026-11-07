@@ -1,0 +1,108 @@
+import { classifySaleLabel, type SaleKind } from "./presale";
+
+export interface SaleWindow {
+  kind: SaleKind;
+  label: string;
+  startsAt: string | null;
+  endsAt: string | null;
+  url: string | null;
+  orderRank: number;
+}
+
+export type ShowStatus = "onsale" | "offsale" | "cancelled" | "postponed" | "rescheduled";
+
+export interface Show {
+  source: "ticketmaster";
+  sourceId: string;
+  name: string;
+  attractionIds: string[];
+  venue: { tmId: string; name: string; city: string; country: string; tz: string };
+  startsAt: string | null;
+  localDate: string;
+  status: ShowStatus;
+  ticketLimit: string | null;
+  url: string;
+  isPackage: boolean;
+  sales: SaleWindow[];
+}
+
+const PACKAGE_RE = /\|\s*[^|]*\b(VIP|Packages?|Paquetes?|Hospitality)\b/i;
+const STATUS: Record<string, ShowStatus> = {
+  onsale: "onsale",
+  offsale: "offsale",
+  canceled: "cancelled",
+  cancelled: "cancelled",
+  postponed: "postponed",
+  rescheduled: "rescheduled",
+};
+
+type Obj = Record<string, unknown>;
+const obj = (v: unknown): Obj => (v && typeof v === "object" ? (v as Obj) : {});
+const str = (v: unknown): string | null => (typeof v === "string" && v.length > 0 ? v : null);
+
+/** Quita parámetros de cola (`queueittoken`) de una URL oficial: nunca se comparten pases de cola. */
+export function stripQueueToken(url: string): string {
+  try {
+    const u = new URL(url);
+    for (const k of [...u.searchParams.keys()]) if (k.toLowerCase() === "queueittoken") u.searchParams.delete(k);
+    return u.toString();
+  } catch {
+    return url;
+  }
+}
+
+function saleWindow(label: string, raw: Obj, url: string | null): SaleWindow {
+  const { kind, orderRank } = classifySaleLabel(label);
+  return { kind, label, startsAt: str(raw.startDateTime), endsAt: str(raw.endDateTime), url, orderRank };
+}
+
+/** Convierte un evento crudo de Discovery v2 en un Show; null si le falta recinto o fecha. */
+export function normalizeTmEvent(raw: unknown): Show | null {
+  const e = obj(raw);
+  const id = str(e.id);
+  const emb = obj(e._embedded);
+  const v = obj((emb.venues as unknown[] | undefined)?.[0]);
+  const start = obj(obj(e.dates).start);
+  const localDate = str(start.localDate);
+  const venueId = str(v.id);
+  if (!id || !venueId || !localDate) return null;
+
+  const timeUnknown = start.timeTBA === true || start.noSpecificTime === true || start.dateTBD === true;
+  const sales = obj(e.sales);
+  const windows: SaleWindow[] = ((sales.presales as unknown[] | undefined) ?? []).map((p) => {
+    const po = obj(p);
+    return saleWindow(str(po.name) ?? "Preventa", po, str(po.url));
+  });
+  const pub = obj(sales.public);
+  if (str(pub.startDateTime) && pub.startTBD !== true && pub.startTBA !== true) {
+    windows.push({ ...saleWindow("Venta general", pub, null), kind: "general", orderRank: 90 });
+  }
+  windows.sort((x, y) => x.orderRank - y.orderRank || (x.startsAt ?? "").localeCompare(y.startsAt ?? ""));
+
+  const name = str(e.name) ?? "";
+  return {
+    source: "ticketmaster",
+    sourceId: id,
+    name,
+    attractionIds: ((emb.attractions as unknown[] | undefined) ?? []).map((a) => str(obj(a).id)).filter((x): x is string => !!x),
+    venue: {
+      tmId: venueId,
+      name: str(v.name) ?? "",
+      city: str(obj(v.city).name) ?? "",
+      country: str(obj(v.country).countryCode) ?? "",
+      tz: str(v.timezone) ?? str(obj(e.dates).timezone) ?? "UTC",
+    },
+    startsAt: timeUnknown ? null : str(start.dateTime),
+    localDate,
+    status: STATUS[str(obj(obj(e.dates).status).code) ?? ""] ?? "onsale",
+    ticketLimit: str(obj(e.ticketLimit).info),
+    url: stripQueueToken(str(e.url) ?? ""),
+    isPackage: PACKAGE_RE.test(name),
+    sales: windows,
+  };
+}
+
+/** Identidad de una fecha: artista principal + recinto + día local (agrupa variantes VIP). */
+export function showKey(s: Show): string {
+  return `${s.attractionIds[0] ?? "?"}:${s.venue.tmId}:${s.localDate}`;
+}
