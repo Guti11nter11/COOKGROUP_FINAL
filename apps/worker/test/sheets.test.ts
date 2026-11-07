@@ -102,11 +102,22 @@ describe("fichas por artista en Discord", () => {
     expect(discordCalls("POST", /\/messages/)).toEqual([]);
   });
 
-  it("artista sin ventas por llegar y sin canal → no se crea canal", async () => {
+  it("artista ⭐ sin ventas por llegar y sin canal → no se crea canal", async () => {
+    await env.DB.prepare("UPDATE follow SET tier = 1").run();
     await storeShow(show("1", "2027-05-10", "2026-10-01T09:00:00Z"));
     await env.DB.prepare("INSERT INTO sheet_dirty (artist_id, since) VALUES ('a1', ?)").bind(NOW.toISOString()).run();
     await publishSheets(env, NOW);
     expect(calls).toEqual([]);
+  });
+
+  it("artista ⭐⭐⭐ con gira ya a la venta → tiene canal con todas las fechas y enlaces", async () => {
+    await storeShow(show("1", "2027-05-10", "2026-10-01T09:00:00Z"));
+    await env.DB.prepare("INSERT INTO sheet_dirty (artist_id, since) VALUES ('a1', ?)").bind(NOW.toISOString()).run();
+    await publishSheets(env, NOW);
+    expect(discordCalls("POST", /\/guilds\//)).toHaveLength(1);
+    const body = discordCalls("POST", /\/channels\/NEW\d+\/messages/).map((c) => c.body.content).join("\n");
+    expect(body).toContain("Todas las ventas ya han empezado");
+    expect(body).toContain("https://tm.example/1");
   });
 
   it("cuando pasa la última fecha → el canal se mueve a 📦 ARCHIVO", async () => {

@@ -127,7 +127,9 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
   if (env.DELIVERY_PAUSED === "1") return { updated: 0, notices: 0 };
   // Reclamo atómico: dos ejecuciones simultáneas nunca trabajan el mismo artista (ni crean dos canales).
   const { results: dirty } = await env.DB.prepare(
-    "DELETE FROM sheet_dirty WHERE artist_id IN (SELECT artist_id FROM sheet_dirty ORDER BY since LIMIT ?) RETURNING artist_id, since",
+    `DELETE FROM sheet_dirty WHERE artist_id IN (
+       SELECT d.artist_id FROM sheet_dirty d LEFT JOIN follow f ON f.artist_id = d.artist_id
+       ORDER BY COALESCE(f.tier, 1) DESC, d.since LIMIT ?) RETURNING artist_id, since`,
   )
     .bind(maxScan)
     .all<{ artist_id: string; since: string }>();
@@ -146,13 +148,18 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
   for (let i = 0; i < dirty.length; i++) {
     const { artist_id } = dirty[i]!;
     try {
-    const artist = await env.DB.prepare("SELECT name, deezer_fans FROM artist WHERE id = ?").bind(artist_id).first<{ name: string; deezer_fans: number | null }>();
+    const artist = await env.DB.prepare(
+      "SELECT a.name, a.deezer_fans, COALESCE(f.tier, 1) AS tier FROM artist a LEFT JOIN follow f ON f.artist_id = a.id WHERE a.id = ?",
+    )
+      .bind(artist_id)
+      .first<{ name: string; deezer_fans: number | null; tier: number }>();
     const { results: rows } = await env.DB.prepare("SELECT snapshot_json FROM show WHERE artist_id = ? AND local_date >= ? AND is_package = 0")
       .bind(artist_id, today)
       .all<{ snapshot_json: string }>();
     const shows = rows.map((r) => JSON.parse(r.snapshot_json) as Show);
     const sheet = await env.DB.prepare("SELECT * FROM sheet WHERE artist_id = ?").bind(artist_id).first<SheetRow>();
-    const active = isSheetActive(shows, now);
+    // Canal mientras la gira tenga fechas futuras (⭐⭐ y ⭐⭐⭐) o, para el resto, mientras quede alguna venta por llegar.
+    const active = shows.length > 0 && ((artist?.tier ?? 1) >= 2 || isSheetActive(shows, now));
 
     if (!artist || (!sheet && !active)) {
       await env.DB.prepare("UPDATE delivery SET status = 'failed', last_error = 'sin ventas por llegar' WHERE artist_id = ? AND status = 'pending'").bind(artist_id).run();
