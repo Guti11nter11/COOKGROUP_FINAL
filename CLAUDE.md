@@ -46,7 +46,7 @@ trata de los eventos y de cómo conseguir las entradas.
 - Ticketeras sin API (revisar ficha de evento): AXS, Eventim/Fansale/TicketOne, Blueticket,
   See Tickets, Dice, Fnac, eTicketing, Vivaticket, Ticketportal, Puntoticket, LaLiga/clubes…
 - Noticias (Google News RSS, NME, Billboard, Los40, Mondosonoro…), feeds RSS de YouTube.
-- Redes vía **Apify** (crédito gratuito 10 $/mes, dosificar): `apify/instagram-scraper`,
+- Redes vía **Apify** (plan FREE: 5 $/mes de crédito, medido el 2026-11-07; dosificar): `apify/instagram-scraper`,
   `clockworks/tiktok-scraper`, el mejor scraper de X mantenido. Meta Business Discovery como
   respaldo oficial para Instagram.
 - Popularidad: Last.fm + Deezer (Spotify exige Premium, descartado).
@@ -55,7 +55,7 @@ trata de los eventos y de cómo conseguir las entradas.
 
 - **Cobertura por fases:** 1) Europa (incl. Reino Unido) → 2) EE. UU. → 3) Latinoamérica →
   4) Australia → 5) Asia. No empezar una región hasta que la anterior funcione bien.
-- ~100 artistas de referencia (ver `docs/` cuando exista): U2, Harry Styles, Oasis, Bad Bunny,
+- ~100 artistas de referencia (semilla en `data/artists.seed.json` cuando exista; plan maestro en `docs/plan/00-LEEME.md`): U2, Harry Styles, Oasis, Bad Bunny,
   Metallica, The Weeknd, Bruno Mars, Sabrina Carpenter, Olivia Rodrigo, Ariana Grande, Shakira,
   Springsteen, Foo Fighters, Guns N' Roses, Radiohead, BTS, Twice, aespa, Quevedo, Raye,
   Olivia Dean, Noah Kahan, Tate McRae, Charli XCX, Celine Dion, Morgan Wallen… + **descubrimiento
