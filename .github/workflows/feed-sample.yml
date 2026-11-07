@@ -1,0 +1,43 @@
+name: Muestra del Discovery Feed
+
+# Diagnóstico: imprime unos pocos eventos reales (datos públicos) del Discovery Feed para
+# usarlos como fixtures de test. Nunca imprime la clave.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/magical-franklin-u415fe]
+    paths: [.github/workflows/feed-sample.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+    steps:
+      - name: Eventos de ejemplo
+        shell: python
+        run: |
+          import gzip, json, os, urllib.request
+          key = os.environ["TICKETMASTER_API_KEY"]
+          def feed(cc):
+              b = urllib.request.urlopen(f"https://app.ticketmaster.com/discovery-feed/v2/events.json?apikey={key}&countryCode={cc}", timeout=120).read()
+              return json.loads(gzip.decompress(b) if b[:2] == b"\x1f\x8b" else b)["events"]
+          es, gb = feed("ES"), feed("GB")
+          pick = [
+              next(e for e in es if e.get("presales")),
+              next(e for e in es if "NFL" in (e.get("eventName") or "")),
+              next(e for e in gb if e.get("presales") and (e.get("classificationSegment") == "Music")),
+          ]
+          for e in pick:
+              for k in ["images", "accessibilityInfo", "healthCheck"]:
+                  e.pop(k, None)
+              for a in e.get("attractions") or []:
+                  a.pop("images", None)
+          print("FIXTURE_BEGIN"); print(json.dumps(pick, ensure_ascii=False)); print("FIXTURE_END")
+          print("GB segmentos:", sorted({e.get("classificationSegment") for e in gb}))
+          print("GB géneros deporte:", sorted({e.get("classificationGenre") for e in gb if e.get("classificationSegment") == "Sports"})[:40])
