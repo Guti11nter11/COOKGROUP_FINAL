@@ -2,25 +2,29 @@ import { localDateIn, MADRID, sheetShows, type EnrichInput, type EnrichTodo, typ
 import type { Env } from "./env";
 
 const VENUE_RECHECK_DAYS = 30;
+const SIGNUP_KINDS = new Set(["artist", "fanclub", "registration", "unknown", "lottery", "promoter"]);
 
 /** Fechas de las fichas activas (las únicas que merece la pena enriquecer). */
-async function activeShows(env: Env, now: Date): Promise<{ artistId: string; artist: string; tier: number; show: Show }[]> {
+type ActiveRow = { artistId: string; artist: string; tier: number; mbid: string | null; homepage: string | null; show: Show };
+async function activeShows(env: Env, now: Date): Promise<ActiveRow[]> {
   const today = localDateIn(now, MADRID);
   const { results } = await env.DB.prepare(
-    `SELECT s.artist_id, a.name, COALESCE(f.tier, 1) AS tier, s.snapshot_json
+    `SELECT s.artist_id, a.name, a.mbid, a.homepage, COALESCE(f.tier, 1) AS tier, s.snapshot_json
        FROM show s JOIN sheet h ON h.artist_id = s.artist_id AND h.status = 'active'
        JOIN artist a ON a.id = s.artist_id LEFT JOIN follow f ON f.artist_id = s.artist_id
       WHERE s.local_date >= ? AND s.is_package = 0`,
   )
     .bind(today)
-    .all<{ artist_id: string; name: string; tier: number; snapshot_json: string }>();
-  const byArtist = new Map<string, { artist: string; tier: number; shows: Show[] }>();
+    .all<{ artist_id: string; name: string; mbid: string | null; homepage: string | null; tier: number; snapshot_json: string }>();
+  const byArtist = new Map<string, { artist: string; tier: number; mbid: string | null; homepage: string | null; shows: Show[] }>();
   for (const r of results) {
-    const e = byArtist.get(r.artist_id) ?? { artist: r.name, tier: r.tier, shows: [] };
+    const e = byArtist.get(r.artist_id) ?? { artist: r.name, tier: r.tier, mbid: r.mbid, homepage: r.homepage, shows: [] };
     e.shows.push(JSON.parse(r.snapshot_json) as Show);
     byArtist.set(r.artist_id, e);
   }
-  return [...byArtist].flatMap(([artistId, e]) => sheetShows(e.artist, e.shows).map((show) => ({ artistId, artist: e.artist, tier: e.tier, show })));
+  return [...byArtist].flatMap(([artistId, e]) =>
+    sheetShows(e.artist, e.shows).map((show) => ({ artistId, artist: e.artist, tier: e.tier, mbid: e.mbid, homepage: e.homepage, show })),
+  );
 }
 
 export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
@@ -52,9 +56,12 @@ export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
       venue: show.venue.name,
     }));
   const artists = new Map<string, EnrichTodo["artists"][number]>();
-  for (const { artistId, artist, tier, show } of rows) {
-    const a = artists.get(artistId) ?? { artistId, name: artist, tier, dates: 0, countries: [], venues: [], hot: false, firstSale: null };
+  const nowMs = now.getTime();
+  for (const { artistId, artist, tier, mbid, homepage, show } of rows) {
+    const a = artists.get(artistId) ?? { artistId, name: artist, tier, mbid, homepage, needsSignup: false, dates: 0, when: [], countries: [], venues: [], hot: false, firstSale: null };
+    a.needsSignup ||= show.sales.some((w) => SIGNUP_KINDS.has(w.kind) && (!w.startsAt || Date.parse(w.startsAt) > nowMs));
     a.dates++;
+    a.when.push({ city: show.venue.city, localDate: show.localDate });
     if (!a.countries.includes(show.venue.country)) a.countries.push(show.venue.country);
     if (!a.venues.some((v) => v.tmId === show.venue.tmId)) a.venues.push({ tmId: show.venue.tmId, name: show.venue.name, country: show.venue.country });
     a.hot ||= show.hot === true;
@@ -65,7 +72,7 @@ export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
 }
 
 /** Guarda lo encontrado y marca las fichas afectadas para regenerarlas. */
-export async function applyEnrichment(env: Env, input: EnrichInput, now: Date): Promise<{ venues: number; prices: number; resale: number }> {
+export async function applyEnrichment(env: Env, input: EnrichInput, now: Date): Promise<{ venues: number; prices: number; resale: number; signups: number }> {
   const iso = now.toISOString();
   const stmts: D1PreparedStatement[] = [];
   const venues = (input.venues ?? []).filter((v) => v.tmId && v.name && (v.capacity === null || (v.capacity > 0 && v.capacity < 400_000)));
@@ -100,6 +107,24 @@ export async function applyEnrichment(env: Env, input: EnrichInput, now: Date): 
       ),
     );
   }
+  const signups = (input.signups ?? []).filter((x) => x.artistId);
+  for (const x of signups) {
+    if (x.homepage !== undefined) stmts.push(env.DB.prepare("UPDATE artist SET homepage = COALESCE(?, homepage) WHERE id = ?").bind(x.homepage, x.artistId));
+    stmts.push(env.DB.prepare("DELETE FROM artist_signup WHERE artist_id = ?").bind(x.artistId));
+    for (const l of x.links.filter((l) => /^https:\/\//.test(l.url) && !/queueittoken/i.test(l.url)).slice(0, 30)) {
+      stmts.push(
+        env.DB.prepare("INSERT OR IGNORE INTO artist_signup (artist_id, url, label, city, local_date, found_at) VALUES (?, ?, ?, ?, ?, ?)").bind(
+          x.artistId,
+          l.url,
+          l.label.slice(0, 60),
+          l.city ?? null,
+          l.localDate ?? null,
+          iso,
+        ),
+      );
+    }
+    stmts.push(env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(x.artistId, iso));
+  }
   // Fichas afectadas → regenerar.
   const venueIds = venues.map((v) => v.tmId);
   const showIds = prices.map((p) => p.sourceId);
@@ -124,5 +149,5 @@ export async function applyEnrichment(env: Env, input: EnrichInput, now: Date): 
   }
   for (const r of resale) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(r.artistId, iso));
   for (let i = 0; i < stmts.length; i += 50) await env.DB.batch(stmts.slice(i, i + 50));
-  return { venues: venues.length, prices: prices.length, resale: resale.length };
+  return { venues: venues.length, prices: prices.length, resale: resale.length, signups: signups.length };
 }

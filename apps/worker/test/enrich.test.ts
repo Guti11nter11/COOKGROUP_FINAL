@@ -57,10 +57,26 @@ describe("/enrich", () => {
         resale: [{ artistId: "a1", info: { low: 1.5, high: 2.5, confidence: "baja", basis: "modelo" } }],
       }),
     });
-    expect(await res.json()).toEqual({ venues: 1, prices: 1, resale: 1 });
+    expect(await res.json()).toEqual({ venues: 1, prices: 1, resale: 1, signups: 0 });
     expect(await env.DB.prepare("SELECT capacity FROM venue_info WHERE tm_venue_id = 'V1'").first()).toEqual({ capacity: 70000 });
     expect(await env.DB.prepare("SELECT source FROM show_price WHERE source_id = '1'").first()).toEqual({ source: "El País" });
     expect(await env.DB.prepare("SELECT COUNT(*) n FROM sheet_dirty WHERE artist_id = 'a1'").first()).toEqual({ n: 1 });
+  });
+
+  it("guarda la web oficial y los enlaces de registro (sin pases de cola)", async () => {
+    await call("/enrich", {
+      method: "POST",
+      body: JSON.stringify({
+        signups: [{ artistId: "a1", homepage: "https://www.artista.com/", links: [
+          { url: "https://www.bandsintown.com/t/1?release_id=x", label: "Bandsintown", city: "Madrid", localDate: "2099-05-10" },
+          { url: "https://x.com/?queueittoken=abc", label: "Malo" },
+        ] }],
+      }),
+    });
+    expect((await env.DB.prepare("SELECT url FROM artist_signup").all()).results).toEqual([{ url: "https://www.bandsintown.com/t/1?release_id=x" }]);
+    expect(await env.DB.prepare("SELECT homepage FROM artist WHERE id = 'a1'").first()).toEqual({ homepage: "https://www.artista.com/" });
+    const todo = (await (await call("/enrich/todo")).json()) as { artists: { homepage: string | null }[] };
+    expect(todo.artists[0]!.homepage).toBe("https://www.artista.com/");
   });
 
   it("un precio de otra fuente no pisa el de Ticketmaster", async () => {

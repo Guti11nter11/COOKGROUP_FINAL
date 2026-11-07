@@ -12,6 +12,7 @@ import {
   type PriceInfo,
   type ResaleInfo,
   type SheetExtras,
+  type SignupLink,
   type VenueInfo,
   stableHash,
   topicOf,
@@ -108,11 +109,20 @@ const placeholders = (n: number) => Array.from({ length: n }, () => "?").join(",
 async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<SheetExtras> {
   const venueIds = [...new Set(shows.map((s) => s.venue.tmId))].slice(0, 90);
   const showIds = shows.map((s) => s.sourceId).slice(0, 90);
-  const [v, p, r] = await env.DB.batch([
+  const [v, p, r, sg, hp] = await env.DB.batch([
     env.DB.prepare(`SELECT tm_venue_id, capacity FROM venue_info WHERE capacity IS NOT NULL AND tm_venue_id IN (${placeholders(venueIds.length)})`).bind(...venueIds),
     env.DB.prepare(`SELECT source_id, min, max, currency, source, zones_json FROM show_price WHERE source_id IN (${placeholders(showIds.length)})`).bind(...showIds),
     env.DB.prepare("SELECT json FROM artist_resale WHERE artist_id = ?").bind(artistId),
+    env.DB.prepare("SELECT url, label, city, local_date FROM artist_signup WHERE artist_id = ? ORDER BY local_date, url").bind(artistId),
+    env.DB.prepare("SELECT homepage FROM artist WHERE id = ?").bind(artistId),
   ]);
+  const signups: SignupLink[] = ((sg!.results ?? []) as { url: string; label: string; city: string | null; local_date: string | null }[]).map((x) => ({
+    url: x.url,
+    label: x.label,
+    city: x.city,
+    localDate: x.local_date,
+  }));
+  const homepage = ((hp!.results ?? [])[0] as { homepage: string | null } | undefined)?.homepage ?? null;
   const venues: Record<string, VenueInfo> = {};
   for (const row of (v!.results ?? []) as { tm_venue_id: string; capacity: number }[]) venues[row.tm_venue_id] = { capacity: row.capacity };
   const prices: Record<string, PriceInfo> = {};
@@ -120,7 +130,7 @@ async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<Sh
     prices[row.source_id] = { min: row.min, max: row.max, currency: row.currency, source: row.source, ...(row.zones_json ? { zones: JSON.parse(row.zones_json) } : {}) };
   }
   const resaleRow = (r!.results ?? [])[0] as { json: string } | undefined;
-  return { venues, prices, resale: resaleRow ? (JSON.parse(resaleRow.json) as ResaleInfo) : null };
+  return { venues, prices, signups, homepage, resale: resaleRow ? (JSON.parse(resaleRow.json) as ResaleInfo) : null };
 }
 
 const dayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: MADRID, weekday: "short", day: "numeric", month: "short" });

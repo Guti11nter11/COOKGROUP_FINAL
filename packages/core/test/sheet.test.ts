@@ -34,7 +34,7 @@ describe("renderArtistSheet (formato tipo Akari)", () => {
 
   it("cada mensaje cabe en Discord (≤ 2.000 caracteres)", () => expect(msgs.every((m) => m.length <= 2000)).toBe(true));
 
-  it("cabecera con gira, países, límite y enlaces oficiales; sin Deezer ni buscadores de reventa", () => {
+  it("cabecera con gira, países, límite, reventa para comparar y enlaces oficiales; sin Deezer", () => {
     const head = msgs[0]!;
     expect(head).toContain("U2 — The Greatest Show On Earth World Tour 2027");
     expect(head).toContain("🇪🇸");
@@ -42,7 +42,7 @@ describe("renderArtistSheet (formato tipo Akari)", () => {
     expect(head).toContain("**Límite de entradas:** 4 por persona");
     expect(head).toContain("**Precios oficiales:** aún sin publicar");
     expect(head).not.toContain("Deezer");
-    expect(head).not.toContain("viagogo.com/secure/search");
+    expect(head).toContain("**Reventa (para comparar):** [Viagogo](https://www.viagogo.com/secure/search?q=U2) · [StubHub](https://www.stubhub.com/secure/search?q=U2)");
     expect(head).toContain("[Ticketmaster ES](https://www.ticketmaster.es/artist/u2-entradas/736365)");
     expect(head).toContain("[Ticketmaster UK](https://www.ticketmaster.co.uk/u2-tickets/artist/736365)");
   });
@@ -119,6 +119,25 @@ describe("qué fechas van en la ficha", () => {
     const s = show("r", "ES", "Madrid", "2027-05-01", [["official_resale", "Reventa oficial", "2026-12-01T10:00:00Z"], ["general", "Venta general", "2026-10-01T09:00:00Z"]]);
     expect(isSheetActive([s], NOW)).toBe(false);
     expect(renderArtistSheet(artist, [s], NOW).join("\n")).not.toContain("Reventa oficial");
+  });
+});
+
+describe("dónde registrarse en cada preventa", () => {
+  const jam = (id: string, city: string, cc: string, date: string) =>
+    show(id, cc, city, date, [["artist", "Artist Presale", "2026-11-10T09:00:00Z"], ["card", "Mastercard Presale", "2026-11-11T09:00:00Z"], ["unknown", "MOJO Presale", "2026-11-12T09:00:00Z"]], { name: "Jamiroquai" });
+  const list = [jam("j1", "Amsterdam", "NL", "2027-07-05"), jam("j2", "London", "GB", "2027-07-16")];
+  const all = renderArtistSheet({ name: "Jamiroquai" }, list, NOW, {
+    homepage: "https://www.jamiroquai.com/",
+    signups: [{ url: "https://www.bandsintown.com/t/1?release_id=abc", label: "Bandsintown", city: "Amsterdam", localDate: "2027-07-05" }],
+  }).join("\n");
+  const block = (label: string) => all.split(/\n(?=## )/).find((b) => b.startsWith(`## 🎟️ ${label}`))!;
+  it("preventa del artista → enlace de registro de su web oficial para esa fecha", () =>
+    expect(block("Artist Presale")).toContain("📝 **Registro:** [Bandsintown · Amsterdam 5 jul](https://www.bandsintown.com/t/1?release_id=abc)"));
+  it("Mastercard → cómo entrar y web del programa", () => expect(block("Mastercard Presale")).toContain("📝 Pagar con una Mastercard"));
+  it("MOJO → newsletter de MOJO", () => expect(block("MOJO Presale")).toContain("[web oficial](https://www.mojo4music.com/)"));
+  it("sin enlace localizado → lo dice y apunta a la web oficial", () => {
+    const none = renderArtistSheet({ name: "Jamiroquai" }, list, NOW, { homepage: "https://www.jamiroquai.com/" }).join("\n");
+    expect(none).toContain("📝 **Registro:** aún no localizado — mira la [web oficial](https://www.jamiroquai.com/)");
   });
 });
 

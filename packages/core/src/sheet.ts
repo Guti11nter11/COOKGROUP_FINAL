@@ -1,4 +1,4 @@
-import type { SaleKind } from "./presale";
+import { presaleGuide, type SaleKind } from "./presale";
 import type { SaleWindow, Show } from "./ticketmaster";
 import { formatHHmm, LONDON, MADRID } from "./time";
 
@@ -73,7 +73,17 @@ export interface ResaleInfo {
   basis: string;
   market?: { median: number; p25: number; p75: number; currency: string; listings: number; source: string };
 }
+/** Enlace de registro/preventa encontrado en la web oficial del artista (Bandsintown, Laylo, Live Nation…). */
+export interface SignupLink {
+  url: string;
+  label: string;
+  city?: string | null;
+  localDate?: string | null;
+}
 export interface SheetExtras {
+  /** Enlaces de registro de la web oficial y la propia web. */
+  signups?: SignupLink[];
+  homepage?: string | null;
   /** Por id de recinto de Ticketmaster. */
   venues?: Record<string, VenueInfo>;
   /** Por id de evento (sourceId). */
@@ -169,6 +179,36 @@ function priceLine(live: Show[], prices: Record<string, PriceInfo>): string | nu
     .join(" · ");
 }
 
+const ARTIST_KINDS = new Set<SaleKind>(["artist", "fanclub", "registration", "unknown", "lottery"]);
+const linkDay = (d: string) => clean(new Intl.DateTimeFormat("es-ES", { timeZone: "UTC", day: "numeric", month: "short" }).format(new Date(`${d}T12:00:00Z`)));
+
+/** Dónde registrarse o cómo entrar en una preventa: enlace propio, programa conocido o registro del artista. */
+function howToJoin(w: SaleWindow, ss: Show[], extras: SheetExtras): string[] {
+  const lines: string[] = [];
+  const guide = presaleGuide(w.label, ss[0]?.venue.country);
+  if (guide) lines.push(`📝 ${guide.how}${guide.url ? ` → [web oficial](${guide.url})` : ""}`);
+  if (w.url) lines.push(`🔗 [Enlace de esta preventa](${w.url})`);
+  if (!guide && ARTIST_KINDS.has(w.kind)) {
+    const fold2 = (t: string) => fold(t);
+    const cities = new Set(ss.map((s) => fold2(s.venue.city)));
+    const dates = new Set(ss.map((s) => s.localDate));
+    const all = extras.signups ?? [];
+    const specific = all.filter((l) => (l.localDate && dates.has(l.localDate)) || (l.city && cities.has(fold2(l.city))));
+    const generic = all.filter((l) => !l.localDate && !l.city);
+    const links = (specific.length ? specific : generic).slice(0, 6);
+    if (links.length) {
+      lines.push(
+        `📝 **Registro:** ${links
+          .map((l) => `[${l.label}${l.city ? ` · ${l.city}` : ""}${l.localDate ? ` ${linkDay(l.localDate)}` : ""}](${l.url})`)
+          .join(" · ")}`,
+      );
+    } else {
+      lines.push(`📝 **Registro:** aún no localizado${extras.homepage ? ` — mira la [web oficial](${extras.homepage})` : " — GIRA lo sigue buscando"}`);
+    }
+  }
+  return lines;
+}
+
 /**
  * Ficha de un artista para su canal (estilo Akari, más clara): cabecera con datos y enlaces, y un
  * bloque por preventa y hora con todas sus fechas y enlaces juntos. Solo ventas por llegar.
@@ -189,6 +229,7 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
   const total = known.reduce((n, s) => n + capacity(s)!, 0);
   const prices = priceLine(live, extras.prices ?? {});
   const r = extras.resale;
+  const q = encodeURIComponent(artist.name);
 
   const head = [
     `# 🎤 ${artist.name} — ${title}`,
@@ -208,7 +249,10 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
             : []),
         ]
       : []),
-    ...(official.length ? ["", "**Enlaces oficiales**", official.map(([n, u]) => `[${n}](${u})`).join(" · ")] : []),
+    `**Reventa (para comparar):** [Viagogo](https://www.viagogo.com/secure/search?q=${q}) · [StubHub](https://www.stubhub.com/secure/search?q=${q}) · [Vivid Seats](https://www.vividseats.com/search?searchTerm=${q})`,
+    ...(official.length || extras.homepage
+      ? ["", "**Enlaces oficiales**", [...(extras.homepage ? [`[Web oficial](${extras.homepage})`] : []), ...official.map(([n, u]) => `[${n}](${u})`)].join(" · ")]
+      : []),
   ].join("\n");
 
   // Precios por zona: una línea por grupo de ciudades con la misma tabla.
@@ -251,7 +295,7 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
     const when = w.startsAt
       ? `🇪🇸 **${clean(saleDayFmt.format(new Date(w.startsAt)))}, ${formatHHmm(w.startsAt, MADRID)}** Madrid · 🇬🇧 ${formatHHmm(w.startsAt, LONDON)} Londres · <t:${Date.parse(w.startsAt) / 1000}:F>`
       : "Hora por confirmar";
-    return [`## 🎟️ ${w.label}`, when, `*${REQUIREMENT[w.kind]}*`, ...ss.map(dateLine)].join("\n");
+    return [`## 🎟️ ${w.label}`, when, `*${REQUIREMENT[w.kind]}*`, ...howToJoin(w, ss, extras), ...ss.map(dateLine)].join("\n");
   });
   return pack([head, ...(zoneBlock ? [zoneBlock] : []), ...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
 }

@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
   push:
     branches: [claude/magical-franklin-u415fe]
-    paths: [.github/workflows/enrich.yml, apps/jobs/src/enrich*.ts, apps/jobs/src/venues-lib.ts, apps/jobs/src/prices*.ts, apps/jobs/src/resale*.ts]
+    paths: [.github/workflows/enrich.yml, apps/jobs/src/enrich*.ts, apps/jobs/src/venues-lib.ts, apps/jobs/src/prices*.ts, apps/jobs/src/resale*.ts, apps/jobs/src/signups*.ts, apps/jobs/src/news.ts, apps/jobs/src/ai.ts]
 
 permissions:
   contents: read
@@ -29,6 +29,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Navegador para leer webs oficiales (widgets de giras con JavaScript)
+        run: npm i --no-save playwright@1.63.0 && npx playwright install --with-deps chromium
       - name: Enriquecer
         env:
           TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
