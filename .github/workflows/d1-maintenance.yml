@@ -36,5 +36,16 @@ jobs:
           id=$(npx wrangler d1 list --json | python3 -c "import sys,json;print(next(d['uuid'] for d in json.load(sys.stdin) if d['name']=='gira'))")
           sed -i "s/00000000-0000-0000-0000-000000000000/$id/" wrangler.jsonc
           for f in $(git diff --name-only HEAD~1 HEAD -- maintenance/ | sed 's#apps/worker/##'); do
-            echo "== $f"; npx wrangler d1 execute gira --remote --file "$f" --yes --json | python3 -c "import sys,json;d=json.load(sys.stdin);print('filas cambiadas:', sum(r.get('meta',{}).get('changes',0) for r in d))"
+            echo "== $f"; npx wrangler d1 execute gira --remote --file "$f" --yes --json > /tmp/out.json || true
+            python3 - <<'PY'
+          import json
+          try:
+              d = json.load(open("/tmp/out.json"))
+          except Exception as e:
+              print("salida no JSON:", open("/tmp/out.json").read()[:2000]); raise SystemExit(0)
+          for r in d if isinstance(d, list) else [d]:
+              rows = r.get("results") or []
+              print("cambios:", (r.get("meta") or {}).get("changes"), "· filas:", len(rows))
+              for row in rows: print("  ", row)
+          PY
           done
