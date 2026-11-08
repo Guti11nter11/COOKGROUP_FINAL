@@ -90,5 +90,7 @@ export function presaleSignal(link: SignupLink, raw?: RawLink): boolean {
   if (known && known[1] !== "Bandsintown") return true;
   const text = `${raw?.text ?? link.label} ${new URL(link.url).pathname}`;
   if (NOT_PRESALE.test(text)) return false;
+  // Enlaces "inteligentes" (lnk.to, linktr.ee…): casi siempre música; solo si el texto habla de preventa.
+  if (/(^|\.)(lnk\.to|linktr\.ee|ffm\.to|smarturl\.it|found\.ee|hypeddit\.com)$/.test(host)) return /\b(pre-?sale|preventa|early access)\b/i.test(text);
   return PRESALE_WORDS.test(`${text} ${raw?.context ?? ""}`);
 }

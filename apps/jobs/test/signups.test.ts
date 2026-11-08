@@ -50,5 +50,7 @@ describe("registros de artistas sin fechas todavía", () => {
     expect(presaleSignal(l("https://www.artist.com/newsletter"), { text: "Sign up", href: "", context: "Sign up for our newsletter" })).toBe(false);
     expect(presaleSignal(l("https://www.artist.com/signup"), { text: "Sign up", href: "", context: "Join the mailing list for news and updates" })).toBe(false);
     expect(presaleSignal(l("https://store.artist.com/register"), { text: "Register", href: "", context: "store" })).toBe(false);
+    expect(presaleSignal(l("https://oasismusic.lnk.to/live"), { text: "Live 25", href: "", context: "tour tickets" })).toBe(false);
+    expect(presaleSignal(l("https://artist.lnk.to/presale"), { text: "Presale sign up", href: "", context: "" })).toBe(true);
   });
 });
