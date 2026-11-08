@@ -41,7 +41,8 @@ export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
 
   const venues = new Map<string, EnrichTodo["venues"][number]>();
   for (const { show } of rows) {
-    if (!fresh.has(show.venue.tmId)) venues.set(show.venue.tmId, { tmId: show.venue.tmId, name: show.venue.name, city: show.venue.city, country: show.venue.country });
+    // Sin nombre de recinto no hay nada que buscar (algunas fechas del feed llegan así).
+    if (!fresh.has(show.venue.tmId) && show.venue.name.trim()) venues.set(show.venue.tmId, { tmId: show.venue.tmId, name: show.venue.name, city: show.venue.city, country: show.venue.country });
   }
   const shows = rows
     .filter(({ show }) => !hasPrice.has(show.sourceId))
