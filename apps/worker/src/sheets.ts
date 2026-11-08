@@ -152,7 +152,7 @@ function noticeText(name: string, alerts: Alert[], shows: Show[], channelId: str
   const places = [...new Set(shows.filter((s) => ids.has(s.sourceId)).map((s) => `${flag(s.venue.country)} ${s.venue.city}`))].slice(0, 6);
   const next = shows
     .flatMap((s) => s.sales)
-    .filter((w) => w.startsAt && Date.parse(w.startsAt) > now.getTime())
+    .filter((w) => w.kind !== "official_resale" && w.startsAt && Date.parse(w.startsAt) > now.getTime())
     .sort((a, b) => a.startsAt!.localeCompare(b.startsAt!))[0];
   const nextTxt = next ? ` · próxima venta: **${clean(dayFmt.format(new Date(next.startsAt!)))}, ${formatHHmm(next.startsAt!, MADRID)}** (Madrid) — ${next.label}` : "";
   return `${icon} **${name}** · ${parts.join(" · ")}${places.length ? ` (${places.join(", ")})` : ""}${nextTxt} → <#${channelId}>`;
@@ -200,6 +200,14 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
       await env.DB.prepare("UPDATE delivery SET status = 'failed', last_error = 'sin ventas por llegar' WHERE artist_id = ? AND status = 'pending'").bind(artist_id).run();
       continue;
     }
+    // Ficha activa sin cambios ni avisos pendientes: no hace falta Discord (no gasta cupo de la pasada).
+    const msgs = active ? renderArtistSheet({ name: artist.name }, shows, now, await loadExtras(env, artist_id, shows)) : [];
+    const hash = stableHash(msgs.join("\u0000").replace(/-# Actualizado <t:\d+:R>/, ""));
+    const pending = await env.DB.prepare("SELECT 1 AS x FROM delivery WHERE artist_id = ? AND status = 'pending' LIMIT 1").bind(artist_id).first();
+    if (active && sheet?.status === "active" && hash === sheet.content_hash && !pending) {
+      if (!sheet.tracked_sale) await env.DB.prepare("UPDATE sheet SET tracked_sale = 1 WHERE artist_id = ?").bind(artist_id).run();
+      continue;
+    }
     if (++touched > maxDiscordArtists) {
       await requeue(dirty.slice(i));
       break;
@@ -245,8 +253,6 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
     }
 
     // Ficha: editar los mensajes existentes en vez de publicar otros nuevos.
-    const msgs = renderArtistSheet({ name: artist.name }, shows, now, await loadExtras(env, artist_id, shows));
-    const hash = stableHash(msgs.join("\u0000").replace(/-# Actualizado <t:\d+:R>/, ""));
     if (hash !== sheet?.content_hash) {
       const ids: string[] = JSON.parse(sheet?.message_ids ?? "[]");
       const next: string[] = [];
