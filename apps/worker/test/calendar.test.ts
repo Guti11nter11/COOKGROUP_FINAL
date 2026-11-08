@@ -56,7 +56,7 @@ describe("reloj de GIRA", () => {
     expect(rec).toHaveLength(1);
     expect(rec[0]!.body.content).toContain("⏰ **U2** · Artist Presale en 1 hora — **10:00** Madrid");
     expect(rec[0]!.body.content).toContain("🇪🇸 Sevilla, 🇪🇸 Barcelona → <#CH_U2>");
-    expect(rec[0]!.body.flags).toBeUndefined();
+    expect(rec[0]!.body.flags! & 4096).toBe(0); // suena (no silencioso)
     posts = [];
     await runCalendar(env, new Date("2026-11-10T08:10:00Z"));
     expect(at("C_REC")).toHaveLength(0);

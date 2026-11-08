@@ -57,7 +57,7 @@ const putSetting = (env: Env, key: string, value: string) =>
   env.DB.prepare("INSERT INTO setting (key, value) VALUES (?, ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value").bind(key, value).run();
 
 async function post(env: Env, channelId: string, content: string, silent: boolean): Promise<string | null> {
-  const res = await discordFetch(env, "POST", `/channels/${channelId}/messages`, { content, allowed_mentions: { parse: [] }, ...(silent ? { flags: 4096 } : {}) });
+  const res = await discordFetch(env, "POST", `/channels/${channelId}/messages`, { content, allowed_mentions: { parse: [] }, flags: silent ? 4096 | 4 : 4 });
   return res.ok ? ((await res.json()) as { id: string }).id : null;
 }
 
@@ -152,7 +152,7 @@ export async function runCalendar(env: Env, now: Date): Promise<{ reminders: num
       const ids: string[] = JSON.parse((await setting(env, "week_msgs")) ?? "[]");
       const next: string[] = [];
       for (let i = 0; i < week.length; i++) {
-        const body = { content: week[i], allowed_mentions: { parse: [] } };
+        const body = { content: week[i], allowed_mentions: { parse: [] }, flags: 4 };
         if (ids[i] && (await discordFetch(env, "PATCH", `/channels/${ch.id}/messages/${ids[i]}`, body)).ok) {
           next.push(ids[i]!);
           continue;
@@ -200,7 +200,7 @@ export async function updateStatusPanel(env: Env, now: Date): Promise<boolean> {
   const ch = await new Guild(env).byName("estado");
   if (!ch) return false;
   const id = await setting(env, "status_msg");
-  const body = { content: text, allowed_mentions: { parse: [] } };
+  const body = { content: text, allowed_mentions: { parse: [] }, flags: 4 };
   if (!(id && (await discordFetch(env, "PATCH", `/channels/${ch.id}/messages/${id}`, body)).ok)) {
     const newId = await post(env, ch.id, text, true);
     if (newId) await putSetting(env, "status_msg", newId);

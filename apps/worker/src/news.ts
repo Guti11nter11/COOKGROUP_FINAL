@@ -53,7 +53,7 @@ async function postNews(env: Env, fresh: (NewsInput["items"][number] & { artistI
     let msg = "";
     const flush = async () => {
       if (!msg) return;
-      if ((await discordFetch(env, "POST", `/channels/${ch.id}/messages`, { content: msg, allowed_mentions: { parse: [] }, ...(silent ? { flags: 4096 } : {}) })).ok) posted++;
+      if ((await discordFetch(env, "POST", `/channels/${ch.id}/messages`, { content: msg, allowed_mentions: { parse: [] }, flags: silent ? 4096 | 4 : 4 })).ok) posted++;
       msg = "";
     };
     for (const n of fresh) {
@@ -67,7 +67,7 @@ async function postNews(env: Env, fresh: (NewsInput["items"][number] & { artistI
     await discordFetch(env, "POST", `/channels/${n.channelId}/messages`, {
       content: `${ICON[n.category]} **Novedad:** ${n.summary} — [${n.source || "fuente"}](<${n.url}>)`,
       allowed_mentions: { parse: [] },
-      ...(silent ? { flags: 4096 } : {}),
+      flags: silent ? 4096 | 4 : 4,
     });
   }
   // Push al iPhone de lo importante (registros, preventas, fechas extra); de noche, nada.

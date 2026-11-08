@@ -257,7 +257,8 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
       const ids: string[] = JSON.parse(sheet?.message_ids ?? "[]");
       const next: string[] = [];
       for (let i = 0; i < msgs.length; i++) {
-        const body = { content: msgs[i], allowed_mentions: { parse: [] } };
+        // Sin vistas previas de enlaces (la ficha tiene muchos y ensuciarían el canal).
+        const body = { content: msgs[i], allowed_mentions: { parse: [] }, flags: 4 };
         if (ids[i]) {
           const r = await discordFetch(env, "PATCH", `/channels/${channelId}/messages/${ids[i]}`, body);
           if (r.ok) {
@@ -309,7 +310,7 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
         const res = await discordFetch(env, "POST", `/channels/${dest.id}/messages`, {
           content: noticeText(artist.name, alerts, shows, channelId, now),
           allowed_mentions: { parse: [] },
-          ...(urgent ? {} : { flags: 4096 }),
+          flags: urgent ? 4 : 4096 | 4,
         });
         // Un fallo (p. ej. 429) no gasta intentos: el catch lo devuelve a pendiente y reencola al artista.
         if (!res.ok) throw new Error(`Discord aviso HTTP ${res.status}`);

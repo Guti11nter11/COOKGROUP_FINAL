@@ -245,16 +245,21 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
     ...(known.length
       ? [`**Aforo:** ~${num(total)} entradas en ${known.length === live.length ? "total" : `${known.length} de ${live.length} fechas`} (aforo de cada recinto abajo)`]
       : []),
+    "",
     ...(r
       ? [
           ...(r.difficulty ? [`**Dificultad para conseguir entrada:** ${r.difficulty}`] : []),
           `**Reventa estimada:** ${times(r.low)}–${times(r.high)} sobre el oficial · confianza ${r.confidence}`,
-          ...(r.markets?.length ? ["**Mercado de reventa ahora** (precio por entrada)"] : []),
           `-# ${r.basis}`,
-          ...(r.markets ?? []).map(
-            (m) =>
-              `${flag(m.country)} ${m.city} ${linkDay(m.localDate)}: mediana **${money(m.median, m.currency)}** · P25–P75 ${money(m.p25, m.currency)}–${money(m.p75, m.currency)} · ${m.listings} anuncios (${m.source})`,
-          ),
+          ...(r.markets?.length
+            ? [
+                "**Mercado de reventa ahora** (precio por entrada)",
+                ...r.markets.map(
+                  (m) =>
+                    `${flag(m.country)} ${m.city} ${linkDay(m.localDate)}: mediana **${money(m.median, m.currency)}** · P25–P75 ${money(m.p25, m.currency)}–${money(m.p75, m.currency)} · ${m.listings} anuncios (${m.source})`,
+                ),
+              ]
+            : []),
           ...(r.history ?? []).slice(0, 3).map((h) => `🕘 ${h.text} · _${h.source}_`),
         ]
       : []),
