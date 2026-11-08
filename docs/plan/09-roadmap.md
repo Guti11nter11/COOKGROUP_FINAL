@@ -18,6 +18,12 @@ estimaciones son orientativas; cada entrega termina con algo que el propietario 
 **Total hasta Europa completa (R0–R7): ~18–21 sesiones.**
 
 **Orden acordado con el propietario (2026-11-07): R0 → R1 → R2 → R4 → R3 → R5 → R6 → R7.**
+
+**Estado (2026-11-08, mañana):** R0 ✅ · R1 ✅ · R2 ✅ (reloj en el cron, ver ADR 0002) · R3 ✅ (app en el
+Worker, falta el alta del propietario) · R4 🟡 (noticias, Entradas.com, See Tickets, Blueticket y registros ✅;
+El Corte Inglés y AXS por ajustar) · R5 🟡 (precios por zona, aforo, reventa con mercado y dificultad) ·
+R6 🟡 (deporte en noticias y feed; calendarios estructurados pendientes) · R7 ⏳ (decidir presupuesto de redes).
+Detalle en [13 · Informe de la noche](13-informe-2026-11-08.md).
 España antes que la app del iPhone. **Ejecución: modo Native** (Claude implementa cada tarea en la
 sesión y una revisión completa de la rama al final de cada entrega).
 

@@ -1,6 +1,6 @@
 name: Ticketeras sin API
 
-# Dos veces al día, por turnos: búsqueda de cada artista ⭐⭐⭐ en Entradas.com, El Corte Inglés,
+# Dos veces al día, por turnos: búsqueda de cada artista ⭐⭐⭐ en Entradas.com y See Tickets (El Corte Inglés y AXS, pendientes de ajuste),
 # See Tickets y AXS con Cloudflare Browser Run (navegador real, baja frecuencia, sin tocar colas).
 
 on:
