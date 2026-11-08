@@ -103,6 +103,7 @@ interface SheetRow {
   content_hash: string | null;
   status: "active" | "archived";
   tracked_sale: number;
+  rendered_json: string | null;
 }
 
 const placeholders = (n: number) => Array.from({ length: n }, () => "?").join(",");
@@ -205,7 +206,9 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
     const hash = stableHash(msgs.join("\u0000").replace(/-# Actualizado <t:\d+:R>/, ""));
     const pending = await env.DB.prepare("SELECT 1 AS x FROM delivery WHERE artist_id = ? AND status = 'pending' LIMIT 1").bind(artist_id).first();
     if (active && sheet?.status === "active" && hash === sheet.content_hash && !pending) {
-      if (!sheet.tracked_sale) await env.DB.prepare("UPDATE sheet SET tracked_sale = 1 WHERE artist_id = ?").bind(artist_id).run();
+      if (!sheet.tracked_sale || !sheet.rendered_json) {
+        await env.DB.prepare("UPDATE sheet SET tracked_sale = 1, rendered_json = ? WHERE artist_id = ?").bind(JSON.stringify(msgs), artist_id).run();
+      }
       continue;
     }
     if (++touched > maxDiscordArtists) {
@@ -271,8 +274,8 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
         next.push(((await r.json()) as { id: string }).id);
       }
       for (const old of ids.slice(msgs.length)) await discordFetch(env, "DELETE", `/channels/${channelId}/messages/${old}`);
-      await env.DB.prepare("UPDATE sheet SET message_ids = ?, content_hash = ?, tracked_sale = 1, updated_at = ? WHERE artist_id = ?")
-        .bind(JSON.stringify(next), hash, iso, artist_id)
+      await env.DB.prepare("UPDATE sheet SET message_ids = ?, content_hash = ?, tracked_sale = 1, rendered_json = ?, updated_at = ? WHERE artist_id = ?")
+        .bind(JSON.stringify(next), hash, JSON.stringify(msgs), iso, artist_id)
         .run();
     } else if (!sheet?.tracked_sale) {
       await env.DB.prepare("UPDATE sheet SET tracked_sale = 1 WHERE artist_id = ?").bind(artist_id).run();

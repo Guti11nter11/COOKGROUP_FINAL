@@ -16,12 +16,17 @@ export async function handleApi(env: Env, req: Request, url: URL): Promise<Respo
   if (url.pathname === "/api/feed") {
     const slots = await loadSlots(env, now);
     const { results: active } = await env.DB.prepare(
-      "SELECT h.artist_id, h.channel_id FROM sheet h WHERE h.status = 'active' ORDER BY h.updated_at DESC LIMIT 60",
-    ).all<{ artist_id: string; channel_id: string }>();
+      "SELECT h.artist_id, h.channel_id, h.rendered_json, a.name FROM sheet h JOIN artist a ON a.id = h.artist_id WHERE h.status = 'active' ORDER BY h.updated_at DESC LIMIT 80",
+    ).all<{ artist_id: string; channel_id: string; rendered_json: string | null; name: string }>();
+    // La ficha ya renderizada al publicarla; solo se calcula aquí (como mucho 3) si aún no está guardada.
     const sheets = [];
+    let rendered = 0;
     for (const a of active) {
-      const s = await renderSheetFor(env, a.artist_id, now);
-      if (s) sheets.push({ artistId: a.artist_id, channelId: a.channel_id, ...s });
+      if (a.rendered_json) sheets.push({ artistId: a.artist_id, channelId: a.channel_id, name: a.name, messages: JSON.parse(a.rendered_json) as string[] });
+      else if (rendered++ < 3) {
+        const s = await renderSheetFor(env, a.artist_id, now);
+        if (s) sheets.push({ artistId: a.artist_id, channelId: a.channel_id, ...s });
+      }
     }
     const { results: news } = await env.DB.prepare(
       "SELECT artist_name, title, url, source, category, summary, published_at, created_at FROM news ORDER BY created_at DESC LIMIT 80",
