@@ -115,6 +115,8 @@ describe("renderArtistSheet: datos de enriquecimiento", () => {
     const s = { ...shows[2]!, ticketLimit: null };
     expect(renderArtistSheet(artist, [s], NOW, { limits: { GB: 6 } })[0]).toContain("**Límite de entradas:** **6** por persona");
     expect(renderArtistSheet(artist, [s], NOW)[0]).toContain("**Límite de entradas:** sin confirmar todavía");
+    // Sin dato del país: el de la misma gira en otro país.
+    expect(renderArtistSheet(artist, [s], NOW, { limits: { DE: 4 } })[0]).toContain("**Límite de entradas:** **4** por persona");
   });
   it("money", () => {
     expect(money(1500, "EUR")).toBe("1.500 €");

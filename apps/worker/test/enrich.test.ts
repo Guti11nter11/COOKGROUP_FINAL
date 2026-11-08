@@ -57,7 +57,7 @@ describe("/enrich", () => {
         resale: [{ artistId: "a1", info: { low: 1.5, high: 2.5, confidence: "baja", basis: "modelo" } }],
       }),
     });
-    expect(await res.json()).toEqual({ venues: 1, prices: 1, resale: 1, signups: 0 });
+    expect(await res.json()).toEqual({ venues: 1, prices: 1, resale: 1, signups: 0, limits: 0 });
     expect(await env.DB.prepare("SELECT capacity FROM venue_info WHERE tm_venue_id = 'V1'").first()).toEqual({ capacity: 70000 });
     expect(await env.DB.prepare("SELECT source FROM show_price WHERE source_id = '1'").first()).toEqual({ source: "El País" });
     expect(await env.DB.prepare("SELECT COUNT(*) n FROM sheet_dirty WHERE artist_id = 'a1'").first()).toEqual({ n: 1 });

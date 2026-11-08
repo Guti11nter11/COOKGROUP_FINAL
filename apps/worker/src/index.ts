@@ -85,7 +85,7 @@ export default {
         // Las fichas marcadas se regeneran en el siguiente ciclo (cada 5 min), sin ráfagas a Discord.
         const r = await applyEnrichment(env, (await req.json()) as EnrichInput, now);
         if (r.freshSignups) ctx.waitUntil(announceSignups(env, r.freshSignups).catch(() => 0));
-        return Response.json({ venues: r.venues, prices: r.prices, resale: r.resale, signups: r.signups });
+        return Response.json({ venues: r.venues, prices: r.prices, resale: r.resale, signups: r.signups, limits: r.limits });
       }
       return new Response("No encontrado", { status: 404 });
     }

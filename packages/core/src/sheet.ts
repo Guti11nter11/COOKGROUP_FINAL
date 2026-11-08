@@ -194,13 +194,18 @@ const COUNTRY: Record<string, string> = {
 };
 export const countryName = (cc: string) => COUNTRY[cc] ?? cc;
 
-/** Límite de entradas por persona: de la ticketera (por fecha) y, si no, de prensa (por país). */
+/**
+ * Límite de entradas por persona: de la ticketera (por fecha) y, si no, de prensa (por país). Un país sin
+ * dato toma el de la misma gira en otro país (suele ser el mismo en toda la gira).
+ */
 function limitText(live: Show[], limits: Record<string, number>): string | null {
   const byCountry = new Map<string, number>();
   for (const cc of new Set(live.map((s) => s.venue.country))) {
     const n = ticketLimitNumber(live.filter((s) => s.venue.country === cc).map((s) => s.ticketLimit)) ?? limits[cc] ?? null;
     if (n) byCountry.set(cc, n);
   }
+  const fallback = mostCommon([...byCountry.values(), ...Object.values(limits)]);
+  if (fallback) for (const cc of new Set(live.map((s) => s.venue.country))) if (!byCountry.has(cc)) byCountry.set(cc, fallback);
   const values = [...new Set(byCountry.values())];
   if (!values.length) return null;
   if (values.length === 1) return `**${values[0]}** por persona`;
