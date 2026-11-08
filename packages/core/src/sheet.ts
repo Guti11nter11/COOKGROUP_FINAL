@@ -324,7 +324,7 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
   const blocks = ordered.map(({ w, shows: ss }) => {
     const when = w.startsAt
       ? `🇪🇸 **${clean(saleDayFmt.format(new Date(w.startsAt)))}, ${formatHHmm(w.startsAt, MADRID)}** Madrid · 🇬🇧 ${formatHHmm(w.startsAt, LONDON)} Londres · <t:${Date.parse(w.startsAt) / 1000}:F>`
-      : "Hora por confirmar";
+      : "📅 Fecha y hora por confirmar";
     // Fin de la ventana (si la ticketera lo da y no es la venta general, que no "termina").
     const until =
       w.endsAt && w.kind !== "general" && w.startsAt && Date.parse(w.endsAt) > Date.parse(w.startsAt)

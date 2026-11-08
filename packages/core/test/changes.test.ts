@@ -124,6 +124,16 @@ describe("detectAlerts: solo lo accionable (nada del pasado)", () => {
     const next2 = withSales(["2026-11-20T09:00:00Z", "2026-11-19T09:00:00Z"]);
     expect(detectAlerts(prev, next2, c).map((a) => a.kind)).toEqual(["sale_added"]);
   });
+  it("aparece la venta general 'por confirmar' en una fecha conocida → sin aviso; cuando tiene hora → aviso", () => {
+    const prev = withSales(["2026-11-20T09:00:00Z"]);
+    const tbd = clone(prev);
+    tbd.sales.push({ kind: "general", label: "Venta general", startsAt: null, endsAt: null, url: null, orderRank: 90 });
+    expect(detectAlerts(prev, tbd, c)).toEqual([]);
+    const dated = clone(prev);
+    dated.sales.push({ kind: "general", label: "Venta general", startsAt: "2026-11-25T09:00:00Z", endsAt: null, url: null, orderRank: 90 });
+    // "por confirmar" → con hora: aviso de cambio (antes "por confirmar", después la hora).
+    expect(detectAlerts(tbd, dated, c).map((a) => a.kind)).toEqual(["sale_changed"]);
+  });
   it("vaivén onsale ↔ offsale → sin aviso; cancelación → aviso", () => {
     const off = clone(base);
     off.status = "offsale";

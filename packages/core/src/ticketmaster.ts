@@ -110,6 +110,9 @@ export function normalizeTmEvent(raw: unknown): Show | null {
   const pub = obj(sales.public);
   if (str(pub.startDateTime) && pub.startTBD !== true && pub.startTBA !== true) {
     windows.push({ ...saleWindow("Venta general", pub, null), kind: "general", orderRank: 90 });
+  } else if ((pub.startTBD === true || pub.startTBA === true) && !["cancelled", "postponed"].includes(STATUS[str(obj(obj(e.dates).status).code) ?? ""] ?? "")) {
+    // Gira anunciada con la venta "por confirmar": es justo lo que interesa saber pronto.
+    windows.push({ kind: "general", label: "Venta general", startsAt: null, endsAt: null, url: null, orderRank: 90 });
   }
   windows.sort((x, y) => x.orderRank - y.orderRank || (x.startsAt ?? "").localeCompare(y.startsAt ?? ""));
 

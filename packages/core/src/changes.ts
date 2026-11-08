@@ -84,6 +84,11 @@ export function detectAlerts(prev: Show | null, next: Show, ctx: ChangeContext):
   for (const w of next.sales) {
     if (prevKeys.has(exact(w))) continue;
     const i = orphans.findIndex((o) => saleId(o) === saleId(w));
+    // Venta general "por confirmar" (sin fecha): no es noticia por sí sola; avisará cuando tenga hora.
+    if (!w.startsAt && w.kind === "general") {
+      if (i >= 0) orphans.splice(i, 1);
+      continue;
+    }
     if (!future(w.startsAt)) {
       if (i >= 0) orphans.splice(i, 1);
       continue; // ventana que ya empezó: no es accionable

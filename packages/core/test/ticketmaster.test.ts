@@ -41,7 +41,7 @@ describe("normalizeTmEvent", () => {
     expect(showKey(normalizeTmEvent(b)!)).toBe(showKey(normalizeTmEvent(a)!));
   });
 
-  it("traduce canceled → cancelled y omite la venta general sin fecha", () => {
+  it("traduce canceled → cancelled y omite la venta general sin fecha (cancelado: nada por llegar)", () => {
     const s = normalizeTmEvent(c)!;
     expect(s.status).toBe("cancelled");
     expect(s.sales).toEqual([]);
@@ -101,5 +101,15 @@ describe("priceOf", () => {
     expect(priceOf({ minPrice: 60, maxPrice: 180, currency: "GBP" })).toEqual({ min: 60, max: 180, currency: "GBP" });
     expect(priceOf({ priceRanges: [{ min: 0, max: 0, currency: "EUR" }] })).toBeNull();
     expect(priceOf({})).toBeNull();
+  });
+});
+
+describe("venta general por confirmar", () => {
+  it("startTBD → ventana de venta general sin hora (cuenta como venta por llegar)", async () => {
+    const { normalizeTmEvent } = await import("../src/ticketmaster");
+    const fixture = (await import("./fixtures/tm-events.json")).default as { _embedded: { events: Record<string, unknown>[] } };
+    const e = structuredClone(fixture._embedded.events[0]!) as Record<string, any>;
+    e.sales = { public: { startTBD: true } };
+    expect(normalizeTmEvent(e)!.sales).toEqual([{ kind: "general", label: "Venta general", startsAt: null, endsAt: null, url: null, orderRank: 90 }]);
   });
 });
