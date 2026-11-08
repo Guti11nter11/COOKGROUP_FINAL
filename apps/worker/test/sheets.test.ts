@@ -1,7 +1,7 @@
 import { env, fetchMock } from "cloudflare:test";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { Show } from "@gira/core";
-import { publishSheets } from "../src/sheets";
+import { publishSheets, refreshActiveSheets } from "../src/sheets";
 
 const GUILD = "1568641743853715516";
 const NOW = new Date("2026-11-08T12:00:00Z");
@@ -166,5 +166,20 @@ describe("fichas por artista en Discord", () => {
     expect(calls.find((c) => c.method === "PATCH" && c.path === `/api/v10/channels/${channel_id}`)?.body).toEqual({ parent_id: "CAT_A" });
     expect(calls.some((c) => c.method === "DELETE")).toBe(false);
     expect(await env.DB.prepare("SELECT status FROM sheet").first()).toEqual({ status: "archived" });
+  });
+
+  it("cuando empieza una preventa, su bloque desaparece del canal en la siguiente revisión", async () => {
+    const a = show("1", "2027-05-10", "2026-11-20T09:00:00Z");
+    a.sales.unshift({ kind: "artist", label: "Artist Presale", startsAt: "2026-11-10T09:00:00Z", endsAt: null, url: null, orderRank: 20 });
+    await storeShow(a); await alertFor(a);
+    await publishSheets(env, NOW);
+    calls = [];
+    const later = new Date("2026-11-10T09:20:00Z");
+    expect(await refreshActiveSheets(env, later)).toBe(1);
+    expect(await refreshActiveSheets(env, later)).toBe(0); // una vez por cuarto de hora
+    await publishSheets(env, later);
+    const edited = discordCalls("PATCH", /\/messages\//).map((c) => c.body.content).join("\n");
+    expect(edited).toContain("Venta general");
+    expect(edited).not.toContain("Artist Presale");
   });
 });

@@ -337,3 +337,16 @@ export async function renderSheetFor(env: Env, artistId: string, now: Date): Pro
   if (!isSheetActive(shows, now)) return null;
   return { name: artist.name, messages: renderArtistSheet({ name: artist.name }, shows, now, await loadExtras(env, artistId, shows)) };
 }
+
+/**
+ * Cada 15 min, todas las fichas activas pasan a "pendientes": así una preventa que ya empezó desaparece
+ * de su canal y, cuando no queda ninguna, el canal se archiva. Solo se toca Discord si la ficha cambió.
+ */
+export async function refreshActiveSheets(env: Env, now: Date): Promise<number> {
+  const slot = `${now.toISOString().slice(0, 14)}${Math.floor(now.getUTCMinutes() / 15)}`;
+  const done = await env.DB.prepare("SELECT value FROM setting WHERE key = 'sheets_refresh'").first<{ value: string }>();
+  if (done?.value === slot) return 0;
+  const r = await env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) SELECT artist_id, ? FROM sheet WHERE status = 'active'").bind(now.toISOString()).run();
+  await env.DB.prepare("INSERT INTO setting (key, value) VALUES ('sheets_refresh', ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value").bind(slot).run();
+  return r.meta.changes ?? 0;
+}

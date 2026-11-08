@@ -1,5 +1,5 @@
 import { ingestShows, processPage, runCycle } from "./cycle";
-import { publishSheets } from "./sheets";
+import { publishSheets, refreshActiveSheets } from "./sheets";
 import type { EnrichInput } from "@gira/core";
 import { applyEnrichment, discover, enrichTodo, followIds } from "./enrich";
 import { ingestNews, type NewsInput } from "./news";
@@ -17,6 +17,7 @@ async function scheduled(env: Env, now: Date): Promise<void> {
     // Primero el reloj (recordatorios puntuales), luego el barrido y las fichas.
     const calendar = await runCalendar(env, now).catch((e) => ({ error: String(e) }));
     const cycle = await runCycle(env, now, async (j) => void (await env.SWEEP_QUEUE.send(j)));
+    await refreshActiveSheets(env, now).catch(() => 0);
     const sheets = await publishSheets(env, now);
     const panel = await updateStatusPanel(env, now).catch(() => false);
     result = { ...cycle, ...sheets, calendar, panel };
