@@ -13,8 +13,8 @@ export interface Ticketer {
 
 export const TICKETERS: Ticketer[] = [
   { id: "entradas", name: "Entradas.com (Eventim ES)", country: "ES", search: (a) => `https://www.entradas.com/search/?affiliate=EES&searchterm=${encodeURIComponent(a)}`, eventPath: /\/(event|artist|eventseries)\//i },
-  // El Corte Inglés y AXS: la búsqueda renderizada no devolvió fichas (ECI) o tarda ~1 min y da 422 (AXS);
-  // desactivadas hasta ajustar la URL de búsqueda.
+  // El Corte Inglés: la búsqueda renderizada no devolvió fichas; pendiente de ajustar. AXS se lee por sus
+  // sitemaps públicos (ver axsEventsFor), no con el navegador.
   { enabled: false, id: "eci", name: "El Corte Inglés", country: "ES", search: (a) => `https://www.elcorteingles.es/entradas/buscar/?term=${encodeURIComponent(a)}`, eventPath: /\/entradas\/(conciertos|musica|festivales|teatro|deportes)\/.+/i },
   { id: "seetickets", name: "See Tickets", country: "GB", search: (a) => `https://www.seetickets.com/search?q=${encodeURIComponent(a)}`, eventPath: /\/(event|tour)\//i },
   { enabled: false, id: "axs", name: "AXS", country: "GB", search: (a) => `https://www.axs.com/uk/search?q=${encodeURIComponent(a)}`, eventPath: /\/(events|artists)\/\d+/i },
@@ -50,4 +50,27 @@ export function listingsFor(html: string, base: string, artist: string, t: Ticke
     if (!out.has(key) || (out.get(key)!.text.length < text.length)) out.set(key, { url: key, text: text || url.pathname.split("/").filter(Boolean).pop()!.replace(/-/g, " ") });
   }
   return [...out.values()];
+}
+
+const AXS_NOT_ARTIST = /(tribute|parking|hotel|hospitality|package|vip|experience|reloaded|legacy|the-music-of|celebrating|-pass-|2-day|camping|shuttle|coach)/i;
+
+/** Eventos de AXS de un artista en un sitemap (la URL lleva el nombre: /uk/events/123/metallica-tickets). */
+export function axsEventsFor(xml: string, artist: string): { url: string; id: number; lastmod: string | null }[] {
+  const s = artist
+    .normalize("NFD")
+    .replace(/[̀-ͯ]/g, "")
+    .toLowerCase()
+    .replace(/['’]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+  if (s.length < 2) return [];
+  // Nombres cortos ("u2"): solo la ficha exacta "u2-tickets…" (si no, cualquier cosa encaja).
+  const tail = s.length < 4 ? "tickets[^<]*" : "[^<]*";
+  const out: { url: string; id: number; lastmod: string | null }[] = [];
+  const re = new RegExp(`<loc>(https://www\\.axs\\.com/[a-z]{2}/events/(\\d+)/(${s}-${tail}))</loc>\\s*(?:<lastmod>([^<]+)</lastmod>)?`, "g");
+  for (const m of xml.matchAll(re)) {
+    if (AXS_NOT_ARTIST.test(m[3]!)) continue;
+    out.push({ url: m[1]!, id: Number(m[2]), lastmod: m[4] ?? null });
+  }
+  return out;
 }

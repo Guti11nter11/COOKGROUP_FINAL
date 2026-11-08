@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { gira } from "./gira-client";
-import { listingsFor, TICKETERS } from "./ticketers-lib";
+import { axsEventsFor, listingsFor, TICKETERS } from "./ticketers-lib";
 
 /**
  * Ticketeras sin API (Entradas.com/Eventim, El Corte Inglés, See Tickets, AXS): dos veces al día, por
@@ -13,7 +13,7 @@ if (!ACCOUNT || !TOKEN) throw new Error("Faltan CLOUDFLARE_ACCOUNT_ID / CLOUDFLA
 const STATE = ".ticketers-state/state.json";
 const PER_RUN = Number(process.env.ARTISTS_PER_RUN ?? 8); // 8 artistas × 2 ticketeras × 2 pasadas ≈ 8 min de navegador al día
 
-type State = { cursor: number; seen: Record<string, string[]> };
+type State = { cursor: number; seen: Record<string, string[]>; axs?: Record<string, number[]>; axsDay?: string };
 const state: State = existsSync(STATE) ? JSON.parse(readFileSync(STATE, "utf8")) : { cursor: 0, seen: {} };
 const top = (JSON.parse(readFileSync("data/artists.resolved.json", "utf8")) as { name: string; tier: number }[]).filter((a) => a.tier >= 3).map((a) => a.name);
 const batch = Array.from({ length: Math.min(PER_RUN, top.length) }, (_, i) => top[(state.cursor + i) % top.length]!);
@@ -51,6 +51,36 @@ for (const artist of batch) {
     }
   }
 }
+// AXS por sus sitemaps públicos (robots.txt los anuncia): una vez al día, sin navegador, artistas ⭐⭐ y ⭐⭐⭐.
+const day = new Date().toISOString().slice(0, 10);
+if (state.axsDay !== day) {
+  state.axs ??= {};
+  const followed = (JSON.parse(readFileSync("data/artists.resolved.json", "utf8")) as { name: string; tier: number }[]).filter((a) => a.tier >= 2).map((a) => a.name);
+  const index = await fetch("https://www.static.discovery-prod.axs.com/uploads/sitemaps/sitemap_index.xml", { headers: { "User-Agent": "GIRA/0.1 (+https://github.com/Guti11nter11/COOKGROUP_FINAL)" } })
+    .then((r) => (r.ok ? r.text() : ""))
+    .catch(() => "");
+  const maps = [...index.matchAll(/<loc>([^<]*sitemap_event_(uk|de|fr|se)(_\d+)?\.xml)<\/loc>/g)].map((m) => m[1]!);
+  const found = new Map<string, { url: string; id: number }[]>();
+  for (const map of maps) {
+    const xml = await fetch(map, { headers: { "User-Agent": "GIRA/0.1 (+https://github.com/Guti11nter11/COOKGROUP_FINAL)" } }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
+    for (const artist of followed) for (const e of axsEventsFor(xml, artist)) found.set(artist, [...(found.get(artist) ?? []), e]);
+    await new Promise((r) => setTimeout(r, 2000)); // Crawl-delay: 2
+  }
+  let nuevas = 0;
+  for (const [artist, events] of found) {
+    const before = state.axs[artist];
+    const fresh = before ? events.filter((e) => !before.includes(e.id)) : [];
+    state.axs[artist] = [...new Set([...(before ?? []), ...events.map((e) => e.id)])].slice(-300);
+    for (const f of fresh.slice(0, 5)) {
+      nuevas++;
+      const name = decodeURIComponent(f.url.split("/").pop()!).replace(/-tickets$/, "").replace(/-/g, " ");
+      news.push({ artistName: artist, title: name, url: f.url, source: "AXS", category: "on_sale", summary: `Nueva ficha en AXS: ${name}` });
+    }
+  }
+  state.axsDay = day;
+  console.log(`AXS: ${maps.length} sitemaps · ${[...found.values()].flat().length} fichas de artistas seguidos · ${nuevas} nuevas`);
+}
+
 if (news.length) console.log(JSON.stringify(await gira("/enrich/news", { items: news })));
 mkdirSync(".ticketers-state", { recursive: true });
 writeFileSync(STATE, JSON.stringify(state));
