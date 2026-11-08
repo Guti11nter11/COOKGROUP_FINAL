@@ -5,6 +5,9 @@ export class RateLimited extends Error {}
 /** Centro de Europa (48N 8E, geohash) y radio que cubre de Islandia y Canarias a Turquía. */
 export const EUROPE_GEOPOINT = "u0t9n4";
 export const EUROPE_RADIUS_KM = 3500;
+/** Centro de EE. UU. (Kansas) y radio que cubre EE. UU. continental, el sur de Canadá y México. */
+export const AMERICA_GEOPOINT = "9yd";
+export const AMERICA_RADIUS_KM = 3000;
 export const PAGE_SIZE = 50;
 
 /** Una página de eventos de Ticketmaster para un lote de artistas (attractionId separados por comas). */
@@ -12,6 +15,7 @@ export async function fetchTmPage(
   ids: string[],
   page: number,
   env: Pick<Env, "TICKETMASTER_API_KEY">,
+  region: "eu" | "am" = "eu",
 ): Promise<{ events: unknown[]; totalPages: number; rateLimitAvailable: number | null }> {
   const q = new URLSearchParams({
     attractionId: ids.join(","),
@@ -19,8 +23,8 @@ export async function fetchTmPage(
     size: String(PAGE_SIZE),
     page: String(page),
     sort: "date,asc",
-    geoPoint: EUROPE_GEOPOINT,
-    radius: String(EUROPE_RADIUS_KM),
+    geoPoint: region === "am" ? AMERICA_GEOPOINT : EUROPE_GEOPOINT,
+    radius: String(region === "am" ? AMERICA_RADIUS_KM : EUROPE_RADIUS_KM),
     unit: "km",
     apikey: env.TICKETMASTER_API_KEY,
   });

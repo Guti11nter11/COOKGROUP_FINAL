@@ -81,6 +81,14 @@ describe("POST /ingest (Discovery Feed)", () => {
     expect((await publishSheets(env, new Date())).notices).toBe(0);
   });
 
+  it("primera lectura de un país nuevo (baseline): guarda sin avisar aunque la entidad ya esté arrancada", async () => {
+    const t = await token();
+    await ingest({ shows: [], markBootstrapped: ["K8vZ917COCV", "K8vZ9178NNV"] }, t);
+    const r = await ingest({ shows: [future(jake, { eventId: "J9", eventStartLocalDate: "2027-09-09" })], baseline: true }, t);
+    expect(((await r.json()) as { alerts: number }).alerts).toBe(0);
+    expect(await count("SELECT COUNT(*) n FROM show WHERE source_id = 'J9'")).toBe(1);
+  });
+
   it("el deporte va a su canal (NFL → #nfl)", async () => {
     const t = await token();
     await ingest({ shows: [], markBootstrapped: ["K8vZ9178NNV"] }, t);

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { localDateIn, MADRID, normalizeFeedEvent, type Show } from "@gira/core";
 import { BIG_VENUE, STADIUM, chunkByArtist, diffFeed, discoverHot, pickFollowed } from "./feed-radar-lib";
-import { FEED_COUNTRIES, iterateFeed } from "./tm-feed";
+import { ALREADY_READ, FEED_COUNTRIES, iterateFeed, rotatingTurn } from "./tm-feed";
 
 const KEY = process.env.TICKETMASTER_API_KEY;
 const GIRA = process.env.GIRA_URL ?? "https://gira-core.eleven-snk-11.workers.dev";
@@ -25,14 +25,17 @@ const nowMs = Date.now();
 
 const all: Show[] = [];
 const failed: string[] = [];
-// Países con catálogo pequeño o con límite de descargas: uno por pasada, por turnos y sin reintentos.
-const ROTATING = ["AR", "CL", "CO", "PE", "UY"];
-const extra = ROTATING[Math.floor(Date.now() / 3600_000) % ROTATING.length]!;
-for (const cc of [...FEED_COUNTRIES, extra]) {
+// Países por turnos (4 por pasada, sin reintentos: si Ticketmaster limita, se leen en otra pasada).
+const turn = rotatingTurn(Date.now());
+// Países ya leídos alguna vez: la primera lectura de uno nuevo (p. ej. EE. UU.) es solo línea base.
+const SEEN_FILE = ".feed-state/countries.json";
+const seenCountries = new Set<string>(existsSync(SEEN_FILE) ? (JSON.parse(readFileSync(SEEN_FILE, "utf8")) as string[]) : ALREADY_READ);
+const readOk: string[] = [];
+for (const cc of [...FEED_COUNTRIES, ...turn]) {
   let total = 0;
   const mine: Show[] = [];
   try {
-    for await (const raw of iterateFeed(cc, KEY, cc === extra ? 1 : 3)) {
+    for await (const raw of iterateFeed(cc, KEY, turn.includes(cc) ? 1 : 3)) {
       total++;
       const s = normalizeFeedEvent(raw);
       if (s && s.localDate >= today) {
@@ -53,7 +56,8 @@ for (const cc of [...FEED_COUNTRIES, extra]) {
     continue;
   }
   all.push(...mine);
-  console.log(`${cc}: ${total} eventos · ${mine.length} de entidades seguidas`);
+  readOk.push(cc);
+  console.log(`${cc}: ${total} eventos · ${mine.length} de entidades seguidas${seenCountries.has(cc) ? "" : " (primera lectura: línea base, sin avisos)"}`);
   await new Promise((r) => setTimeout(r, 3000)); // no encadenar descargas (evita 429)
 }
 
@@ -88,16 +92,19 @@ async function post(body: unknown): Promise<{ stored: number; alerts: number }> 
 }
 
 let alerts = 0;
-for (const chunk of chunkByArtist(changed, 40)) alerts += (await post({ shows: chunk })).alerts;
+const isNew = (s: Show) => !seenCountries.has(s.venue.country);
+for (const chunk of chunkByArtist(changed.filter((s) => !isNew(s)), 40)) alerts += (await post({ shows: chunk })).alerts;
+for (const chunk of chunkByArtist(changed.filter(isNew), 40)) await post({ shows: chunk, baseline: true });
 // Solo con una lectura completa (todos los países) las entidades quedan "arrancadas" (también las
 // que no tienen fechas, para que su primera gira futura sí avise).
-// Latinoamérica es nueva: si algún país suyo falla, no bloquea el arranque (Europa sí).
-const LATAM = new Set(["MX", "BR", ...ROTATING]);
-if (failed.filter((cc) => !LATAM.has(cc)).length === 0) {
+// Solo bloquea el arranque un fallo de los países de cada pasada (los de por turnos se reintentan solos).
+if (failed.filter((cc) => FEED_COUNTRIES.includes(cc)).length === 0) {
   const ids = [...followed];
   for (let i = 0; i < ids.length; i += 500) await post({ shows: [], markBootstrapped: ids.slice(i, i + 500) });
 } else {
   console.log(`Arranque pendiente: fallaron ${failed.join(", ")}`);
 }
-writeFileSync(STATE, JSON.stringify(state));
+// Los países por turnos no se leen en cada pasada: se conserva su última huella para no reenviarlos.
+writeFileSync(STATE, JSON.stringify({ ...prev, ...state }));
+writeFileSync(SEEN_FILE, JSON.stringify([...new Set([...seenCountries, ...readOk])]));
 console.log(`Avisos nuevos: ${alerts}`);

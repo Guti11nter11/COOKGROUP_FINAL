@@ -50,6 +50,7 @@ const NOTICE = /\/channels\/C_(NUEVAS|EXTRA|PRE)\/messages$/;
 const notices = () => posts.filter((p) => NOTICE.test(p.path));
 let discordPostStatus = 200;
 let tmPaths: string[] = [];
+let amEvents: unknown[] = [];
 
 async function seedArtists() {
   await env.DB.batch([
@@ -61,7 +62,7 @@ async function seedArtists() {
 function mockTicketmaster(body: unknown, status = 200, times = 1) {
   fetchMock
     .get("https://app.ticketmaster.com")
-    .intercept({ path: (p) => (p.startsWith("/discovery/v2/events.json") ? (tmPaths.push(p), true) : false) })
+    .intercept({ path: (p) => (p.startsWith("/discovery/v2/events.json") && !p.includes("geoPoint=9yd") ? (tmPaths.push(p), true) : false) })
     .reply(status, JSON.stringify(body), { headers: { "content-type": "application/json" } })
     .times(times);
 }
@@ -116,17 +117,24 @@ beforeAll(() => {
   fetchMock.activate();
   fetchMock.disableNetConnect();
   mockDiscordOnce();
+  // Zona América (EE. UU./Canadá/México): por defecto sin fechas en estos tests.
+  fetchMock
+    .get("https://app.ticketmaster.com")
+    .intercept({ path: (p) => p.startsWith("/discovery/v2/events.json") && p.includes("geoPoint=9yd") })
+    .reply(() => ({ statusCode: 200, data: JSON.stringify(page(amEvents)), responseOptions: { headers: { "content-type": "application/json" } } }))
+    .persist();
 });
 beforeEach(async () => {
   posts = [];
   tmPaths = [];
+  amEvents = [];
   createdChannels = [];
   discordPostStatus = 200;
   await seedArtists();
 });
 afterEach(() => {
   // Todas las respuestas simuladas de Ticketmaster deben haberse consumido.
-  expect(fetchMock.pendingInterceptors().filter((i) => i.origin.includes("ticketmaster"))).toEqual([]);
+  expect(fetchMock.pendingInterceptors().filter((i) => i.origin.includes("ticketmaster") && !i.persist)).toEqual([]);
 });
 
 describe("ciclo de Ticketmaster → D1 → Discord", () => {
@@ -196,11 +204,21 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     expect(await count("SELECT COUNT(*) n FROM alert")).toBe(0);
   });
 
-  it("4. ignora eventos fuera de los países de la Fase 1", async () => {
-    mockTicketmaster(page([...BASE_EVENTS, tmEvent("E6", "K1", "V7", "US", "2027-08-01")]));
+  it("4. ignora eventos fuera de los países cubiertos (Europa, Latinoamérica, EE. UU./Canadá)", async () => {
+    mockTicketmaster(page([...BASE_EVENTS, tmEvent("E6", "K1", "V7", "JP", "2027-08-01"), tmEvent("E6b", "K1", "V7b", "US", "2027-08-02")]));
     mockDiscord();
     await cycleAndDrain();
-    expect(await count("SELECT COUNT(*) n FROM show WHERE country = 'US'")).toBe(0);
+    expect(await count("SELECT COUNT(*) n FROM show WHERE country = 'JP'")).toBe(0);
+    expect(await count("SELECT COUNT(*) n FROM show WHERE country = 'US'")).toBe(1);
+  });
+
+  it("4c. de EE. UU. no entra deporte (NFL/NBA de liga); sí los partidos internacionales", async () => {
+    const sport = (id: string, cc: string) => ({ ...tmEvent(id, "K1", `VS${id}`, cc, "2027-10-10"), classifications: [{ segment: { name: "Sports" }, genre: { name: "Football" }, subGenre: { name: "NFL" } }] });
+    mockTicketmaster(page([...BASE_EVENTS, sport("S1", "US"), sport("S2", "GB")]));
+    mockDiscord();
+    await cycleAndDrain();
+    expect(await count("SELECT COUNT(*) n FROM show WHERE source_id = 'S1'")).toBe(0);
+    expect(await count("SELECT COUNT(*) n FROM show WHERE source_id = 'S2'")).toBe(1);
   });
 
   it("4b. nunca guarda ni publica conciertos pasados", async () => {
@@ -246,7 +264,30 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     mockTicketmaster(page(BASE_EVENTS, 3, 0));
     const sent: SweepJob[] = [];
     await processPage(env, { ids: ["K1", "K2"], page: 0 }, NOW, async (j) => void sent.push(j));
-    expect(sent).toEqual([{ ids: ["K1", "K2"], page: 1 }]);
+    expect(sent).toEqual([{ ids: ["K1", "K2"], page: 1, region: "eu" }]);
+  });
+
+  it("8b. al acabar Europa se encola la zona América; el arranque se marca al acabar América", async () => {
+    mockTicketmaster(page(BASE_EVENTS));
+    const sent: SweepJob[] = [];
+    await processPage(env, { ids: ["K1", "K2"], page: 0 }, NOW, async (j) => void sent.push(j));
+    expect(sent).toEqual([{ ids: ["K1", "K2"], page: 0, region: "am" }]);
+    expect(await count("SELECT COUNT(*) n FROM follow WHERE bootstrapped_at IS NOT NULL")).toBe(0);
+    await processPage(env, sent[0]!, NOW, async () => undefined);
+    expect(await count("SELECT COUNT(*) n FROM follow WHERE bootstrapped_at IS NOT NULL")).toBe(2);
+  });
+
+  it("8c. la primera media hora de la zona América es línea base: lo ya a la venta no avisa; lo nuevo después sí", async () => {
+    const us = (id: string) => tmEvent(id, "K1", `VU${id}`, "US", "2027-09-01");
+    // Primera lectura de América (con una fecha de EE. UU. ya a la venta): sin avisos.
+    amEvents = [us("U1")];
+    const r1 = await processPage(env, { ids: ["K1"], page: 0, region: "am" }, NOW, async () => undefined);
+    expect(r1.alerts).toBe(0);
+    expect(await count("SELECT COUNT(*) n FROM show WHERE source_id = 'U1'")).toBe(1);
+    // Una hora después, una fecha nueva en EE. UU.: sí avisa.
+    amEvents = [us("U1"), us("U2")];
+    const r2 = await processPage(env, { ids: ["K1"], page: 0, region: "am" }, LATER, async () => undefined);
+    expect(r2.alerts).toBeGreaterThan(0);
   });
 
   it("9. un 429 en una página intermedia no marca el arranque: el ciclo siguiente no da avisos falsos", async () => {

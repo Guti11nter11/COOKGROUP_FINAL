@@ -8,13 +8,19 @@ import Pick from "stream-json/filters/Pick.js";
 import StreamArray from "stream-json/streamers/StreamArray.js";
 
 /**
- * Países con Discovery Feed en cada pasada: Europa (Portugal no lo tiene), México y Brasil. El resto de
- * Latinoamérica va por turnos (feed-radar.ts). Un país sin feed (404/400) se salta sin error.
+ * Países del Discovery Feed en cada pasada (los de más giras). Ticketmaster limita las descargas
+ * (~20 por hora), así que el resto va por turnos (ROTATING_COUNTRIES, 4 por pasada). Un país sin
+ * feed (404/400) se salta sin error.
  */
-export const FEED_COUNTRIES = [
-  "GB", "IE", "ES", "FR", "DE", "IT", "NL", "BE", "AT", "CH", "DK", "SE", "NO", "FI", "PL", "CZ", "TR",
-  "MX", "BR",
-];
+export const FEED_COUNTRIES = ["GB", "IE", "ES", "FR", "DE", "IT", "NL", "BE", "US", "MX"];
+export const ROTATING_COUNTRIES = ["AT", "CH", "DK", "SE", "NO", "FI", "PL", "CZ", "TR", "BR", "CA", "AR", "CL", "CO", "PE", "UY"];
+/** Países que ya se leían antes de guardar esta lista (su próxima lectura no es línea base). */
+export const ALREADY_READ = ["GB", "IE", "ES", "FR", "DE", "IT", "NL", "BE", "AT", "CH", "DK", "SE", "NO", "FI", "PL", "CZ", "TR", "MX", "BR", "AR"];
+/** Los países por turnos de esta pasada (4, rotando cada hora). */
+export function rotatingTurn(now: number, per = 4): string[] {
+  const start = (Math.floor(now / 3600_000) * per) % ROTATING_COUNTRIES.length;
+  return Array.from({ length: per }, (_, i) => ROTATING_COUNTRIES[(start + i) % ROTATING_COUNTRIES.length]!);
+}
 
 /**
  * Recorre el Discovery Feed de un país evento a evento. Primero descarga el fichero completo a

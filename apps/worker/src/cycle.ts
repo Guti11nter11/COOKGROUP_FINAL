@@ -26,15 +26,17 @@ import { fetchTmPage, RateLimited } from "./tm-client";
 
 export type Send = (job: SweepJob) => Promise<void>;
 
-/** Países cubiertos: Europa incluido Reino Unido (fase 1) y Latinoamérica (pedido del propietario, 2026-11-08). */
+/** Países cubiertos: Europa incluido Reino Unido, Latinoamérica y EE. UU./Canadá (pedidos del propietario, 2026-11-08). */
 export const COVERED_COUNTRIES = new Set(
   [
     "GB IE ES PT FR DE IT NL BE LU AT CH DK SE NO FI PL CZ HU GR HR RO SK SI BG EE LV LT IS MT CY RS TR",
     "MX BR AR CL CO PE UY PY BO EC VE CR PA GT HN SV NI DO PR",
+    "US CA",
   ]
     .join(" ")
     .split(" "),
 );
+const DOMESTIC_SPORTS = new Set(["US", "CA"]);
 /** Ticketmaster no pagina más allá de 1.000 resultados (size 50 → 20 páginas). */
 const MAX_PAGES = 20;
 /** Fechas vistas hace menos de esto forman parte del mismo anuncio (no cuentan como "ya conocidas"). */
@@ -49,6 +51,18 @@ export async function runCycle(env: Env, now: Date, send: Send): Promise<{ jobs:
   return { jobs: batches.length };
 }
 
+/**
+ * La zona América se activó el 2026-11-08: su primera media hora de barridos solo guarda lo que ya
+ * estaba a la venta (línea base); a partir de ahí avisa de lo nuevo, como Europa.
+ */
+async function americaBaseline(env: Env, now: Date): Promise<boolean> {
+  const row = await env.DB.prepare("SELECT value FROM setting WHERE key = 'america_baseline_until'").first<{ value: string }>();
+  if (row) return now.toISOString() < row.value;
+  const until = new Date(now.getTime() + 30 * 60_000).toISOString();
+  await env.DB.prepare("INSERT OR IGNORE INTO setting (key, value) VALUES ('america_baseline_until', ?)").bind(until).run();
+  return true;
+}
+
 /** Cola: procesa una página de Ticketmaster (cabe en los 10 ms de CPU del plan gratuito). */
 export async function processPage(
   env: Env,
@@ -61,7 +75,7 @@ export async function processPage(
 
   let fetched;
   try {
-    fetched = await fetchTmPage(job.ids, job.page, env);
+    fetched = await fetchTmPage(job.ids, job.page, env, job.region ?? "eu");
   } catch (e) {
     await bumpQuota(env.DB, "ticketmaster", today, 1).run();
     if (e instanceof RateLimited) return { calls: 1, shows: 0, alerts: 0, stoppedBy: "rate_limit" };
@@ -74,11 +88,16 @@ export async function processPage(
 
   const follows = await getFollowsByAttraction(env.DB, job.ids);
   const shows = fetched.events.map(normalizeTmEvent).filter((x): x is Show => x !== null);
-  const { stmts, stored, alerts: alertCount } = await storeShows(env, shows, follows, now, "api");
+  const baselineOnly = (job.region ?? "eu") === "am" && (await americaBaseline(env, now));
+  const { stmts, stored, alerts: alertCount } = await storeShows(env, shows, follows, now, "api", baselineOnly);
   stmts.unshift(bumpQuota(env.DB, "ticketmaster", today, 1));
   const nowIso = now.toISOString();
 
-  if (job.page === lastPage || lastPage < 0) {
+  // El arranque se marca al terminar la última zona (América): así la primera lectura de cada zona
+  // es solo línea base (sin avisos de lo que ya estaba a la venta).
+  const region = job.region ?? "eu";
+  const regionDone = job.page === lastPage || lastPage < 0;
+  if (regionDone && region === "am") {
     const ids = [...follows.values()].map((f) => f.artistId);
     if (ids.length) {
       stmts.push(
@@ -89,7 +108,8 @@ export async function processPage(
     }
   }
   await env.DB.batch(stmts);
-  if (job.page < lastPage) await send({ ids: job.ids, page: job.page + 1 });
+  if (job.page < lastPage) await send({ ids: job.ids, page: job.page + 1, region });
+  else if (region === "eu") await send({ ids: job.ids, page: 0, region: "am" });
   return { calls: 1, shows: stored, alerts: alertCount };
 }
 
@@ -103,12 +123,16 @@ export async function storeShows(
   follows: Map<string, FollowRow>,
   now: Date,
   source: "api" | "feed",
+  /** Primera lectura de una zona o país nuevo: se guarda como línea base, sin avisos. */
+  baselineOnly = false,
 ): Promise<{ stmts: D1PreparedStatement[]; stored: number; alerts: number }> {
   const nowIso = now.toISOString();
   const todayMadrid = localDateIn(now, MADRID);
   const shows: { show: Show; follow: FollowRow }[] = [];
   for (const show of all) {
     if (!COVERED_COUNTRIES.has(show.venue.country) || show.localDate < todayMadrid) continue;
+    // De EE. UU. y Canadá solo música: de NFL, NBA y demás interesan los partidos internacionales.
+    if (DOMESTIC_SPORTS.has(show.venue.country) && show.segment === "Sports") continue;
     const followId = show.attractionIds.find((id) => follows.has(id));
     if (followId) shows.push({ show, follow: follows.get(followId)! });
   }
@@ -139,7 +163,7 @@ export async function storeShows(
         .map((r) => r.show_key),
     ).size;
     const alerts: Alert[] =
-      sameDateListed || baseline
+      sameDateListed || baseline || baselineOnly
         ? []
         : detectAlerts(prev, show, { bootstrap: !(source === "feed" ? follow.feedBootstrapped : follow.bootstrapped), knownDatesInCountry, artistName: follow.name, tier: follow.tier, now });
 
@@ -183,13 +207,13 @@ export async function storeShows(
 /** Ingesta desde el Discovery Feed (GitHub Actions): fechas normalizadas y marcas de arranque. */
 export async function ingestShows(
   env: Env,
-  body: { shows?: Show[]; markBootstrapped?: string[] },
+  body: { shows?: Show[]; markBootstrapped?: string[]; baseline?: boolean },
   now: Date,
 ): Promise<{ stored: number; alerts: number }> {
   const shows = (body.shows ?? []).slice(0, 80);
   const ids = [...new Set(shows.flatMap((s) => s.attractionIds ?? []))];
   const follows = await getFollowsByAttraction(env.DB, ids);
-  const { stmts, stored, alerts } = await storeShows(env, shows, follows, now, "feed");
+  const { stmts, stored, alerts } = await storeShows(env, shows, follows, now, "feed", body.baseline === true);
   const mark = [...new Set(body.markBootstrapped ?? [])];
   for (let i = 0; i < mark.length; i += 90) {
     const part = mark.slice(i, i + 90);

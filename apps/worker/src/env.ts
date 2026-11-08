@@ -1,6 +1,8 @@
 export interface SweepJob {
   ids: string[];
   page: number;
+  /** Zona del barrido: Europa (por defecto) y después América (EE. UU., Canadá y México). */
+  region?: "eu" | "am";
 }
 
 export interface Env {
