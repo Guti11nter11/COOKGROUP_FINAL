@@ -346,9 +346,8 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
 
   const blocks = ordered.map(({ w, shows: ss }) => {
     const when = w.startsAt ? `🕙 ${ts(w.startsAt)}` : "📅 Fecha y hora por confirmar";
-    // Fin de la ventana (si la ticketera lo da y no es la venta general, que no "termina").
-    const until = w.endsAt && w.kind !== "general" && w.startsAt && Date.parse(w.endsAt) > Date.parse(w.startsAt) ? [`⏳ Hasta ${ts(w.endsAt, "f")}`] : [];
-    return [`## 🎟️ ${w.label}`, when, ...until, ...ss.map(dateLine)].join("\n");
+    // Solo el momento de salida (decisión del propietario: nunca "hasta").
+    return [`## 🎟️ ${w.label}`, when, ...ss.map(dateLine)].join("\n");
   });
   return sections(head, renderPrices(live, extras.prices ?? {}), signup, [...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
 }

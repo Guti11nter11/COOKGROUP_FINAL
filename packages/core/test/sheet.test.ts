@@ -169,10 +169,12 @@ describe("dónde registrarse en cada preventa (mensaje de sign up)", () => {
     expect(line("Artist Presale")).toBe("**Artist Presale** → Registro **[AQUÍ](https://www.bandsintown.com/t/1?release_id=abc)**"));
   it("Mastercard → cómo entrar y web del programa", () => expect(line("Mastercard Presale")).toContain("Pagar con una Mastercard"));
   it("MOJO → newsletter de MOJO", () => expect(line("MOJO Presale")).toContain("**[AQUÍ](https://www.mojo4music.com/)**"));
-  it("dice hasta cuándo dura la preventa (marca de Discord)", () => {
+  it("solo el momento de salida, nunca hasta cuándo dura", () => {
     const s2 = show("e", "GB", "London", "2027-07-16", [["artist", "Artist Presale", "2026-11-10T09:00:00Z"]]);
     s2.sales[0]!.endsAt = "2026-11-11T21:00:00Z";
-    expect(renderArtistSheet({ name: "U2" }, [s2], NOW).join("\n")).toContain(`⏳ Hasta <t:${Date.parse("2026-11-11T21:00:00Z") / 1000}:f>`);
+    const all = renderArtistSheet({ name: "U2" }, [s2], NOW).join("\n");
+    expect(all).toContain(`🕙 <t:${Date.parse("2026-11-10T09:00:00Z") / 1000}:F>`);
+    expect(all).not.toContain("Hasta");
   });
   it("sin enlace localizado → lo dice y apunta a la web oficial", () => {
     const none = renderArtistSheet({ name: "Jamiroquai" }, list, NOW, { homepage: "https://www.jamiroquai.com/" }).join("\n");
