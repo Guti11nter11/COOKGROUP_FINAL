@@ -1,5 +1,5 @@
 import { ingestShows, processPage, runCycle } from "./cycle";
-import { publishSheets, refreshActiveSheets, renderSheetFor } from "./sheets";
+import { publishSheets, refreshActiveSheets } from "./sheets";
 import type { EnrichInput } from "@gira/core";
 import { announceSignups, applyEnrichment, discover, enrichTodo, followIds } from "./enrich";
 import { ingestNews, type NewsInput } from "./news";
@@ -64,10 +64,10 @@ export default {
       if (url.pathname === "/enrich/todo" && req.method === "GET") return Response.json(await enrichTodo(env, now));
       if (url.pathname === "/enrich/preview") {
         // Texto de las fichas activas (solo datos públicos: fechas, precios, enlaces oficiales) para revisarlas.
-        const { results } = await env.DB.prepare("SELECT artist_id FROM sheet WHERE status = 'active' LIMIT 10").all<{ artist_id: string }>();
-        const out = [];
-        for (const r of results) out.push(await renderSheetFor(env, r.artist_id, now));
-        return Response.json(out.filter(Boolean));
+        const { results } = await env.DB.prepare(
+          "SELECT a.name, h.rendered_json FROM sheet h JOIN artist a ON a.id = h.artist_id WHERE h.status = 'active' AND h.rendered_json IS NOT NULL LIMIT 20",
+        ).all<{ name: string; rendered_json: string }>();
+        return Response.json(results.map((r) => ({ name: r.name, messages: JSON.parse(r.rendered_json) as string[] })));
       }
       if (url.pathname === "/enrich/follows") return Response.json({ ids: await followIds(env) });
       if (url.pathname === "/enrich/discover" && req.method === "POST") return Response.json(await discover(env, (await req.json()) as never, now));
