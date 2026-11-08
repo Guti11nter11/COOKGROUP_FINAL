@@ -148,6 +148,11 @@ describe("dónde registrarse en cada preventa", () => {
   it("preventa del artista → enlace de registro de su web oficial para esa fecha", () =>
     expect(block("Artist Presale")).toContain("📝 **Registro:** [Bandsintown · Amsterdam 5 jul](https://www.bandsintown.com/t/1?release_id=abc)"));
   it("Mastercard → cómo entrar y web del programa", () => expect(block("Mastercard Presale")).toContain("📝 Pagar con una Mastercard"));
+  it("dice hasta cuándo dura la preventa", () => {
+    const s2 = show("e", "GB", "London", "2027-07-16", [["artist", "Artist Presale", "2026-11-10T09:00:00Z"]]);
+    s2.sales[0]!.endsAt = "2026-11-11T21:00:00Z";
+    expect(renderArtistSheet({ name: "U2" }, [s2], NOW).join("\n")).toContain("⏳ Hasta mié 11 nov, 22:00 (Madrid)");
+  });
   it("MOJO → newsletter de MOJO", () => expect(block("MOJO Presale")).toContain("[web oficial](https://www.mojo4music.com/)"));
   it("sin enlace localizado → lo dice y apunta a la web oficial", () => {
     const none = renderArtistSheet({ name: "Jamiroquai" }, list, NOW, { homepage: "https://www.jamiroquai.com/" }).join("\n");

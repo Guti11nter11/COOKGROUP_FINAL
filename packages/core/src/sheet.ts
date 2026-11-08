@@ -325,7 +325,12 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
     const when = w.startsAt
       ? `🇪🇸 **${clean(saleDayFmt.format(new Date(w.startsAt)))}, ${formatHHmm(w.startsAt, MADRID)}** Madrid · 🇬🇧 ${formatHHmm(w.startsAt, LONDON)} Londres · <t:${Date.parse(w.startsAt) / 1000}:F>`
       : "Hora por confirmar";
-    return [`## 🎟️ ${w.label}`, when, `*${REQUIREMENT[w.kind]}*`, ...howToJoin(w, ss, extras), ...ss.map(dateLine)].join("\n");
+    // Fin de la ventana (si la ticketera lo da y no es la venta general, que no "termina").
+    const until =
+      w.endsAt && w.kind !== "general" && w.startsAt && Date.parse(w.endsAt) > Date.parse(w.startsAt)
+        ? [`⏳ Hasta ${clean(saleDayFmt.format(new Date(w.endsAt)))}, ${formatHHmm(w.endsAt, MADRID)} (Madrid)`]
+        : [];
+    return [`## 🎟️ ${w.label}`, when, ...until, `*${REQUIREMENT[w.kind]}*`, ...howToJoin(w, ss, extras), ...ss.map(dateLine)].join("\n");
   });
   return pack([head, ...(zoneBlock ? [zoneBlock] : []), ...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
 }
