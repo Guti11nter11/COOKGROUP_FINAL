@@ -1,7 +1,8 @@
 name: Webs de entradas de deporte
 
 # Dos veces al día (lo lanza el Worker): webs oficiales de entradas de clubes y torneos
-# (data/sports-pages.json). Solo lee las páginas de entradas, respeta robots.txt y bloqueos.
+# (data/sports-pages.json), que solo se leen respetando robots.txt y bloqueos, y la agenda de
+# entradas de cada canal de deporte (partidos, carreras, torneos y lo que vende Ticketmaster).
 
 on:
   workflow_dispatch:
@@ -41,6 +42,12 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: npx tsx apps/jobs/src/sports.ts
+      - name: Agenda de entradas (fútbol, F1, tenis, NFL, otros)
+        if: always()
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+          FOOTBALL_DATA_API_KEY: ${{ secrets.FOOTBALL_DATA_API_KEY }}
+        run: npx tsx apps/jobs/src/sports-agenda.ts
       - name: Guardar lecturas
         if: always()
         uses: actions/cache/save@v4

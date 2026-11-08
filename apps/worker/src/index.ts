@@ -7,6 +7,7 @@ import { handleAuth } from "./auth";
 import { handleApi } from "./app-api";
 import { handleInteraction, verifyDiscord } from "./interactions";
 import { dispatchJobs } from "./dispatch";
+import { postAgenda } from "./agenda";
 import { isSweepTick } from "@gira/core";
 import { announceCalendar, calendarIcs, icsToken, runCalendar, updateStatusPanel } from "./calendar";
 import type { Env, SweepJob } from "./env";
@@ -79,6 +80,7 @@ export default {
       }
       // Fuerza una pasada de publicación y devuelve el resultado (con errores de Discord, si los hay).
       if (url.pathname === "/enrich/publish" && req.method === "POST") return Response.json(await publishSheets(env, now));
+      if (url.pathname === "/enrich/agenda" && req.method === "POST") return Response.json(await postAgenda(env, (await req.json()) as never, now));
       if (url.pathname === "/enrich/follows") return Response.json({ ids: await followIds(env) });
       if (url.pathname === "/enrich/discover" && req.method === "POST") return Response.json(await discover(env, (await req.json()) as never, now));
       if (url.pathname === "/enrich/price-image" && req.method === "POST") {
