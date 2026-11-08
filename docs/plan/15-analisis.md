@@ -38,16 +38,22 @@ cuándo, dónde registrarse y cómo entrar, con coste mínimo (≤ 1 $/día).
 - Mercado de reventa de otro país (U2 en São Paulo): ahora se marca "otro país, para comparar".
 - Revisado: The Game tiene canal porque está en la lista semilla (⭐) y vende el lunes 9.
 
-## Gasto real de hoy
+## Gasto real de hoy y cierre (17:45)
 
-Apify, a las 13:30: **0,08 $** (dos pasadas de redes con 29 cuentas incluidas). Ayer 1,43 $ por las
-pruebas del primer día. Todo lo demás, 0 €.
+Apify en todo el día: **0,08 $** (ayer 1,43 $ por las pruebas del primer día; mes 1,51 $). Todo lo
+demás, 0 €. Ticketmaster: 790 llamadas de 5.000.
+
+Pasadas de la tarde, todas lanzadas por el Worker y correctas: catálogo 16:31 y noticias 17:21
+(4 titulares nuevos, ninguno accionable). El barrido sale "fuera de franja" donde toca. El endpoint
+de Discord rechaza peticiones sin firma (401), como debe; `/proximas` falta probarlo desde Discord.
 
 ## Lo que falta o conviene vigilar
 
 | Tema | Prioridad | Qué haría |
 |---|---|---|
 | Alta de la app en el iPhone | Alta (tuya) | Enlace en #estado; sin ella no hay notificaciones push |
+| Probar `/proximas` en Discord | Alta (tuya) | Confirma que el portal de Discord quedó bien |
+| Ticketeras de las 20:00 | Media | Primera pasada con cupo de Browser Run tras agotarse anoche: revisar mañana |
 | Browser Run sin cupo hoy | Media | Las pruebas de anoche agotaron el cupo; el límite parece una ventana de 24 h. Si se repite, bajar a 3 artistas por pasada |
 | Cachés de Actions por rama | Baja | Los estados guardados en la rama de trabajo no los ve la rama principal: la primera pasada de cada trabajo en la principal vuelve a ser línea base (sin avisos falsos, solo sin novedades esa vez) |
 | Sala de espera / stock (formato Akari) | Media | No se puede leer la cola sin tocarla (prohibido). Alternativa: noticias e Instagram cuando una venta "se agota" o "abre la cola" |
