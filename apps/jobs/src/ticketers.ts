@@ -17,8 +17,9 @@ type State = { cursor: number; seen: Record<string, string[]>; axs?: Record<stri
 const state: State = existsSync(STATE) ? JSON.parse(readFileSync(STATE, "utf8")) : { cursor: 0, seen: {} };
 const top = (JSON.parse(readFileSync("data/artists.resolved.json", "utf8")) as { name: string; tier: number }[]).filter((a) => a.tier >= 3).map((a) => a.name);
 const batch = Array.from({ length: Math.min(PER_RUN, top.length) }, (_, i) => top[(state.cursor + i) % top.length]!);
-state.cursor = (state.cursor + batch.length) % Math.max(1, top.length);
+const startCursor = state.cursor;
 
+let limited = false; // 429: cupo diario de Browser Run agotado → parar y retomar en la próxima pasada
 async function render(url: string): Promise<string | null> {
   const res = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ACCOUNT}/browser-rendering/content`, {
     method: "POST",
@@ -27,6 +28,7 @@ async function render(url: string): Promise<string | null> {
     signal: AbortSignal.timeout(70_000),
   }).catch(() => null);
   if (!res?.ok) {
+    if (res?.status === 429) limited = true;
     console.log(`  ✗ ${url} → HTTP ${res?.status ?? "sin respuesta"}`);
     return null;
   }
@@ -34,8 +36,12 @@ async function render(url: string): Promise<string | null> {
 }
 
 const news: { artistName: string; title: string; url: string; source: string; category: string; summary: string }[] = [];
+let done = 0;
 for (const artist of batch) {
+  if (limited) break;
+  done++;
   for (const t of TICKETERS.filter((x) => x.enabled !== false)) {
+    if (limited) break;
     const url = t.search(artist);
     const html = await render(url);
     await new Promise((r) => setTimeout(r, 10_000)); // una página cada ~10 s
@@ -51,6 +57,10 @@ for (const artist of batch) {
     }
   }
 }
+// El turno avanza solo por los artistas leídos de verdad (si hubo 429, el último se repite).
+state.cursor = (startCursor + (limited ? Math.max(0, done - 1) : done)) % Math.max(1, top.length);
+if (limited) console.log("Browser Run: cupo del día agotado; se retoma en la próxima pasada");
+
 // AXS por sus sitemaps públicos (robots.txt los anuncia): una vez al día, sin navegador, artistas ⭐⭐ y ⭐⭐⭐.
 const day = new Date().toISOString().slice(0, 10);
 if (state.axsDay !== day) {
