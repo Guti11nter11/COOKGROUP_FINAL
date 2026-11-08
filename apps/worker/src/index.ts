@@ -77,6 +77,8 @@ export default {
         ).all<{ name: string; rendered_json: string }>();
         return Response.json(results.map((r) => ({ name: r.name, messages: JSON.parse(r.rendered_json) as string[] })));
       }
+      // Fuerza una pasada de publicación y devuelve el resultado (con errores de Discord, si los hay).
+      if (url.pathname === "/enrich/publish" && req.method === "POST") return Response.json(await publishSheets(env, now));
       if (url.pathname === "/enrich/follows") return Response.json({ ids: await followIds(env) });
       if (url.pathname === "/enrich/discover" && req.method === "POST") return Response.json(await discover(env, (await req.json()) as never, now));
       if (url.pathname === "/enrich/price-image" && req.method === "POST") {
@@ -129,10 +131,11 @@ export default {
       const c = await env.DB.prepare(
         `SELECT (SELECT COUNT(*) FROM artist) AS artists, (SELECT COUNT(*) FROM show) AS shows, (SELECT COUNT(*) FROM alert) AS alerts,
                 (SELECT COUNT(*) FROM delivery WHERE status = 'sent') AS sent, (SELECT COUNT(*) FROM delivery WHERE status = 'pending') AS pending,
-                (SELECT COALESCE(SUM(calls), 0) FROM quota_usage WHERE service = 'ticketmaster' AND day = ?) AS tmCallsToday`,
+                (SELECT COALESCE(SUM(calls), 0) FROM quota_usage WHERE service = 'ticketmaster' AND day = ?) AS tmCallsToday,
+                (SELECT value FROM setting WHERE key = 'sheets_last_error') AS sheetsLastError`,
       )
         .bind(today)
-        .first<Record<string, number>>();
+        .first<Record<string, number | string | null>>();
       ctx.waitUntil(announceCalendar(env, url.origin).catch(() => undefined));
       return Response.json(
         {

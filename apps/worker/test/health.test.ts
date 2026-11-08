@@ -18,7 +18,7 @@ it("/health devuelve estado y contadores, sin indexar", async () => {
     lastCycleAt: "2026-11-08T12:00:00Z",
     lastOk: true,
     lastResult: { jobs: 5 },
-    counts: { artists: 0, shows: 0, alerts: 0, sent: 0, pending: 0, tmCallsToday: 7 },
+    counts: { artists: 0, shows: 0, alerts: 0, sent: 0, pending: 0, tmCallsToday: 7, sheetsLastError: null },
   });
 });
 

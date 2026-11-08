@@ -172,7 +172,8 @@ function noticeText(name: string, alerts: Alert[], shows: Show[], channelId: str
  * Publica las fichas de los artistas pendientes: crea su canal si tienen ventas por llegar, edita
  * la ficha si cambió, envía un aviso agrupado y archiva el canal cuando pasa la gira.
  */
-export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, maxScan = 8): Promise<{ updated: number; notices: number }> {
+export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, maxScan = 8): Promise<{ updated: number; notices: number; errors?: string[] }> {
+  const errors: string[] = [];
   if (env.DELIVERY_PAUSED === "1") return { updated: 0, notices: 0 };
   // Reclamo atómico: dos ejecuciones simultáneas nunca trabajan el mismo artista (ni crean dos canales).
   const { results: dirty } = await env.DB.prepare(
@@ -360,14 +361,21 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
       }
     }
     } catch (e) {
-      // Discord falló (p. ej. 429): este artista y los que faltan vuelven a la cola; nada se pierde.
+      // Discord falló: este artista vuelve a la cola (nada se pierde). Con 429 se para la pasada; con
+      // otro error se sigue con los demás para que uno roto no bloquee al resto.
       await env.DB.prepare("UPDATE delivery SET status = 'pending' WHERE artist_id = ? AND status = 'sending'").bind(artist_id).run();
-      await requeue(dirty.slice(i));
-      console.log(`publishSheets: ${String(e)}`);
-      break;
+      const msg = `${new Date().toISOString().slice(11, 16)} ${artist_id}: ${String(e).slice(0, 160)}`;
+      errors.push(msg);
+      await env.DB.prepare("INSERT INTO setting (key, value) VALUES ('sheets_last_error', ?) ON CONFLICT (key) DO UPDATE SET value = excluded.value").bind(msg).run();
+      console.log(`publishSheets: ${msg}`);
+      if (/HTTP 429/.test(String(e))) {
+        await requeue(dirty.slice(i));
+        break;
+      }
+      await requeue([dirty[i]!]);
     }
   }
-  return { updated: Math.min(touched, maxDiscordArtists), notices };
+  return { updated: Math.min(touched, maxDiscordArtists), notices, ...(errors.length ? { errors } : {}) };
 }
 
 const PRICES_HEADER = "## 💶 Precios oficiales";
