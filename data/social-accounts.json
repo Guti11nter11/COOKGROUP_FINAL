@@ -1,0 +1,6 @@
+{
+  "_doc": "Cuentas oficiales que GIRA lee con poca frecuencia vía Apify (solo lectura, sin cookies propias). Blueticket bloquea su web a servidores: su Instagram oficial es la vía legítima. Coste ≈ 0,0017 $ por publicación.",
+  "instagram": [
+    { "handle": "meoblueticket", "name": "Blueticket", "country": "PT" }
+  ]
+}

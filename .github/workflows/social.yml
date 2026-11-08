@@ -1,0 +1,31 @@
+name: Redes oficiales (Blueticket)
+
+# Una vez al día: Instagram oficial de ticketeras cuya web no se puede leer (Blueticket, Portugal),
+# vía Apify (solo lectura). La IA extrae lo accionable y va a #noticias.
+
+on:
+  schedule:
+    - cron: "37 10 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  social:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Leer y enviar
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+          APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npx tsx apps/jobs/src/social.ts
