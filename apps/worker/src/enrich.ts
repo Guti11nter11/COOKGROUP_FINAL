@@ -256,13 +256,16 @@ export async function announceSignups(env: Env, fresh: { artistId: string; links
   return sent;
 }
 
-const CHUNK = 90_000;
-/** Guarda la imagen de precios de un artista (base64, en trozos) y marca su ficha para republicarla. */
-export async function storePriceImage(env: Env, body: { artistId?: string; hash?: string; mime?: string; data?: string }, now: Date): Promise<{ stored: boolean }> {
-  const { artistId, hash, mime, data } = body;
-  if (!artistId || !hash || !data || !/^image\/(png|jpeg)$/.test(mime ?? "") || data.length > 1_500_000 || !/^[A-Za-z0-9+/=]+$/.test(data)) return { stored: false };
-  const parts: string[] = [];
-  for (let i = 0; i < data.length; i += CHUNK) parts.push(data.slice(i, i + CHUNK));
+const CHUNK = 400_000;
+/**
+ * Guarda la imagen de precios de un artista (bytes tal cual, sin base64: decodificar costaría CPU) y
+ * marca su ficha para republicarla.
+ */
+export async function storePriceImage(env: Env, q: { artistId?: string | null; hash?: string | null; mime?: string | null }, bytes: ArrayBuffer, now: Date): Promise<{ stored: boolean }> {
+  const { artistId, hash, mime } = q;
+  if (!artistId || !hash || !/^image\/(png|jpeg)$/.test(mime ?? "") || !bytes.byteLength || bytes.byteLength > 1_500_000) return { stored: false };
+  const parts: ArrayBuffer[] = [];
+  for (let i = 0; i < bytes.byteLength; i += CHUNK) parts.push(bytes.slice(i, i + CHUNK));
   const iso = now.toISOString();
   await env.DB.batch([
     env.DB.prepare("DELETE FROM price_image_chunk WHERE artist_id = ?").bind(artistId),

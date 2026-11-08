@@ -372,12 +372,16 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
 
 const PRICES_HEADER = "## 💶 Precios oficiales";
 
-/** Imagen de precios guardada en trozos base64. */
+/** Imagen de precios guardada en trozos binarios (se juntan sin decodificar nada). */
 async function loadImage(env: Env, artistId: string, mime: string): Promise<{ name: string; type: string; bytes: Uint8Array }> {
-  const { results } = await env.DB.prepare("SELECT data FROM price_image_chunk WHERE artist_id = ? ORDER BY idx").bind(artistId).all<{ data: string }>();
-  const bin = atob(results.map((r) => r.data).join(""));
-  const bytes = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  const { results } = await env.DB.prepare("SELECT data FROM price_image_chunk WHERE artist_id = ? ORDER BY idx").bind(artistId).all<{ data: ArrayBuffer | number[] }>();
+  const parts = results.map((r) => (r.data instanceof ArrayBuffer ? new Uint8Array(r.data) : Uint8Array.from(r.data)));
+  const bytes = new Uint8Array(parts.reduce((n, p) => n + p.length, 0));
+  let o = 0;
+  for (const p of parts) {
+    bytes.set(p, o);
+    o += p.length;
+  }
   return { name: mime === "image/png" ? "precios.png" : "precios.jpg", type: mime, bytes };
 }
 

@@ -175,7 +175,7 @@ describe("fichas por artista en Discord", () => {
     await storeShow(a); await alertFor(a);
     await env.DB.prepare("INSERT INTO show_price (source_id, min, max, currency, source, updated_at) VALUES ('1', 45, 250, 'EUR', 'Ticketmaster', ?)").bind(NOW.toISOString()).run();
     const { storePriceImage } = await import("../src/enrich");
-    expect(await storePriceImage(env, { artistId: "a1", hash: "h1", mime: "image/jpeg", data: btoa("JPEGDATA") }, NOW)).toEqual({ stored: true });
+    expect(await storePriceImage(env, { artistId: "a1", hash: "h1", mime: "image/jpeg" }, new TextEncoder().encode("JPEGDATA").buffer as ArrayBuffer, NOW)).toEqual({ stored: true });
     await publishSheets(env, NOW);
     const posts = discordCalls("POST", /\/channels\/NEW\d+\/messages$/);
     expect(posts.some((c) => c.body.multipart)).toBe(true);

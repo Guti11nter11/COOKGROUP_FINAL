@@ -79,7 +79,10 @@ export default {
       }
       if (url.pathname === "/enrich/follows") return Response.json({ ids: await followIds(env) });
       if (url.pathname === "/enrich/discover" && req.method === "POST") return Response.json(await discover(env, (await req.json()) as never, now));
-      if (url.pathname === "/enrich/price-image" && req.method === "POST") return Response.json(await storePriceImage(env, (await req.json()) as never, now));
+      if (url.pathname === "/enrich/price-image" && req.method === "POST") {
+        const q = { artistId: url.searchParams.get("artist"), hash: url.searchParams.get("hash"), mime: req.headers.get("content-type") };
+        return Response.json(await storePriceImage(env, q, await req.arrayBuffer(), now));
+      }
       if (url.pathname === "/enrich/news" && req.method === "POST") return Response.json(await ingestNews(env, (await req.json()) as NewsInput, now));
       if (url.pathname === "/enrich" && req.method === "POST") {
         // Las fichas marcadas se regeneran en el siguiente ciclo (cada 5 min), sin ráfagas a Discord.

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { pricesByCountry, type EnrichTodo } from "@gira/core";
-import { gira } from "./gira-client";
+import { GIRA, giraToken } from "./gira-client";
 import { priceCardHtml } from "./price-image-lib";
 
 type Page = { setContent: (h: string, o?: unknown) => Promise<void>; $: (s: string) => Promise<{ screenshot: (o: unknown) => Promise<Buffer> } | null>; close: () => Promise<void> };
@@ -26,7 +26,13 @@ export async function uploadPriceImages(artists: EnrichTodo["artists"]): Promise
       try {
         await page.setContent(priceCardHtml(a.name, null, rows), { waitUntil: "networkidle" });
         const shot = await (await page.$("#card"))!.screenshot({ type: "jpeg", quality: 88 });
-        const r = await gira<{ stored: boolean }>("/enrich/price-image", { artistId: a.artistId, hash, mime: "image/jpeg", data: shot.toString("base64") });
+        // En binario: el Worker lo guarda tal cual (base64 le costaría CPU al decodificar).
+        const res = await fetch(`${GIRA}/enrich/price-image?artist=${encodeURIComponent(a.artistId)}&hash=${hash}`, {
+          method: "POST",
+          headers: { "content-type": "image/jpeg", authorization: `Bearer ${giraToken()}` },
+          body: new Uint8Array(shot),
+        });
+        const r = (res.ok ? await res.json() : { stored: false }) as { stored: boolean };
         if (r.stored) uploaded++;
         console.log(`${r.stored ? "✓" : "⚠️"} ${a.name}: imagen de precios (${rows.length} países, ${Math.round(shot.length / 1024)} KB)`);
       } finally {
