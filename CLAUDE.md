@@ -20,14 +20,18 @@ trata de los eventos y de cómo conseguir las entradas.
 
 1. **App iPhone (PWA) "GIRA"** instalable desde Safari con notificaciones push — salida principal.
    **Privada, solo para el propietario**: registro una vez con passkey (Face ID) y sesión recordada
-   (~1 año) para no volver a identificarse. Nunca pública ni indexable.
+   (~1 año) para no volver a identificarse. Nunca pública ni indexable. Servida por el propio Worker
+   en `/app/` (ADR 0002); el enlace de alta se publica solo en `#estado` del Discord privado.
 2. **Servidor de Discord "GIRA"** (ID `1568641743853715516`) montado por el bot con categorías:
    INICIO · CALENDARIO (#daily-release, #esta-semana, #recordatorios) · ALERTAS (#nuevas-giras,
-   #fechas-extra, #preventas, #registros-abiertos) · GIRAS (foro `fichas`) · POR REGIÓN ·
-   NOTICIAS · TICKETERAS · DEPORTES · ARCHIVO. **Nunca un canal por artista ni por concierto**: la
-   información se recopila en canales temáticos; cada gira con fechas futuras tiene una publicación
-   en el foro `fichas` que, al pasar su última fecha, se resume en `#archivo` y se borra. **Solo
-   eventos futuros** (nada de historial pasado). La PWA guarda todo sin límite.
+   #fechas-extra, #preventas, #registros-abiertos) · GIRAS · POR REGIÓN · NOTICIAS · TICKETERAS ·
+   DEPORTES · ARCHIVO. **Un canal por artista, como Akari** (decisión del propietario, 2026-11-07),
+   solo mientras tenga alguna **preventa o venta general por llegar**: lo ya lanzado no interesa
+   aunque el concierto sea futuro. Al quedarse sin ventas por llegar, el canal pasa a 📦 ARCHIVO
+   (si se creó por error, se borra); con el servidor lleno se borra el archivado más antiguo. La
+   ficha se edita en sitio; las novedades van en **un aviso agrupado** por artista en el canal
+   temático. Cada preventa dice **dónde registrarse** y la ficha lleva enlaces de reventa para
+   comparar. La PWA guarda todo sin límite.
 3. **Calendario `.ics`** suscribible.
 
 **Horas de silencio:** 01:00–08:00 Europe/Madrid. Solo se notifica en ese tramo si es urgente
@@ -40,9 +44,11 @@ trata de los eventos y de cómo conseguir las entradas.
   Browser Run, Vectorize. Cuenta `61fba2a15c66bf4a4a86477a4d74c51e`.
 - **GitHub Actions** (repo público → minutos ilimitados): noticias, ticketeras sin API, Apify,
   resúmenes y fichas con IA. Los lanza el Worker (`workflow_dispatch`) para que sean puntuales.
-- Resúmenes 21:00 y 08:00 Europe/Madrid: alarmas del Durable Object "Reloj" del Worker.
+- Resúmenes 21:00 y 08:00 Europe/Madrid y recordatorios: el cron de 5 min del Worker (ADR 0002).
 - KV solo como caché de lectura (el plan gratuito permite 1.000 escrituras/día).
-- **Cloudflare Pages**: la PWA.
+- La PWA la sirve el propio Worker (static assets en `apps/worker/public/app`).
+- **Logs de GitHub Actions son públicos** (repo público): nunca imprimir mensajes del Discord
+  privado, enlaces de alta/calendario, tokens ni contenido de `setting`.
 - IA con fallback en este orden: Groq → Gemini → Workers AI → NVIDIA → OpenAI (de pago, último).
 
 ## Fuentes
