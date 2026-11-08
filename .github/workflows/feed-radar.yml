@@ -5,8 +5,8 @@ name: Radar Discovery Feed
 # solo lo que cambió. El estado anterior se guarda en la caché de Actions.
 
 on:
-  schedule:
-    - cron: "17 * * * *"
+  # Lo lanza el Worker a horas fijas de Madrid (packages/core/src/schedule.ts, JOB_SLOTS): los
+  # schedule de GitHub se saltaban la mayoría de las pasadas.
   workflow_dispatch:
   push:
     branches: [claude/magical-franklin-u415fe]

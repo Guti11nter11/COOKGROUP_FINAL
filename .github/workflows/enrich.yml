@@ -4,8 +4,8 @@ name: Enriquecer fichas
 # activas. Lee lo pendiente del Worker y le devuelve lo encontrado.
 
 on:
-  schedule:
-    - cron: "41 */3 * * *"
+  # Lo lanza el Worker a horas fijas de Madrid (packages/core/src/schedule.ts, JOB_SLOTS): los
+  # schedule de GitHub se saltaban la mayoría de las pasadas.
   workflow_dispatch:
   push:
     branches: [claude/magical-franklin-u415fe]

@@ -7,6 +7,7 @@ import { handleAuth } from "./auth";
 import { handleApi } from "./app-api";
 import { handleInteraction, verifyDiscord } from "./interactions";
 import { dispatchJobs } from "./dispatch";
+import { isSweepTick } from "@gira/core";
 import { announceCalendar, calendarIcs, icsToken, runCalendar, updateStatusPanel } from "./calendar";
 import type { Env, SweepJob } from "./env";
 
@@ -16,8 +17,13 @@ async function scheduled(env: Env, now: Date): Promise<void> {
   let ok = 1;
   let result: unknown;
   try {
-    // Primero el reloj (recordatorios puntuales), luego el barrido y las fichas.
+    // El reloj va siempre (recordatorios y resúmenes: solo base de datos, sin coste). El barrido de
+    // Ticketmaster, las fichas y los trabajos siguen el horario por franjas (de 00:00 a 08:00, nada).
     const calendar = await runCalendar(env, now).catch((e) => ({ error: String(e) }));
+    if (!isSweepTick(now)) {
+      result = { calendar, sweep: "fuera de franja" };
+      return;
+    }
     const cycle = await runCycle(env, now, async (j) => void (await env.SWEEP_QUEUE.send(j)));
     await refreshActiveSheets(env, now).catch(() => 0);
     const sheets = await publishSheets(env, now);

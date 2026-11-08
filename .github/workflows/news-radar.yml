@@ -4,8 +4,8 @@ name: Radar de noticias
 # la IA confirma y resume lo accionable y el Worker lo publica en #noticias (y en el canal del artista).
 
 on:
-  schedule:
-    - cron: "23 */2 * * *"
+  # Lo lanza el Worker a horas fijas de Madrid (packages/core/src/schedule.ts, JOB_SLOTS): los
+  # schedule de GitHub se saltaban la mayoría de las pasadas.
   workflow_dispatch:
   push:
     branches: [claude/magical-franklin-u415fe]

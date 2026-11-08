@@ -1,13 +1,13 @@
 import { estimateResale, robustStats, type EnrichInput, type EnrichTodo, type ResaleInfo } from "@gira/core";
 import { aiJson } from "./ai";
-import { apifyBudget, runActor } from "./apify";
+import { apifyAllowed, runActor } from "./apify";
 import { getJson } from "./gira-client";
 import { articleText, searchNews } from "./news";
 import { chooseEvents, convert, countryCode, faceValue, type StubEvent } from "./resale-lib";
 
 const RESAMPLE_DAYS = 7;
-/** Por encima de este gasto mensual de Apify no se muestrea (queda margen para redes sociales). */
-const APIFY_MONTHLY_CAP_USD = 3;
+/** Coste previsto de muestrear un artista (búsqueda + 3 fechas × 30 anuncios ≈ 0,4 $). */
+const SAMPLE_COST_USD = 0.45;
 const LISTINGS_PER_EVENT = 30;
 
 type Listing = { raw_price?: number; from_url?: string; section?: string };
@@ -67,9 +67,9 @@ export async function estimateAll(artists: EnrichTodo["artists"], now = new Date
   const fresh = (a: EnrichTodo["artists"][number]) => a.resaleAt && now.getTime() - Date.parse(a.resaleAt) < RESAMPLE_DAYS * 86_400_000;
   // Todos se recalculan (los precios oficiales pueden haber llegado); solo los no recientes gastan en mercado.
   const todo = [...artists].sort((a, b) => Number(!!fresh(a)) - Number(!!fresh(b)) || b.tier - a.tier || Number(b.hot) - Number(a.hot));
-  const budget = process.env.APIFY_TOKEN ? await apifyBudget() : null;
-  let canSample = !!budget && budget.used < Math.min(APIFY_MONTHLY_CAP_USD, budget.limit * 0.6);
-  console.log(`Apify: ${budget ? `${budget.used.toFixed(2)} $ de ${budget.limit} $ este mes` : "sin acceso"} · muestreo ${canSample ? "sí" : "no"}`);
+  const first = process.env.APIFY_TOKEN ? await apifyAllowed(SAMPLE_COST_USD) : { ok: false, today: null, month: null };
+  let canSample = first.ok;
+  console.log(`Apify: hoy ${first.today?.toFixed(2) ?? "?"} $ (límite 1 $/día) · mes ${first.month?.toFixed(2) ?? "?"} $ · muestreo ${canSample ? "sí" : "no"}`);
   const rates = await ratesFromEur();
   const out: NonNullable<EnrichInput["resale"]> = [];
   let sampled = 0;
@@ -117,8 +117,7 @@ export async function estimateAll(artists: EnrichTodo["artists"], now = new Date
       } catch (e) {
         console.log(`⚠️ ${a.name}: mercado no disponible (${String(e)})`);
       }
-      const after = await apifyBudget();
-      if (after && after.used >= APIFY_MONTHLY_CAP_USD) canSample = false;
+      canSample = (await apifyAllowed(SAMPLE_COST_USD)).ok;
     }
     const hist = reuse ? (reuse.history ?? []) : a.tier >= 2 ? await history(a.name).catch(() => []) : [];
     const est = estimateResale({ tier: a.tier, hot: a.hot, dates: a.dates, countries: a.countries.length, observed, listings, marketsWithoutFace: markets.length - observed.length });

@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { aiJson } from "./ai";
-import { apifyBudget, runActor } from "./apify";
+import { apifyAllowed, runActor } from "./apify";
 import { gira } from "./gira-client";
 
 /**
@@ -8,9 +8,9 @@ import { gira } from "./gira-client";
  * los últimos 2 días; la IA extrae lo accionable (gira, preventa, venta) y va a #noticias.
  */
 const cfg = JSON.parse(readFileSync("data/social-accounts.json", "utf8")) as { instagram: { handle: string; name: string; country: string }[] };
-const budget = await apifyBudget();
-if (!budget || budget.used >= 3.5) {
-  console.log(`Apify: sin presupuesto este mes (${budget?.used ?? "?"} $) — se omite`);
+const budget = await apifyAllowed(0.05);
+if (!budget.ok) {
+  console.log(`Apify: límite alcanzado (hoy ${budget.today ?? "?"} $ de 1 $) — se omite`);
   process.exit(0);
 }
 type Post = { caption?: string; url?: string; timestamp?: string; ownerUsername?: string };
