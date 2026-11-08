@@ -13,6 +13,6 @@ it("escapa comillas simples y usa ids estables", () => {
 });
 
 it("el nivel solo sube, nunca baja (un imprescindible nuevo sube; nadie se degrada solo)", () =>
-  expect(buildSeedSql(artists)).toContain("ON CONFLICT (artist_id) DO UPDATE SET tier = MAX(tier, excluded.tier);"));
+  expect(buildSeedSql(artists)).toContain("ON CONFLICT (artist_id) DO UPDATE SET tier = excluded.tier WHERE excluded.tier > follow.tier;"));
 
 it("omite artistas sin attractionId", () => expect(buildSeedSql(artists)).not.toContain("Sin ID"));

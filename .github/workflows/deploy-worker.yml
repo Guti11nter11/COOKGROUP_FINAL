@@ -1,7 +1,8 @@
 name: Desplegar Worker
 
 # Despliega gira-core en Cloudflare: crea la base D1 y la cola si no existen, aplica migraciones,
-# carga los artistas seguidos (idempotente), despliega y guarda los secretos del Worker.
+# carga los artistas seguidos solo si su fichero cambió (cada carga son miles de escrituras de D1 y el
+# plan gratuito permite 100.000 al día), despliega y guarda los secretos del Worker.
 
 on:
   workflow_dispatch:
@@ -32,6 +33,8 @@ jobs:
         working-directory: apps/worker
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -59,9 +62,17 @@ jobs:
           echo "Cola lista"
 
       - name: Migraciones y artistas seguidos
+        env:
+          BEFORE: ${{ github.event.before }}
         run: |
           npx wrangler d1 migrations apply gira --remote
-          npx wrangler d1 execute gira --remote --file seed/artists.sql --yes >/dev/null
+          # La semilla solo se carga si cambió en este push (o en un lanzamiento manual).
+          if [ "${{ github.event_name }}" != "push" ] || ! git cat-file -e "$BEFORE" 2>/dev/null || git diff --name-only "$BEFORE" "$GITHUB_SHA" | grep -q '^apps/worker/seed/artists.sql$'; then
+            npx wrangler d1 execute gira --remote --file seed/artists.sql --yes >/dev/null
+            echo "Semilla de artistas cargada"
+          else
+            echo "Semilla sin cambios: no se carga (ahorra escrituras de D1)"
+          fi
           npx wrangler d1 execute gira --remote --command "SELECT COUNT(*) AS artistas FROM artist" --json | python3 -c "import sys,json;print('Artistas en D1:', json.load(sys.stdin)[0]['results'][0]['artistas'])"
 
       - name: Desplegar
