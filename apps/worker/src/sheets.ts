@@ -283,8 +283,17 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
           // Sin vistas previas de enlaces (la ficha tiene muchos y ensuciarían el canal).
           const isPrices = img && msgs[i]!.startsWith(PRICES_HEADER);
           const body = { content: isPrices ? PRICES_HEADER : msgs[i], allowed_mentions: { parse: [] }, flags: 4 };
-          const send = async (method: "POST" | "PATCH", path: string) =>
+          const once = async (method: "POST" | "PATCH", path: string) =>
             isPrices ? discordUpload(env, method, path, body, await loadImage(env, artist_id, img!.mime)) : discordFetch(env, method, path, body);
+          // Discord limita las ediciones (~5 cada 5 s por canal): se espera lo que pide y se reintenta.
+          const send = async (method: "POST" | "PATCH", path: string) => {
+            let r = await once(method, path);
+            for (let t = 0; t < 3 && r.status === 429; t++) {
+              await new Promise((ok) => setTimeout(ok, Math.min(6000, retryAfterMs(r))));
+              r = await once(method, path);
+            }
+            return r;
+          };
           // Mensaje de texto idéntico al publicado: no se toca (ahorra llamadas a Discord).
           if (ids[i] && !isPrices && prevMsgs[i] === msgs[i]) {
             next.push(ids[i]!);
@@ -304,7 +313,10 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
           next.push(((await r.json()) as { id: string }).id);
         }
       } catch (e) {
+        // Progreso parcial: los mensajes ya editados no se repiten en la siguiente pasada.
         await saveIds([...next, ...ids.slice(next.length)]);
+        const partial = [...msgs.slice(0, next.length), ...prevMsgs.slice(next.length)];
+        await env.DB.prepare("UPDATE sheet SET rendered_json = ? WHERE artist_id = ?").bind(JSON.stringify(partial), artist_id).run();
         throw e;
       }
       for (const old of ids.slice(msgs.length)) await discordFetch(env, "DELETE", `/channels/${channelId}/messages/${old}`);
@@ -379,6 +391,12 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
 }
 
 const PRICES_HEADER = "## 💶 Precios oficiales";
+
+/** Espera que pide Discord en un 429 (cabecera Retry-After, en segundos); 2 s si no la da. */
+function retryAfterMs(r: Response): number {
+  const s = Number(r.headers.get("retry-after") ?? r.headers.get("x-ratelimit-reset-after"));
+  return Number.isFinite(s) && s > 0 ? Math.ceil(s * 1000) + 100 : 2000;
+}
 
 /** Imagen de precios guardada en trozos binarios (se juntan sin decodificar nada). */
 async function loadImage(env: Env, artistId: string, mime: string): Promise<{ name: string; type: string; bytes: Uint8Array }> {

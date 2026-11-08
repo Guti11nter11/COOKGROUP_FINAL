@@ -63,7 +63,7 @@ beforeAll(() => {
     .reply((o) => (calls.push({ method: "POST", path: o.path, body: parse(o.body) }), ok({ id: `M${calls.length}` })))
     .persist();
   d.intercept({ path: (p) => p.startsWith("/api/v10/channels/"), method: "PATCH" })
-    .reply((o) => (calls.push({ method: "PATCH", path: o.path, body: parse(o.body) }), patchStatus === 200 ? ok({}) : { statusCode: patchStatus, data: "{}" }))
+    .reply((o) => (calls.push({ method: "PATCH", path: o.path, body: parse(o.body) }), patchStatus === 200 ? ok({}) : { statusCode: patchStatus, data: "{}", responseOptions: { headers: { "retry-after": "0.01" } } }))
     .persist();
   d.intercept({ path: (p) => /^\/api\/v10\/channels\/[^/]+\/messages\?limit=100$/.test(p), method: "GET" })
     .reply((o) => (calls.push({ method: "GET", path: o.path, body: null }), ok(channelMessages)))
@@ -207,6 +207,8 @@ describe("fichas por artista en Discord", () => {
     patchStatus = 429;
     await publishSheets(env, NOW);
     expect(discordCalls("POST", /\/channels\/NEW\d+\/messages$/)).toHaveLength(0);
+    // Reintenta lo que pide Discord antes de rendirse.
+    expect(discordCalls("PATCH", /\/channels\/NEW\d+\/messages\//).length).toBeGreaterThanOrEqual(4);
     expect((await env.DB.prepare("SELECT message_ids FROM sheet").first<{ message_ids: string }>())!.message_ids).toBe(before);
   });
 
