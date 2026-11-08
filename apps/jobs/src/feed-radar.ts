@@ -88,7 +88,9 @@ let alerts = 0;
 for (const chunk of chunkByArtist(changed, 40)) alerts += (await post({ shows: chunk })).alerts;
 // Solo con una lectura completa (todos los países) las entidades quedan "arrancadas" (también las
 // que no tienen fechas, para que su primera gira futura sí avise).
-if (failed.length === 0) {
+// Latinoamérica es nueva: si algún país suyo falla, no bloquea el arranque (Europa sí).
+const LATAM = new Set(["MX", "BR", "AR", "CL", "CO", "PE", "UY", "CR", "PA", "GT", "DO", "PR"]);
+if (failed.filter((cc) => !LATAM.has(cc)).length === 0) {
   const ids = [...followed];
   for (let i = 0; i < ids.length; i += 500) await post({ shows: [], markBootstrapped: ids.slice(i, i + 500) });
 } else {
