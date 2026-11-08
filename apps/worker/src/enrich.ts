@@ -96,7 +96,8 @@ export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
     a.limitCountries ??= [];
     if (show.ticketLimit) hasLimit.add(`${artistId}|${show.venue.country}`);
   }
-  for (const a of artists.values()) a.limitCountries = a.countries.filter((cc) => !hasLimit.has(`${a.artistId}|${cc}`));
+  // Con un límite general de la gira ("ZZ") ya no hace falta buscar país por país.
+  for (const a of artists.values()) a.limitCountries = hasLimit.has(`${a.artistId}|ZZ`) ? [] : a.countries.filter((cc) => !hasLimit.has(`${a.artistId}|${cc}`));
   const { results: imgs } = await env.DB.prepare("SELECT artist_id, hash FROM price_image").all<{ artist_id: string; hash: string }>();
   for (const i of imgs) {
     const a = artists.get(i.artist_id);

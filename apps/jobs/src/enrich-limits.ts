@@ -35,5 +35,34 @@ export async function findLimits(artists: EnrichTodo["artists"], maxGroups = 12)
     }
     await pause(1000);
   }
+  // Sin dato en ningún país: búsqueda general de la gira (inglés y español). Se guarda como límite
+  // general ("ZZ"), que la ficha usa en los países sin dato propio.
+  const done = new Set(out.map((o) => o.artistId));
+  const general = [...artists].filter((a) => (a.limitCountries?.length ?? 0) > 0 && a.limitCountries!.length === a.countries.length && !done.has(a.artistId)).slice(0, 6);
+  for (const a of general) {
+    const found: number[] = [];
+    for (const [q, cc] of [
+      [`"${a.name}" tour tickets "per person" limit`, "GB"],
+      [`"${a.name}" ticket limit 2027 tour`, "US"],
+      [`"${a.name}" entradas "por persona" máximo gira`, "ES"],
+    ] as const) {
+      try {
+        for (const it of (await searchNews(q, cc)).slice(0, 5)) {
+          const head = `${it.title}. ${it.description}`;
+          const body = (await articleText(it.link)) ?? "";
+          if (!fold(`${head} ${body}`).includes(fold(a.name))) continue;
+          const n = limitFromText(head) ?? limitFromText(body);
+          if (n) found.push(n);
+          await pause(300);
+        }
+      } catch {
+        /* fuente caída: se sigue con la siguiente */
+      }
+      await pause(800);
+    }
+    const n = consensus(found);
+    if (n) out.push({ artistId: a.artistId, country: "ZZ", limit: n });
+    console.log(`${n ? "✓" : "·"} ${a.name} (gira): ${n ? `${n} por persona (${found.length} fuentes)` : "sin dato en prensa"}`);
+  }
   return out;
 }
