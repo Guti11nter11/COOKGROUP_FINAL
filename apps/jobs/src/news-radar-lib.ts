@@ -61,3 +61,7 @@ export const SPORT_QUERIES: [string, string][] = [
   ["GB", "Glastonbury 2027 tickets registration"],
   ["ES", "abonos festival 2027 a la venta"],
 ];
+
+/** Ofertas de viaje (hotel, paquetes, hospitality): fuera de alcance de GIRA. Pura. */
+const TRAVEL_RE = /\b(hotel(es|s)?|hoteles|package(s)?|paquetes?|hospitality|short breaks?|city breaks?|travel deals?|holiday deals?|vuelo\s*\+\s*hotel)\b/i;
+export const isTravelOffer = (text: string) => TRAVEL_RE.test(fold(text));

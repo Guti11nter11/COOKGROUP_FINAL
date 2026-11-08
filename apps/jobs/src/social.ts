@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { getJson } from "./gira-client";
-import { instagramHandle } from "./social-lib";
+import { isTravelOffer } from "./news-radar-lib";
+import { instagramHandle, itemConsistent } from "./social-lib";
 import { aiJson } from "./ai";
 import { apifyAllowed, runActor } from "./apify";
 import { gira } from "./gira-client";
@@ -65,7 +66,8 @@ const items = (res?.items ?? [])
   .filter((r) => {
     const acc = cfg.instagram.find((a) => a.handle.toLowerCase() === fresh[r.i]?.ownerUsername?.toLowerCase());
     // Artistas: solo lo que afecta a Europa (fase 1). Ticketeras: solo eventos grandes.
-    return fresh[r.i] && r.artist && (acc?.artist ? r.europe === true : r.major === true) && ["tour_announced", "presale", "on_sale", "extra_date", "sold_out", "signup"].includes(r.category);
+    // La IA a veces cruza índices: lo devuelto tiene que encajar con la cuenta y el texto de esa publicación.
+    return fresh[r.i] && r.artist && itemConsistent(r, fresh[r.i]!.caption!, acc) && !isTravelOffer(fresh[r.i]!.caption!) && (acc?.artist ? r.europe === true : r.major === true) && ["tour_announced", "presale", "on_sale", "extra_date", "sold_out", "signup"].includes(r.category);
   })
   .map((r) => {
     const p = fresh[r.i]!;

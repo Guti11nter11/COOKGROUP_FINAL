@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { aiJson } from "./ai";
 import { gira } from "./gira-client";
 import { searchNews, type NewsItem } from "./news";
-import { CATEGORIES, EVENT_NAMES, GENERAL_QUERIES, nameMatcher, SPORT_QUERIES, type NewsCategory } from "./news-radar-lib";
+import { CATEGORIES, EVENT_NAMES, GENERAL_QUERIES, isTravelOffer, nameMatcher, SPORT_QUERIES, type NewsCategory } from "./news-radar-lib";
 
 /**
  * Radar de noticias (cada 2 h): titulares de los últimos 2 días en varios países, filtrados por
@@ -28,7 +28,7 @@ for (const [cc, q] of queries) {
     const key = hash(it.title.toLowerCase().replace(/\W+/g, " ").trim().slice(0, 90));
     if (seen[key] || fresh.some((f) => f.key === key)) continue;
     const candidates = matcher.match(`${it.title} ${it.description}`);
-    if (candidates.length) fresh.push({ ...it, candidates, key });
+    if (candidates.length && !isTravelOffer(`${it.title} ${it.description}`)) fresh.push({ ...it, candidates, key });
   }
   await new Promise((r) => setTimeout(r, 800));
 }
