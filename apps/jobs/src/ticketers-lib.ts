@@ -7,13 +7,17 @@ export interface Ticketer {
   search: (artist: string) => string;
   /** Rutas que son fichas de evento o de artista en esa ticketera. */
   eventPath: RegExp;
+  /** false = pendiente de ajustar (no se lee para no gastar tiempo de navegador). */
+  enabled?: boolean;
 }
 
 export const TICKETERS: Ticketer[] = [
   { id: "entradas", name: "Entradas.com (Eventim ES)", country: "ES", search: (a) => `https://www.entradas.com/search/?affiliate=EES&searchterm=${encodeURIComponent(a)}`, eventPath: /\/(event|artist|eventseries)\//i },
-  { id: "eci", name: "El Corte Inglés", country: "ES", search: (a) => `https://www.elcorteingles.es/entradas/buscar/?term=${encodeURIComponent(a)}`, eventPath: /\/entradas\/(conciertos|musica|festivales|teatro|deportes)\/.+/i },
+  // El Corte Inglés y AXS: la búsqueda renderizada no devolvió fichas (ECI) o tarda ~1 min y da 422 (AXS);
+  // desactivadas hasta ajustar la URL de búsqueda.
+  { enabled: false, id: "eci", name: "El Corte Inglés", country: "ES", search: (a) => `https://www.elcorteingles.es/entradas/buscar/?term=${encodeURIComponent(a)}`, eventPath: /\/entradas\/(conciertos|musica|festivales|teatro|deportes)\/.+/i },
   { id: "seetickets", name: "See Tickets", country: "GB", search: (a) => `https://www.seetickets.com/search?q=${encodeURIComponent(a)}`, eventPath: /\/(event|tour)\//i },
-  { id: "axs", name: "AXS", country: "GB", search: (a) => `https://www.axs.com/uk/search?q=${encodeURIComponent(a)}`, eventPath: /\/(events|artists)\/\d+/i },
+  { enabled: false, id: "axs", name: "AXS", country: "GB", search: (a) => `https://www.axs.com/uk/search?q=${encodeURIComponent(a)}`, eventPath: /\/(events|artists)\/\d+/i },
 ];
 
 const fold = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
