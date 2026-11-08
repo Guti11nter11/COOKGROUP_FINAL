@@ -102,20 +102,28 @@ export async function runCalendar(env: Env, now: Date): Promise<{ reminders: num
     .all<{ key: string }>();
   const due = remindersDue(slots, new Set(sentRows.map((r) => r.key)), now);
   const rec = due.length ? await guild.byName("recordatorios") : undefined;
-  // Un solo mensaje por artista, hora y tipo de recordatorio (p. ej. 4 preventas de RAYE a las 11:00).
+  // Un solo mensaje por hora de inicio y tipo de recordatorio, con una línea por artista
+  // (p. ej. las 4 preventas de RAYE y la de U2 a las 11:00 van juntas).
   const groups = new Map<string, typeof due>();
   for (const d of due) {
-    const k = `${d.slot.artistId}|${d.slot.startsAt}|${d.reminder.key}`;
+    const k = `${d.slot.startsAt}|${d.reminder.key}`;
     groups.set(k, [...(groups.get(k) ?? []), d]);
   }
-  for (const group of [...groups.values()].slice(0, 6)) {
+  for (const group of [...groups.values()].slice(0, 4)) {
     if (!rec) break;
     const d = group[0]!;
-    const labels = [...new Set(group.map((g) => g.slot.label))];
-    const merged = { ...d.slot, dates: [...new Map(group.flatMap((g) => g.slot.dates).map((x) => [x.url, x])).values()] };
-    // De noche (01–08) el de 24 h va en silencio; los de 1 h y 10 min siempre suenan (son urgentes).
-    const silent = d.reminder.key === "24h" && isQuietTime(now);
-    if (!(await post(env, rec.id, renderReminder(merged, d.reminder.text, labels), silent))) break;
+    const byArtist = new Map<string, { slot: (typeof due)[number]["slot"]; labels: string[] }>();
+    for (const g of group) {
+      const cur = byArtist.get(g.slot.artistId);
+      if (!cur) byArtist.set(g.slot.artistId, { slot: { ...g.slot }, labels: [g.slot.label] });
+      else {
+        if (!cur.labels.includes(g.slot.label)) cur.labels.push(g.slot.label);
+        cur.slot.dates = [...new Map([...cur.slot.dates, ...g.slot.dates].map((x) => [x.url, x])).values()];
+      }
+    }
+    const lines = [...byArtist.values()];
+    // Los de 1 h y 10 min siempre suenan (son urgentes, también de noche).
+    if (!(await post(env, rec.id, renderReminder(lines, d.reminder.text), false))) break;
     const iso = now.toISOString();
     await env.DB.batch(
       group
@@ -123,14 +131,12 @@ export async function runCalendar(env: Env, now: Date): Promise<{ reminders: num
         .map((k) => env.DB.prepare("INSERT OR IGNORE INTO reminder_sent (key, sent_at) VALUES (?, ?)").bind(k, iso)),
     );
     result.reminders++;
-    if (!silent) {
-      await pushAll(env, {
-        title: `${d.slot.artist} · ${d.reminder.text}`,
-        body: `${labels.join(", ")} a las ${formatHHmm(d.slot.startsAt, MADRID)} (Madrid) · ${merged.dates.map((x) => x.city).filter((c, i, a) => a.indexOf(c) === i).join(", ")}`,
-        url: "/app/",
-        tag: `r-${d.slot.artistId}-${d.reminder.key}`,
-      }).catch(() => 0);
-    }
+    await pushAll(env, {
+      title: `⏰ ${d.reminder.text[0]!.toUpperCase()}${d.reminder.text.slice(1)} · ${formatHHmm(d.slot.startsAt, MADRID)}`,
+      body: lines.map((l) => `${l.slot.artist} (${l.labels.join(", ")})`).join(" · "),
+      url: "/app/",
+      tag: `r-${d.slot.startsAt}-${d.reminder.key}`,
+    }).catch(() => 0);
   }
 
   // 2) Resumen diario a las 21:00 y a las 08:00 (Madrid), una vez.

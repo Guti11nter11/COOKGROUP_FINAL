@@ -54,7 +54,7 @@ describe("reloj de GIRA", () => {
     await runCalendar(env, new Date("2026-11-10T08:05:00Z"));
     const rec = at("C_REC");
     expect(rec).toHaveLength(1);
-    expect(rec[0]!.body.content).toContain("⏰ **U2** · Artist Presale en 1 hora — **10:00** Madrid");
+    expect(rec[0]!.body.content).toContain("⏰ **En 1 hora** · <t:1794301200:F>\n• **U2** · Artist Presale");
     expect(rec[0]!.body.content).toContain("🇪🇸 Sevilla, 🇪🇸 Barcelona → <#CH_U2>");
     expect(rec[0]!.body.flags! & 4096).toBe(0); // suena (no silencioso)
     posts = [];
@@ -72,7 +72,7 @@ describe("reloj de GIRA", () => {
     await runCalendar(env, new Date("2026-11-10T08:05:00Z"));
     const rec = at("C_REC");
     expect(rec).toHaveLength(1);
-    expect(rec[0]!.body.content).toContain("Artist Presale · Live Nation Presale en 1 hora");
+    expect(rec[0]!.body.content).toContain("• **U2** · Artist Presale · Live Nation Presale ·");
   });
 
   it("resumen de las 21:00 una sola vez; esta semana se publica y luego se edita", async () => {

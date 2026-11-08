@@ -7,21 +7,25 @@ const slot: SaleSlot = {
 };
 
 describe("recordatorios", () => {
-  it("24 h antes → el de mañana", () => {
-    const due = remindersDue([slot], new Set(), new Date("2026-11-09T09:30:00Z"));
-    expect(due.map((d) => d.reminder.key)).toEqual(["24h"]);
+  it("24 h antes → nada (lo cubren los resúmenes); 1 h antes → el de 1 h", () => {
+    expect(remindersDue([slot], new Set(), new Date("2026-11-09T09:30:00Z"))).toEqual([]);
+    expect(remindersDue([slot], new Set(), new Date("2026-11-10T08:05:00Z")).map((d) => d.reminder.key)).toEqual(["1h"]);
   });
   it("a 8 minutos y sin enviar nada antes → solo el de 10 min (los demás se dan por enviados)", () => {
     const [d] = remindersDue([slot], new Set(), new Date("2026-11-10T08:52:00Z"));
     expect(d!.reminder.key).toBe("10m");
-    expect(d!.skip).toEqual([`${slotKey(slot)}|24h`, `${slotKey(slot)}|1h`]);
+    expect(d!.skip).toEqual([`${slotKey(slot)}|1h`]);
   });
   it("ya enviado o ya empezada → nada", () => {
     expect(remindersDue([slot], new Set([`${slotKey(slot)}|1h`]), new Date("2026-11-10T08:30:00Z"))).toEqual([]);
     expect(remindersDue([slot], new Set(), new Date("2026-11-10T09:01:00Z"))).toEqual([]);
   });
-  it("texto con hora de Madrid y Londres y el canal", () =>
-    expect(renderReminder(slot, "en 1 hora")).toContain("⏰ **U2** · Artist Presale en 1 hora — **10:00** Madrid · 09:00 Londres"));
+  it("un mensaje para todas las ventas de la misma hora, una línea por artista", () => {
+    const raye = { ...slot, artistId: "a2", artist: "RAYE", channelId: "R", label: "MCD Presale", dates: [{ city: "Dublin", country: "IE", localDate: "2027-06-24", url: "u" }] };
+    expect(renderReminder([{ slot, labels: ["Artist Presale"] }, { slot: raye, labels: ["MCD Presale", "Live Nation Presale"] }], "en 1 hora")).toBe(
+      `⏰ **En 1 hora** · <t:${Date.parse(slot.startsAt) / 1000}:F>\n• **U2** · Artist Presale · 🇪🇸 Barcelona, 🇪🇸 Sevilla → <#CH>\n• **RAYE** · MCD Presale · Live Nation Presale · 🇮🇪 Dublin → <#R>`,
+    );
+  });
 });
 
 describe("resúmenes y calendario", () => {

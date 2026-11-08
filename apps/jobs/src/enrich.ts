@@ -4,6 +4,7 @@ import { findCapacities } from "./enrich-venues";
 import { findPrices } from "./enrich-prices";
 import { findSignups } from "./enrich-signups";
 import { estimateAll } from "./enrich-resale";
+import { findLimits } from "./enrich-limits";
 
 /**
  * Enriquecimiento de las fichas activas: aforo de recintos (Wikidata), precios oficiales (prensa con
@@ -15,6 +16,7 @@ console.log(`Pendiente: ${todo.venues.length} recintos sin aforo · ${todo.shows
 const steps: [string, () => Promise<EnrichInput>][] = [
   ["aforos", async () => ({ venues: await findCapacities(todo.venues) })],
   ["registros", async () => ({ signups: await findSignups(todo.artists) })],
+  ["límites", async () => ({ limits: await findLimits(todo.artists) })],
   ["precios", async () => ({ prices: await findPrices(todo.shows) })],
   // La reventa va al final: usa los precios oficiales ya guardados (la siguiente pasada los tiene todos).
   ["reventa", async () => ({ resale: await estimateAll(todo.artists) })],

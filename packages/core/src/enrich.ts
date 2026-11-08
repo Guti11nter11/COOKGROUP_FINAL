@@ -23,6 +23,8 @@ export interface EnrichTodo {
     resaleAt: string | null;
     /** Estimación guardada (para reutilizar el mercado leído sin volver a gastar). */
     resale: ResaleInfo | null;
+    /** Países de sus fechas sin límite de entradas conocido (ni de la ticketera ni de prensa). */
+    limitCountries?: string[];
     /** Precios oficiales conocidos de sus fechas. */
     prices: { country: string; city: string; min: number; max: number; currency: string; zones?: { name: string; price: number }[] }[];
   }[];
@@ -33,5 +35,7 @@ export interface EnrichInput {
   venues?: { tmId: string; name: string; city?: string; country?: string; capacity: number | null; wikidataId?: string | null; source?: string }[];
   prices?: ({ sourceId: string } & PriceInfo)[];
   resale?: { artistId: string; info: ResaleInfo }[];
+  /** Límite de entradas por persona encontrado en prensa. */
+  limits?: { artistId: string; country: string; limit: number }[];
 }
 

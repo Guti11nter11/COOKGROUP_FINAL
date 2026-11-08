@@ -14,8 +14,8 @@ export interface SaleSlot {
   dates: { city: string; country: string; localDate: string; url: string }[];
 }
 
+/** Sin "mañana a esta hora": de eso ya avisan los resúmenes de las 21:00 y las 08:00. */
 export const REMINDERS = [
-  { key: "24h", ms: 24 * 3600_000, text: "mañana a esta hora" },
   { key: "1h", ms: 3600_000, text: "en 1 hora" },
   { key: "10m", ms: 10 * 60_000, text: "en 10 minutos" },
 ] as const;
@@ -46,8 +46,14 @@ const chan = (s: SaleSlot) => (s.channelId ? ` → <#${s.channelId}>` : "");
 const dayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: MADRID, weekday: "long", day: "numeric", month: "long" });
 const dayKey = new Intl.DateTimeFormat("en-CA", { timeZone: MADRID, year: "numeric", month: "2-digit", day: "2-digit" });
 
-export function renderReminder(slot: SaleSlot, text: string, labels: string[] = [slot.label]): string {
-  return `⏰ **${slot.artist}** · ${labels.join(" · ")} ${text} — **${formatHHmm(slot.startsAt, MADRID)}** Madrid · ${formatHHmm(slot.startsAt, LONDON)} Londres · <t:${Date.parse(slot.startsAt) / 1000}:R>\n${cities(slot)}${chan(slot)}`;
+/**
+ * Un recordatorio para todas las ventas que empiezan a la misma hora: una línea por artista con sus
+ * preventas, ciudades y canal. La hora va como marca de Discord (cada uno la ve en su zona).
+ */
+export function renderReminder(group: { slot: SaleSlot; labels: string[] }[], text: string): string {
+  const at = group[0]!.slot.startsAt;
+  const lines = group.map(({ slot, labels }) => `• **${slot.artist}** · ${labels.join(" · ")} · ${cities(slot)}${chan(slot)}`);
+  return [`⏰ **${text[0]!.toUpperCase()}${text.slice(1)}** · <t:${Date.parse(at) / 1000}:F>`, ...lines].join("\n");
 }
 
 /** Ventas agrupadas por día (hora de Madrid), en orden. */

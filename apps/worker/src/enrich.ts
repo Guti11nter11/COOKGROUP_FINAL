@@ -88,6 +88,15 @@ export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
       a.prices.push({ country: show.venue.country, city: show.venue.city, min: p.min, max: p.max, currency: p.currency, ...(p.zones_json ? { zones: JSON.parse(p.zones_json) } : {}) });
     }
   }
+  // Límite de entradas: países sin dato de la ticketera ni de prensa.
+  const { results: lim } = await env.DB.prepare("SELECT artist_id, country FROM artist_limit").all<{ artist_id: string; country: string }>();
+  const hasLimit = new Set(lim.map((l) => `${l.artist_id}|${l.country}`));
+  for (const { artistId, show } of rows) {
+    const a = artists.get(artistId)!;
+    a.limitCountries ??= [];
+    if (show.ticketLimit) hasLimit.add(`${artistId}|${show.venue.country}`);
+  }
+  for (const a of artists.values()) a.limitCountries = a.countries.filter((cc) => !hasLimit.has(`${a.artistId}|${cc}`));
   return { venues: [...venues.values()], shows, artists: [...artists.values()] };
 }
 
@@ -96,7 +105,7 @@ export async function applyEnrichment(
   env: Env,
   input: EnrichInput,
   now: Date,
-): Promise<{ venues: number; prices: number; resale: number; signups: number; freshSignups?: { artistId: string; links: SignupLink[] }[] }> {
+): Promise<{ venues: number; prices: number; resale: number; signups: number; limits: number; freshSignups?: { artistId: string; links: SignupLink[] }[] }> {
   const iso = now.toISOString();
   const stmts: D1PreparedStatement[] = [];
   const venues = (input.venues ?? []).filter((v) => v.tmId && v.name && (v.capacity === null || (v.capacity > 0 && v.capacity < 400_000)));
@@ -129,6 +138,14 @@ export async function applyEnrichment(
         JSON.stringify(r.info),
         iso,
       ),
+    );
+  }
+  const limits = (input.limits ?? []).filter((l) => l.artistId && /^[A-Z]{2}$/.test(l.country) && Number.isInteger(l.limit) && l.limit >= 1 && l.limit <= 20);
+  for (const l of limits) {
+    stmts.push(
+      env.DB.prepare(
+        "INSERT INTO artist_limit (artist_id, country, ticket_limit, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT (artist_id, country) DO UPDATE SET ticket_limit = excluded.ticket_limit, updated_at = excluded.updated_at",
+      ).bind(l.artistId, l.country, l.limit, iso),
     );
   }
   const signups = (input.signups ?? []).filter((x) => x.artistId);
@@ -178,8 +195,9 @@ export async function applyEnrichment(
     );
   }
   for (const r of resale) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(r.artistId, iso));
+  for (const a of new Set(limits.map((l) => l.artistId))) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(a, iso));
   for (let i = 0; i < stmts.length; i += 50) await env.DB.batch(stmts.slice(i, i + 50));
-  return { venues: venues.length, prices: prices.length, resale: resale.length, signups: signups.length, ...(freshSignups.length ? { freshSignups } : {}) };
+  return { venues: venues.length, prices: prices.length, resale: resale.length, signups: signups.length, limits: limits.length, ...(freshSignups.length ? { freshSignups } : {}) };
 }
 
 /** Entidades seguidas (ids de Ticketmaster), incluidas las descubiertas, para el radar del feed. */
