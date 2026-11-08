@@ -16,6 +16,11 @@ describe("reventa", () => {
     expect(r.low).toBeGreaterThanOrEqual(1.6);
     expect(r.high).toBeLessThanOrEqual(3.0);
   });
+  it("dificultad según el multiplicador; la alta demanda sube un nivel", async () => {
+    const { difficultyOf } = await import("../src/resale");
+    expect([difficultyOf(1.2, false), difficultyOf(1.5, false), difficultyOf(2.0, false), difficultyOf(2.6, false), difficultyOf(2.0, true)]).toEqual(["baja", "media", "alta", "muy alta", "muy alta"]);
+    expect(estimateResale({ tier: 3, hot: false, dates: 5, countries: 2, observed: [1.8, 2.0], listings: 60 }).difficulty).toBe("alta");
+  });
   it("mercado sin precio oficial: lo explica", () =>
     expect(estimateResale({ tier: 3, hot: false, dates: 4, countries: 2, observed: [], listings: 20, marketsWithoutFace: 1 }).basis).toContain("falta el precio oficial"));
   it("sin mercado: modelo con confianza baja y explicación", () => {

@@ -71,6 +71,8 @@ export interface ResaleInfo {
   high: number;
   confidence: "baja" | "media" | "alta";
   basis: string;
+  /** Lo difícil que será conseguir entrada en la venta oficial. */
+  difficulty?: "baja" | "media" | "alta" | "muy alta";
   /** Mercado actual por fecha muestreada (también de otros países, para comparar). */
   markets?: { country: string; city: string; localDate: string; median: number; p25: number; p75: number; currency: string; listings: number; source: string }[];
   /** Datos de reventa de giras anteriores (prensa), con su fuente. */
@@ -245,6 +247,7 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
       : []),
     ...(r
       ? [
+          ...(r.difficulty ? [`**Dificultad para conseguir entrada:** ${r.difficulty}`] : []),
           `**Reventa estimada:** ${times(r.low)}–${times(r.high)} sobre el oficial · confianza ${r.confidence}`,
           ...(r.markets?.length ? ["**Mercado de reventa ahora** (precio por entrada)"] : []),
           `-# ${r.basis}`,

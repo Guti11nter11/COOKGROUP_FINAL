@@ -46,7 +46,19 @@ export interface DemandSignals {
 const round1 = (n: number) => Math.round(n * 10) / 10;
 
 /** Rango estimado de reventa sobre el precio oficial, con nivel de confianza y explicación. */
-export function estimateResale(s: DemandSignals): Pick<ResaleInfo, "low" | "high" | "confidence" | "basis"> {
+export function estimateResale(s: DemandSignals): Pick<ResaleInfo, "low" | "high" | "confidence" | "basis" | "difficulty"> {
+  const r = estimateCore(s);
+  return { ...r, difficulty: difficultyOf((r.low + r.high) / 2, s.hot) };
+}
+
+const LEVELS = ["baja", "media", "alta", "muy alta"] as const;
+/** Dificultad a partir del multiplicador medio esperado; la alta demanda de Ticketmaster sube un nivel. */
+export function difficultyOf(mid: number, hot: boolean): (typeof LEVELS)[number] {
+  const i = mid >= 2.4 ? 3 : mid >= 1.8 ? 2 : mid >= 1.35 ? 1 : 0;
+  return LEVELS[Math.min(3, i + (hot ? 1 : 0))]!;
+}
+
+function estimateCore(s: DemandSignals): Pick<ResaleInfo, "low" | "high" | "confidence" | "basis"> {
   if (s.observed.length) {
     const m = s.observed.slice().sort((a, b) => a - b)[Math.floor(s.observed.length / 2)]!;
     const low = Math.max(1, round1(m * 0.8));

@@ -169,6 +169,46 @@ export async function runCalendar(env: Env, now: Date): Promise<{ reminders: num
   return result;
 }
 
+/** Panel de salud en #estado: un mensaje fijo que se edita como mucho una vez por hora. */
+export async function updateStatusPanel(env: Env, now: Date): Promise<boolean> {
+  if (env.DELIVERY_PAUSED === "1") return false;
+  const hourKey = now.toISOString().slice(0, 13);
+  if ((await setting(env, "status_hour")) === hourKey) return false;
+  const today = now.toISOString().slice(0, 10);
+  const c = await env.DB.prepare(
+    `SELECT (SELECT COUNT(*) FROM follow) AS follows, (SELECT COUNT(*) FROM show WHERE local_date >= ?) AS shows,
+            (SELECT COUNT(*) FROM sheet WHERE status = 'active') AS sheets, (SELECT COUNT(*) FROM sheet WHERE status = 'archived') AS archived,
+            (SELECT COUNT(*) FROM news WHERE created_at >= ?) AS news24, (SELECT COUNT(*) FROM delivery WHERE status = 'pending') AS pending,
+            (SELECT COALESCE(SUM(calls), 0) FROM quota_usage WHERE service = 'ticketmaster' AND day = ?) AS tm,
+            (SELECT COUNT(*) FROM push_sub) AS devices, (SELECT COUNT(*) FROM show_price) AS priced,
+            (SELECT COUNT(*) FROM venue_info WHERE capacity IS NOT NULL) AS venues`,
+  )
+    .bind(today, new Date(now.getTime() - 86_400_000).toISOString(), today)
+    .first<Record<string, number>>();
+  const last = await env.DB.prepare("SELECT started_at, ok FROM job_run ORDER BY id DESC LIMIT 1").first<{ started_at: string; ok: number | null }>();
+  const ok = last?.ok === 1 && now.getTime() - Date.parse(last.started_at) < 15 * 60_000;
+  const text = [
+    `## ${ok ? "🟢" : "🟠"} Estado de GIRA`,
+    `Último ciclo: <t:${Math.floor(Date.parse(last?.started_at ?? now.toISOString()) / 1000)}:R>${ok ? "" : " · revisar"}`,
+    `Entidades seguidas: **${c?.follows ?? 0}** · fechas futuras: **${c?.shows ?? 0}**`,
+    `Canales de gira activos: **${c?.sheets ?? 0}** · archivados: ${c?.archived ?? 0}`,
+    `Noticias (24 h): ${c?.news24 ?? 0} · avisos pendientes: ${c?.pending ?? 0}`,
+    `Ticketmaster hoy: ${c?.tm ?? 0} / 5.000 llamadas · fechas con precio: ${c?.priced ?? 0} · recintos con aforo: ${c?.venues ?? 0}`,
+    `Dispositivos con notificaciones: ${c?.devices ?? 0}`,
+    `-# Se actualiza cada hora`,
+  ].join("\n");
+  const ch = await new Guild(env).byName("estado");
+  if (!ch) return false;
+  const id = await setting(env, "status_msg");
+  const body = { content: text, allowed_mentions: { parse: [] } };
+  if (!(id && (await discordFetch(env, "PATCH", `/channels/${ch.id}/messages/${id}`, body)).ok)) {
+    const newId = await post(env, ch.id, text, true);
+    if (newId) await putSetting(env, "status_msg", newId);
+  }
+  await putSetting(env, "status_hour", hourKey);
+  return true;
+}
+
 /** Token privado del calendario (derivado de una clave secreta; nunca en el repo). */
 export async function icsToken(env: Env): Promise<string> {
   const d = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`gira-ics:${env.TICKETMASTER_API_KEY}`));

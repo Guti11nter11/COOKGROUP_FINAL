@@ -5,7 +5,7 @@ import { applyEnrichment, discover, enrichTodo, followIds } from "./enrich";
 import { ingestNews, type NewsInput } from "./news";
 import { handleAuth } from "./auth";
 import { handleApi } from "./app-api";
-import { announceCalendar, calendarIcs, icsToken, runCalendar } from "./calendar";
+import { announceCalendar, calendarIcs, icsToken, runCalendar, updateStatusPanel } from "./calendar";
 import type { Env, SweepJob } from "./env";
 
 async function scheduled(env: Env, now: Date): Promise<void> {
@@ -18,7 +18,8 @@ async function scheduled(env: Env, now: Date): Promise<void> {
     const calendar = await runCalendar(env, now).catch((e) => ({ error: String(e) }));
     const cycle = await runCycle(env, now, async (j) => void (await env.SWEEP_QUEUE.send(j)));
     const sheets = await publishSheets(env, now);
-    result = { ...cycle, ...sheets, calendar };
+    const panel = await updateStatusPanel(env, now).catch(() => false);
+    result = { ...cycle, ...sheets, calendar, panel };
   } catch (e) {
     ok = 0;
     result = { error: String(e) };

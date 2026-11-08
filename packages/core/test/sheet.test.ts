@@ -79,7 +79,7 @@ describe("renderArtistSheet: datos de enriquecimiento", () => {
       "3": { min: 70, max: 210, currency: "GBP", source: "Ticketmaster" },
     },
     resale: {
-      low: 1.8, high: 3.2, confidence: "media", basis: "Basado en 3 giras anteriores de estadio en Europa",
+      low: 1.8, high: 3.2, confidence: "media", basis: "Basado en 3 giras anteriores de estadio en Europa", difficulty: "muy alta",
       markets: [{ country: "GB", city: "London", localDate: "2027-06-19", median: 320, p25: 240, p75: 450, currency: "USD", listings: 85, source: "StubHub" }],
       history: [{ text: "En 2023 la pista llegó a 600 € en reventa", source: "elpais.com" }],
     },
@@ -94,6 +94,7 @@ describe("renderArtistSheet: datos de enriquecimiento", () => {
   });
   it("reventa estimada con confianza y mercado", () => {
     expect(head).toContain("**Reventa estimada:** ×1,8–×3,2 sobre el oficial · confianza media");
+    expect(head).toContain("**Dificultad para conseguir entrada:** muy alta");
     expect(head).toContain("Basado en 3 giras anteriores");
     expect(head).toContain("🇬🇧 London 19 jun: mediana **$320** · P25–P75 $240–$450 · 85 anuncios (StubHub)");
     expect(head).toContain("🕘 En 2023 la pista llegó a 600 € en reventa");
