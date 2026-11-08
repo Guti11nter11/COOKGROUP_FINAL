@@ -1,4 +1,4 @@
-name: Redes oficiales (Blueticket)
+name: Redes oficiales (Blueticket y artistas ⭐⭐⭐)
 
 # Una vez al día: Instagram oficial de ticketeras cuya web no se puede leer (Blueticket, Portugal),
 # vía Apify (solo lectura). La IA extrae lo accionable y va a #noticias.
@@ -21,6 +21,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Cuentas de los artistas (caché semanal)
+        uses: actions/cache/restore@v4
+        with:
+          path: .social-state
+          key: social-state-${{ github.run_id }}
+          restore-keys: social-state-
       - name: Leer y enviar
         env:
           TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
@@ -28,3 +34,9 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: npx tsx apps/jobs/src/social.ts
+      - name: Guardar caché
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .social-state
+          key: social-state-${{ github.run_id }}

@@ -12,7 +12,7 @@ Qué corre, cuándo y cómo intervenir. Todo es gratis salvo Apify (tope automá
 | Enriquecer fichas | Actions `enrich` | 09:00, 13:00, 19:00 (Worker) | Aforo, precios oficiales (prensa + IA), registros de la web oficial, reventa |
 | Radar de noticias | Actions `news-radar` | 6 veces/día (Worker) | Prensa de Europa, una noticia por artista y tipo al día |
 | Ticketeras sin API | Actions `ticketers` | 10:00 y 20:00 (Worker) | Entradas.com, Eventim DE, TicketOne IT y See Tickets con Browser Run, por turnos; AXS por sitemaps |
-| Blueticket | Actions `social` | 11:30 (Worker) | Instagram oficial de Blueticket (Apify) |
+| Redes | Actions `social` | 11:30 (Worker) | Instagram oficial de Blueticket y de los artistas ⭐⭐⭐ (Apify, ~0,1 $/día) |
 | Mantenimiento D1 | Actions `d1-maintenance` | al subir un `.sql` a `apps/worker/maintenance/` | Ejecuta ese SQL en producción e imprime el resultado |
 
 Horario y costes: [plan/14-horarios-y-costes.md](plan/14-horarios-y-costes.md). Los trabajos los lanza el
