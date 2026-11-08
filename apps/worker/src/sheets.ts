@@ -162,7 +162,7 @@ function noticeText(name: string, alerts: Alert[], shows: Show[], channelId: str
  * Publica las fichas de los artistas pendientes: crea su canal si tienen ventas por llegar, edita
  * la ficha si cambió, envía un aviso agrupado y archiva el canal cuando pasa la gira.
  */
-export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, maxScan = 25): Promise<{ updated: number; notices: number }> {
+export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, maxScan = 8): Promise<{ updated: number; notices: number }> {
   if (env.DELIVERY_PAUSED === "1") return { updated: 0, notices: 0 };
   // Reclamo atómico: dos ejecuciones simultáneas nunca trabajan el mismo artista (ni crean dos canales).
   const { results: dirty } = await env.DB.prepare(
