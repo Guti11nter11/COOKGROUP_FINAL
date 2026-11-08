@@ -79,7 +79,11 @@ export default {
         return Response.json(results.map((r) => ({ name: r.name, messages: JSON.parse(r.rendered_json) as string[] })));
       }
       // Fuerza una pasada de publicación y devuelve el resultado (con errores de Discord, si los hay).
-      if (url.pathname === "/enrich/publish" && req.method === "POST") return Response.json(await publishSheets(env, now));
+      if (url.pathname === "/enrich/publish" && req.method === "POST") {
+        // Todas las fichas activas pasan a pendientes (p. ej. tras cambiar el formato) y se publica una pasada.
+        await env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) SELECT artist_id, ? FROM sheet WHERE status = 'active'").bind(now.toISOString()).run();
+        return Response.json(await publishSheets(env, now));
+      }
       if (url.pathname === "/enrich/agenda" && req.method === "POST") return Response.json(await postAgenda(env, (await req.json()) as never, now));
       if (url.pathname === "/enrich/follows") return Response.json({ ids: await followIds(env) });
       if (url.pathname === "/enrich/discover" && req.method === "POST") return Response.json(await discover(env, (await req.json()) as never, now));
