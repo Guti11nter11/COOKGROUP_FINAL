@@ -143,7 +143,7 @@ const dayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: MADRID, weekday: "sh
 const clean = (s: string) => s.replace(/\./g, "").replace(/,/g, "").replace(/\s+/g, " ").trim();
 
 /** Un único aviso por artista y ejecución, con enlace a su canal. */
-function noticeText(name: string, alerts: Alert[], shows: Show[], channelId: string, now: Date): string {
+function noticeText(name: string, alerts: Alert[], shows: Show[], channelId: string, now: Date, forPush = false): string {
   const n = (k: Alert["kind"]) => alerts.filter((a) => a.kind === k).length;
   const parts: string[] = [];
   if (n("new_event")) parts.push(`${n("new_event")} ${n("new_event") === 1 ? "fecha nueva" : "fechas nuevas"}`);
@@ -158,7 +158,13 @@ function noticeText(name: string, alerts: Alert[], shows: Show[], channelId: str
     .flatMap((s) => s.sales)
     .filter((w) => w.kind !== "official_resale" && w.startsAt && Date.parse(w.startsAt) > now.getTime())
     .sort((a, b) => a.startsAt!.localeCompare(b.startsAt!))[0];
-  const nextTxt = next ? ` · próxima venta: **${clean(dayFmt.format(new Date(next.startsAt!)))}, ${formatHHmm(next.startsAt!, MADRID)}** (Madrid) — ${next.label}` : "";
+  // En Discord, marca de hora (cada uno la ve en su zona); en el iPhone, la hora escrita.
+  const when = next
+    ? forPush
+      ? `${clean(dayFmt.format(new Date(next.startsAt!)))}, ${formatHHmm(next.startsAt!, MADRID)}`
+      : `<t:${Math.floor(Date.parse(next.startsAt!) / 1000)}:F>`
+    : "";
+  const nextTxt = next ? ` · próxima venta: **${when}** — ${next.label}` : "";
   return `${icon} **${name}** · ${parts.join(" · ")}${places.length ? ` (${places.join(", ")})` : ""}${nextTxt} → <#${channelId}>`;
 }
 
@@ -349,7 +355,7 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
         notices++;
         // Push al iPhone: de noche (01–08) solo si es urgente.
         if (urgent || !isQuietTime(now)) {
-          await pushAll(env, { title: artist.name, body: noticeText(artist.name, alerts, shows, channelId, now).replace(/\*\*/g, "").replace(/ → <#\d+>$/, ""), url: `/app/#gira-${artist_id}`, tag: `n-${artist_id}` }).catch(() => 0);
+          await pushAll(env, { title: artist.name, body: noticeText(artist.name, alerts, shows, channelId, now, true).replace(/\*\*/g, "").replace(/ → <#\d+>$/, ""), url: `/app/#gira-${artist_id}`, tag: `n-${artist_id}` }).catch(() => 0);
         }
       }
     }
