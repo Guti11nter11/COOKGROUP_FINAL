@@ -39,6 +39,8 @@ export interface DemandSignals {
   observed: number[];
   /** Anuncios usados en total. */
   listings: number;
+  /** Fechas con mercado leído aunque falte el precio oficial para comparar. */
+  marketsWithoutFace?: number;
 }
 
 const round1 = (n: number) => Math.round(n * 10) / 10;
@@ -73,5 +75,8 @@ export function estimateResale(s: DemandSignals): Pick<ResaleInfo, "low" | "high
     high *= 1.15;
     why.push(`solo ${s.dates} ${s.dates === 1 ? "fecha" : "fechas"}`);
   }
-  return { low: round1(low), high: round1(high), confidence: "baja", basis: `Modelo GIRA sin datos de mercado todavía: ${why.join(", ")}` };
+  const basis = s.marketsWithoutFace
+    ? `Modelo GIRA (${why.join(", ")}); hay ${s.listings} anuncios de reventa abajo, pero falta el precio oficial para calcular el multiplicador real`
+    : `Modelo GIRA sin datos de mercado todavía: ${why.join(", ")}`;
+  return { low: round1(low), high: round1(high), confidence: "baja", basis };
 }

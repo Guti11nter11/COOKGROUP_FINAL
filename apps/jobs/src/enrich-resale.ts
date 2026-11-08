@@ -65,7 +65,8 @@ async function history(artist: string): Promise<{ text: string; source: string }
  */
 export async function estimateAll(artists: EnrichTodo["artists"], now = new Date(), maxSampled = 3): Promise<NonNullable<EnrichInput["resale"]>> {
   const fresh = (a: EnrichTodo["artists"][number]) => a.resaleAt && now.getTime() - Date.parse(a.resaleAt) < RESAMPLE_DAYS * 86_400_000;
-  const todo = artists.filter((a) => !fresh(a)).sort((a, b) => b.tier - a.tier || Number(b.hot) - Number(a.hot));
+  // Todos se recalculan (los precios oficiales pueden haber llegado); solo los no recientes gastan en mercado.
+  const todo = [...artists].sort((a, b) => Number(!!fresh(a)) - Number(!!fresh(b)) || b.tier - a.tier || Number(b.hot) - Number(a.hot));
   const budget = process.env.APIFY_TOKEN ? await apifyBudget() : null;
   let canSample = !!budget && budget.used < Math.min(APIFY_MONTHLY_CAP_USD, budget.limit * 0.6);
   console.log(`Apify: ${budget ? `${budget.used.toFixed(2)} $ de ${budget.limit} $ este mes` : "sin acceso"} · muestreo ${canSample ? "sí" : "no"}`);
@@ -73,11 +74,22 @@ export async function estimateAll(artists: EnrichTodo["artists"], now = new Date
   const out: NonNullable<EnrichInput["resale"]> = [];
   let sampled = 0;
 
-  for (const a of todo.slice(0, 12)) {
+  for (const a of todo.slice(0, 20)) {
     const markets: NonNullable<ResaleInfo["markets"]> = [];
+    a.prices ??= [];
     const observed: number[] = [];
     let listings = 0;
-    if (canSample && sampled < maxSampled && a.tier >= 3) {
+    const reuse = fresh(a) ? a.resale : null;
+    if (reuse?.markets?.length) {
+      // Mercado leído hace menos de una semana: se reutiliza y se compara con los precios oficiales de ahora.
+      for (const m of reuse.markets) {
+        markets.push(m);
+        listings += m.listings;
+        const face = faceValue(a.prices, m.country);
+        const faceUsd = face ? convert(face.amount, face.currency, "USD", rates) : null;
+        if (faceUsd) observed.push(m.median / faceUsd);
+      }
+    } else if (!reuse && canSample && sampled < maxSampled && a.tier >= 3) {
       try {
         sampled++;
         const found = await runActor<StubEvent & { error?: string }>("parseforge/stubhub-scraper", { query: a.name, maxItems: 25, maxConcurrency: 2 }, { maxItems: 25, timeoutSecs: 180 });
@@ -108,8 +120,8 @@ export async function estimateAll(artists: EnrichTodo["artists"], now = new Date
       const after = await apifyBudget();
       if (after && after.used >= APIFY_MONTHLY_CAP_USD) canSample = false;
     }
-    const hist = a.tier >= 2 ? await history(a.name).catch(() => []) : [];
-    const est = estimateResale({ tier: a.tier, hot: a.hot, dates: a.dates, countries: a.countries.length, observed, listings });
+    const hist = reuse ? (reuse.history ?? []) : a.tier >= 2 ? await history(a.name).catch(() => []) : [];
+    const est = estimateResale({ tier: a.tier, hot: a.hot, dates: a.dates, countries: a.countries.length, observed, listings, marketsWithoutFace: markets.length - observed.length });
     out.push({ artistId: a.artistId, info: { ...est, ...(markets.length ? { markets } : {}), ...(hist.length ? { history: hist } : {}) } });
     console.log(`✓ ${a.name}: ×${est.low}–×${est.high} (${est.confidence}) · ${markets.length} mercados · ${hist.length} datos históricos`);
   }

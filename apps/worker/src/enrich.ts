@@ -58,7 +58,7 @@ export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
   const artists = new Map<string, EnrichTodo["artists"][number]>();
   const nowMs = now.getTime();
   for (const { artistId, artist, tier, mbid, homepage, show } of rows) {
-    const a = artists.get(artistId) ?? { artistId, name: artist, tier, mbid, homepage, needsSignup: false, dates: 0, when: [], countries: [], venues: [], hot: false, firstSale: null, resaleAt: null, prices: [] };
+    const a = artists.get(artistId) ?? { artistId, name: artist, tier, mbid, homepage, needsSignup: false, dates: 0, when: [], countries: [], venues: [], hot: false, firstSale: null, resaleAt: null, resale: null, prices: [] };
     a.needsSignup ||= show.sales.some((w) => SIGNUP_KINDS.has(w.kind) && (!w.startsAt || Date.parse(w.startsAt) > nowMs));
     a.dates++;
     a.when.push({ city: show.venue.city, localDate: show.localDate });
@@ -68,7 +68,7 @@ export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
     for (const w of show.sales) if (w.startsAt && (!a.firstSale || w.startsAt < a.firstSale)) a.firstSale = w.startsAt;
     artists.set(artistId, a);
   }
-  const { results: rs } = await env.DB.prepare("SELECT artist_id, updated_at FROM artist_resale").all<{ artist_id: string; updated_at: string }>();
+  const { results: rs } = await env.DB.prepare("SELECT artist_id, json, updated_at FROM artist_resale").all<{ artist_id: string; json: string; updated_at: string }>();
   const { results: pr } = await env.DB.prepare("SELECT source_id, min, max, currency, zones_json FROM show_price").all<{
     source_id: string;
     min: number;
@@ -79,7 +79,9 @@ export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
   const priceOf = new Map(pr.map((p) => [p.source_id, p]));
   for (const { artistId, show } of rows) {
     const a = artists.get(artistId)!;
-    a.resaleAt = rs.find((r) => r.artist_id === artistId)?.updated_at ?? null;
+    const prev = rs.find((r) => r.artist_id === artistId);
+    a.resaleAt = prev?.updated_at ?? null;
+    a.resale = prev ? JSON.parse(prev.json) : null;
     const p = priceOf.get(show.sourceId);
     if (p && a.prices.length < 40) {
       a.prices.push({ country: show.venue.country, city: show.venue.city, min: p.min, max: p.max, currency: p.currency, ...(p.zones_json ? { zones: JSON.parse(p.zones_json) } : {}) });

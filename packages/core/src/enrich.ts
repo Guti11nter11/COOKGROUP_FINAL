@@ -21,6 +21,8 @@ export interface EnrichTodo {
     firstSale: string | null;
     /** Última estimación de reventa guardada (para no volver a muestrear el mercado cada vez). */
     resaleAt: string | null;
+    /** Estimación guardada (para reutilizar el mercado leído sin volver a gastar). */
+    resale: ResaleInfo | null;
     /** Precios oficiales conocidos de sus fechas. */
     prices: { country: string; city: string; min: number; max: number; currency: string; zones?: { name: string; price: number }[] }[];
   }[];

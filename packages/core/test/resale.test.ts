@@ -16,6 +16,8 @@ describe("reventa", () => {
     expect(r.low).toBeGreaterThanOrEqual(1.6);
     expect(r.high).toBeLessThanOrEqual(3.0);
   });
+  it("mercado sin precio oficial: lo explica", () =>
+    expect(estimateResale({ tier: 3, hot: false, dates: 4, countries: 2, observed: [], listings: 20, marketsWithoutFace: 1 }).basis).toContain("falta el precio oficial"));
   it("sin mercado: modelo con confianza baja y explicación", () => {
     const r = estimateResale({ tier: 3, hot: true, dates: 2, countries: 1, observed: [], listings: 0 });
     expect(r.confidence).toBe("baja");

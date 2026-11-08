@@ -34,11 +34,11 @@ async function priceGroup(list: EnrichTodo["shows"], out: NonNullable<EnrichInpu
   {
     const { artist, country } = list[0]!;
     const items = (await searchNews(`"${artist}" ${PRICE_QUERY[country] ?? "ticket prices"}`, country)).slice(0, 6);
-    const sources: { url: string; text: string }[] = [];
+    const sources: { url: string; text: string; name: string }[] = [];
     for (const it of items) {
       const body = (await articleText(it.link)) ?? "";
       const snippets = priceSnippets(`${it.title}. ${it.description}. ${body}`);
-      if (snippets.length) sources.push({ url: it.link, text: snippets.join(" ") });
+      if (snippets.length) sources.push({ url: it.link, text: snippets.join(" "), name: it.source });
       await pause(400);
     }
     if (!sources.length) {
@@ -51,9 +51,12 @@ async function priceGroup(list: EnrichTodo["shows"], out: NonNullable<EnrichInpu
     const ok = validPrices(res?.prices ?? [], sources);
     const assigned = assignToShows(ok, list);
     for (const [sourceId, p] of assigned) {
-      let source = "prensa";
+      // Nombre del medio (Google News enlaza por su dominio; el medio real viene en el RSS).
+      let source = sources.find((x) => x.url === p.url)?.name || "prensa";
       try {
-        source = new URL(p.url).hostname.replace(/^www\./, "");
+        const host = new URL(p.url).hostname.replace(/^www\./, "");
+        if (!/news\.google\.com$/.test(host) && !source.includes(".")) source = `${source} (${host})`;
+        else if (!/news\.google\.com$/.test(host)) source = host;
       } catch {
         /* sin dominio */
       }
