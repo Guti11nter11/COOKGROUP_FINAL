@@ -166,7 +166,7 @@ describe("fichas por artista en Discord", () => {
     const body = discordCalls("POST", /\/channels\/NEW\d+\/messages/).map((c) => c.body.content).join("\n");
     expect(body).toContain("· Estadio (70.000)");
     expect(body).toContain("🇪🇸 **ESPAÑA:** **45 €** – **250 €**");
-    expect(body).toContain("**Reventa estimada:** ×1,5–×2,5");
+    expect(body).toContain("**Reventa estimada:** ×1,5–×2,5 sobre el oficial\n");
     expect(body).toMatch(/^# 🎤 Artista Uno — Tour 2027 ⭐⭐⭐/m);
   });
 

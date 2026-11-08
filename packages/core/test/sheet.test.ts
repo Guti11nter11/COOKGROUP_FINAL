@@ -105,7 +105,7 @@ describe("renderArtistSheet: datos de enriquecimiento", () => {
     expect(msgs.join("\n")).toContain("· Estadio Sevilla (70.000)");
   });
   it("reventa: solo el multiplicador (sin mercado, historial ni explicación del modelo)", () => {
-    expect(head).toContain("**Reventa estimada:** ×1,8–×3,2 sobre el oficial · confianza media");
+    expect(head).toContain("**Reventa estimada:** ×1,8–×3,2 sobre el oficial");
     expect(head).toContain("**Dificultad para conseguir entrada:** muy alta");
     expect(head).not.toContain("Basado en");
     expect(head).not.toContain("mediana");

@@ -31,8 +31,8 @@ describe("recordatorios", () => {
 describe("resúmenes y calendario", () => {
   const now = new Date("2026-11-09T20:00:00Z");
   it("resumen de la noche con novedades y ventas de 48 h", () => {
-    const d = renderDigest([slot], [{ artist: "Jamiroquai", text: "gira europea 2027", channelId: "J" }], now, "21:00").join("\n");
-    expect(d).toContain("🌙 Resumen de la noche");
+    const d = renderDigest([slot], [{ artist: "Jamiroquai", text: "gira europea 2027", channelId: "J" }], now).join("\n");
+    expect(d).toContain("🌙 Resumen del día");
     expect(d).toContain("• **Jamiroquai** · gira europea 2027 → <#J>");
     expect(d).toContain("`10:00` **U2** · Artist Presale · 🇪🇸 Barcelona, 🇪🇸 Sevilla → <#CH>");
   });

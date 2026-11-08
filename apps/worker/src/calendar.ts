@@ -1,6 +1,5 @@
 import {
   formatHHmm,
-  isQuietTime,
   localDateIn,
   MADRID,
   remindersDue,
@@ -87,8 +86,8 @@ async function newsSince(env: Env, since: Date): Promise<{ artist: string; text:
 }
 
 /**
- * Reloj de GIRA (cada 5 min): recordatorios T-24 h / T-1 h / T-10 min, resúmenes de las 21:00 y las
- * 08:00 (hora de Madrid) y el mensaje fijo de #esta-semana.
+ * Reloj de GIRA (cada 5 min): recordatorios T-1 h / T-10 min, resumen diario de las 22:00 (hora de
+ * Madrid; uno al día, decisión del propietario) y el mensaje fijo de #esta-semana.
  */
 export async function runCalendar(env: Env, now: Date): Promise<{ reminders: number; digest: boolean; week: boolean }> {
   if (env.DELIVERY_PAUSED === "1") return { reminders: 0, digest: false, week: false };
@@ -139,17 +138,20 @@ export async function runCalendar(env: Env, now: Date): Promise<{ reminders: num
     }).catch(() => 0);
   }
 
-  // 2) Resumen diario a las 21:00 y a las 08:00 (Madrid), una vez.
+  // 2) Resumen diario: una sola vez, a las 22:00 (Madrid).
   const hhmm = formatHHmm(now.toISOString(), MADRID);
-  const slotName = hhmm >= "21:00" && hhmm < "21:15" ? "21:00" : hhmm >= "08:00" && hhmm < "08:15" ? "08:00" : null;
+  const slotName = hhmm >= "22:00" && hhmm < "22:15" ? "22:00" : null;
   if (slotName) {
-    const key = `digest|${localDateIn(now, MADRID)}|${slotName}`;
-    if (!(await setting(env, key))) {
+    const day = localDateIn(now, MADRID);
+    const key = `digest|${day}|${slotName}`;
+    // Uno al día: si hoy ya salió (p. ej. el de las 21:00 del horario anterior), no se repite.
+    const already = await env.DB.prepare("SELECT 1 AS x FROM setting WHERE key LIKE ? LIMIT 1").bind(`digest|${day}|%`).first();
+    if (!already) {
       const ch = await guild.byName("daily-release");
       if (ch) {
-        const msgs = renderDigest(slots, await newsSince(env, new Date(now.getTime() - 12 * 3600_000)), now, slotName);
+        const msgs = renderDigest(slots, await newsSince(env, new Date(now.getTime() - 24 * 3600_000)), now);
         let ok = true;
-        for (const m of msgs) ok = ok && !!(await post(env, ch.id, m, slotName === "08:00" ? false : isQuietTime(now)));
+        for (const m of msgs) ok = ok && !!(await post(env, ch.id, m, false));
         if (ok) {
           await putSetting(env, key, now.toISOString());
           result.digest = true;

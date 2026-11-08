@@ -75,12 +75,15 @@ describe("reloj de GIRA", () => {
     expect(rec[0]!.body.content).toContain("• **U2** · Artist Presale · Live Nation Presale ·");
   });
 
-  it("resumen de las 21:00 una sola vez; esta semana se publica y luego se edita", async () => {
-    await runCalendar(env, new Date("2026-11-09T20:02:00Z"));
-    expect(at("C_DAY").map((p) => p.body.content).join("\n")).toContain("Resumen de la noche");
+  it("resumen diario a las 22:00, una sola vez; esta semana se publica y luego se edita", async () => {
+    await runCalendar(env, new Date("2026-11-09T20:02:00Z")); // 21:02: ya no hay resumen a esa hora
+    expect(at("C_DAY")).toHaveLength(0);
     expect(at("C_WEEK")).toHaveLength(1);
     posts = [];
-    await runCalendar(env, new Date("2026-11-09T20:07:00Z"));
+    await runCalendar(env, new Date("2026-11-09T21:02:00Z"));
+    expect(at("C_DAY").map((p) => p.body.content).join("\n")).toContain("Resumen del día");
+    posts = [];
+    await runCalendar(env, new Date("2026-11-09T21:07:00Z"));
     expect(at("C_DAY")).toHaveLength(0);
     expect(at("C_WEEK")).toHaveLength(0);
   });

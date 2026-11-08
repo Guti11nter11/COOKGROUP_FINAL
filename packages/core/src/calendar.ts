@@ -14,7 +14,7 @@ export interface SaleSlot {
   dates: { city: string; country: string; localDate: string; url: string }[];
 }
 
-/** Sin "mañana a esta hora": de eso ya avisan los resúmenes de las 21:00 y las 08:00. */
+/** Sin "mañana a esta hora": de eso ya avisa el resumen diario de las 22:00. */
 export const REMINDERS = [
   { key: "1h", ms: 3600_000, text: "en 1 hora" },
   { key: "10m", ms: 10 * 60_000, text: "en 10 minutos" },
@@ -68,11 +68,11 @@ function byDay(slots: SaleSlot[]): [string, SaleSlot[]][] {
 
 const line = (s: SaleSlot) => `\`${formatHHmm(s.startsAt, MADRID)}\` **${s.artist}** · ${s.label} · ${cities(s)}${chan(s)}`;
 
-/** Resumen diario (21:00 y 08:00): ventas de las próximas 48 h y giras nuevas del día. */
-export function renderDigest(slots: SaleSlot[], news: { artist: string; text: string; channelId: string | null }[], now: Date, slot: "21:00" | "08:00"): string[] {
+/** Resumen diario (una vez, a las 22:00): ventas de las próximas 48 h y giras nuevas del día. */
+export function renderDigest(slots: SaleSlot[], news: { artist: string; text: string; channelId: string | null }[], now: Date): string[] {
   const horizon = now.getTime() + 48 * 3600_000;
   const next = slots.filter((s) => Date.parse(s.startsAt) > now.getTime() && Date.parse(s.startsAt) <= horizon);
-  const parts: string[] = [`# ${slot === "21:00" ? "🌙 Resumen de la noche" : "☀️ Buenos días"} · ${dayFmt.format(now)}`];
+  const parts: string[] = [`# 🌙 Resumen del día · ${dayFmt.format(now)}`];
   if (news.length) parts.push(["## 🆕 Novedades", ...news.slice(0, 15).map((n) => `• **${n.artist}** · ${n.text}${n.channelId ? ` → <#${n.channelId}>` : ""}`)].join("\n"));
   if (next.length) {
     for (const [, list] of byDay(next)) parts.push([`## 📅 ${dayFmt.format(new Date(list[0]!.startsAt))}`, ...list.map(line)].join("\n"));
