@@ -39,17 +39,25 @@ conseguir entradas (sorteos, preventas, registros y ventas cuentan como accionab
 Para cada titular di a qué artista de su lista de candidatos se refiere de verdad (o null si no es ese
 artista: homónimos, palabras normales…), la categoría (${CATEGORIES.join(", ")}) y un resumen de una
 línea en español con lo accionable (fechas, ciudades, cuándo es la preventa o venta). Sin inventar.
-Responde en JSON: {"items":[{"i":0,"artist":"","category":"","summary":""}]}`;
+"europe" es true solo si afecta a fechas o ventas en Europa o Reino Unido (o es una gira mundial que
+incluye Europa); false si solo trata de América, Asia u Oceanía.
+Responde en JSON: {"items":[{"i":0,"artist":"","category":"","summary":"","europe":true}]}`;
 
 const out: { artistName: string; title: string; url: string; source: string; category: NewsCategory; summary: string; publishedAt: string | null }[] = [];
 for (let i = 0; i < fresh.length; i += 20) {
   const batch = fresh.slice(i, i + 20);
   const user = batch.map((b, j) => `${j}. [candidatos: ${b.candidates.join(", ")}] ${b.title} — ${b.description.slice(0, 280)}`).join("\n");
-  const res = await aiJson<{ items?: { i: number; artist: string | null; category: string; summary: string }[] }>(SYSTEM, user);
+  const res = await aiJson<{ items?: { i: number; artist: string | null; category: string; summary: string; europe?: boolean }[] }>(SYSTEM, user);
   for (const r of res?.items ?? []) {
     const b = batch[r.i];
     if (!b || !r.artist || !b.candidates.includes(r.artist)) continue;
     if (!CATEGORIES.includes(r.category as NewsCategory) || r.category === "other") continue;
+    // Fase 1: solo Europa y Reino Unido (América, Asia y Oceanía llegarán en sus fases).
+    if (r.europe !== true) continue;
+    // Una sola noticia por artista y tipo al día (la misma historia sale en muchos medios).
+    const dup = `dup|${r.artist.toLowerCase()}|${r.category}|${new Date(now).toISOString().slice(0, 10)}`;
+    if (seen[dup] || out.some((o) => o.artistName === r.artist && o.category === r.category)) continue;
+    seen[dup] = now;
     out.push({ artistName: r.artist, title: b.title, url: b.link, source: b.source, category: r.category as NewsCategory, summary: r.summary.slice(0, 220), publishedAt: b.pubDate });
   }
 }

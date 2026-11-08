@@ -27,13 +27,16 @@ const SYSTEM = `Lees publicaciones oficiales de una ticketera para un radar pers
 Para cada publicación que anuncie un concierto, gira, festival o evento deportivo con venta o preventa,
 devuelve el artista o evento, la categoría (tour_announced, presale, on_sale, extra_date, sold_out) y un
 resumen en español con fechas, ciudad/recinto y cuándo salen las entradas. Ignora sorteos de redes,
-merchandising y publicaciones sin evento. Responde en JSON: {"items":[{"i":0,"artist":"","category":"","summary":""}]}`;
-const res = await aiJson<{ items?: { i: number; artist: string; category: string; summary: string }[] }>(
+merchandising y publicaciones sin evento. "major" es true solo si es un artista o evento de alta demanda
+(artista internacional o muy conocido, festival grande, pabellón o estadio); false para conciertos
+locales pequeños, teatro o música de cámara.
+Responde en JSON: {"items":[{"i":0,"artist":"","category":"","summary":"","major":true}]}`;
+const res = await aiJson<{ items?: { i: number; artist: string; category: string; summary: string; major?: boolean }[] }>(
   SYSTEM,
   fresh.map((p, i) => `${i}. @${p.ownerUsername}: ${p.caption!.slice(0, 600)}`).join("\n\n"),
 );
 const items = (res?.items ?? [])
-  .filter((r) => fresh[r.i] && r.artist && ["tour_announced", "presale", "on_sale", "extra_date", "sold_out"].includes(r.category))
+  .filter((r) => fresh[r.i] && r.artist && r.major === true && ["tour_announced", "presale", "on_sale", "extra_date", "sold_out"].includes(r.category))
   .map((r) => {
     const p = fresh[r.i]!;
     const acc = cfg.instagram.find((a) => a.handle === p.ownerUsername);
