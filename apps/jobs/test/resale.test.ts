@@ -13,8 +13,13 @@ describe("reventa: muestreo y precio de referencia", () => {
   it("precio de referencia: media de zonas del mismo país", () => {
     const prices = [{ country: "ES", city: "Barcelona", min: 85, max: 255, currency: "EUR", zones: [{ name: "Pista", price: 181.5 }, { name: "PL5", price: 85 }] }];
     expect(faceValue(prices, "ES")).toEqual({ amount: 133.25, currency: "EUR" });
-    expect(faceValue(prices, "GB")).toEqual({ amount: 133.25, currency: "EUR" });
+    expect(faceValue(prices, "GB")).toBeNull(); // solo el mismo país
+    expect(faceValue([{ country: "GB", city: "London", min: 49.1, max: 49.1, currency: "GBP" }], "GB")).toBeNull(); // precio suelto
     expect(faceValue([], "ES")).toBeNull();
+  });
+  it("multiplicador creíble", async () => {
+    const { plausibleMultiplier } = await import("../src/resale-lib");
+    expect([plausibleMultiplier(2.1), plausibleMultiplier(7.6), plausibleMultiplier(0.3)]).toEqual([true, false, false]);
   });
   it("conversión con tasas base EUR", () => expect(convert(100, "EUR", "USD", { USD: 1.1 })).toBeCloseTo(110));
 });

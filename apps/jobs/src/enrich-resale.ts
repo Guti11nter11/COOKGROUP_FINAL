@@ -3,7 +3,7 @@ import { aiJson } from "./ai";
 import { apifyAllowed, runActor } from "./apify";
 import { getJson } from "./gira-client";
 import { articleText, searchNews } from "./news";
-import { chooseEvents, convert, countryCode, faceValue, type StubEvent } from "./resale-lib";
+import { chooseEvents, convert, countryCode, faceValue, plausibleMultiplier, type StubEvent } from "./resale-lib";
 
 const RESAMPLE_DAYS = 7;
 /** Coste previsto de muestrear un artista (búsqueda + 3 fechas × 30 anuncios ≈ 0,4 $). */
@@ -87,7 +87,7 @@ export async function estimateAll(artists: EnrichTodo["artists"], now = new Date
         listings += m.listings;
         const face = faceValue(a.prices, m.country);
         const faceUsd = face ? convert(face.amount, face.currency, "USD", rates) : null;
-        if (faceUsd) observed.push(m.median / faceUsd);
+        if (faceUsd && plausibleMultiplier(m.median / faceUsd)) observed.push(m.median / faceUsd);
       }
     } else if (!reuse && canSample && sampled < maxSampled && a.tier >= 3) {
       try {
@@ -111,7 +111,7 @@ export async function estimateAll(artists: EnrichTodo["artists"], now = new Date
             listings += st.n;
             const face = faceValue(a.prices, cc);
             const faceUsd = face ? convert(face.amount, face.currency, "USD", rates) : null;
-            if (faceUsd) observed.push(st.median / faceUsd);
+            if (faceUsd && plausibleMultiplier(st.median / faceUsd)) observed.push(st.median / faceUsd);
           }
         }
       } catch (e) {
