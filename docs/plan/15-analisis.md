@@ -23,7 +23,13 @@ cuándo, dónde registrarse y cómo entrar, con coste mínimo (≤ 1 $/día).
   un precio oficial del mismo país con rango o zonas, y se descartan multiplicadores imposibles.
 - Trabajos lanzados por el Worker a horas fijas (GitHub se saltaba la mayoría).
 - Eventim Alemania y TicketOne Italia añadidas al lector de ticketeras.
-- Instagram oficial de los artistas ⭐⭐⭐ (fase R7) dentro del presupuesto.
+- Instagram oficial de los artistas ⭐⭐⭐ (fase R7) dentro del presupuesto: 28 cuentas localizadas en
+  MusicBrainz; primera pasada, 8 publicaciones de las últimas 24 h y 1 accionable.
+
+## Gasto real de hoy
+
+Apify, a las 13:30: **0,08 $** (dos pasadas de redes con 29 cuentas incluidas). Ayer 1,43 $ por las
+pruebas del primer día. Todo lo demás, 0 €.
 
 ## Lo que falta o conviene vigilar
 
