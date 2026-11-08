@@ -76,3 +76,19 @@ export function pickSignups(raw: RawLink[], shows: { city: string; localDate: st
   }
   return [...out.values()];
 }
+
+const PRESALE_WORDS = /\b(pre-?sale|presale|preventa|pr[ée]vente|vorverkauf|early access|get access|tour|tickets?|entradas|boletos|concerts?|live|sphere|stadium|estadio|arena)\b/i;
+const NOT_PRESALE = /\b(newsletter|merch|store|shop|tienda|podcast|contest|competition|sorteo|giveaway)\b/i;
+
+/**
+ * Para artistas sin fechas todavía: solo enlaces que apuntan a una preventa o gira (plataformas de
+ * registro conocidas o texto/contexto de gira), no la newsletter genérica de la web. Pura.
+ */
+export function presaleSignal(link: SignupLink, raw?: RawLink): boolean {
+  const host = new URL(link.url).hostname.replace(/^www\./, "");
+  const known = HOSTS.find(([re]) => re.test(host));
+  if (known && known[1] !== "Bandsintown") return true;
+  const text = `${raw?.text ?? link.label} ${new URL(link.url).pathname}`;
+  if (NOT_PRESALE.test(text)) return false;
+  return PRESALE_WORDS.test(`${text} ${raw?.context ?? ""}`);
+}

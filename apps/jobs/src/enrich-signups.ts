@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 import type { EnrichInput, EnrichTodo } from "@gira/core";
 import { getJson } from "./gira-client";
 import { readFileSync } from "node:fs";
-import { pickSignups, type RawLink } from "./signups-lib";
+import { cleanUrl, pickSignups, presaleSignal, type RawLink } from "./signups-lib";
 
 /** Registros que el propietario ya conoce (data/watchlist.json): se añaden siempre a su ficha. */
 type Watch = { entity: string; kind: string; url?: string };
@@ -55,7 +55,7 @@ async function linksOf(browser: Browser, url: string): Promise<RawLink[]> {
 }
 
 /** Busca dónde registrarse para las preventas del artista en su web oficial (y su página de gira). */
-export async function findSignups(artists: EnrichTodo["artists"], max = 15): Promise<NonNullable<EnrichInput["signups"]>> {
+export async function findSignups(artists: EnrichTodo["artists"], max = 15, onlyPresale = false): Promise<NonNullable<EnrichInput["signups"]>> {
   const todo = artists.filter((a) => a.needsSignup).slice(0, max);
   if (!todo.length) return [];
   // Playwright se instala solo en el trabajo de Actions (no es dependencia del repo).
@@ -81,7 +81,9 @@ export async function findSignups(artists: EnrichTodo["artists"], max = 15): Pro
       // Página de gira de la misma web, si la hay.
       const tour = raw.find((l) => /^(tour|tours|live|dates|shows|events|conciertos|gira|tickets)$/i.test(l.text) && l.href.includes(host));
       if (tour) raw.push(...(await linksOf(browser, tour.href)));
-      const found = pickSignups(raw, a.when, host);
+      const picked = pickSignups(raw, a.when, host);
+      // Sin fechas todavía: solo lo que apunta a una preventa o gira, no la newsletter de siempre.
+      const found = onlyPresale ? picked.filter((f) => presaleSignal(f, raw.find((r) => cleanUrl(r.href) === f.url))) : picked;
       const links = [...known, ...found.filter((f) => !known.some((k) => k.url === f.url))];
       out.push({ artistId: a.artistId, homepage, links });
       console.log(`${links.length ? "✓" : "·"} ${a.name} (${homepage}): ${links.map((l) => `${l.label}${l.city ? ` ${l.city}` : ""}`).join(", ") || "sin enlaces de registro"}`);

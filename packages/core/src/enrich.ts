@@ -2,6 +2,8 @@ import type { PriceInfo, ResaleInfo, SignupLink } from "./sheet";
 
 /** Lo que los trabajos de enriquecimiento (GitHub Actions) tienen que buscar. */
 export interface EnrichTodo {
+  /** Artistas ⭐⭐⭐ sin fechas por llegar: se vigila su web oficial por si abren un registro antes de publicar fechas. */
+  watch?: { artistId: string; name: string; tier: number; mbid: string | null; homepage: string | null }[];
   venues: { tmId: string; name: string; city: string; country: string }[];
   shows: { sourceId: string; artistId: string; artist: string; name: string; city: string; country: string; localDate: string; venue: string }[];
   artists: {

@@ -13,10 +13,21 @@ import { findLimits } from "./enrich-limits";
 const todo = await gira<EnrichTodo>("/enrich/todo");
 console.log(`Pendiente: ${todo.venues.length} recintos sin aforo · ${todo.shows.length} fechas sin precio · ${todo.artists.length} artistas`);
 
+/** Artistas sin fechas, por turnos: 8 por pasada (3 pasadas al día cubren a los ⭐⭐⭐ en un día y medio). */
+function watchTurn(watch: NonNullable<EnrichTodo["watch"]>): EnrichTodo["artists"] {
+  const turn = Math.floor(Date.now() / (8 * 3600_000));
+  const start = watch.length ? (turn * 8) % watch.length : 0;
+  return [...watch.slice(start), ...watch.slice(0, start)].slice(0, 8).map((w) => ({
+    artistId: w.artistId, mbid: w.mbid, homepage: w.homepage, needsSignup: true, name: w.name, tier: w.tier, dates: 0, when: [],
+    countries: [], venues: [], hot: false, firstSale: null, resaleAt: null, resale: null, prices: [],
+  }));
+}
+
 const steps: [string, () => Promise<EnrichInput>][] = [
   ["aforos", async () => ({ venues: await findCapacities(todo.venues) })],
   ["registros", async () => ({ signups: await findSignups(todo.artists) })],
   ["límites", async () => ({ limits: await findLimits(todo.artists) })],
+  ["registros sin fechas", async () => ({ signups: await findSignups(watchTurn(todo.watch ?? []), 8, true) })],
   ["precios", async () => ({ prices: await findPrices(todo.shows) })],
   // La reventa va al final: usa los precios oficiales ya guardados (la siguiente pasada los tiene todos).
   ["reventa", async () => ({ resale: await estimateAll(todo.artists) })],

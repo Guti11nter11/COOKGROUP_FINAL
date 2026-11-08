@@ -97,7 +97,12 @@ export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
     if (show.ticketLimit) hasLimit.add(`${artistId}|${show.venue.country}`);
   }
   for (const a of artists.values()) a.limitCountries = a.countries.filter((cc) => !hasLimit.has(`${a.artistId}|${cc}`));
-  return { venues: [...venues.values()], shows, artists: [...artists.values()] };
+  // ⭐⭐⭐ sin fechas activas: su web puede abrir un registro antes de que haya fechas en Ticketmaster.
+  const { results: watch } = await env.DB.prepare(
+    `SELECT a.id AS artistId, a.name, f.tier, a.mbid, a.homepage FROM follow f JOIN artist a ON a.id = f.artist_id
+     WHERE f.tier >= 3 ORDER BY a.name LIMIT 200`,
+  ).all<{ artistId: string; name: string; tier: number; mbid: string | null; homepage: string | null }>();
+  return { venues: [...venues.values()], shows, artists: [...artists.values()], watch: watch.filter((w) => !artists.has(w.artistId)) };
 }
 
 /** Guarda lo encontrado y marca las fichas afectadas para regenerarlas. */

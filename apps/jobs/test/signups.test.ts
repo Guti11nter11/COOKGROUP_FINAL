@@ -37,3 +37,18 @@ describe("registros en la web oficial", () => {
     ]);
   });
 });
+
+import { presaleSignal } from "../src/signups-lib";
+describe("registros de artistas sin fechas todavía", () => {
+  const l = (url: string, label = "Sign up") => ({ url, label, city: null, localDate: null });
+  it("plataformas de preventa y enlaces de gira sí", () => {
+    expect(presaleSignal(l("https://laylo.com/rush/abc"))).toBe(true);
+    expect(presaleSignal(l("https://www.rush.com/sphere/"), { text: "Signup Here", href: "https://www.rush.com/sphere/", context: "RUSH at SPHERE Las Vegas · tickets on sale November 13" })).toBe(true);
+    expect(presaleSignal(l("https://signup.ticketmaster.com/noahkahan"))).toBe(true);
+  });
+  it("newsletter genérica y tienda no", () => {
+    expect(presaleSignal(l("https://www.artist.com/newsletter"), { text: "Sign up", href: "", context: "Sign up for our newsletter" })).toBe(false);
+    expect(presaleSignal(l("https://www.artist.com/signup"), { text: "Sign up", href: "", context: "Join the mailing list for news and updates" })).toBe(false);
+    expect(presaleSignal(l("https://store.artist.com/register"), { text: "Register", href: "", context: "store" })).toBe(false);
+  });
+});
