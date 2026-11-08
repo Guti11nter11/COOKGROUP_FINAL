@@ -272,7 +272,7 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
                 "**Mercado de reventa ahora** (precio por entrada)",
                 ...r.markets.map(
                   (m) =>
-                    `${flag(m.country)} ${m.city} ${linkDay(m.localDate)}: mediana **${money(m.median, m.currency)}** · P25–P75 ${money(m.p25, m.currency)}–${money(m.p75, m.currency)} · ${m.listings} anuncios (${m.source})`,
+                    `${flag(m.country)} ${m.city} ${linkDay(m.localDate)}: mediana **${money(m.median, m.currency)}** · P25–P75 ${money(m.p25, m.currency)}–${money(m.p75, m.currency)} · ${m.listings} anuncios (${m.source})${live.some((x) => x.venue.country === m.country) ? "" : " · _otro país, para comparar_"}`,
                 ),
               ]
             : []),

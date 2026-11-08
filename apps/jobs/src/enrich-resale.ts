@@ -24,6 +24,12 @@ Frases cortas en español. "quote" es un trozo LITERAL del fragmento. No invente
 Responde en JSON: {"facts":[{"text":"","quote":"","url":""}]}`;
 
 /** Datos de reventa de otros años/países en prensa (con cita literal comprobada). */
+const foldName = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+export const mentions = (text: string, artist: string) => foldName(text).includes(foldName(artist));
+
+/** Corta en palabra completa con "…". */
+export const clip = (t: string, max: number) => (t.length <= max ? t : `${t.slice(0, max).replace(/\s+\S*$/, "")}…`);
+
 async function history(artist: string): Promise<{ text: string; source: string }[]> {
   const items = [
     ...(await searchNews(`"${artist}" reventa entradas precio`, "ES")).slice(0, 4),
@@ -46,7 +52,9 @@ async function history(artist: string): Promise<{ text: string; source: string }
   );
   const fold = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().replace(/\s+/g, " ");
   return (res?.facts ?? [])
+    // Cita literal comprobada y que nombre al artista (fuera leyes o datos generales del sector).
     .filter((f) => f.quote?.length >= 15 && sources.some((s) => s.url === f.url && fold(s.text).includes(fold(f.quote))))
+    .filter((f) => mentions(`${f.quote} ${f.text}`, artist))
     .slice(0, 3)
     .map((f) => {
       let source = "prensa";
@@ -55,7 +63,7 @@ async function history(artist: string): Promise<{ text: string; source: string }
       } catch {
         /* sin dominio */
       }
-      return { text: f.text.slice(0, 160), source };
+      return { text: clip(f.text, 160), source };
     });
 }
 
@@ -119,7 +127,7 @@ export async function estimateAll(artists: EnrichTodo["artists"], now = new Date
       }
       canSample = (await apifyAllowed(SAMPLE_COST_USD)).ok;
     }
-    const hist = reuse ? (reuse.history ?? []) : a.tier >= 2 ? await history(a.name).catch(() => []) : [];
+    const hist = reuse ? (reuse.history ?? []).filter((h) => mentions(h.text, a.name)) : a.tier >= 2 ? await history(a.name).catch(() => []) : [];
     const est = estimateResale({ tier: a.tier, hot: a.hot, dates: a.dates, countries: a.countries.length, observed, listings, marketsWithoutFace: markets.length - observed.length });
     out.push({ artistId: a.artistId, info: { ...est, ...(markets.length ? { markets } : {}), ...(hist.length ? { history: hist } : {}) } });
     console.log(`✓ ${a.name}: ×${est.low}–×${est.high} (${est.confidence}) · ${markets.length} mercados · ${hist.length} datos históricos`);

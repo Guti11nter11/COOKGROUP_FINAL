@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { clip, mentions } from "../src/enrich-resale";
 import { chooseEvents, convert, faceValue } from "../src/resale-lib";
 
 describe("reventa: muestreo y precio de referencia", () => {
@@ -22,4 +23,16 @@ describe("reventa: muestreo y precio de referencia", () => {
     expect([plausibleMultiplier(2.1), plausibleMultiplier(7.6), plausibleMultiplier(0.3)]).toEqual([true, false, false]);
   });
   it("conversión con tasas base EUR", () => expect(convert(100, "EUR", "USD", { USD: 1.1 })).toBeCloseTo(110));
+});
+
+describe("historial de reventa", () => {
+  it("solo datos que nombran al artista", () => {
+    expect(mentions("tras los dos conciertos de U2 en España", "U2")).toBe(true);
+    expect(mentions("En Massachusetts, una ley de 2026 limita la reventa al 110 %", "Noah Kahan")).toBe(false);
+    expect(mentions("Las entradas de Beyoncé se revendieron a 900 €", "Beyonce")).toBe(true);
+  });
+  it("corta en palabra completa", () => {
+    expect(clip("Ciudadanos pidió limitar la reventa", 22)).toBe("Ciudadanos pidió…");
+    expect(clip("corto", 22)).toBe("corto");
+  });
 });

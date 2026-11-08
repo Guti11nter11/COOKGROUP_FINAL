@@ -80,7 +80,9 @@ describe("renderArtistSheet: datos de enriquecimiento", () => {
     },
     resale: {
       low: 1.8, high: 3.2, confidence: "media", basis: "Basado en 3 giras anteriores de estadio en Europa", difficulty: "muy alta",
-      markets: [{ country: "GB", city: "London", localDate: "2027-06-19", median: 320, p25: 240, p75: 450, currency: "USD", listings: 85, source: "StubHub" }],
+      markets: [{ country: "GB", city: "London", localDate: "2027-06-19", median: 320, p25: 240, p75: 450, currency: "USD", listings: 85, source: "StubHub" },
+        { country: "BR", city: "São Paulo", localDate: "2027-03-12", median: 774, p25: 438, p75: 1783, currency: "USD", listings: 21, source: "StubHub" },
+      ],
       history: [{ text: "En 2023 la pista llegó a 600 € en reventa", source: "elpais.com" }],
     },
   });
@@ -96,7 +98,8 @@ describe("renderArtistSheet: datos de enriquecimiento", () => {
     expect(head).toContain("**Reventa estimada:** ×1,8–×3,2 sobre el oficial · confianza media");
     expect(head).toContain("**Dificultad para conseguir entrada:** muy alta");
     expect(head).toContain("Basado en 3 giras anteriores");
-    expect(head).toContain("🇬🇧 London 19 jun: mediana **$320** · P25–P75 $240–$450 · 85 anuncios (StubHub)");
+    expect(head).toContain("🇬🇧 London 19 jun: mediana **$320** · P25–P75 $240–$450 · 85 anuncios (StubHub)\n");
+    expect(head).toContain("· 21 anuncios (StubHub) · _otro país, para comparar_");
     expect(head).toContain("🕘 En 2023 la pista llegó a 600 € en reventa");
   });
   it("money", () => {
