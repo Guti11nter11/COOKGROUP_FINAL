@@ -16,6 +16,8 @@ export const TICKETERS: Ticketer[] = [
   // El Corte Inglés: la búsqueda renderizada no devolvió fichas; pendiente de ajustar. AXS se lee por sus
   // sitemaps públicos (ver axsEventsFor), no con el navegador.
   { enabled: false, id: "eci", name: "El Corte Inglés", country: "ES", search: (a) => `https://www.elcorteingles.es/entradas/buscar/?term=${encodeURIComponent(a)}`, eventPath: /\/entradas\/(conciertos|musica|festivales|teatro|deportes)\/.+/i },
+  { id: "eventim-de", name: "Eventim (Alemania)", country: "DE", search: (a) => `https://www.eventim.de/search/?searchterm=${encodeURIComponent(a)}`, eventPath: /\/(event|artist|eventseries)\//i },
+  { id: "ticketone", name: "TicketOne (Italia)", country: "IT", search: (a) => `https://www.ticketone.it/search/?searchterm=${encodeURIComponent(a)}`, eventPath: /\/(event|artist|eventseries)\//i },
   { id: "seetickets", name: "See Tickets", country: "GB", search: (a) => `https://www.seetickets.com/search?q=${encodeURIComponent(a)}`, eventPath: /\/(event|tour)\//i },
   { enabled: false, id: "axs", name: "AXS", country: "GB", search: (a) => `https://www.axs.com/uk/search?q=${encodeURIComponent(a)}`, eventPath: /\/(events|artists)\/\d+/i },
 ];

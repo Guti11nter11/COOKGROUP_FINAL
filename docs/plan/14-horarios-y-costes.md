@@ -21,8 +21,8 @@ Trabajos de GitHub, lanzados por el Worker a horas fijas (nunca de madrugada):
 | Catálogo de Ticketmaster | 08:30, 09:30 … 14:30, 16:30, 18:30, 20:30, 22:30 | 11 |
 | Noticias | 08:15, 10:15, 12:15, 14:15, 17:15, 20:15 | 6 |
 | Enriquecer fichas (aforo, precios, registros, reventa) | 09:00, 13:00, 19:00 | 3 |
-| Ticketeras (Entradas.com, See Tickets, AXS) | 10:07 y 20:07 | 2 |
-| Blueticket | 11:37 | 1 |
+| Ticketeras (Entradas.com, Eventim DE, TicketOne IT, See Tickets, AXS) | 10:00 y 20:00 | 2 |
+| Blueticket | 11:30 | 1 |
 
 Se configura en `packages/core/src/schedule.ts`.
 

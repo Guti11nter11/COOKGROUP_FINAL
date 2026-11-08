@@ -4,8 +4,7 @@ name: Ticketeras sin API
 # See Tickets y AXS con Cloudflare Browser Run (navegador real, baja frecuencia, sin tocar colas).
 
 on:
-  schedule:
-    - cron: "7 9,19 * * *"
+  # Lo lanza el Worker a horas fijas de Madrid (packages/core/src/schedule.ts, JOB_SLOTS).
   workflow_dispatch:
   push:
     branches: [claude/magical-franklin-u415fe]

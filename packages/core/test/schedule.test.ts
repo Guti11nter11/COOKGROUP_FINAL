@@ -29,5 +29,9 @@ describe("horario por franjas (hora de Madrid)", () => {
     expect(slotDue(slots, at("10:30"), new Set())).toBeNull(); // 09:00 ya pasó hace más de 60 min
     expect(slotDue(slots, at("07:00"), new Set())).toBeNull();
   });
+  it("todos los trabajos tienen horas fijas y ninguna de madrugada", () => {
+    for (const slots of Object.values(JOB_SLOTS)) for (const s of slots) expect(s >= "08:00").toBe(true);
+    expect(Object.keys(JOB_SLOTS).sort()).toEqual(["enrich.yml", "feed-radar.yml", "news-radar.yml", "social.yml", "ticketers.yml"]);
+  });
   it("en verano también (Madrid = UTC+2)", () => expect(sweepEveryMin(new Date("2027-07-01T08:00:00Z"))).toBe(10));
 });

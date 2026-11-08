@@ -11,7 +11,7 @@ const ACCOUNT = process.env.CLOUDFLARE_ACCOUNT_ID;
 const TOKEN = process.env.CLOUDFLARE_API_TOKEN;
 if (!ACCOUNT || !TOKEN) throw new Error("Faltan CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_API_TOKEN");
 const STATE = ".ticketers-state/state.json";
-const PER_RUN = Number(process.env.ARTISTS_PER_RUN ?? 8); // 8 artistas × 2 ticketeras × 2 pasadas ≈ 8 min de navegador al día
+const PER_RUN = Number(process.env.ARTISTS_PER_RUN ?? 5); // 5 artistas × 4 ticketeras × 2 pasadas ≈ 40 páginas (< 10 min de navegador al día)
 
 type State = { cursor: number; seen: Record<string, string[]>; axs?: Record<string, number[]>; axsDay?: string };
 const state: State = existsSync(STATE) ? JSON.parse(readFileSync(STATE, "utf8")) : { cursor: 0, seen: {} };

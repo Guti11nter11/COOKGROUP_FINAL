@@ -4,8 +4,7 @@ name: Redes oficiales (Blueticket)
 # vía Apify (solo lectura). La IA extrae lo accionable y va a #noticias.
 
 on:
-  schedule:
-    - cron: "37 10 * * *"
+  # Lo lanza el Worker a horas fijas de Madrid (packages/core/src/schedule.ts, JOB_SLOTS).
   workflow_dispatch:
 
 permissions:
