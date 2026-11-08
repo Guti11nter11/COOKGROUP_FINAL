@@ -25,6 +25,8 @@ export interface EnrichTodo {
     resaleAt: string | null;
     /** Estimación guardada (para reutilizar el mercado leído sin volver a gastar). */
     resale: ResaleInfo | null;
+    /** Huella de la imagen de precios ya guardada (para no volver a subirla si no cambió). */
+    priceImageHash?: string | null;
     /** Países de sus fechas sin límite de entradas conocido (ni de la ticketera ni de prensa). */
     limitCountries?: string[];
     /** Precios oficiales conocidos de sus fechas. */

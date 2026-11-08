@@ -207,30 +207,39 @@ function limitText(live: Show[], limits: Record<string, number>): string | null 
   return [...byCountry].map(([cc, n]) => `${flag(cc)} **${n}**`).join(" · ") + " por persona";
 }
 
-/**
- * Precios oficiales por país (en un país, todas las ciudades tienen la misma tabla): zonas de la fecha
- * que más detalle tenga o, si no hay zonas, el rango. Sin fuentes. Null si no hay ningún precio.
- */
-export function renderPrices(live: Show[], prices: Record<string, PriceInfo>): string | null {
-  const byCountry = new Map<string, PriceInfo[]>();
-  for (const s of live) {
-    const p = prices[s.sourceId];
-    if (p) byCountry.set(s.venue.country, [...(byCountry.get(s.venue.country) ?? []), p]);
-  }
-  if (!byCountry.size) return null;
-  const parts = [...byCountry].map(([cc, ps]) => {
+export interface CountryPrices {
+  country: string;
+  name: string;
+  currency: string;
+  /** Zonas de la fecha con más detalle (en un país todas las ciudades tienen la misma tabla). */
+  zones: { name: string; price: number }[];
+  min: number;
+  max: number;
+}
+
+/** Precios oficiales agrupados por país (sin fuentes). Lo usan el texto de la ficha y la imagen. */
+export function pricesByCountry(entries: { country: string; min: number; max: number; currency: string; zones?: { name: string; price: number }[] }[]): CountryPrices[] {
+  const byCountry = new Map<string, typeof entries>();
+  for (const e of entries) byCountry.set(e.country, [...(byCountry.get(e.country) ?? []), e]);
+  return [...byCountry].map(([cc, ps]) => {
     const zoned = [...ps].filter((p) => p.zones?.length).sort((a, b) => b.zones!.length - a.zones!.length)[0];
-    if (zoned) {
-      const seen = new Set<string>();
-      const zones = zoned.zones!.filter((z) => !seen.has(z.name.toLowerCase()) && seen.add(z.name.toLowerCase()));
-      return [`${flag(cc)} **${countryName(cc)}**`, ...zones.map((z) => `• ${z.name} · **${money(z.price, zoned.currency)}**`)].join("\n");
-    }
-    const cur = ps[0]!.currency;
+    const cur = zoned?.currency ?? ps[0]!.currency;
     const same = ps.filter((p) => p.currency === cur);
-    const min = Math.min(...same.map((p) => p.min));
-    const max = Math.max(...same.map((p) => p.max));
-    return `${flag(cc)} **${countryName(cc)}:** ${min === max ? `**${money(min, cur)}**` : `**${money(min, cur)}** – **${money(max, cur)}**`}`;
+    const seen = new Set<string>();
+    const zones = (zoned?.zones ?? []).filter((z) => !seen.has(z.name.toLowerCase()) && seen.add(z.name.toLowerCase()));
+    return { country: cc, name: countryName(cc), currency: cur, zones, min: Math.min(...same.map((p) => p.min)), max: Math.max(...same.map((p) => p.max)) };
   });
+}
+
+/** Mensaje "💶 Precios oficiales": un bloque por país con sus zonas o, si no hay zonas, el rango. */
+export function renderPrices(live: Show[], prices: Record<string, PriceInfo>): string | null {
+  const rows = pricesByCountry(live.filter((s) => prices[s.sourceId]).map((s) => ({ ...prices[s.sourceId]!, country: s.venue.country })));
+  if (!rows.length) return null;
+  const parts = rows.map((c) =>
+    c.zones.length
+      ? [`${flag(c.country)} **${c.name}**`, ...c.zones.map((z) => `• ${z.name} · **${money(z.price, c.currency)}**`)].join("\n")
+      : `${flag(c.country)} **${c.name}:** ${c.min === c.max ? `**${money(c.min, c.currency)}**` : `**${money(c.min, c.currency)}** – **${money(c.max, c.currency)}**`}`,
+  );
   return ["## 💶 Precios oficiales", ...parts].join("\n\n");
 }
 

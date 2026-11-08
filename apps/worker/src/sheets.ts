@@ -20,7 +20,7 @@ import {
   type Alert,
   type Show,
 } from "@gira/core";
-import { discordFetch } from "./discord-client";
+import { discordFetch, discordUpload } from "./discord-client";
 import { pushAll } from "./push";
 import type { Env } from "./env";
 
@@ -208,7 +208,9 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
     }
     // Ficha activa sin cambios ni avisos pendientes: no hace falta Discord (no gasta cupo de la pasada).
     const msgs = active ? renderArtistSheet({ name: artist.name, tier: artist.tier }, shows, now, await loadExtras(env, artist_id, shows)) : [];
-    const hash = stableHash(msgs.join("\u0000").replace(/-# Actualizado <t:\d+:R>/, ""));
+    // Imagen de precios (si el trabajo de enriquecer la generó): sustituye al texto del mensaje de precios.
+    const img = active ? await env.DB.prepare("SELECT hash, mime FROM price_image WHERE artist_id = ?").bind(artist_id).first<{ hash: string; mime: string }>() : null;
+    const hash = stableHash(msgs.join("\u0000").replace(/-# Actualizado <t:\d+:R>/, "") + (img ? `|img:${img.hash}` : ""));
     const pending = await env.DB.prepare("SELECT 1 AS x FROM delivery WHERE artist_id = ? AND status = 'pending' LIMIT 1").bind(artist_id).first();
     if (active && sheet?.status === "active" && hash === sheet.content_hash && !pending) {
       if (!sheet.tracked_sale || !sheet.rendered_json) {
@@ -263,6 +265,7 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
     // Ficha: editar los mensajes existentes en vez de publicar otros nuevos.
     if (hash !== sheet?.content_hash) {
       const ids: string[] = JSON.parse(sheet?.message_ids ?? "[]");
+      const prevMsgs: string[] = sheet?.rendered_json ? JSON.parse(sheet.rendered_json) : [];
       const next: string[] = [];
       // Los ids se guardan aunque la pasada falle a medias: un mensaje publicado nunca queda huérfano
       // (antes, un 429 a mitad dejaba copias de la ficha que ya nadie editaba).
@@ -271,9 +274,17 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
       try {
         for (let i = 0; i < msgs.length; i++) {
           // Sin vistas previas de enlaces (la ficha tiene muchos y ensuciarían el canal).
-          const body = { content: msgs[i], allowed_mentions: { parse: [] }, flags: 4 };
+          const isPrices = img && msgs[i]!.startsWith(PRICES_HEADER);
+          const body = { content: isPrices ? PRICES_HEADER : msgs[i], allowed_mentions: { parse: [] }, flags: 4 };
+          const send = async (method: "POST" | "PATCH", path: string) =>
+            isPrices ? discordUpload(env, method, path, body, await loadImage(env, artist_id, img!.mime)) : discordFetch(env, method, path, body);
+          // Mensaje de texto idéntico al publicado: no se toca (ahorra llamadas a Discord).
+          if (ids[i] && !isPrices && prevMsgs[i] === msgs[i]) {
+            next.push(ids[i]!);
+            continue;
+          }
           if (ids[i]) {
-            const r = await discordFetch(env, "PATCH", `/channels/${channelId}/messages/${ids[i]}`, body);
+            const r = await send("PATCH", `/channels/${channelId}/messages/${ids[i]}`);
             if (r.ok) {
               next.push(ids[i]!);
               continue;
@@ -281,7 +292,7 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
             // Solo se publica otro si el mensaje ya no existe; cualquier otro fallo se reintenta luego.
             if (r.status !== 404) throw new Error(`Discord editar ficha HTTP ${r.status}`);
           }
-          const r = await discordFetch(env, "POST", `/channels/${channelId}/messages`, body);
+          const r = await send("POST", `/channels/${channelId}/messages`);
           if (!r.ok) throw new Error(`Discord publicar ficha HTTP ${r.status}`);
           next.push(((await r.json()) as { id: string }).id);
         }
@@ -351,6 +362,17 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
     }
   }
   return { updated: Math.min(touched, maxDiscordArtists), notices };
+}
+
+const PRICES_HEADER = "## 💶 Precios oficiales";
+
+/** Imagen de precios guardada en trozos base64. */
+async function loadImage(env: Env, artistId: string, mime: string): Promise<{ name: string; type: string; bytes: Uint8Array }> {
+  const { results } = await env.DB.prepare("SELECT data FROM price_image_chunk WHERE artist_id = ? ORDER BY idx").bind(artistId).all<{ data: string }>();
+  const bin = atob(results.map((r) => r.data).join(""));
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return { name: mime === "image/png" ? "precios.png" : "precios.jpg", type: mime, bytes };
 }
 
 /**

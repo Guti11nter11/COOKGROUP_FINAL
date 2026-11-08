@@ -5,6 +5,7 @@ import { findPrices } from "./enrich-prices";
 import { findSignups } from "./enrich-signups";
 import { estimateAll } from "./enrich-resale";
 import { findLimits } from "./enrich-limits";
+import { uploadPriceImages } from "./enrich-price-images";
 
 /**
  * Enriquecimiento de las fichas activas: aforo de recintos (Wikidata), precios oficiales (prensa con
@@ -42,5 +43,12 @@ for (const [name, step] of steps) {
     failed++;
     console.log(`⚠️ ${name}: ${String(e)}`);
   }
+}
+// Imagen de precios por país (con los precios recién guardados): solo se sube si cambió.
+try {
+  const fresh = await gira<EnrichTodo>("/enrich/todo");
+  console.log(`imágenes de precios: ${JSON.stringify(await uploadPriceImages(fresh.artists))}`);
+} catch (e) {
+  console.log(`⚠️ imágenes de precios: ${String(e)}`);
 }
 if (failed === steps.length) process.exit(1);

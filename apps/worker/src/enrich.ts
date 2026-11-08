@@ -97,6 +97,11 @@ export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
     if (show.ticketLimit) hasLimit.add(`${artistId}|${show.venue.country}`);
   }
   for (const a of artists.values()) a.limitCountries = a.countries.filter((cc) => !hasLimit.has(`${a.artistId}|${cc}`));
+  const { results: imgs } = await env.DB.prepare("SELECT artist_id, hash FROM price_image").all<{ artist_id: string; hash: string }>();
+  for (const i of imgs) {
+    const a = artists.get(i.artist_id);
+    if (a) a.priceImageHash = i.hash;
+  }
   // ⭐⭐⭐ sin fechas activas: su web puede abrir un registro antes de que haya fechas en Ticketmaster.
   const { results: watch } = await env.DB.prepare(
     `SELECT a.id AS artistId, a.name, f.tier, a.mbid, a.homepage FROM follow f JOIN artist a ON a.id = f.artist_id
@@ -249,4 +254,23 @@ export async function announceSignups(env: Env, fresh: { artistId: string; links
     if ((await discordFetch(env, "POST", `/channels/${ch.id}/messages`, { content, allowed_mentions: { parse: [] }, flags: 4 })).ok) sent++;
   }
   return sent;
+}
+
+const CHUNK = 90_000;
+/** Guarda la imagen de precios de un artista (base64, en trozos) y marca su ficha para republicarla. */
+export async function storePriceImage(env: Env, body: { artistId?: string; hash?: string; mime?: string; data?: string }, now: Date): Promise<{ stored: boolean }> {
+  const { artistId, hash, mime, data } = body;
+  if (!artistId || !hash || !data || !/^image\/(png|jpeg)$/.test(mime ?? "") || data.length > 1_500_000 || !/^[A-Za-z0-9+/=]+$/.test(data)) return { stored: false };
+  const parts: string[] = [];
+  for (let i = 0; i < data.length; i += CHUNK) parts.push(data.slice(i, i + CHUNK));
+  const iso = now.toISOString();
+  await env.DB.batch([
+    env.DB.prepare("DELETE FROM price_image_chunk WHERE artist_id = ?").bind(artistId),
+    ...parts.map((d, i) => env.DB.prepare("INSERT INTO price_image_chunk (artist_id, idx, data) VALUES (?, ?, ?)").bind(artistId, i, d)),
+    env.DB.prepare(
+      "INSERT INTO price_image (artist_id, hash, mime, chunks, updated_at) VALUES (?, ?, ?, ?, ?) ON CONFLICT (artist_id) DO UPDATE SET hash = excluded.hash, mime = excluded.mime, chunks = excluded.chunks, updated_at = excluded.updated_at",
+    ).bind(artistId, hash, mime!, parts.length, iso),
+    env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(artistId, iso),
+  ]);
+  return { stored: true };
 }

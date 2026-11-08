@@ -1,7 +1,7 @@
 import { ingestShows, processPage, runCycle } from "./cycle";
 import { publishSheets, refreshActiveSheets } from "./sheets";
 import type { EnrichInput } from "@gira/core";
-import { announceSignups, applyEnrichment, discover, enrichTodo, followIds } from "./enrich";
+import { announceSignups, applyEnrichment, discover, enrichTodo, followIds, storePriceImage } from "./enrich";
 import { ingestNews, type NewsInput } from "./news";
 import { handleAuth } from "./auth";
 import { handleApi } from "./app-api";
@@ -79,6 +79,7 @@ export default {
       }
       if (url.pathname === "/enrich/follows") return Response.json({ ids: await followIds(env) });
       if (url.pathname === "/enrich/discover" && req.method === "POST") return Response.json(await discover(env, (await req.json()) as never, now));
+      if (url.pathname === "/enrich/price-image" && req.method === "POST") return Response.json(await storePriceImage(env, (await req.json()) as never, now));
       if (url.pathname === "/enrich/news" && req.method === "POST") return Response.json(await ingestNews(env, (await req.json()) as NewsInput, now));
       if (url.pathname === "/enrich" && req.method === "POST") {
         // Las fichas marcadas se regeneran en el siguiente ciclo (cada 5 min), sin ráfagas a Discord.

@@ -52,11 +52,18 @@ beforeAll(() => {
   d.intercept({ path: `/api/v10/guilds/${GUILD}/channels`, method: "POST" })
     .reply((o) => (calls.push({ method: "POST", path: o.path, body: JSON.parse(String(o.body)) }), ok({ id: `NEW${++created}` })))
     .persist();
+  const parse = (b: unknown) => {
+    try {
+      return JSON.parse(String(b));
+    } catch {
+      return { multipart: true }; // mensaje con imagen adjunta
+    }
+  };
   d.intercept({ path: (p) => p.startsWith("/api/v10/channels/"), method: "POST" })
-    .reply((o) => (calls.push({ method: "POST", path: o.path, body: JSON.parse(String(o.body)) }), ok({ id: `M${calls.length}` })))
+    .reply((o) => (calls.push({ method: "POST", path: o.path, body: parse(o.body) }), ok({ id: `M${calls.length}` })))
     .persist();
   d.intercept({ path: (p) => p.startsWith("/api/v10/channels/"), method: "PATCH" })
-    .reply((o) => (calls.push({ method: "PATCH", path: o.path, body: JSON.parse(String(o.body)) }), patchStatus === 200 ? ok({}) : { statusCode: patchStatus, data: "{}" }))
+    .reply((o) => (calls.push({ method: "PATCH", path: o.path, body: parse(o.body) }), patchStatus === 200 ? ok({}) : { statusCode: patchStatus, data: "{}" }))
     .persist();
   d.intercept({ path: (p) => /^\/api\/v10\/channels\/[^/]+\/messages\?limit=100$/.test(p), method: "GET" })
     .reply((o) => (calls.push({ method: "GET", path: o.path, body: null }), ok(channelMessages)))
@@ -161,6 +168,18 @@ describe("fichas por artista en Discord", () => {
     expect(body).toContain("🇪🇸 **ESPAÑA:** **45 €** – **250 €**");
     expect(body).toContain("**Reventa estimada:** ×1,5–×2,5");
     expect(body).toMatch(/^# 🎤 Artista Uno — Tour 2027 ⭐⭐⭐/m);
+  });
+
+  it("con imagen de precios, el mensaje de precios se publica con la imagen adjunta", async () => {
+    const a = show("1", "2027-05-10", "2026-11-20T09:00:00Z");
+    await storeShow(a); await alertFor(a);
+    await env.DB.prepare("INSERT INTO show_price (source_id, min, max, currency, source, updated_at) VALUES ('1', 45, 250, 'EUR', 'Ticketmaster', ?)").bind(NOW.toISOString()).run();
+    const { storePriceImage } = await import("../src/enrich");
+    expect(await storePriceImage(env, { artistId: "a1", hash: "h1", mime: "image/jpeg", data: btoa("JPEGDATA") }, NOW)).toEqual({ stored: true });
+    await publishSheets(env, NOW);
+    const posts = discordCalls("POST", /\/channels\/NEW\d+\/messages$/);
+    expect(posts.some((c) => c.body.multipart)).toBe(true);
+    expect(posts.some((c) => typeof c.body.content === "string" && c.body.content.includes("ESPAÑA"))).toBe(false);
   });
 
   it("en el canal solo queda la ficha: se borran copias antiguas y novedades del bot", async () => {
