@@ -182,7 +182,7 @@ function noticias() {
   const news = state.feed.news;
   if (!news.length) return `<h1>Noticias</h1><p class="empty">Todavía no hay noticias guardadas.</p>`;
   return `<h1>Noticias</h1><ul class="list news">${news
-    .map((n) => `<li><a class="row" href="${esc(n.url)}" target="_blank" rel="noopener noreferrer"><span class="cat">${esc(CAT[n.category] || n.category)}</span><br><b>${esc(n.artist_name)}</b> · ${esc(n.summary)}<span class="sub">${esc(n.source || "")}</span></a></li>`)
+    .map((n) => `<li><a class="row" href="${esc(n.url)}" target="_blank" rel="noopener noreferrer"><span class="cat">${esc(CAT[n.category] || n.category)}</span><br><b>${esc(n.artist_name)}</b> · ${esc(n.summary)}</a></li>`)
     .join("")}</ul>`;
 }
 

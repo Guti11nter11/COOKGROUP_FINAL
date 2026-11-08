@@ -7,6 +7,8 @@ const GUILD = "1568641743853715516";
 const NOW = new Date("2026-11-08T12:00:00Z");
 let calls: { method: string; path: string; body: any }[] = [];
 let created = 0;
+let patchStatus = 200;
+let channelMessages: { id: string; timestamp: string; author: { bot: boolean } }[] = [];
 
 const show = (id: string, date: string, saleAt: string, extra: Partial<Show> = {}): Show => ({
   source: "ticketmaster", sourceId: id, name: "Artista Uno - Tour 2027", attractionIds: ["K1"],
@@ -54,7 +56,10 @@ beforeAll(() => {
     .reply((o) => (calls.push({ method: "POST", path: o.path, body: JSON.parse(String(o.body)) }), ok({ id: `M${calls.length}` })))
     .persist();
   d.intercept({ path: (p) => p.startsWith("/api/v10/channels/"), method: "PATCH" })
-    .reply((o) => (calls.push({ method: "PATCH", path: o.path, body: JSON.parse(String(o.body)) }), ok({})))
+    .reply((o) => (calls.push({ method: "PATCH", path: o.path, body: JSON.parse(String(o.body)) }), patchStatus === 200 ? ok({}) : { statusCode: patchStatus, data: "{}" }))
+    .persist();
+  d.intercept({ path: (p) => /^\/api\/v10\/channels\/[^/]+\/messages\?limit=100$/.test(p), method: "GET" })
+    .reply((o) => (calls.push({ method: "GET", path: o.path, body: null }), ok(channelMessages)))
     .persist();
   d.intercept({ path: (p) => p.startsWith("/api/v10/channels/"), method: "DELETE" })
     .reply((o) => (calls.push({ method: "DELETE", path: o.path, body: null }), { statusCode: 204, data: "" }))
@@ -62,6 +67,8 @@ beforeAll(() => {
 });
 beforeEach(async () => {
   calls = [];
+  patchStatus = 200;
+  channelMessages = [];
   await env.DB.batch([
     env.DB.prepare("INSERT INTO artist (id, name, tm_attraction_id) VALUES ('a1', 'Artista Uno', 'K1')"),
     env.DB.prepare("INSERT INTO follow (artist_id, tier) VALUES ('a1', 3)"),
@@ -150,9 +157,38 @@ describe("fichas por artista en Discord", () => {
     ]);
     await publishSheets(env, NOW);
     const body = discordCalls("POST", /\/channels\/NEW\d+\/messages/).map((c) => c.body.content).join("\n");
-    expect(body).toContain("**Aforo:** ~70.000 entradas en total");
-    expect(body).toContain("**Precios oficiales:** 🇪🇸 45–250 €");
+    expect(body).toContain("· Estadio (70.000)");
+    expect(body).toContain("🇪🇸 **ESPAÑA:** **45 €** – **250 €**");
     expect(body).toContain("**Reventa estimada:** ×1,5–×2,5");
+    expect(body).toMatch(/^# 🎤 Artista Uno — Tour 2027 ⭐⭐⭐/m);
+  });
+
+  it("en el canal solo queda la ficha: se borran copias antiguas y novedades del bot", async () => {
+    const a = show("1", "2027-05-10", "2026-11-20T09:00:00Z");
+    await storeShow(a); await alertFor(a);
+    channelMessages = [
+      { id: "OLD1", timestamp: NOW.toISOString(), author: { bot: true } },
+      { id: "OLD2", timestamp: NOW.toISOString(), author: { bot: true } },
+      { id: "HUMANO", timestamp: NOW.toISOString(), author: { bot: false } },
+    ];
+    await publishSheets(env, NOW);
+    const bulk = discordCalls("POST", /\/messages\/bulk-delete$/)[0];
+    expect(bulk?.body).toEqual({ messages: ["OLD1", "OLD2"] });
+  });
+
+  it("si Discord falla al editar (429), no publica otra copia y guarda los ids", async () => {
+    const a = show("1", "2027-05-10", "2026-11-20T09:00:00Z");
+    await storeShow(a); await alertFor(a);
+    await publishSheets(env, NOW);
+    const before = (await env.DB.prepare("SELECT message_ids FROM sheet").first<{ message_ids: string }>())!.message_ids;
+    // Cambia la ficha y Discord responde 429 al editar.
+    await storeShow({ ...a, venue: { ...a.venue, name: "Otro estadio" } });
+    await env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES ('a1', ?)").bind(NOW.toISOString()).run();
+    calls = [];
+    patchStatus = 429;
+    await publishSheets(env, NOW);
+    expect(discordCalls("POST", /\/channels\/NEW\d+\/messages$/)).toHaveLength(0);
+    expect((await env.DB.prepare("SELECT message_ids FROM sheet").first<{ message_ids: string }>())!.message_ids).toBe(before);
   });
 
   it("cuando pasa la última fecha → el canal se mueve a 📦 ARCHIVO", async () => {

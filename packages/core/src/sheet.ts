@@ -1,6 +1,5 @@
 import { presaleGuide, type SaleKind } from "./presale";
 import type { SaleWindow, Show } from "./ticketmaster";
-import { formatHHmm, LONDON, MADRID } from "./time";
 
 /** Nombre de canal de Discord para una entidad: "Guns N' Roses" → "guns-n-roses". */
 export function channelSlug(name: string): string {
@@ -106,6 +105,8 @@ export interface SheetExtras {
   /** Por id de evento (sourceId). */
   prices?: Record<string, PriceInfo>;
   resale?: ResaleInfo | null;
+  /** Límite de entradas por persona encontrado en prensa, por país. */
+  limits?: Record<string, number>;
 }
 
 const REQUIREMENT: Record<SaleKind, string> = {
@@ -141,7 +142,6 @@ function ticketerName(url: string): string {
 }
 
 const dayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: "UTC", weekday: "short", day: "numeric", month: "short", year: "numeric" });
-const saleDayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: MADRID, weekday: "short", day: "numeric", month: "short" });
 const clean = (s: string) => s.replace(/\./g, "").replace(/,/g, "").replace(/\s+/g, " ").trim();
 const showDay = (localDate: string) => clean(dayFmt.format(new Date(`${localDate}T12:00:00Z`)));
 
@@ -180,57 +180,90 @@ export function money(n: number, currency: string): string {
 }
 const times = (n: number) => `×${n.toFixed(1).replace(".", ",")}`;
 
-/** "45–250 €" por país, a partir de los precios por fecha. */
-function priceLine(live: Show[], prices: Record<string, PriceInfo>): string | null {
-  const byCountry = new Map<string, { min: number; max: number; currency: string }>();
-  for (const s of live) {
-    const p = prices[s.sourceId];
-    if (!p) continue;
-    const c = byCountry.get(s.venue.country);
-    if (!c) byCountry.set(s.venue.country, { min: p.min, max: p.max, currency: p.currency });
-    else if (c.currency === p.currency) byCountry.set(s.venue.country, { ...c, min: Math.min(c.min, p.min), max: Math.max(c.max, p.max) });
-  }
-  if (!byCountry.size) return null;
-  return [...byCountry]
-    .map(([cc, p]) => `${flag(cc)} ${p.min === p.max ? money(p.min, p.currency) : `${money(p.min, p.currency).replace(/ \S+$/, "")}–${money(p.max, p.currency)}`}`)
-    .join(" · ");
-}
-
 const ARTIST_KINDS = new Set<SaleKind>(["artist", "fanclub", "registration", "unknown", "lottery"]);
 const linkDay = (d: string) => clean(new Intl.DateTimeFormat("es-ES", { timeZone: "UTC", day: "numeric", month: "short" }).format(new Date(`${d}T12:00:00Z`)));
+const ts = (iso: string, style = "F") => `<t:${Math.floor(Date.parse(iso) / 1000)}:${style}>`;
 
-/** Dónde registrarse o cómo entrar en una preventa: enlace propio, programa conocido o registro del artista. */
-function howToJoin(w: SaleWindow, ss: Show[], extras: SheetExtras): string[] {
-  const lines: string[] = [];
-  const guide = presaleGuide(w.label, ss[0]?.venue.country);
-  if (guide) lines.push(`📝 ${guide.how}${guide.url ? ` → [web oficial](${guide.url})` : ""}`);
-  if (w.url) lines.push(`🔗 [Enlace de esta preventa](${w.url})`);
-  if (!guide && ARTIST_KINDS.has(w.kind)) {
-    const fold2 = (t: string) => fold(t);
-    const cities = new Set(ss.map((s) => fold2(s.venue.city)));
-    const dates = new Set(ss.map((s) => s.localDate));
-    const all = extras.signups ?? [];
-    const specific = all.filter((l) => (l.localDate && dates.has(l.localDate)) || (l.city && cities.has(fold2(l.city))));
-    const generic = all.filter((l) => !l.localDate && !l.city);
-    const links = (specific.length ? specific : generic).slice(0, 6);
-    if (links.length) {
-      lines.push(
-        `📝 **Registro:** ${links
-          .map((l) => `[${l.label}${l.city ? ` · ${l.city}` : ""}${l.localDate ? ` ${linkDay(l.localDate)}` : ""}](${l.url})`)
-          .join(" · ")}`,
-      );
-    } else {
-      lines.push(`📝 **Registro:** aún no localizado${extras.homepage ? ` — mira la [web oficial](${extras.homepage})` : " — GIRA lo sigue buscando"}`);
-    }
+/** Nombre del país en mayúsculas para el bloque de precios. */
+const COUNTRY: Record<string, string> = {
+  ES: "ESPAÑA", GB: "REINO UNIDO", IE: "IRLANDA", FR: "FRANCIA", DE: "ALEMANIA", IT: "ITALIA", NL: "PAÍSES BAJOS", BE: "BÉLGICA",
+  AT: "AUSTRIA", CH: "SUIZA", DK: "DINAMARCA", SE: "SUECIA", NO: "NORUEGA", FI: "FINLANDIA", PL: "POLONIA", CZ: "CHEQUIA",
+  PT: "PORTUGAL", TR: "TURQUÍA", GR: "GRECIA", HU: "HUNGRÍA", US: "EE. UU.", CA: "CANADÁ", MX: "MÉXICO", BR: "BRASIL",
+  AR: "ARGENTINA", CL: "CHILE", CO: "COLOMBIA", PE: "PERÚ", UY: "URUGUAY", EC: "ECUADOR", CR: "COSTA RICA", PA: "PANAMÁ",
+  GT: "GUATEMALA", PR: "PUERTO RICO", DO: "REP. DOMINICANA", AU: "AUSTRALIA", NZ: "NUEVA ZELANDA", JP: "JAPÓN", KR: "COREA DEL SUR",
+};
+export const countryName = (cc: string) => COUNTRY[cc] ?? cc;
+
+/** Límite de entradas por persona: de la ticketera (por fecha) y, si no, de prensa (por país). */
+function limitText(live: Show[], limits: Record<string, number>): string | null {
+  const byCountry = new Map<string, number>();
+  for (const cc of new Set(live.map((s) => s.venue.country))) {
+    const n = ticketLimitNumber(live.filter((s) => s.venue.country === cc).map((s) => s.ticketLimit)) ?? limits[cc] ?? null;
+    if (n) byCountry.set(cc, n);
   }
-  return lines;
+  const values = [...new Set(byCountry.values())];
+  if (!values.length) return null;
+  if (values.length === 1) return `**${values[0]}** por persona`;
+  return [...byCountry].map(([cc, n]) => `${flag(cc)} **${n}**`).join(" · ") + " por persona";
 }
 
 /**
- * Ficha de un artista para su canal (estilo Akari, más clara): cabecera con datos y enlaces, y un
- * bloque por preventa y hora con todas sus fechas y enlaces juntos. Solo ventas por llegar.
+ * Precios oficiales por país (en un país, todas las ciudades tienen la misma tabla): zonas de la fecha
+ * que más detalle tenga o, si no hay zonas, el rango. Sin fuentes. Null si no hay ningún precio.
  */
-export function renderArtistSheet(artist: { name: string }, shows: Show[], now: Date, extras: SheetExtras = {}): string[] {
+export function renderPrices(live: Show[], prices: Record<string, PriceInfo>): string | null {
+  const byCountry = new Map<string, PriceInfo[]>();
+  for (const s of live) {
+    const p = prices[s.sourceId];
+    if (p) byCountry.set(s.venue.country, [...(byCountry.get(s.venue.country) ?? []), p]);
+  }
+  if (!byCountry.size) return null;
+  const parts = [...byCountry].map(([cc, ps]) => {
+    const zoned = [...ps].filter((p) => p.zones?.length).sort((a, b) => b.zones!.length - a.zones!.length)[0];
+    if (zoned) {
+      const seen = new Set<string>();
+      const zones = zoned.zones!.filter((z) => !seen.has(z.name.toLowerCase()) && seen.add(z.name.toLowerCase()));
+      return [`${flag(cc)} **${countryName(cc)}**`, ...zones.map((z) => `• ${z.name} · **${money(z.price, zoned.currency)}**`)].join("\n");
+    }
+    const cur = ps[0]!.currency;
+    const same = ps.filter((p) => p.currency === cur);
+    const min = Math.min(...same.map((p) => p.min));
+    const max = Math.max(...same.map((p) => p.max));
+    return `${flag(cc)} **${countryName(cc)}:** ${min === max ? `**${money(min, cur)}**` : `**${money(min, cur)}** – **${money(max, cur)}**`}`;
+  });
+  return ["## 💶 Precios oficiales", ...parts].join("\n\n");
+}
+
+/** Cómo entrar en una preventa: programa conocido, enlace propio o registro del artista. Una línea. */
+function howToJoin(w: SaleWindow, ss: Show[], extras: SheetExtras): string {
+  const parts: string[] = [];
+  const guide = presaleGuide(w.label, ss[0]?.venue.country);
+  if (guide) parts.push(`${guide.how}${guide.url ? ` **[AQUÍ](${guide.url})**` : ""}`);
+  if (w.url) parts.push(`[enlace de la preventa](${w.url})`);
+  if (!guide && ARTIST_KINDS.has(w.kind)) {
+    const cities = new Set(ss.map((s) => fold(s.venue.city)));
+    const dates = new Set(ss.map((s) => s.localDate));
+    const all = extras.signups ?? [];
+    const specific = all.filter((l) => (l.localDate && dates.has(l.localDate)) || (l.city && cities.has(fold(l.city))));
+    const generic = all.filter((l) => !l.localDate && !l.city);
+    const links = (specific.length ? specific : generic).slice(0, 6);
+    if (links.length === 1) parts.push(`Registro **[AQUÍ](${links[0]!.url})**`);
+    else if (links.length) parts.push(`Registro: ${links.map((l) => `[${l.label}${l.city ? ` · ${l.city}` : ""}${l.localDate ? ` ${linkDay(l.localDate)}` : ""}](${l.url})`).join(" · ")}`);
+    else parts.push(`registro aún no localizado${extras.homepage ? ` — mira la [web oficial](${extras.homepage})` : " (GIRA lo sigue buscando)"}`);
+  }
+  if (!parts.length) parts.push(REQUIREMENT[w.kind]);
+  return parts.join(" · ");
+}
+
+/** Empaqueta cada sección por separado: precios, sign up y ventas nunca comparten mensaje. */
+const sections = (...xs: (string | string[] | null)[]) => xs.flatMap((x) => (x === null ? [] : pack(Array.isArray(x) ? x : [x])));
+
+/**
+ * Ficha de un artista para su canal (estilo Akari, más limpia). Mensajes separados: cabecera,
+ * precios oficiales por país, sign up (cómo entrar en cada preventa) y un bloque por preventa y hora
+ * con sus fechas. Solo ventas por llegar; la hora es la marca de Discord (cada uno la ve en su zona).
+ */
+export function renderArtistSheet(artist: { name: string; tier?: number }, shows: Show[], now: Date, extras: SheetExtras = {}): string[] {
   // Solo las fechas con alguna preventa o venta general por llegar: lo demás ya no es accionable.
   const live = sheetShows(artist.name, shows)
     .filter((s) => s.sales.some((w) => upcoming(w, now)))
@@ -238,7 +271,7 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
   const tour = mostCommon(live.map((s) => s.name.replace(/\s*\|.*$/, "").trim())) ?? artist.name;
   const title = fold(tour).startsWith(fold(artist.name)) ? tour.slice(artist.name.length).replace(/^\s*[-–:]\s*/, "") || tour : tour;
   const countries = [...new Map(live.map((s) => [s.venue.country, flag(s.venue.country)])).values()];
-  const limit = ticketLimitNumber(live.map((s) => s.ticketLimit));
+  const limit = limitText(live, extras.limits ?? {});
   // Página del artista en cada ticketera, solo si es de verdad la suya (no la del festival en que actúa).
   const artistSlug = fold(artist.name).replace(/[^a-z0-9]+/g, "-");
   const official = [
@@ -246,61 +279,22 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
   ];
   const venues = extras.venues ?? {};
   const capacity = (s: Show) => venues[s.venue.tmId]?.capacity ?? null;
-  const known = live.filter((s) => capacity(s));
-  const total = known.reduce((n, s) => n + capacity(s)!, 0);
-  const prices = priceLine(live, extras.prices ?? {});
   const r = extras.resale;
   const q = encodeURIComponent(artist.name);
+  const stars = artist.tier ? ` ${"⭐".repeat(Math.min(3, artist.tier))}` : "";
 
   const head = [
-    fold(title) === fold(artist.name) ? `# 🎤 ${artist.name}` : `# 🎤 ${artist.name} — ${title}`,
-    `${countries.join(" ")} · ${live.length} ${live.length === 1 ? "fecha" : "fechas"} en Europa`,
+    `${fold(title) === fold(artist.name) ? `# 🎤 ${artist.name}` : `# 🎤 ${artist.name} — ${title}`}${stars}`,
+    `${countries.join(" ")} · ${live.length} ${live.length === 1 ? "fecha" : "fechas"}`,
     "",
-    `**Límite de entradas:** ${limit ? `${limit} por persona` : "sin confirmar"}`,
-    `**Precios oficiales:** ${prices ?? "aún sin publicar"}`,
-    ...(known.length
-      ? [`**Aforo:** ~${num(total)} entradas en ${known.length === live.length ? "total" : `${known.length} de ${live.length} fechas`} (aforo de cada recinto abajo)`]
-      : []),
-    "",
-    ...(r
-      ? [
-          ...(r.difficulty ? [`**Dificultad para conseguir entrada:** ${r.difficulty}`] : []),
-          `**Reventa estimada:** ${times(r.low)}–${times(r.high)} sobre el oficial · confianza ${r.confidence}`,
-          `-# ${r.basis}`,
-          ...(r.markets?.length
-            ? [
-                "**Mercado de reventa ahora** (precio por entrada)",
-                ...r.markets.map(
-                  (m) =>
-                    `${flag(m.country)} ${m.city} ${linkDay(m.localDate)}: mediana **${money(m.median, m.currency)}** · P25–P75 ${money(m.p25, m.currency)}–${money(m.p75, m.currency)} · ${m.listings} anuncios (${m.source})${live.some((x) => x.venue.country === m.country) ? "" : " · _otro país, para comparar_"}`,
-                ),
-              ]
-            : []),
-          ...(r.history ?? []).slice(0, 3).map((h) => `🕘 ${h.text} · _${h.source}_`),
-        ]
-      : []),
+    `**Límite de entradas:** ${limit ?? "sin confirmar todavía"}`,
+    ...(r?.difficulty ? [`**Dificultad para conseguir entrada:** ${r.difficulty}`] : []),
+    ...(r ? [`**Reventa estimada:** ${times(r.low)}–${times(r.high)} sobre el oficial · confianza ${r.confidence}`] : []),
     `**Reventa (para comparar):** [Viagogo](https://www.viagogo.com/secure/search?q=${q}) · [StubHub](https://www.stubhub.com/secure/search?q=${q}) · [Vivid Seats](https://www.vividseats.com/search?searchTerm=${q})`,
     ...(official.length || extras.homepage
       ? ["", "**Enlaces oficiales**", [...(extras.homepage ? [`[Web oficial](${extras.homepage})`] : []), ...official.map(([n, u]) => `[${n}](${u})`)].join(" · ")]
       : []),
   ].join("\n");
-
-  // Precios por zona: una línea por grupo de ciudades con la misma tabla.
-  const zoneGroups = new Map<string, { cities: string[]; flagCc: string; zones: string; source: string }>();
-  for (const s of live) {
-    const p = extras.prices?.[s.sourceId];
-    if (!p?.zones?.length) continue;
-    const zones = p.zones.map((z) => `${z.name} **${money(z.price, p.currency)}**`).join(" · ");
-    const g = zoneGroups.get(zones) ?? { cities: [], flagCc: s.venue.country, zones, source: p.source };
-    if (!g.cities.includes(s.venue.city)) g.cities.push(s.venue.city);
-    zoneGroups.set(zones, g);
-  }
-  const zoneBlock = zoneGroups.size
-    ? [
-        "## 💶 Precios por zona",
-        ...[...zoneGroups.values()].map((g) => `${flag(g.flagCc)} **${g.cities.join(" · ")}:** ${g.zones}\n-# Fuente: ${g.source}`),
-      ].join("\n")
-    : null;
 
   const dateLine = (s: Show) => {
     const cap = capacity(s);
@@ -321,16 +315,26 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
   const ordered = [...groups.values()].sort(
     (a, b) => (a.w.startsAt ?? "9999").localeCompare(b.w.startsAt ?? "9999") || a.w.orderRank - b.w.orderRank,
   );
+
+  // Sign up: una línea por preventa (no la venta general), con todas sus fechas para elegir el registro.
+  const byLabel = new Map<string, { w: SaleWindow; shows: Show[] }>();
+  for (const { w, shows: ss } of ordered) {
+    if (w.kind === "general" || w.kind === "official_resale") continue;
+    const k = w.label.toLowerCase();
+    const g = byLabel.get(k) ?? { w, shows: [] };
+    for (const s of ss) if (!g.shows.includes(s)) g.shows.push(s);
+    if (!g.w.url && w.url) g.w = w;
+    byLabel.set(k, g);
+  }
+  const signup = byLabel.size
+    ? ["## 📝 Sign up · cómo entrar en cada preventa", ...[...byLabel.values()].map(({ w, shows: ss }) => `**${w.label}** → ${howToJoin(w, ss, extras)}`)].join("\n")
+    : null;
+
   const blocks = ordered.map(({ w, shows: ss }) => {
-    const when = w.startsAt
-      ? `🇪🇸 **${clean(saleDayFmt.format(new Date(w.startsAt)))}, ${formatHHmm(w.startsAt, MADRID)}** Madrid · 🇬🇧 ${formatHHmm(w.startsAt, LONDON)} Londres · <t:${Date.parse(w.startsAt) / 1000}:F>`
-      : "📅 Fecha y hora por confirmar";
+    const when = w.startsAt ? `🕙 ${ts(w.startsAt)}` : "📅 Fecha y hora por confirmar";
     // Fin de la ventana (si la ticketera lo da y no es la venta general, que no "termina").
-    const until =
-      w.endsAt && w.kind !== "general" && w.startsAt && Date.parse(w.endsAt) > Date.parse(w.startsAt)
-        ? [`⏳ Hasta ${clean(saleDayFmt.format(new Date(w.endsAt)))}, ${formatHHmm(w.endsAt, MADRID)} (Madrid)`]
-        : [];
-    return [`## 🎟️ ${w.label}`, when, ...until, `*${REQUIREMENT[w.kind]}*`, ...howToJoin(w, ss, extras), ...ss.map(dateLine)].join("\n");
+    const until = w.endsAt && w.kind !== "general" && w.startsAt && Date.parse(w.endsAt) > Date.parse(w.startsAt) ? [`⏳ Hasta ${ts(w.endsAt, "f")}`] : [];
+    return [`## 🎟️ ${w.label}`, when, ...until, ...ss.map(dateLine)].join("\n");
   });
-  return pack([head, ...(zoneBlock ? [zoneBlock] : []), ...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
+  return sections(head, renderPrices(live, extras.prices ?? {}), signup, [...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
 }

@@ -112,13 +112,16 @@ const placeholders = (n: number) => Array.from({ length: n }, () => "?").join(",
 async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<SheetExtras> {
   const venueIds = [...new Set(shows.map((s) => s.venue.tmId))].slice(0, 90);
   const showIds = shows.map((s) => s.sourceId).slice(0, 90);
-  const [v, p, r, sg, hp] = await env.DB.batch([
+  const [v, p, r, sg, hp, lm] = await env.DB.batch([
     env.DB.prepare(`SELECT tm_venue_id, capacity FROM venue_info WHERE capacity IS NOT NULL AND tm_venue_id IN (${placeholders(venueIds.length)})`).bind(...venueIds),
     env.DB.prepare(`SELECT source_id, min, max, currency, source, zones_json FROM show_price WHERE source_id IN (${placeholders(showIds.length)})`).bind(...showIds),
     env.DB.prepare("SELECT json FROM artist_resale WHERE artist_id = ?").bind(artistId),
     env.DB.prepare("SELECT url, label, city, local_date FROM artist_signup WHERE artist_id = ? ORDER BY local_date, url").bind(artistId),
     env.DB.prepare("SELECT homepage FROM artist WHERE id = ?").bind(artistId),
+    env.DB.prepare("SELECT country, ticket_limit FROM artist_limit WHERE artist_id = ?").bind(artistId),
   ]);
+  const limits: Record<string, number> = {};
+  for (const row of (lm!.results ?? []) as { country: string; ticket_limit: number }[]) limits[row.country] = row.ticket_limit;
   const signups: SignupLink[] = ((sg!.results ?? []) as { url: string; label: string; city: string | null; local_date: string | null }[]).map((x) => ({
     url: x.url,
     label: x.label,
@@ -133,7 +136,7 @@ async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<Sh
     prices[row.source_id] = { min: row.min, max: row.max, currency: row.currency, source: row.source, ...(row.zones_json ? { zones: JSON.parse(row.zones_json) } : {}) };
   }
   const resaleRow = (r!.results ?? [])[0] as { json: string } | undefined;
-  return { venues, prices, signups, homepage, resale: resaleRow ? (JSON.parse(resaleRow.json) as ResaleInfo) : null };
+  return { venues, prices, signups, homepage, limits, resale: resaleRow ? (JSON.parse(resaleRow.json) as ResaleInfo) : null };
 }
 
 const dayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: MADRID, weekday: "short", day: "numeric", month: "short" });
@@ -163,7 +166,7 @@ function noticeText(name: string, alerts: Alert[], shows: Show[], channelId: str
  * Publica las fichas de los artistas pendientes: crea su canal si tienen ventas por llegar, edita
  * la ficha si cambió, envía un aviso agrupado y archiva el canal cuando pasa la gira.
  */
-export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, maxScan = 8): Promise<{ updated: number; notices: number }> {
+export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, maxScan = 8): Promise<{ updated: number; notices: number }> {
   if (env.DELIVERY_PAUSED === "1") return { updated: 0, notices: 0 };
   // Reclamo atómico: dos ejecuciones simultáneas nunca trabajan el mismo artista (ni crean dos canales).
   const { results: dirty } = await env.DB.prepare(
@@ -188,7 +191,9 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
   for (let i = 0; i < dirty.length; i++) {
     const { artist_id } = dirty[i]!;
     try {
-    const artist = await env.DB.prepare("SELECT name FROM artist WHERE id = ?").bind(artist_id).first<{ name: string }>();
+    const artist = await env.DB.prepare("SELECT a.name, COALESCE(f.tier, 1) AS tier FROM artist a LEFT JOIN follow f ON f.artist_id = a.id WHERE a.id = ?")
+      .bind(artist_id)
+      .first<{ name: string; tier: number }>();
     const { results: rows } = await env.DB.prepare("SELECT snapshot_json FROM show WHERE artist_id = ? AND local_date >= ? AND is_package = 0")
       .bind(artist_id, today)
       .all<{ snapshot_json: string }>();
@@ -202,7 +207,7 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
       continue;
     }
     // Ficha activa sin cambios ni avisos pendientes: no hace falta Discord (no gasta cupo de la pasada).
-    const msgs = active ? renderArtistSheet({ name: artist.name }, shows, now, await loadExtras(env, artist_id, shows)) : [];
+    const msgs = active ? renderArtistSheet({ name: artist.name, tier: artist.tier }, shows, now, await loadExtras(env, artist_id, shows)) : [];
     const hash = stableHash(msgs.join("\u0000").replace(/-# Actualizado <t:\d+:R>/, ""));
     const pending = await env.DB.prepare("SELECT 1 AS x FROM delivery WHERE artist_id = ? AND status = 'pending' LIMIT 1").bind(artist_id).first();
     if (active && sheet?.status === "active" && hash === sheet.content_hash && !pending) {
@@ -259,21 +264,33 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
     if (hash !== sheet?.content_hash) {
       const ids: string[] = JSON.parse(sheet?.message_ids ?? "[]");
       const next: string[] = [];
-      for (let i = 0; i < msgs.length; i++) {
-        // Sin vistas previas de enlaces (la ficha tiene muchos y ensuciarían el canal).
-        const body = { content: msgs[i], allowed_mentions: { parse: [] }, flags: 4 };
-        if (ids[i]) {
-          const r = await discordFetch(env, "PATCH", `/channels/${channelId}/messages/${ids[i]}`, body);
-          if (r.ok) {
-            next.push(ids[i]!);
-            continue;
+      // Los ids se guardan aunque la pasada falle a medias: un mensaje publicado nunca queda huérfano
+      // (antes, un 429 a mitad dejaba copias de la ficha que ya nadie editaba).
+      const saveIds = (list: string[]) =>
+        env.DB.prepare("UPDATE sheet SET message_ids = ? WHERE artist_id = ?").bind(JSON.stringify(list), artist_id).run();
+      try {
+        for (let i = 0; i < msgs.length; i++) {
+          // Sin vistas previas de enlaces (la ficha tiene muchos y ensuciarían el canal).
+          const body = { content: msgs[i], allowed_mentions: { parse: [] }, flags: 4 };
+          if (ids[i]) {
+            const r = await discordFetch(env, "PATCH", `/channels/${channelId}/messages/${ids[i]}`, body);
+            if (r.ok) {
+              next.push(ids[i]!);
+              continue;
+            }
+            // Solo se publica otro si el mensaje ya no existe; cualquier otro fallo se reintenta luego.
+            if (r.status !== 404) throw new Error(`Discord editar ficha HTTP ${r.status}`);
           }
+          const r = await discordFetch(env, "POST", `/channels/${channelId}/messages`, body);
+          if (!r.ok) throw new Error(`Discord publicar ficha HTTP ${r.status}`);
+          next.push(((await r.json()) as { id: string }).id);
         }
-        const r = await discordFetch(env, "POST", `/channels/${channelId}/messages`, body);
-        if (!r.ok) throw new Error(`Discord publicar ficha HTTP ${r.status}`);
-        next.push(((await r.json()) as { id: string }).id);
+      } catch (e) {
+        await saveIds([...next, ...ids.slice(next.length)]);
+        throw e;
       }
       for (const old of ids.slice(msgs.length)) await discordFetch(env, "DELETE", `/channels/${channelId}/messages/${old}`);
+      await removeStrays(env, channelId, new Set(next)).catch((e) => console.log(`limpieza ${artist.name}: ${String(e)}`));
       await env.DB.prepare("UPDATE sheet SET message_ids = ?, content_hash = ?, tracked_sale = 1, rendered_json = ?, updated_at = ? WHERE artist_id = ?")
         .bind(JSON.stringify(next), hash, JSON.stringify(msgs), iso, artist_id)
         .run();
@@ -336,16 +353,36 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 4, 
   return { updated: Math.min(touched, maxDiscordArtists), notices };
 }
 
+/**
+ * En el canal del artista solo queda su ficha: se borran los mensajes del bot que no son parte de ella
+ * (copias antiguas, "Novedad" de prensa). Dos subpeticiones: leer y borrar en bloque.
+ */
+async function removeStrays(env: Env, channelId: string, keep: Set<string>): Promise<number> {
+  const res = await discordFetch(env, "GET", `/channels/${channelId}/messages?limit=100`);
+  if (!res.ok) return 0;
+  const recent = Date.now() - 13 * 86_400_000; // el borrado en bloque solo admite mensajes de < 14 días
+  const strays = ((await res.json()) as { id: string; timestamp: string; author?: { bot?: boolean } }[]).filter(
+    (m) => m.author?.bot && !keep.has(m.id),
+  );
+  const bulk = strays.filter((m) => Date.parse(m.timestamp) > recent).map((m) => m.id);
+  if (bulk.length >= 2 && (await discordFetch(env, "POST", `/channels/${channelId}/messages/bulk-delete`, { messages: bulk })).ok) return bulk.length;
+  let n = 0;
+  for (const m of strays.slice(0, 5)) if ((await discordFetch(env, "DELETE", `/channels/${channelId}/messages/${m.id}`)).ok) n++;
+  return n;
+}
+
 /** Ficha de un artista tal como se ve en Discord (para la app). Null si no tiene ventas por llegar. */
 export async function renderSheetFor(env: Env, artistId: string, now: Date): Promise<{ name: string; messages: string[] } | null> {
-  const artist = await env.DB.prepare("SELECT name FROM artist WHERE id = ?").bind(artistId).first<{ name: string }>();
+  const artist = await env.DB.prepare("SELECT a.name, COALESCE(f.tier, 1) AS tier FROM artist a LEFT JOIN follow f ON f.artist_id = a.id WHERE a.id = ?")
+    .bind(artistId)
+    .first<{ name: string; tier: number }>();
   if (!artist) return null;
   const { results: rows } = await env.DB.prepare("SELECT snapshot_json FROM show WHERE artist_id = ? AND local_date >= ? AND is_package = 0")
     .bind(artistId, localDateIn(now, MADRID))
     .all<{ snapshot_json: string }>();
   const shows = sheetShows(artist.name, rows.map((r) => JSON.parse(r.snapshot_json) as Show));
   if (!isSheetActive(shows, now)) return null;
-  return { name: artist.name, messages: renderArtistSheet({ name: artist.name }, shows, now, await loadExtras(env, artistId, shows)) };
+  return { name: artist.name, messages: renderArtistSheet({ name: artist.name, tier: artist.tier }, shows, now, await loadExtras(env, artistId, shows)) };
 }
 
 /**

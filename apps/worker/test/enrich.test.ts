@@ -109,3 +109,16 @@ describe("/enrich/discover y /enrich/follows", () => {
     expect(ids).toContain("K1");
   });
 });
+
+import { newsLine, newsWorthPosting } from "../src/news";
+describe("qué noticias se publican", () => {
+  const n = (artistName: string, category: string, channelId: string | null = null) => ({ artistName, category, channelId, summary: "Gira 2027 en Madrid", url: "https://x.example/a" });
+  it("solo importantes, de artistas sin ficha activa y una por artista", () => {
+    const out = newsWorthPosting([n("U2", "extra_date", "CH_U2"), n("Maluma", "tour_announced"), n("Maluma", "presale"), n("NFL", "price"), n("Feid", "signup")]);
+    expect(out.map((x) => `${x.artistName}|${x.category}`)).toEqual(["Maluma|tour_announced", "Feid|signup"]);
+  });
+  it("sin fuente; los registros llevan enlace para apuntarse", () => {
+    expect(newsLine(n("Maluma", "tour_announced"))).toBe("🆕 **Maluma** · Gira 2027 en Madrid");
+    expect(newsLine(n("Feid", "signup"))).toBe("📝 **Feid** · Gira 2027 en Madrid · [más info](<https://x.example/a>)");
+  });
+});

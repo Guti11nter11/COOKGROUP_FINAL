@@ -28,44 +28,51 @@ const shows = [
 ];
 const artist = { name: "U2" };
 
+
 describe("renderArtistSheet (formato tipo Akari)", () => {
-  const msgs = renderArtistSheet(artist, shows, NOW);
+  const msgs = renderArtistSheet({ name: "U2", tier: 3 }, shows, NOW);
   const all = msgs.join("\n");
+  const T = (iso: string) => `<t:${Date.parse(iso) / 1000}:F>`;
 
   it("cada mensaje cabe en Discord (≤ 2.000 caracteres)", () => expect(msgs.every((m) => m.length <= 2000)).toBe(true));
 
-  it("cabecera con gira, países, límite, reventa para comparar y enlaces oficiales; sin Deezer", () => {
+  it("cabecera: gira con estrellas, países, límite, reventa para comparar y enlaces; nada de aforo total ni fuentes", () => {
     const head = msgs[0]!;
-    expect(head).toContain("U2 — The Greatest Show On Earth World Tour 2027");
+    expect(head).toMatch(/^# 🎤 U2 — The Greatest Show On Earth World Tour 2027 ⭐⭐⭐\n/);
     expect(head).toContain("🇪🇸");
     expect(head).toContain("🇬🇧");
-    expect(head).toContain("**Límite de entradas:** 4 por persona");
-    expect(head).toContain("**Precios oficiales:** aún sin publicar");
+    expect(head).toContain("**Límite de entradas:** **4** por persona");
+    expect(head).not.toContain("Precios oficiales");
+    expect(head).not.toContain("Aforo");
     expect(head).not.toContain("Deezer");
     expect(head).toContain("**Reventa (para comparar):** [Viagogo](https://www.viagogo.com/secure/search?q=U2) · [StubHub](https://www.stubhub.com/secure/search?q=U2)");
     expect(head).toContain("[Ticketmaster ES](https://www.ticketmaster.es/artist/u2-entradas/736365)");
     expect(head).toContain("[Ticketmaster UK](https://www.ticketmaster.co.uk/u2-tickets/artist/736365)");
   });
 
-  it("un bloque por preventa y hora, en orden, con todas sus fechas y enlaces juntos", () => {
-    const iEs = all.indexOf("Artist Presale");
-    expect(iEs).toBeGreaterThan(0);
+  it("un bloque por preventa y hora, solo con la hora de Discord y sus fechas", () => {
     const esBlock = all.split(/\n(?=## )/).find((m) => m.includes("Artist Presale") && m.includes("Sevilla"))!;
-    expect(esBlock).toContain("🇪🇸 **mar 10 nov, 10:00** Madrid · 🇬🇧 09:00 Londres");
-    expect(esBlock).toContain(`<t:${Date.parse("2026-11-10T09:00:00Z") / 1000}:F>`);
+    expect(esBlock).toContain(`## 🎟️ Artist Presale\n🕙 ${T("2026-11-10T09:00:00Z")}\n`);
+    expect(esBlock).not.toContain("Madrid ·");
+    expect(esBlock).not.toContain("Registro");
     expect(esBlock).toContain("[Barcelona · jue 13 may 2027](https://tm.example/2) · Estadio Barcelona");
-    expect(esBlock).toContain("[Sevilla · jue 27 may 2027](https://tm.example/1) · Estadio Sevilla");
     expect(esBlock.indexOf("Barcelona")).toBeLessThan(esBlock.indexOf("Sevilla"));
-    expect(all.indexOf("Priority from O2")).toBeGreaterThan(all.indexOf("Venta general") > 0 ? 0 : -1);
-    expect(all).toContain("Cliente de la operadora");
+  });
+
+  it("sign up en su propio mensaje, una línea por preventa (sin la venta general)", () => {
+    const su = msgs.find((m) => m.startsWith("## 📝 Sign up"))!;
+    expect(su).toBeDefined();
+    expect(su).not.toContain("## 🎟️");
+    expect(su).toContain("**Priority from O2** →");
+    expect(su).toContain("**Artist Presale** →");
+    expect(su).not.toContain("Venta general");
   });
 
   it("no muestra ventas que ya pasaron", () => expect(all).not.toContain("https://tm.example/4"));
 
-  it("las ventas de la misma hora pero en otro país van en su propio bloque (hora UK distinta)", () => {
-    const sections = all.split(/\n(?=## )/);
-    const uk = sections.find((m) => m.includes("Artist Presale") && m.includes("London"))!;
-    expect(uk).toContain("🇪🇸 **mar 10 nov, 11:00** Madrid · 🇬🇧 10:00 Londres");
+  it("las ventas de la misma hora pero en otro país van en su propio bloque", () => {
+    const uk = all.split(/\n(?=## )/).find((m) => m.includes("Artist Presale") && m.includes("London"))!;
+    expect(uk).toContain(T("2026-11-10T10:00:00Z"));
     expect(uk).not.toContain("Sevilla");
   });
 });
@@ -74,33 +81,39 @@ describe("renderArtistSheet: datos de enriquecimiento", () => {
   const msgs = renderArtistSheet(artist, shows, NOW, {
     venues: { V1: { capacity: 70000 }, V2: { capacity: 55926 } },
     prices: {
-      "1": { min: 85, max: 255, currency: "EUR", source: "mercadeopop.com", zones: [{ name: "Pista", price: 181.5 }, { name: "PL5 Grada", price: 85 }] },
-      "2": { min: 85, max: 255, currency: "EUR", source: "mercadeopop.com", zones: [{ name: "Pista", price: 181.5 }, { name: "PL5 Grada", price: 85 }] },
+      "1": { min: 85, max: 255, currency: "EUR", source: "abc.es", zones: [{ name: "PL1 Grada", price: 255 }, { name: "PL5 Grada", price: 85 }] },
+      "2": { min: 85, max: 255, currency: "EUR", source: "mercadeopop.com", zones: [{ name: "Pista", price: 181.5 }, { name: "PL1 Grada", price: 255 }, { name: "PL5 Grada", price: 85 }] },
       "3": { min: 70, max: 210, currency: "GBP", source: "Ticketmaster" },
     },
     resale: {
       low: 1.8, high: 3.2, confidence: "media", basis: "Basado en 3 giras anteriores de estadio en Europa", difficulty: "muy alta",
-      markets: [{ country: "GB", city: "London", localDate: "2027-06-19", median: 320, p25: 240, p75: 450, currency: "USD", listings: 85, source: "StubHub" },
-        { country: "BR", city: "São Paulo", localDate: "2027-03-12", median: 774, p25: 438, p75: 1783, currency: "USD", listings: 21, source: "StubHub" },
-      ],
+      markets: [{ country: "GB", city: "London", localDate: "2027-06-19", median: 320, p25: 240, p75: 450, currency: "USD", listings: 85, source: "StubHub" }],
       history: [{ text: "En 2023 la pista llegó a 600 € en reventa", source: "elpais.com" }],
     },
   });
   const head = msgs[0]!;
-  it("precios oficiales por país", () => expect(head).toContain("**Precios oficiales:** 🇪🇸 85–255 € · 🇬🇧 £70–£210"));
-  it("precios por zona agrupando ciudades con la misma tabla", () =>
-    expect(msgs.join("\n")).toContain("🇪🇸 **Barcelona · Sevilla:** Pista **181,50 €** · PL5 Grada **85 €**\n-# Fuente: mercadeopop.com"));
-  it("aforo total y por recinto", () => {
-    expect(head).toContain("**Aforo:** ~125.926 entradas en 2 de 3 fechas");
+  const prices = msgs.find((m) => m.startsWith("## 💶 Precios oficiales"))!;
+  it("precios en su propio mensaje, uno por país con la tabla más completa y sin fuentes", () => {
+    expect(prices).toContain("🇪🇸 **ESPAÑA**\n• Pista · **181,50 €**\n• PL1 Grada · **255 €**\n• PL5 Grada · **85 €**");
+    expect(prices).toContain("🇬🇧 **REINO UNIDO:** **£70** – **£210**");
+    expect(prices).not.toMatch(/Fuente|abc\.es|mercadeopop/);
+    expect(prices).not.toContain("## 🎟️");
+  });
+  it("aforo solo por recinto", () => {
+    expect(head).not.toContain("Aforo");
     expect(msgs.join("\n")).toContain("· Estadio Sevilla (70.000)");
   });
-  it("reventa estimada con confianza y mercado", () => {
+  it("reventa: solo el multiplicador (sin mercado, historial ni explicación del modelo)", () => {
     expect(head).toContain("**Reventa estimada:** ×1,8–×3,2 sobre el oficial · confianza media");
     expect(head).toContain("**Dificultad para conseguir entrada:** muy alta");
-    expect(head).toContain("Basado en 3 giras anteriores");
-    expect(head).toContain("🇬🇧 London 19 jun: mediana **$320** · P25–P75 $240–$450 · 85 anuncios (StubHub)\n");
-    expect(head).toContain("· 21 anuncios (StubHub) · _otro país, para comparar_");
-    expect(head).toContain("🕘 En 2023 la pista llegó a 600 € en reventa");
+    expect(head).not.toContain("Basado en");
+    expect(head).not.toContain("mediana");
+    expect(head).not.toContain("🕘");
+  });
+  it("límite de entradas de prensa por país cuando la ticketera no lo da", () => {
+    const s = { ...shows[2]!, ticketLimit: null };
+    expect(renderArtistSheet(artist, [s], NOW, { limits: { GB: 6 } })[0]).toContain("**Límite de entradas:** **6** por persona");
+    expect(renderArtistSheet(artist, [s], NOW)[0]).toContain("**Límite de entradas:** sin confirmar todavía");
   });
   it("money", () => {
     expect(money(1500, "EUR")).toBe("1.500 €");
@@ -139,27 +152,28 @@ describe("qué fechas van en la ficha", () => {
   });
 });
 
-describe("dónde registrarse en cada preventa", () => {
+describe("dónde registrarse en cada preventa (mensaje de sign up)", () => {
   const jam = (id: string, city: string, cc: string, date: string) =>
     show(id, cc, city, date, [["artist", "Artist Presale", "2026-11-10T09:00:00Z"], ["card", "Mastercard Presale", "2026-11-11T09:00:00Z"], ["unknown", "MOJO Presale", "2026-11-12T09:00:00Z"]], { name: "Jamiroquai" });
   const list = [jam("j1", "Amsterdam", "NL", "2027-07-05"), jam("j2", "London", "GB", "2027-07-16")];
-  const all = renderArtistSheet({ name: "Jamiroquai" }, list, NOW, {
+  const msgs = renderArtistSheet({ name: "Jamiroquai" }, list, NOW, {
     homepage: "https://www.jamiroquai.com/",
     signups: [{ url: "https://www.bandsintown.com/t/1?release_id=abc", label: "Bandsintown", city: "Amsterdam", localDate: "2027-07-05" }],
-  }).join("\n");
-  const block = (label: string) => all.split(/\n(?=## )/).find((b) => b.startsWith(`## 🎟️ ${label}`))!;
-  it("preventa del artista → enlace de registro de su web oficial para esa fecha", () =>
-    expect(block("Artist Presale")).toContain("📝 **Registro:** [Bandsintown · Amsterdam 5 jul](https://www.bandsintown.com/t/1?release_id=abc)"));
-  it("Mastercard → cómo entrar y web del programa", () => expect(block("Mastercard Presale")).toContain("📝 Pagar con una Mastercard"));
-  it("dice hasta cuándo dura la preventa", () => {
+  });
+  const su = msgs.find((m) => m.startsWith("## 📝 Sign up"))!;
+  const line = (label: string) => su.split("\n").find((l) => l.startsWith(`**${label}**`))!;
+  it("preventa del artista → enlace de registro de su web oficial", () =>
+    expect(line("Artist Presale")).toBe("**Artist Presale** → Registro **[AQUÍ](https://www.bandsintown.com/t/1?release_id=abc)**"));
+  it("Mastercard → cómo entrar y web del programa", () => expect(line("Mastercard Presale")).toContain("Pagar con una Mastercard"));
+  it("MOJO → newsletter de MOJO", () => expect(line("MOJO Presale")).toContain("**[AQUÍ](https://www.mojo4music.com/)**"));
+  it("dice hasta cuándo dura la preventa (marca de Discord)", () => {
     const s2 = show("e", "GB", "London", "2027-07-16", [["artist", "Artist Presale", "2026-11-10T09:00:00Z"]]);
     s2.sales[0]!.endsAt = "2026-11-11T21:00:00Z";
-    expect(renderArtistSheet({ name: "U2" }, [s2], NOW).join("\n")).toContain("⏳ Hasta mié 11 nov, 22:00 (Madrid)");
+    expect(renderArtistSheet({ name: "U2" }, [s2], NOW).join("\n")).toContain(`⏳ Hasta <t:${Date.parse("2026-11-11T21:00:00Z") / 1000}:f>`);
   });
-  it("MOJO → newsletter de MOJO", () => expect(block("MOJO Presale")).toContain("[web oficial](https://www.mojo4music.com/)"));
   it("sin enlace localizado → lo dice y apunta a la web oficial", () => {
     const none = renderArtistSheet({ name: "Jamiroquai" }, list, NOW, { homepage: "https://www.jamiroquai.com/" }).join("\n");
-    expect(none).toContain("📝 **Registro:** aún no localizado — mira la [web oficial](https://www.jamiroquai.com/)");
+    expect(none).toContain("**Artist Presale** → registro aún no localizado — mira la [web oficial](https://www.jamiroquai.com/)");
   });
 });
 
