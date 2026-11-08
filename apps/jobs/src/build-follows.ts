@@ -6,20 +6,21 @@ import { iterateFeed } from "./tm-feed";
 const TM = process.env.TICKETMASTER_API_KEY;
 const LASTFM = process.env.LASTFM_API_KEY;
 if (!TM || !LASTFM) throw new Error("Faltan TICKETMASTER_API_KEY o LASTFM_API_KEY");
-const LIMIT = Number(process.env.GIRA_ENTITIES ?? 1000);
+// Lista de partida (2.000 desde 2026-11-08); además, el radar del catálogo añade solas las giras grandes.
+const LIMIT = Number(process.env.GIRA_ENTITIES ?? 2000);
 const UA = "GIRA/0.1 (+https://github.com/Guti11nter11/COOKGROUP_FINAL)";
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const getJson = async (url: string) => (await fetch(url, { headers: { "User-Agent": UA } })).json() as Promise<any>;
 
 // 1) Candidatos por popularidad (Last.fm): global y por país.
 const cands: Candidate[] = [];
-for (let page = 1; page <= 20; page++) {
+for (let page = 1; page <= 40; page++) {
   const d = await getJson(`https://ws.audioscrobbler.com/2.0/?method=chart.gettopartists&limit=50&page=${page}&format=json&api_key=${LASTFM}`);
   for (const a of d.artists?.artist ?? []) cands.push({ name: a.name, listeners: Number(a.listeners) || 0, mbid: a.mbid || null });
   await sleep(250);
 }
-for (const country of ["spain", "united kingdom", "mexico", "italy", "france", "germany", "united states", "south korea", "portugal", "argentina", "colombia", "netherlands"]) {
-  for (let page = 1; page <= 2; page++) {
+for (const country of ["spain", "united kingdom", "mexico", "italy", "france", "germany", "united states", "south korea", "portugal", "argentina", "colombia", "netherlands", "chile", "peru", "brazil", "ireland", "belgium", "poland"]) {
+  for (let page = 1; page <= 3; page++) {
     const d = await getJson(`https://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country=${encodeURIComponent(country)}&limit=100&page=${page}&format=json&api_key=${LASTFM}`);
     for (const a of d.topartists?.artist ?? []) cands.push({ name: a.name, listeners: Number(a.listeners) || 0, mbid: a.mbid || null });
     await sleep(250);
@@ -36,7 +37,7 @@ const mbidOf = new Map(cands.filter((c) => c.mbid).map((c) => [c.name, c.mbid!])
 
 // 3) Índice de atracciones a partir de los feeds (sin gastar cuota de la API).
 const attractions = new Map<string, FeedAttraction>();
-for (const cc of ["GB", "ES", "FR", "DE", "IT", "NL", "BE", "IE", "US", "MX"]) {
+for (const cc of ["GB", "ES", "FR", "DE", "IT", "NL", "BE", "IE", "US", "MX", "BR"]) {
   for await (const e of iterateFeed(cc, TM) as AsyncIterable<any>) {
     for (const w of e.attractions ?? []) {
       const a = w.attraction ?? {};
