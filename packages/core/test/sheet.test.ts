@@ -46,6 +46,7 @@ describe("renderArtistSheet (formato tipo Akari)", () => {
     expect(head).not.toContain("Aforo");
     expect(head).not.toContain("Deezer");
     expect(head).toContain("**Reventa (para comparar):** [Viagogo](https://www.viagogo.com/secure/search?q=U2) · [StubHub](https://www.stubhub.com/secure/search?q=U2)");
+    expect(head).toContain("[SeatGeek](https://seatgeek.com/search?search=U2)");
     expect(head).toContain("[Ticketmaster ES](https://www.ticketmaster.es/artist/u2-entradas/736365)");
     expect(head).toContain("[Ticketmaster UK](https://www.ticketmaster.co.uk/u2-tickets/artist/736365)");
   });

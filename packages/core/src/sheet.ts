@@ -290,7 +290,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
     `**Límite de entradas:** ${limit ?? "sin confirmar todavía"}`,
     ...(r?.difficulty ? [`**Dificultad para conseguir entrada:** ${r.difficulty}`] : []),
     ...(r ? [`**Reventa estimada:** ${times(r.low)}–${times(r.high)} sobre el oficial · confianza ${r.confidence}`] : []),
-    `**Reventa (para comparar):** [Viagogo](https://www.viagogo.com/secure/search?q=${q}) · [StubHub](https://www.stubhub.com/secure/search?q=${q}) · [Vivid Seats](https://www.vividseats.com/search?searchTerm=${q})`,
+    `**Reventa (para comparar):** [Viagogo](https://www.viagogo.com/secure/search?q=${q}) · [StubHub](https://www.stubhub.com/secure/search?q=${q}) · [Vivid Seats](https://www.vividseats.com/search?searchTerm=${q}) · [SeatGeek](https://seatgeek.com/search?search=${q})`,
     ...(official.length || extras.homepage
       ? ["", "**Enlaces oficiales**", [...(extras.homepage ? [`[Web oficial](${extras.homepage})`] : []), ...official.map(([n, u]) => `[${n}](${u})`)].join(" · ")]
       : []),

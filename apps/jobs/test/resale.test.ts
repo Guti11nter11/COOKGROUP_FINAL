@@ -36,3 +36,13 @@ describe("historial de reventa", () => {
     expect(clip("corto", 22)).toBe("corto");
   });
 });
+
+import { marketsFromSeatGeek } from "../src/seatgeek";
+describe("SeatGeek", () => {
+  it("solo fechas del propio artista con anuncios suficientes", () => {
+    const ev = (name: string, n: number) => ({ datetime_local: "2027-06-18T19:00:00", performers: [{ name }], venue: { city: "London", country: "United Kingdom" }, stats: { lowest_price: 150, median_price: 300, average_price: 340, listing_count: n } });
+    expect(marketsFromSeatGeek("U2", [ev("U2", 20), ev("U2 Tribute", 30), ev("U2", 2)])).toEqual([
+      { country: "GB", city: "London", localDate: "2027-06-18", median: 300, p25: 150, p75: 340, currency: "USD", listings: 20, source: "SeatGeek" },
+    ]);
+  });
+});
