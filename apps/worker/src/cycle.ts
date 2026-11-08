@@ -26,9 +26,14 @@ import { fetchTmPage, RateLimited } from "./tm-client";
 
 export type Send = (job: SweepJob) => Promise<void>;
 
-/** Países de la Fase 1: Europa incluido Reino Unido. */
-export const PHASE1_COUNTRIES = new Set(
-  "GB IE ES PT FR DE IT NL BE LU AT CH DK SE NO FI PL CZ HU GR HR RO SK SI BG EE LV LT IS MT CY RS TR".split(" "),
+/** Países cubiertos: Europa incluido Reino Unido (fase 1) y Latinoamérica (pedido del propietario, 2026-11-08). */
+export const COVERED_COUNTRIES = new Set(
+  [
+    "GB IE ES PT FR DE IT NL BE LU AT CH DK SE NO FI PL CZ HU GR HR RO SK SI BG EE LV LT IS MT CY RS TR",
+    "MX BR AR CL CO PE UY PY BO EC VE CR PA GT HN SV NI DO PR",
+  ]
+    .join(" ")
+    .split(" "),
 );
 /** Ticketmaster no pagina más allá de 1.000 resultados (size 50 → 20 páginas). */
 const MAX_PAGES = 20;
@@ -103,7 +108,7 @@ export async function storeShows(
   const todayMadrid = localDateIn(now, MADRID);
   const shows: { show: Show; follow: FollowRow }[] = [];
   for (const show of all) {
-    if (!PHASE1_COUNTRIES.has(show.venue.country) || show.localDate < todayMadrid) continue;
+    if (!COVERED_COUNTRIES.has(show.venue.country) || show.localDate < todayMadrid) continue;
     const followId = show.attractionIds.find((id) => follows.has(id));
     if (followId) shows.push({ show, follow: follows.get(followId)! });
   }

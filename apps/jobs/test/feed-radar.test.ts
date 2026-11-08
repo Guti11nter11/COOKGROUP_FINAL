@@ -55,4 +55,21 @@ describe("descubrimiento de giras de alta demanda", async () => {
       { tmAttractionId: "B", name: "Otra", hotDates: 1, countries: ["ES"] },
     ]);
   });
+  it("también giras grandes a punto de salir a la venta (arenas y estadios); no las de salas", () => {
+    const sale = (id: string, name: string, country: string, bigVenue = false) => ev(id, name, false, { country, upcomingSale: true, bigVenue });
+    const got = discoverHot(
+      [
+        sale("T", "Gira Estadios", "ES", true), sale("T", "Gira Estadios", "MX", true),
+        sale("M", "Gira Mixta", "ES", true), sale("M", "Gira Mixta", "FR"), sale("M", "Gira Mixta", "FR"),
+        sale("L", "Gira Salas", "ES"), sale("L", "Gira Salas", "FR"), sale("L", "Gira Salas", "IT"),
+      ],
+      new Set(),
+    );
+    expect(got.map((d) => d.name)).toEqual(["Gira Estadios", "Gira Mixta"]);
+  });
+  it("recinto grande por nombre", async () => {
+    const { BIG_VENUE } = await import("../src/feed-radar-lib");
+    expect(["Estadio Metropolitano", "Movistar Arena", "Palau Sant Jordi", "The O2", "Foro Sol", "Ziggo Dome"].every((v) => BIG_VENUE.test(v))).toBe(true);
+    expect(["Sala Riviera", "TivoliVredenburg", "Teatro Real"].some((v) => BIG_VENUE.test(v))).toBe(false);
+  });
 });

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { localDateIn, MADRID, normalizeFeedEvent, type Show } from "@gira/core";
-import { chunkByArtist, diffFeed, discoverHot, pickFollowed } from "./feed-radar-lib";
+import { BIG_VENUE, chunkByArtist, diffFeed, discoverHot, pickFollowed } from "./feed-radar-lib";
 import { FEED_COUNTRIES, iterateFeed } from "./tm-feed";
 
 const KEY = process.env.TICKETMASTER_API_KEY;
@@ -21,6 +21,7 @@ try {
 }
 const hotSeen: Parameters<typeof discoverHot>[0] = [];
 const today = localDateIn(new Date(), MADRID);
+const nowMs = Date.now();
 
 const all: Show[] = [];
 const failed: string[] = [];
@@ -33,9 +34,13 @@ for (const cc of FEED_COUNTRIES) {
       const s = normalizeFeedEvent(raw);
       if (s && s.localDate >= today) {
         mine.push(...pickFollowed([s], followed));
-        if (s.hot) {
+        // Candidatas a descubrir: alta demanda o con venta por llegar (gira que está a punto de salir).
+        const upcomingSale = s.sales.some((w) => w.kind !== "official_resale" && w.startsAt && Date.parse(w.startsAt) > nowMs);
+        if (s.hot || upcomingSale) {
           const att = (raw as { attractions?: { attraction?: { attractionId?: string; attractionName?: string } }[] }).attractions?.[0]?.attraction;
-          hotSeen.push({ attractionId: att?.attractionId ?? null, attractionName: att?.attractionName ?? null, hot: true, country: s.venue.country, segment: s.segment, isPackage: s.isPackage });
+          if (att?.attractionId && !followed.has(att.attractionId)) {
+            hotSeen.push({ attractionId: att.attractionId, attractionName: att.attractionName ?? null, hot: s.hot === true, country: s.venue.country, segment: s.segment, isPackage: s.isPackage, upcomingSale, bigVenue: BIG_VENUE.test(s.venue.name) });
+          }
         }
       }
     }
@@ -58,7 +63,7 @@ if (found.length) {
     headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
     body: JSON.stringify({ entities: found }),
   }).catch(() => null);
-  console.log(`Descubiertas: ${found.map((d) => `${d.name} (${d.hotDates})`).join(", ")} → ${res?.status ?? "sin respuesta"}`);
+  console.log(`Descubiertas ${found.length}: ${found.map((d) => `${d.name} (${d.countries.join("/")})`).join(", ")} → ${res?.status ?? "sin respuesta"}`);
 }
 
 const prev = existsSync(STATE) ? (JSON.parse(readFileSync(STATE, "utf8")) as Record<string, string>) : {};

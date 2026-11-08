@@ -7,8 +7,14 @@ import StreamJson from "stream-json";
 import Pick from "stream-json/filters/Pick.js";
 import StreamArray from "stream-json/streamers/StreamArray.js";
 
-/** Países de la Fase 1 que tienen Discovery Feed (Portugal no lo tiene). */
-export const FEED_COUNTRIES = ["GB", "IE", "ES", "FR", "DE", "IT", "NL", "BE", "AT", "CH", "DK", "SE", "NO", "FI", "PL", "CZ", "TR"];
+/**
+ * Países con Discovery Feed: Europa (Portugal no lo tiene) y Latinoamérica donde vende Ticketmaster.
+ * Un país sin feed responde 404 y se salta sin error.
+ */
+export const FEED_COUNTRIES = [
+  "GB", "IE", "ES", "FR", "DE", "IT", "NL", "BE", "AT", "CH", "DK", "SE", "NO", "FI", "PL", "CZ", "TR",
+  "MX", "BR", "AR", "CL", "CO", "PE", "UY", "CR", "PA", "GT", "DO", "PR",
+];
 
 /**
  * Recorre el Discovery Feed de un país evento a evento. Primero descarga el fichero completo a

@@ -36,6 +36,14 @@ export const GENERAL_QUERIES: [string, string][] = [
   ["IT", "tour 2027 biglietti prevendita"],
   ["NL", "tour 2027 tickets voorverkoop"],
   ["PT", "concerto 2027 bilhetes Portugal"],
+  // Latinoamérica (Ticketmaster y ticketeras locales).
+  ["MX", "preventa boletos concierto 2027"],
+  ["MX", "anuncia gira 2027 fechas México boletos"],
+  ["AR", "entradas recital 2027 preventa"],
+  ["CL", "entradas concierto 2027 preventa Chile"],
+  ["CO", "boletas concierto 2027 preventa Colombia"],
+  ["PE", "entradas concierto 2027 preventa Lima"],
+  ["BR", "ingressos show 2027 pré-venda"],
 ];
 
 /** Deporte y festivales de alta demanda: nombres con los que aparecen en prensa (además de las entidades seguidas). */

@@ -72,6 +72,12 @@ const LOCALE: Record<string, { hl: string; gl: string; bing: string }> = {
   NL: { hl: "nl", gl: "NL", bing: "nl-NL" },
   PT: { hl: "pt-PT", gl: "PT", bing: "pt-PT" },
   US: { hl: "en-US", gl: "US", bing: "en-US" },
+  MX: { hl: "es-419", gl: "MX", bing: "es-MX" },
+  AR: { hl: "es-419", gl: "AR", bing: "es-AR" },
+  CL: { hl: "es-419", gl: "CL", bing: "es-CL" },
+  CO: { hl: "es-419", gl: "CO", bing: "es-CO" },
+  PE: { hl: "es-419", gl: "PE", bing: "es-PE" },
+  BR: { hl: "pt-BR", gl: "BR", bing: "pt-BR" },
 };
 
 async function get(url: string): Promise<string | null> {

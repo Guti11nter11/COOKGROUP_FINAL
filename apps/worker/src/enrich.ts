@@ -213,11 +213,12 @@ export async function followIds(env: Env): Promise<string[]> {
 export async function discover(env: Env, body: { entities?: { tmAttractionId: string; name: string; hotDates: number }[] }, now: Date): Promise<{ added: number }> {
   const iso = now.toISOString();
   let added = 0;
-  for (const e of (body.entities ?? []).filter((x) => /^[A-Za-z0-9]{6,20}$/.test(x.tmAttractionId) && x.name).slice(0, 30)) {
+  for (const e of (body.entities ?? []).filter((x) => /^[A-Za-z0-9]{6,20}$/.test(x.tmAttractionId) && x.name).slice(0, 50)) {
     const id = `a_${e.tmAttractionId}`;
     const r = await env.DB.batch([
       env.DB.prepare("INSERT OR IGNORE INTO artist (id, name, tm_attraction_id) VALUES (?, ?, ?)").bind(id, e.name.slice(0, 120), e.tmAttractionId),
-      env.DB.prepare("INSERT OR IGNORE INTO follow (artist_id, tier, bootstrapped_at, feed_bootstrapped_at) VALUES (?, 2, ?, ?)").bind(id, iso, iso),
+      // Alta demanda según Ticketmaster → ⭐⭐; gira grande descubierta por recintos → ⭐.
+      env.DB.prepare("INSERT OR IGNORE INTO follow (artist_id, tier, bootstrapped_at, feed_bootstrapped_at) VALUES (?, ?, ?, ?)").bind(id, e.hotDates > 0 ? 2 : 1, iso, iso),
     ]);
     if (r[1]!.meta.changes) added++;
   }

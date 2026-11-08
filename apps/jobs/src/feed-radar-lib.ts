@@ -46,20 +46,40 @@ export interface Discovery {
   countries: string[];
 }
 
+/** Recintos de arena o estadio (por nombre): lo que define una gira grande. */
+export const BIG_VENUE =
+  /\b(arena|stadium|stadion|stadio|estadio|est[aá]dio|stade|dome|palacio de (los )?deportes|palau sant jordi|wizink|ziggo|accor|the o2|o2 arena|forum|sportpaleis|unipol|ippodromo|hip[oó]dromo|aut[oó]dromo|foro sol|hyde park|marlay park|velodrom|olympiahalle|lanxess|uber arena|mercedes-benz|movistar arena|allianz|wembley|san siro|bernab[eé]u|metropolitano|cartuja)\b/i;
+
 /**
- * Descubrimiento: entidades no seguidas con fechas que Ticketmaster marca como de alta demanda
- * (hotEvent) en los países de la fase. Se descartan tributos y accesorios. Las de más fechas primero.
+ * Descubrimiento sin lista cerrada: entidades no seguidas con fechas de alta demanda (hotEvent) o con
+ * una gira grande a punto de salir a la venta (≥ 2 fechas en arenas/estadios con venta por llegar, o
+ * una arena/estadio dentro de ≥ 3 fechas en ≥ 2 países). Se descartan
+ * tributos, paquetes y lo que no es música ni deporte. Primero las de más fechas.
  */
-export function discoverHot(events: { attractionId: string | null; attractionName: string | null; hot: boolean; country: string; segment?: string; isPackage: boolean }[], followed: Set<string>, max = 15): Discovery[] {
-  const by = new Map<string, Discovery>();
+export function discoverHot(
+  events: { attractionId: string | null; attractionName: string | null; hot: boolean; country: string; segment?: string; isPackage: boolean; upcomingSale?: boolean; bigVenue?: boolean }[],
+  followed: Set<string>,
+  max = 40,
+): Discovery[] {
+  const by = new Map<string, Discovery & { sale: number; big: number; hot: boolean }>();
   for (const e of events) {
-    if (!e.hot || e.isPackage || !e.attractionId || !e.attractionName || followed.has(e.attractionId)) continue;
+    if (e.isPackage || !e.attractionId || !e.attractionName || followed.has(e.attractionId)) continue;
+    if (!e.hot && !e.upcomingSale) continue;
     if (e.segment && e.segment !== "Music" && e.segment !== "Sports") continue;
     if (NOT_ARTIST.test(e.attractionName)) continue;
-    const d = by.get(e.attractionId) ?? { tmAttractionId: e.attractionId, name: e.attractionName, hotDates: 0, countries: [] };
-    d.hotDates++;
+    const d = by.get(e.attractionId) ?? { tmAttractionId: e.attractionId, name: e.attractionName, hotDates: 0, countries: [], sale: 0, big: 0, hot: false };
+    if (e.hot) {
+      d.hotDates++;
+      d.hot = true;
+    }
+    if (e.upcomingSale) d.sale++;
+    if (e.upcomingSale && e.bigVenue) d.big++;
     if (!d.countries.includes(e.country)) d.countries.push(e.country);
     by.set(e.attractionId, d);
   }
-  return [...by.values()].sort((a, b) => b.hotDates - a.hotDates || b.countries.length - a.countries.length).slice(0, max);
+  return [...by.values()]
+    .filter((d) => d.hot || d.big >= 2 || (d.big >= 1 && d.sale >= 3 && d.countries.length >= 2))
+    .sort((a, b) => b.hotDates - a.hotDates || b.big - a.big || b.sale - a.sale || b.countries.length - a.countries.length)
+    .slice(0, max)
+    .map(({ tmAttractionId, name, hotDates, countries }) => ({ tmAttractionId, name, hotDates, countries }));
 }
