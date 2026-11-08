@@ -1,0 +1,49 @@
+name: Webs de entradas de deporte
+
+# Dos veces al día (lo lanza el Worker): webs oficiales de entradas de clubes y torneos
+# (data/sports-pages.json). Solo lee las páginas de entradas, respeta robots.txt y bloqueos.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/magical-franklin-u415fe]
+    paths: [.github/workflows/sports.yml, apps/jobs/src/sports*.ts, data/sports-pages.json]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sports
+  cancel-in-progress: false
+
+jobs:
+  sports:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Navegador (webs que se pintan con JavaScript)
+        run: npm i --no-save playwright@1.63.0 && npx playwright install --with-deps chromium
+      - name: Lecturas anteriores
+        uses: actions/cache/restore@v4
+        with:
+          path: .sports-state
+          key: sports-state-${{ github.run_id }}
+          restore-keys: sports-state-
+      - name: Comparar y avisar
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: npx tsx apps/jobs/src/sports.ts
+      - name: Guardar lecturas
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: .sports-state
+          key: sports-state-${{ github.run_id }}

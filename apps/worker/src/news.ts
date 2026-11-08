@@ -5,12 +5,13 @@ import { pushAll } from "./push";
 import { Guild } from "./sheets";
 
 export interface NewsInput {
-  items: { artistName: string; title: string; url: string; source?: string; category: string; summary: string; publishedAt?: string | null }[];
+  items: { artistName: string; title: string; url: string; source?: string; category: string; summary: string; publishedAt?: string | null; channel?: string }[];
 }
 
 const ICON: Record<string, string> = {
   tour_announced: "🆕", extra_date: "➕", presale: "🎟️", signup: "📝", on_sale: "🛒", sold_out: "🔥", price: "💶",
 };
+const SPORT_CHANNELS = new Set(["futbol", "tenis", "f1", "nfl", "otros-deportes"]);
 /** Lo que merece un aviso: cambia cómo o cuándo conseguir entradas. */
 const IMPORTANT = new Set(["tour_announced", "extra_date", "presale", "signup", "on_sale"]);
 
@@ -67,15 +68,20 @@ async function postNews(env: Env, fresh: Fresh[], now: Date): Promise<number> {
   const guild = new Guild(env);
   const silent = isQuietTime(now);
   let posted = 0;
-  const ch = await guild.byName("noticias");
-  if (ch) {
+  // Deporte a su canal (#futbol, #tenis…); registros a #registros-abiertos; lo demás a #noticias.
+  const target = (n: Fresh) => (n.channel && SPORT_CHANNELS.has(n.channel) ? n.channel : n.category === "signup" ? "registros-abiertos" : "noticias");
+  const byTarget = new Map<string, Fresh[]>();
+  for (const n of fresh) byTarget.set(target(n), [...(byTarget.get(target(n)) ?? []), n]);
+  for (const [name, list] of byTarget) {
+    const ch = list.length ? await guild.byName(name) : undefined;
+    if (!ch) continue;
     let msg = "";
     const flush = async () => {
       if (!msg) return;
       if ((await discordFetch(env, "POST", `/channels/${ch.id}/messages`, { content: msg, allowed_mentions: { parse: [] }, flags: silent ? 4096 | 4 : 4 })).ok) posted++;
       msg = "";
     };
-    for (const n of fresh) {
+    for (const n of list) {
       const l = newsLine(n);
       if (msg.length + l.length + 1 > 1900) await flush();
       msg += (msg ? "\n" : "") + l;

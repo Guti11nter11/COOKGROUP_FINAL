@@ -39,6 +39,7 @@ export const JOB_SLOTS: Record<string, string[]> = {
   "enrich.yml": ["09:00", "13:00", "19:00"],
   "ticketers.yml": ["10:00", "20:00"],
   "social.yml": ["11:30"],
+  "sports.yml": ["09:45", "18:45"],
 };
 
 /**
