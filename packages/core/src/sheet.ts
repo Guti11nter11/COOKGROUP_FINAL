@@ -42,7 +42,19 @@ const fold = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").t
  */
 export function sheetShows(artistName: string, shows: Show[]): Show[] {
   const me = fold(artistName);
-  return shows.filter((s) => !s.isPackage && !(FESTIVAL_RE.test(s.name) && !fold(s.name).includes(me)));
+  const slug = me.replace(/[^a-z0-9]+/g, "-");
+  const mine = (s: Show) => fold(s.name).includes(me) || fold(s.url).includes(slug);
+  const kept = shows.filter(
+    (s) => !s.isPackage && !/[/-](package|packages|vip-package|hospitality)[-/]/i.test(s.url) && !(FESTIVAL_RE.test(s.name) && !fold(s.name).includes(me)),
+  );
+  // Misma fecha y recinto listados dos veces (p. ej. el día del festival y el concierto): se queda el del artista.
+  const byDate = new Map<string, Show>();
+  for (const s of kept) {
+    const k = `${s.venue.tmId}|${s.localDate}`;
+    const prev = byDate.get(k);
+    if (!prev || (!mine(prev) && mine(s))) byDate.set(k, s);
+  }
+  return kept.filter((s) => byDate.get(`${s.venue.tmId}|${s.localDate}`) === s);
 }
 
 /** Ventana que importa para conseguir entradas: futura y que no sea reventa. */
@@ -227,7 +239,11 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
   const title = fold(tour).startsWith(fold(artist.name)) ? tour.slice(artist.name.length).replace(/^\s*[-–:]\s*/, "") || tour : tour;
   const countries = [...new Map(live.map((s) => [s.venue.country, flag(s.venue.country)])).values()];
   const limit = ticketLimitNumber(live.map((s) => s.ticketLimit));
-  const official = [...new Map(live.filter((s) => s.artistUrl).map((s) => [ticketerName(s.artistUrl!), s.artistUrl!])).entries()];
+  // Página del artista en cada ticketera, solo si es de verdad la suya (no la del festival en que actúa).
+  const artistSlug = fold(artist.name).replace(/[^a-z0-9]+/g, "-");
+  const official = [
+    ...new Map(live.filter((s) => s.artistUrl && fold(s.artistUrl).includes(artistSlug)).map((s) => [ticketerName(s.artistUrl!), s.artistUrl!])).entries(),
+  ];
   const venues = extras.venues ?? {};
   const capacity = (s: Show) => venues[s.venue.tmId]?.capacity ?? null;
   const known = live.filter((s) => capacity(s));
@@ -237,7 +253,7 @@ export function renderArtistSheet(artist: { name: string }, shows: Show[], now: 
   const q = encodeURIComponent(artist.name);
 
   const head = [
-    `# 🎤 ${artist.name} — ${title}`,
+    fold(title) === fold(artist.name) ? `# 🎤 ${artist.name}` : `# 🎤 ${artist.name} — ${title}`,
     `${countries.join(" ")} · ${live.length} ${live.length === 1 ? "fecha" : "fechas"} en Europa`,
     "",
     `**Límite de entradas:** ${limit ? `${limit} por persona` : "sin confirmar"}`,

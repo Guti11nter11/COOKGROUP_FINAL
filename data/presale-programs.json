@@ -1,28 +1,170 @@
 {
   "_doc": "Cómo entrar en cada programa de preventa conocido. 'match' es una expresión regular sobre la etiqueta de la venta. 'url' solo cuando es la página oficial del programa. Revisar cuando cambie un programa.",
   "programs": [
-    { "match": "mastercard|priceless", "how": "Pagar con una Mastercard: se accede desde Priceless o metiendo los primeros dígitos de la tarjeta en Ticketmaster", "url": "https://www.priceless.com/" },
-    { "match": "american express|\\bamex\\b", "how": "Tarjeta American Express: se validan los primeros dígitos de la tarjeta en la ticketera", "url": "https://www.americanexpress.com/en-gb/benefits/presale-tickets/" },
-    { "match": "\\bvisa\\b", "how": "Pagar con una tarjeta Visa (se validan los primeros dígitos en la ticketera)" },
-    { "match": "\\bo2\\b|priority", "how": "Cliente de O2 (Reino Unido): la preventa sale en la app O2 Priority", "url": "https://priority.o2.co.uk/" },
-    { "match": "vodafone|veryme", "how": "Cliente de Vodafone: código en la app VeryMe Rewards (Reino Unido)", "url": "https://www.vodafone.co.uk/veryme" },
-    { "match": "\\bmojo\\b", "how": "Suscribirse a la newsletter de MOJO: el código llega por email antes de la preventa", "url": "https://www.mojo4music.com/" },
-    { "match": "kerrang", "how": "Newsletter de Kerrang!: el código llega por email", "url": "https://www.kerrang.com/" },
-    { "match": "planet rock", "how": "Registro en Planet Rock: el código llega por email", "url": "https://www.planetrock.com/" },
-    { "match": "radio ?x", "how": "Registro en Radio X: el código llega por email", "url": "https://www.radiox.co.uk/" },
-    { "match": "absolute radio", "how": "Registro en Absolute Radio: el código llega por email", "url": "https://planetradio.co.uk/absolute-radio/" },
-    { "match": "live ?nation", "how": "Cuenta de Live Nation: el código de la preventa se publica en su web el día antes", "url": "https://www.livenation.co.uk/", "urlByCountry": { "ES": "https://www.livenation.es/", "FR": "https://www.livenation.fr/", "NL": "https://www.livenation.nl/", "DE": "https://www.livenation.de/", "IT": "https://www.livenation.it/", "BE": "https://www.livenation.be/" } },
-    { "match": "ticketmaster", "how": "Cuenta de Ticketmaster y seguir al artista: el acceso suele llegar por email", "url": "https://www.ticketmaster.co.uk/", "urlByCountry": { "ES": "https://www.ticketmaster.es/", "FR": "https://www.ticketmaster.fr/", "NL": "https://www.ticketmaster.nl/", "DE": "https://www.ticketmaster.de/", "IT": "https://www.ticketmaster.it/", "BE": "https://www.ticketmaster.be/", "IE": "https://www.ticketmaster.ie/" } },
-    { "match": "spotify", "how": "Spotify Fans First: invitación por email a los oyentes habituales del artista (cuenta de Spotify)" },
-    { "match": "amazon music", "how": "Amazon Music: acceso desde la app para oyentes del artista" },
-    { "match": "bandsintown", "how": "Seguir al artista en Bandsintown y pedir acceso a la preventa", "url": "https://www.bandsintown.com/" },
-    { "match": "laylo", "how": "Registro en el Laylo del artista (aviso por SMS/email)" },
-    { "match": "axs", "how": "Cuenta de AXS y registro en la preventa del evento", "url": "https://www.axs.com/" },
-    { "match": "see tickets", "how": "Cuenta de See Tickets", "url": "https://www.seetickets.com/" },
-    { "match": "dice", "how": "App de DICE: seguir al artista", "url": "https://dice.fm/" },
-    { "match": "santander", "how": "Cliente de Banco Santander: pagar con su tarjeta" },
-    { "match": "caixabank", "how": "Cliente de CaixaBank: pagar con su tarjeta" },
-    { "match": "movistar", "how": "Cliente de Movistar: acceso desde su app o web de ventajas" },
-    { "match": "el corte ingl", "how": "Venta en El Corte Inglés (cuenta en su web)", "url": "https://www.elcorteingles.es/entradas/" }
+    {
+      "match": "mastercard|priceless",
+      "how": "Pagar con una Mastercard: se accede desde Priceless o metiendo los primeros dígitos de la tarjeta en Ticketmaster",
+      "url": "https://www.priceless.com/"
+    },
+    {
+      "match": "american express|\\bamex\\b",
+      "how": "Tarjeta American Express: se validan los primeros dígitos de la tarjeta en la ticketera",
+      "url": "https://www.americanexpress.com/en-gb/benefits/presale-tickets/"
+    },
+    {
+      "match": "\\bvisa\\b",
+      "how": "Pagar con una tarjeta Visa (se validan los primeros dígitos en la ticketera)"
+    },
+    {
+      "match": "\\bo2\\b|priority",
+      "how": "Cliente de O2 (Reino Unido): la preventa sale en la app O2 Priority",
+      "url": "https://priority.o2.co.uk/"
+    },
+    {
+      "match": "vodafone|veryme",
+      "how": "Cliente de Vodafone: código en la app VeryMe Rewards (Reino Unido)",
+      "url": "https://www.vodafone.co.uk/veryme"
+    },
+    {
+      "match": "\\bmojo\\b",
+      "how": "Suscribirse a la newsletter de MOJO: el código llega por email antes de la preventa",
+      "url": "https://www.mojo4music.com/"
+    },
+    {
+      "match": "kerrang",
+      "how": "Newsletter de Kerrang!: el código llega por email",
+      "url": "https://www.kerrang.com/"
+    },
+    {
+      "match": "planet rock",
+      "how": "Registro en Planet Rock: el código llega por email",
+      "url": "https://www.planetrock.com/"
+    },
+    {
+      "match": "radio ?x",
+      "how": "Registro en Radio X: el código llega por email",
+      "url": "https://www.radiox.co.uk/"
+    },
+    {
+      "match": "absolute radio",
+      "how": "Registro en Absolute Radio: el código llega por email",
+      "url": "https://planetradio.co.uk/absolute-radio/"
+    },
+    {
+      "match": "\\bmcd\\b",
+      "how": "Registro en MCD (promotora de Irlanda): el código llega por email",
+      "url": "https://www.mcd.ie/"
+    },
+    {
+      "match": "aeg",
+      "how": "Registro en AEG Presents: el código llega por email",
+      "url": "https://www.aegpresents.co.uk/"
+    },
+    {
+      "match": "\\bsjm\\b",
+      "how": "Registro en SJM Concerts: el código llega por email",
+      "url": "https://www.sjmconcerts.com/"
+    },
+    {
+      "match": "doctor music",
+      "how": "Newsletter de Doctor Music: el código llega por email",
+      "url": "https://www.doctormusic.com/"
+    },
+    {
+      "match": "last tour",
+      "how": "Newsletter de Last Tour: el código llega por email",
+      "url": "https://www.lasttour.com/"
+    },
+    {
+      "match": "telekom|magenta",
+      "how": "Cliente de Telekom (Alemania): MagentaMusik Prio Tickets",
+      "url": "https://www.magentamusik.de/prio-tickets"
+    },
+    {
+      "match": "paypal",
+      "how": "PayPal Prio Tickets (Alemania): acceso con tu cuenta de PayPal",
+      "url": "https://www.paypalpriotickets.de/"
+    },
+    {
+      "match": "royal parks",
+      "how": "Registro en la newsletter de The Royal Parks / BST Hyde Park",
+      "url": "https://www.bst-hydepark.com/"
+    },
+    {
+      "match": "live ?nation",
+      "how": "Cuenta de Live Nation: el código de la preventa se publica en su web el día antes",
+      "url": "https://www.livenation.co.uk/",
+      "urlByCountry": {
+        "ES": "https://www.livenation.es/",
+        "FR": "https://www.livenation.fr/",
+        "NL": "https://www.livenation.nl/",
+        "DE": "https://www.livenation.de/",
+        "IT": "https://www.livenation.it/",
+        "BE": "https://www.livenation.be/"
+      }
+    },
+    {
+      "match": "ticketmaster",
+      "how": "Cuenta de Ticketmaster y seguir al artista: el acceso suele llegar por email",
+      "url": "https://www.ticketmaster.co.uk/",
+      "urlByCountry": {
+        "ES": "https://www.ticketmaster.es/",
+        "FR": "https://www.ticketmaster.fr/",
+        "NL": "https://www.ticketmaster.nl/",
+        "DE": "https://www.ticketmaster.de/",
+        "IT": "https://www.ticketmaster.it/",
+        "BE": "https://www.ticketmaster.be/",
+        "IE": "https://www.ticketmaster.ie/"
+      }
+    },
+    {
+      "match": "spotify",
+      "how": "Spotify Fans First: invitación por email a los oyentes habituales del artista (cuenta de Spotify)"
+    },
+    {
+      "match": "amazon music",
+      "how": "Amazon Music: acceso desde la app para oyentes del artista"
+    },
+    {
+      "match": "bandsintown",
+      "how": "Seguir al artista en Bandsintown y pedir acceso a la preventa",
+      "url": "https://www.bandsintown.com/"
+    },
+    {
+      "match": "laylo",
+      "how": "Registro en el Laylo del artista (aviso por SMS/email)"
+    },
+    {
+      "match": "axs",
+      "how": "Cuenta de AXS y registro en la preventa del evento",
+      "url": "https://www.axs.com/"
+    },
+    {
+      "match": "see tickets",
+      "how": "Cuenta de See Tickets",
+      "url": "https://www.seetickets.com/"
+    },
+    {
+      "match": "dice",
+      "how": "App de DICE: seguir al artista",
+      "url": "https://dice.fm/"
+    },
+    {
+      "match": "santander",
+      "how": "Cliente de Banco Santander: pagar con su tarjeta"
+    },
+    {
+      "match": "caixabank",
+      "how": "Cliente de CaixaBank: pagar con su tarjeta"
+    },
+    {
+      "match": "movistar",
+      "how": "Cliente de Movistar: acceso desde su app o web de ventajas"
+    },
+    {
+      "match": "el corte ingl",
+      "how": "Venta en El Corte Inglés (cuenta en su web)",
+      "url": "https://www.elcorteingles.es/entradas/"
+    }
   ]
 }

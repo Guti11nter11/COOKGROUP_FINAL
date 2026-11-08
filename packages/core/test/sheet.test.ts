@@ -118,6 +118,17 @@ describe("qué fechas van en la ficha", () => {
     expect(sheetShows("Robbie Williams", list).map((s) => s.sourceId)).toEqual(["a", "e"]);
     expect(sheetShows("Creamfields", [rw("f", "Creamfields 2027 - Weekend Camping")]).map((s) => s.sourceId)).toEqual(["f"]);
   });
+  it("fuera paquetes por URL y duplicados de la misma fecha (se queda el del artista)", () => {
+    const base = show("p1", "FR", "Paris", "2027-07-09", [["general", "Général", "2026-12-01T10:00:00Z"]], { name: "Jamiroquai", url: "https://www.ticketmaster.fr/fr/manifestation/jamiroquai-billet/idmanif/1" });
+    const pkg = { ...base, sourceId: "p2", url: "https://www.ticketmaster.fr/fr/manifestation/package-jamiroquai-billet/idmanif/2" };
+    expect(sheetShows("Jamiroquai", [base, pkg]).map((x) => x.sourceId)).toEqual(["p1"]);
+    const bst = show("h1", "GB", "London", "2027-07-10", [["general", "General", "2026-12-01T10:00:00Z"]], { name: "American Express presents BST Hyde Park", url: "https://www.ticketmaster.co.uk/american-express-presents-bst-hyde-park-london-10-07-2027/event/1" });
+    const raye = { ...bst, sourceId: "h2", name: "Amex presents BST Hyde Park - RAYE", url: "https://www.ticketmaster.co.uk/amex-presents-bst-hyde-park-raye-london-10-07-2027/event/2" };
+    expect(sheetShows("RAYE", [bst, raye]).map((x) => x.sourceId)).toEqual(["h2"]);
+  });
+  it("título sin repetir el nombre cuando la gira no tiene nombre propio", () =>
+    expect(renderArtistSheet({ name: "The Game" }, [show("g", "NL", "Utrecht", "2027-03-28", [["general", "Venta general", "2026-11-09T09:00:00Z"]], { name: "The Game" })], NOW)[0]).toMatch(/^# 🎤 The Game\n/));
+
   it("una reventa oficial no cuenta como venta por llegar", () => {
     const s = show("r", "ES", "Madrid", "2027-05-01", [["official_resale", "Reventa oficial", "2026-12-01T10:00:00Z"], ["general", "Venta general", "2026-10-01T09:00:00Z"]]);
     expect(isSheetActive([s], NOW)).toBe(false);
