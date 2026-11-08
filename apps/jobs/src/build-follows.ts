@@ -38,20 +38,25 @@ const mbidOf = new Map(cands.filter((c) => c.mbid).map((c) => [c.name, c.mbid!])
 // 3) Índice de atracciones a partir de los feeds (sin gastar cuota de la API).
 const attractions = new Map<string, FeedAttraction>();
 for (const cc of ["GB", "ES", "FR", "DE", "IT", "NL", "BE", "IE", "US", "MX", "BR"]) {
-  for await (const e of iterateFeed(cc, TM) as AsyncIterable<any>) {
-    for (const w of e.attractions ?? []) {
-      const a = w.attraction ?? {};
-      if (!a.attractionId) continue;
-      const prev = attractions.get(a.attractionId);
-      attractions.set(a.attractionId, {
-        attractionId: a.attractionId,
-        attractionName: a.attractionName ?? "",
-        musicbrainz_id: a.externalLinks?.musicbrainz_id ?? null,
-        events: (prev?.events ?? 0) + 1,
-      });
+  // Un país que falle (p. ej. 429 de Ticketmaster) se salta: el índice de los demás basta.
+  try {
+    for await (const e of iterateFeed(cc, TM) as AsyncIterable<any>) {
+      for (const w of e.attractions ?? []) {
+        const a = w.attraction ?? {};
+        if (!a.attractionId) continue;
+        const prev = attractions.get(a.attractionId);
+        attractions.set(a.attractionId, {
+          attractionId: a.attractionId,
+          attractionName: a.attractionName ?? "",
+          musicbrainz_id: a.externalLinks?.musicbrainz_id ?? null,
+          events: (prev?.events ?? 0) + 1,
+        });
+      }
     }
+    console.log(`Índice tras ${cc}: ${attractions.size} atracciones`);
+  } catch (e) {
+    console.log(`⚠️ ${cc}: ${String(e)} — se sigue sin ese país`);
   }
-  console.log(`Índice tras ${cc}: ${attractions.size} atracciones`);
 }
 const index = buildAttractionIndex([...attractions.values()]);
 
