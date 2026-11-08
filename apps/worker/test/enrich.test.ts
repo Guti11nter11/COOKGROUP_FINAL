@@ -96,3 +96,16 @@ describe("/enrich/news", () => {
     expect(await env.DB.prepare("SELECT artist_id, category FROM news").first()).toEqual({ artist_id: "a1", category: "extra_date" });
   });
 });
+
+describe("/enrich/discover y /enrich/follows", () => {
+  it("sigue (⭐⭐) lo descubierto una sola vez, ya arrancado, y lo devuelve en la lista", async () => {
+    const body = JSON.stringify({ entities: [{ tmAttractionId: "K8vZ9NUEVO", name: "Nuevo", hotDates: 3 }, { tmAttractionId: "x", name: "malo", hotDates: 1 }] });
+    const a = (await (await call("/enrich/discover", { method: "POST", body })).json()) as { added: number };
+    const b = (await (await call("/enrich/discover", { method: "POST", body })).json()) as { added: number };
+    expect([a.added, b.added]).toEqual([1, 0]);
+    expect(await env.DB.prepare("SELECT tier, bootstrapped_at IS NOT NULL AS boot FROM follow WHERE artist_id = 'a_K8vZ9NUEVO'").first()).toEqual({ tier: 2, boot: 1 });
+    const ids = ((await (await call("/enrich/follows")).json()) as { ids: string[] }).ids;
+    expect(ids).toContain("K8vZ9NUEVO");
+    expect(ids).toContain("K1");
+  });
+});

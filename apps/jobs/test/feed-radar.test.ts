@@ -41,3 +41,18 @@ describe("chunkByArtist", () => {
     expect(chunks.flat()).toHaveLength(5);
   });
 });
+
+describe("descubrimiento de giras de alta demanda", async () => {
+  const { discoverHot } = await import("../src/feed-radar-lib");
+  const ev = (id: string, name: string, hot = true, extra: object = {}) => ({ attractionId: id, attractionName: name, hot, country: "ES", segment: "Music", isPackage: false, ...extra });
+  it("solo hotEvent, no seguidas, sin tributos ni paquetes; las de más fechas primero", () => {
+    const got = discoverHot(
+      [ev("A", "Artista Nuevo"), ev("A", "Artista Nuevo", true, { country: "GB" }), ev("B", "Otra"), ev("C", "Queen Tribute Experience"), ev("D", "Seguida"), ev("E", "Frío", false), ev("F", "Paquete", true, { isPackage: true }), ev("G", "Teatro", true, { segment: "Arts & Theatre" })],
+      new Set(["D"]),
+    );
+    expect(got).toEqual([
+      { tmAttractionId: "A", name: "Artista Nuevo", hotDates: 2, countries: ["ES", "GB"] },
+      { tmAttractionId: "B", name: "Otra", hotDates: 1, countries: ["ES"] },
+    ]);
+  });
+});
