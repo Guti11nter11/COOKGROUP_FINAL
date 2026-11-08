@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { aiJson } from "./ai";
 import { gira } from "./gira-client";
 import { searchNews, type NewsItem } from "./news";
-import { CATEGORIES, GENERAL_QUERIES, nameMatcher, type NewsCategory } from "./news-radar-lib";
+import { CATEGORIES, EVENT_NAMES, GENERAL_QUERIES, nameMatcher, SPORT_QUERIES, type NewsCategory } from "./news-radar-lib";
 
 /**
  * Radar de noticias (cada 2 h): titulares de los últimos 2 días en varios países, filtrados por
@@ -12,13 +12,13 @@ import { CATEGORIES, GENERAL_QUERIES, nameMatcher, type NewsCategory } from "./n
 const STATE = ".news-state/seen.json";
 const MAX_AGE_MS = 48 * 3600_000;
 const follows: { name: string; tier: number }[] = JSON.parse(readFileSync("data/artists.resolved.json", "utf8"));
-const matcher = nameMatcher(follows.map((f) => f.name));
+const matcher = nameMatcher([...follows.map((f) => f.name), ...EVENT_NAMES]);
 const top = follows.filter((f) => f.tier >= 3).map((f) => f.name);
 const hash = (t: string) => createHash("sha1").update(t).digest("hex").slice(0, 16);
 
 const seen: Record<string, number> = existsSync(STATE) ? JSON.parse(readFileSync(STATE, "utf8")) : {};
 const now = Date.now();
-const queries: [string, string][] = [...GENERAL_QUERIES, ...top.map((n, i): [string, string] => [i % 2 ? "GB" : "ES", `"${n}" ${i % 2 ? "tour tickets" : "gira entradas"}`])];
+const queries: [string, string][] = [...GENERAL_QUERIES, ...SPORT_QUERIES, ...top.map((n, i): [string, string] => [i % 2 ? "GB" : "ES", `"${n}" ${i % 2 ? "tour tickets" : "gira entradas"}`])];
 
 const fresh: (NewsItem & { candidates: string[]; key: string })[] = [];
 for (const [cc, q] of queries) {
@@ -34,7 +34,8 @@ for (const [cc, q] of queries) {
 }
 console.log(`${queries.length} búsquedas · ${fresh.length} titulares nuevos con artistas seguidos`);
 
-const SYSTEM = `Clasificas titulares de música y eventos para un radar personal que busca conseguir entradas.
+const SYSTEM = `Clasificas titulares de música, festivales y deporte de alta demanda para un radar personal que busca
+conseguir entradas (sorteos, preventas, registros y ventas cuentan como accionables).
 Para cada titular di a qué artista de su lista de candidatos se refiere de verdad (o null si no es ese
 artista: homónimos, palabras normales…), la categoría (${CATEGORIES.join(", ")}) y un resumen de una
 línea en español con lo accionable (fechas, ciudades, cuándo es la preventa o venta). Sin inventar.

@@ -37,3 +37,27 @@ export const GENERAL_QUERIES: [string, string][] = [
   ["NL", "tour 2027 tickets voorverkoop"],
   ["PT", "concerto 2027 bilhetes Portugal"],
 ];
+
+/** Deporte y festivales de alta demanda: nombres con los que aparecen en prensa (además de las entidades seguidas). */
+export const EVENT_NAMES = [
+  "Champions League", "Liga de Campeones", "Europa League", "Conference League", "Fórmula 1", "Formula 1", "F1", "Gran Premio",
+  "Wimbledon", "Roland Garros", "US Open", "Mutua Madrid Open", "ATP Finals", "Copa Davis", "Final Four", "Euroliga",
+  "Mundial 2030", "Eurocopa", "Juegos Olímpicos", "LA 2028", "NFL", "NBA", "UFC", "WWE", "PDC", "Premier League Darts",
+  "Seis Naciones", "Six Nations", "Real Madrid", "FC Barcelona", "Atlético de Madrid", "Selección española",
+  "Mad Cool", "Primavera Sound", "BBK Live", "Sónar", "Glastonbury", "Tomorrowland", "Rock in Rio", "NOS Alive",
+];
+
+export const SPORT_QUERIES: [string, string][] = [
+  ["ES", "entradas final Champions sorteo UEFA"],
+  ["ES", "entradas Fórmula 1 Madrid 2027 venta"],
+  ["ES", "entradas NFL Madrid partido venta"],
+  ["ES", "entradas Mutua Madrid Open 2027 venta"],
+  ["ES", "entradas Mundial 2030 venta FIFA"],
+  ["GB", "Wimbledon ballot 2027"],
+  ["GB", "NFL London games 2027 tickets"],
+  ["GB", "Premier League Darts 2027 tickets on sale"],
+  ["GB", "F1 British Grand Prix 2027 tickets"],
+  ["FR", "billetterie Roland-Garros 2027"],
+  ["GB", "Glastonbury 2027 tickets registration"],
+  ["ES", "abonos festival 2027 a la venta"],
+];
