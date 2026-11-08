@@ -6,6 +6,7 @@ import { ingestNews, type NewsInput } from "./news";
 import { handleAuth } from "./auth";
 import { handleApi } from "./app-api";
 import { handleInteraction, verifyDiscord } from "./interactions";
+import { dispatchJobs } from "./dispatch";
 import { announceCalendar, calendarIcs, icsToken, runCalendar, updateStatusPanel } from "./calendar";
 import type { Env, SweepJob } from "./env";
 
@@ -21,7 +22,8 @@ async function scheduled(env: Env, now: Date): Promise<void> {
     await refreshActiveSheets(env, now).catch(() => 0);
     const sheets = await publishSheets(env, now);
     const panel = await updateStatusPanel(env, now).catch(() => false);
-    result = { ...cycle, ...sheets, calendar, panel };
+    const dispatched = await dispatchJobs(env, now).catch(() => []);
+    result = { ...cycle, ...sheets, calendar, panel, ...(dispatched.length ? { dispatched } : {}) };
   } catch (e) {
     ok = 0;
     result = { error: String(e) };

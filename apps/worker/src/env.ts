@@ -11,6 +11,8 @@ export interface Env {
   TICKETMASTER_API_KEY: string;
   DISCORD_BOT_TOKEN: string;
   DISCORD_GUILD_ID: string;
+  /** Token de GitHub (Actions: write) para lanzar los trabajos a su hora desde el cron del Worker. */
+  GH_DISPATCH_TOKEN?: string;
   /** Clave pública de la aplicación de Discord (verifica la firma de los comandos). */
   DISCORD_PUBLIC_KEY?: string;
   /** "1" = no publicar en Discord (los avisos se guardan igualmente). */
