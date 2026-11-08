@@ -6,10 +6,11 @@ Qué corre, cuándo y cómo intervenir. Todo es gratis salvo Apify (tope automá
 
 | Pieza | Dónde | Frecuencia | Qué hace |
 |---|---|---|---|
-| Reloj del Worker | Cloudflare (cron cada 5 min) | siempre | Recordatorios, resúmenes 21:00/08:00, #esta-semana (solo base de datos) |
+| Reloj del Worker | Cloudflare (cron cada 5 min) | siempre | Recordatorios (1 h y 10 min, uno por hora de inicio), resúmenes 21:00/08:00, #esta-semana |
 | Barrido del Worker | Cloudflare | por franjas: nada 00–08; cada 10 min 08:30–14:30 y 16:00–21:30; 15/30 min el resto | Ticketmaster (⭐⭐⭐), fichas y avisos, panel de #estado, lanza los trabajos de GitHub |
-| Radar del catálogo | Actions `feed-radar` | 11 veces/día (lo lanza el Worker) | Catálogo completo de Ticketmaster por país; cambios → Worker; descubre giras de alta demanda |
-| Enriquecer fichas | Actions `enrich` | 09:00, 13:00, 19:00 (Worker) | Aforo, precios oficiales (prensa + IA), registros de la web oficial, reventa |
+| Radar del catálogo | Actions `feed-radar` | 11 veces/día (lo lanza el Worker) | Catálogo completo de Ticketmaster, Europa y Latinoamérica; cambios → Worker; descubre sin tope giras de arenas/estadios y de alta demanda |
+| Enriquecer fichas | Actions `enrich` | 09:00, 13:00, 19:00 (Worker) | Aforo, precios oficiales (prensa + IA) e imagen de precios, límite de entradas, registros (también de ⭐⭐⭐ sin fechas), reventa (StubHub, SeatGeek) |
+| Webs de deporte | Actions `sports` | 09:45 y 18:45 (Worker) | Webs oficiales de entradas (`data/sports-pages.json`); lo nuevo al canal del deporte |
 | Radar de noticias | Actions `news-radar` | 6 veces/día (Worker) | Prensa de Europa, una noticia por artista y tipo al día |
 | Ticketeras sin API | Actions `ticketers` | 10:00 y 20:00 (Worker) | Entradas.com, Eventim DE, TicketOne IT y See Tickets con Browser Run, por turnos; AXS por sitemaps |
 | Redes | Actions `social` | 11:30 (Worker) | Instagram oficial de Blueticket y de los artistas ⭐⭐⭐ (Apify, ~0,1 $/día) |
@@ -27,6 +28,9 @@ Worker sobre la rama por defecto (`claude/vigilant-euler-pkmop0`): fusionar ahí
 - **Revisar el texto de las fichas activas:** lanzar *Vista previa de fichas* en Actions (solo datos públicos).
 - **Añadir un programa de preventa** (cómo entrar): `data/presale-programs.json`.
 - **Añadir un registro que ya conoces** (Laylo, Live Nation…): `data/watchlist.json`.
+- **Vigilar otra web de entradas de deporte:** añadirla a `data/sports-pages.json` (nombre, canal y URL).
+- **Activar SeatGeek como mercado de reventa:** crear un *client id* en seatgeek.com (cuenta →
+  developer) y guardarlo como secreto `SEATGEEK_CLIENT_ID` en GitHub.
 - **Rotar las claves de las notificaciones:** borrar `setting.vapid` (SQL de mantenimiento) y volver a
   activar las notificaciones en el iPhone.
 
