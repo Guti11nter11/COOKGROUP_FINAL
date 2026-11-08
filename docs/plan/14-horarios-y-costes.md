@@ -11,7 +11,7 @@
 | 16:00–21:30 | **cada 10 min** | Preventas de EE. UU. (fase 2) y anuncios de tarde |
 | 21:30–24:00 | cada 30 min | Repaso del día |
 
-Recordatorios (24 h, 1 h, 10 min) y resúmenes (21:00, 08:00) siguen siempre en hora: solo leen la
+Recordatorios (1 h y 10 min) y el resumen diario (22:00) siguen siempre en hora: solo leen la
 base de datos y no cuestan nada.
 
 Trabajos de GitHub, lanzados por el Worker a horas fijas (nunca de madrugada):

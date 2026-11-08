@@ -11,7 +11,7 @@ cuándo, dónde registrarse y cómo entrar, con coste mínimo (≤ 1 $/día).
 | Cuándo es cada preventa (hora España y UK) | ✅ | Ficha por artista con bloques por preventa y hora, y hasta cuándo dura |
 | Dónde registrarse / cómo entrar | ✅ | Programas conocidos (Mastercard, O2, MOJO, Live Nation…) y enlaces de la web oficial por fecha |
 | Precios, aforo, reventa, dificultad | ✅ / 🟡 | Precios dependen de prensa; reventa con mercado real solo si hay precio oficial del mismo país |
-| No perderse una preventa | ✅ | Recordatorios 24 h / 1 h / 10 min (agrupados por artista), resúmenes 21:00 y 08:00, calendario `.ics`, push |
+| No perderse una preventa | ✅ | Recordatorios 1 h y 10 min (uno por hora de inicio), resumen diario a las 22:00, calendario `.ics`, push |
 | Nada del pasado | ✅ | Canal solo con ventas por llegar; la ficha se revisa cada 15 min en franja |
 | Coste ≤ 1 $/día | ✅ | Apify con freno diario; lo demás en planes gratuitos |
 | Horario por franjas | ✅ | Nada 00–08; cada 10 min 08:30–14:30 y 16:00–21:30 |

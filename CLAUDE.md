@@ -47,7 +47,7 @@ trata de los eventos y de cómo conseguir las entradas.
   Browser Run, Vectorize. Cuenta `61fba2a15c66bf4a4a86477a4d74c51e`.
 - **GitHub Actions** (repo público → minutos ilimitados): noticias, ticketeras sin API, Apify,
   resúmenes y fichas con IA. Los lanza el Worker (`workflow_dispatch`) para que sean puntuales.
-- Resúmenes 21:00 y 08:00 Europe/Madrid y recordatorios: el cron de 5 min del Worker (ADR 0002).
+- Resumen diario a las 22:00 Europe/Madrid (uno al día, decisión del propietario) y recordatorios 1 h y 10 min antes: el cron de 5 min del Worker (ADR 0002).
 - **Horario por franjas** (decisión del propietario, 2026-11-08): barrido de Ticketmaster nada de
   00:00 a 08:00 y cada 10 min en las franjas de preventas (08:30–14:30 EU/UK, 16:00–21:30 EE. UU.);
   trabajos de GitHub a horas fijas lanzados por el Worker. Ver `docs/plan/14-horarios-y-costes.md`.

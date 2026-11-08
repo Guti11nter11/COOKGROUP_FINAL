@@ -6,7 +6,7 @@ Qué corre, cuándo y cómo intervenir. Todo es gratis salvo Apify (tope automá
 
 | Pieza | Dónde | Frecuencia | Qué hace |
 |---|---|---|---|
-| Reloj del Worker | Cloudflare (cron cada 5 min) | siempre | Recordatorios (1 h y 10 min, uno por hora de inicio), resúmenes 21:00/08:00, #esta-semana |
+| Reloj del Worker | Cloudflare (cron cada 5 min) | siempre | Recordatorios (1 h y 10 min, uno por hora de inicio), resumen diario 22:00, #esta-semana |
 | Barrido del Worker | Cloudflare | por franjas: nada 00–08; cada 10 min 08:30–14:30 y 16:00–21:30; 15/30 min el resto | Ticketmaster (⭐⭐⭐), fichas y avisos, panel de #estado, lanza los trabajos de GitHub |
 | Radar del catálogo | Actions `feed-radar` | 11 veces/día (lo lanza el Worker) | Catálogo completo de Ticketmaster, Europa y Latinoamérica; cambios → Worker; descubre sin tope giras de arenas/estadios y de alta demanda |
 | Enriquecer fichas | Actions `enrich` | 09:00, 13:00, 19:00 (Worker) | Aforo, precios oficiales (prensa + IA) e imagen de precios, límite de entradas, registros (también de ⭐⭐⭐ sin fechas), reventa (StubHub, SeatGeek) |
