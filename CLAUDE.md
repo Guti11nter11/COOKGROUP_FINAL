@@ -65,6 +65,8 @@ trata de los eventos y de cómo conseguir las entradas.
   UEFA, Wimbledon, Roland-Garros, Mutua Madrid Open, F1, NFL.
 - Ticketeras sin API (revisar ficha de evento): AXS, Eventim/Fansale/TicketOne, Blueticket,
   See Tickets, Dice, Fnac, eTicketing, Vivaticket, Ticketportal, Puntoticket, LaLiga/clubes…
+- SeatGeek: **ticketera de venta oficial** (sobre todo EE. UU., fase 2), no fuente de reventa
+  (decisión del propietario, 2026-11-08); API oficial con `SEATGEEK_CLIENT_ID`.
 - Noticias (Google News RSS, NME, Billboard, Los40, Mondosonoro…), feeds RSS de YouTube.
 - Redes vía **Apify** (plan FREE: 5 $/mes de crédito, medido el 2026-11-07; dosificar): `apify/instagram-scraper`,
   `clockworks/tiktok-scraper`, el mejor scraper de X mantenido. Meta Business Discovery como
@@ -95,21 +97,20 @@ artist presale, venta general) con hora de España y Reino Unido, qué hace falt
 precio oficial (face value) y **rango estimado de reventa** (mín.–máx., multiplicador sobre el
 oficial) calculado con un modelo propio: demanda (popularidad Last.fm/Deezer, ruido en noticias y
 redes, nº de fechas y fechas extra, aforo, velocidad de agotado), tipo de sección (pista/GA, Inner
-Circle/Red Zone, gradas por anillo) y país. Mostrar siempre como estimación con nivel de
-confianza; sirve para saber lo difícil/caro que será si no se consigue en la venta oficial.
-Además, **leer (solo lectura, con poca frecuencia) los precios publicados en StubHub (vía Apify) y
-SeatGeek (API oficial)** por sección como dato de mercado. Son precios *pedidos*, no ventas: filtrar anuncios
+Circle/Red Zone, gradas por anillo) y país; sirve para saber lo difícil/caro que será si no se
+consigue en la venta oficial. Además, **leer (solo lectura, con poca frecuencia) los precios
+publicados en StubHub (vía Apify)** por sección como dato de mercado. Son precios *pedidos*, no ventas: filtrar anuncios
 absurdos con estadística robusta (mediana y percentiles P25–P75 por sección, descartar valores
 fuera de ~3×IQR y los que no se mueven en días) en vez de un tope fijo, porque en eventos como una
-final del Mundial 10.000 € puede ser lo normal. En la ficha se muestra solo el multiplicador estimado y la confianza (decisión del propietario,
-2026-11-08); el mercado se usa para calcularlo.
+final del Mundial 10.000 € puede ser lo normal. En la ficha se muestra solo el multiplicador estimado, sin nivel de confianza (decisión del
+propietario, 2026-11-08); el mercado se usa para calcularlo.
 
 ## Secrets (GitHub → Settings → Secrets and variables → Actions)
 
 `TICKETMASTER_API_KEY`, `DISCORD_BOT_TOKEN`, `DISCORD_APPLICATION_ID`, `DISCORD_PUBLIC_KEY`,
 `GROQ_API_KEY`, `GEMINI_API_KEY`, `NVIDIA_API_KEY`, `OPENAI_API_KEY`, `FIRECRAWL_API_KEY`,
 `APIFY_TOKEN`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`, `LASTFM_API_KEY`,
-`FOOTBALL_DATA_API_KEY`; opcional `SEATGEEK_CLIENT_ID` (mercado de reventa gratis). **Reddit: NO usar** (ni API, ni Apify, ni RSS, ni scraping). Su política
+`FOOTBALL_DATA_API_KEY`; opcional `SEATGEEK_CLIENT_ID` (SeatGeek, venta oficial en EE. UU.). **Reddit: NO usar** (ni API, ni Apify, ni RSS, ni scraping). Su política
 exige aprobación previa y prohíbe extraer datos o usar varias cuentas. Solo se activará si llegan
 `REDDIT_CLIENT_ID`/`REDDIT_CLIENT_SECRET` aprobados oficialmente.
 Setlist.fm descartado. Fuentes sin clave: Deezer, MusicBrainz, Wikidata, Jolpica (F1),

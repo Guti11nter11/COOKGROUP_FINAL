@@ -131,11 +131,13 @@ const TM_DOMAINS: Record<string, string> = {
   "ticketmaster.dk": "DK", "ticketmaster.se": "SE", "ticketmaster.no": "NO", "ticketmaster.fi": "FI", "ticketmaster.pl": "PL",
   "ticketmaster.cz": "CZ", "ticketmaster.com": "US", "ticketmaster.com.mx": "MX",
 };
+/** Otras ticketeras de venta oficial (no de reventa). */
+const PRIMARY: Record<string, string> = { "seatgeek.com": "SeatGeek", "axs.com": "AXS", "seetickets.com": "See Tickets", "dice.fm": "DICE" };
 
 function ticketerName(url: string): string {
   try {
     const host = new URL(url).hostname.replace(/^www\./, "");
-    return TM_DOMAINS[host] ? `Ticketmaster ${TM_DOMAINS[host]}` : host;
+    return TM_DOMAINS[host] ? `Ticketmaster ${TM_DOMAINS[host]}` : PRIMARY[host] ?? host;
   } catch {
     return "Ficha oficial";
   }
@@ -304,7 +306,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
     `**Límite de entradas:** ${limit ?? "sin confirmar todavía"}`,
     ...(r?.difficulty ? [`**Dificultad para conseguir entrada:** ${r.difficulty}`] : []),
     ...(r ? [`**Reventa estimada:** ${times(r.low)}–${times(r.high)} sobre el oficial`] : []),
-    `**Reventa (para comparar):** [Viagogo](https://www.viagogo.com/secure/search?q=${q}) · [StubHub](https://www.stubhub.com/secure/search?q=${q}) · [Vivid Seats](https://www.vividseats.com/search?searchTerm=${q}) · [SeatGeek](https://seatgeek.com/search?search=${q})`,
+    `**Reventa (para comparar):** [Viagogo](https://www.viagogo.com/secure/search?q=${q}) · [StubHub](https://www.stubhub.com/secure/search?q=${q}) · [Vivid Seats](https://www.vividseats.com/search?searchTerm=${q})`,
     ...(official.length || extras.homepage
       ? ["", "**Enlaces oficiales**", [...(extras.homepage ? [`[Web oficial](${extras.homepage})`] : []), ...official.map(([n, u]) => `[${n}](${u})`)].join(" · ")]
       : []),

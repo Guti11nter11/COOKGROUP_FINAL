@@ -3,7 +3,6 @@ import { aiJson } from "./ai";
 import { apifyAllowed, runActor } from "./apify";
 import { getJson } from "./gira-client";
 import { articleText, searchNews } from "./news";
-import { seatGeekMarkets } from "./seatgeek";
 import { chooseEvents, convert, countryCode, faceValue, plausibleMultiplier, type StubEvent } from "./resale-lib";
 
 const RESAMPLE_DAYS = 7;
@@ -127,16 +126,6 @@ export async function estimateAll(artists: EnrichTodo["artists"], now = new Date
         console.log(`⚠️ ${a.name}: mercado no disponible (${String(e)})`);
       }
       canSample = (await apifyAllowed(SAMPLE_COST_USD)).ok;
-    }
-    // SeatGeek (gratis): se añade siempre que haya clave, también a los mercados reutilizados.
-    if (!markets.some((m) => m.source === "SeatGeek")) {
-      for (const m of await seatGeekMarkets(a.name)) {
-        markets.push(m);
-        listings += m.listings;
-        const face = faceValue(a.prices, m.country);
-        const faceUsd = face ? convert(face.amount, face.currency, "USD", rates) : null;
-        if (faceUsd && plausibleMultiplier(m.median / faceUsd)) observed.push(m.median / faceUsd);
-      }
     }
     const hist = reuse ? (reuse.history ?? []).filter((h) => mentions(h.text, a.name)) : a.tier >= 2 ? await history(a.name).catch(() => []) : [];
     const est = estimateResale({ tier: a.tier, hot: a.hot, dates: a.dates, countries: a.countries.length, observed, listings, marketsWithoutFace: markets.length - observed.length });
