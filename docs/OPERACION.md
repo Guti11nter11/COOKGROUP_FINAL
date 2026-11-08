@@ -6,16 +6,17 @@ Qué corre, cuándo y cómo intervenir. Todo es gratis salvo Apify (tope automá
 
 | Pieza | Dónde | Frecuencia | Qué hace |
 |---|---|---|---|
-| Ciclo del Worker | Cloudflare (cron) | cada 5 min | Recordatorios, resúmenes 21:00/08:00, #esta-semana, barrido de Ticketmaster (⭐⭐⭐), fichas y avisos, panel de #estado (cada hora) |
-| Radar del catálogo | Actions `feed-radar` | cada hora (:17) | Catálogo completo de Ticketmaster por país; cambios → Worker; descubre giras de alta demanda |
-| Enriquecer fichas | Actions `enrich` | cada 3 h (:41) | Aforo, precios oficiales (prensa + IA), registros de la web oficial, reventa |
-| Radar de noticias | Actions `news-radar` | cada 2 h (:23) | Prensa de Europa, una noticia por artista y tipo al día |
+| Reloj del Worker | Cloudflare (cron cada 5 min) | siempre | Recordatorios, resúmenes 21:00/08:00, #esta-semana (solo base de datos) |
+| Barrido del Worker | Cloudflare | por franjas: nada 00–08; cada 10 min 08:30–14:30 y 16:00–21:30; 15/30 min el resto | Ticketmaster (⭐⭐⭐), fichas y avisos, panel de #estado, lanza los trabajos de GitHub |
+| Radar del catálogo | Actions `feed-radar` | 11 veces/día (lo lanza el Worker) | Catálogo completo de Ticketmaster por país; cambios → Worker; descubre giras de alta demanda |
+| Enriquecer fichas | Actions `enrich` | 09:00, 13:00, 19:00 (Worker) | Aforo, precios oficiales (prensa + IA), registros de la web oficial, reventa |
+| Radar de noticias | Actions `news-radar` | 6 veces/día (Worker) | Prensa de Europa, una noticia por artista y tipo al día |
 | Ticketeras sin API | Actions `ticketers` | 09:07 y 19:07 UTC | Entradas.com y See Tickets con Browser Run, por turnos |
 | Blueticket | Actions `social` | 10:37 UTC | Instagram oficial de Blueticket (Apify) |
 | Mantenimiento D1 | Actions `d1-maintenance` | al subir un `.sql` a `apps/worker/maintenance/` | Ejecuta ese SQL en producción e imprime el resultado |
 
-Los `schedule` de GitHub solo corren en la rama por defecto (`claude/vigilant-euler-pkmop0`):
-fusionar ahí cada cambio de los trabajos.
+Horario y costes: [plan/14-horarios-y-costes.md](plan/14-horarios-y-costes.md). Los trabajos los lanza el
+Worker sobre la rama por defecto (`claude/vigilant-euler-pkmop0`): fusionar ahí cada cambio.
 
 ## Tareas habituales
 
@@ -34,7 +35,7 @@ fusionar ahí cada cambio de los trabajos.
 - Solo información: nada de comprar, colas, cookies ni pases (`queueittoken` se descarta siempre).
 - Los logs de Actions son públicos: nunca imprimir mensajes del Discord privado, enlaces de alta o
   calendario, tokens ni la tabla `setting` completa.
-- Apify: tope de 3 $/mes para reventa y 3,5 $/mes en total; por encima, los trabajos se saltan solos.
+- Apify: como mucho **1 $ al día** (decisión del propietario); por encima, los trabajos se saltan solos.
 - Browser Run: 10 min/día; los trabajos van por turnos para no pasarse.
 
 ## Límites del plan gratuito que condicionan el diseño
