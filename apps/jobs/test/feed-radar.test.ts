@@ -55,17 +55,20 @@ describe("descubrimiento de giras de alta demanda", async () => {
       { tmAttractionId: "B", name: "Otra", hotDates: 1, countries: ["ES"] },
     ]);
   });
-  it("también giras grandes a punto de salir a la venta (arenas y estadios); no las de salas", () => {
-    const sale = (id: string, name: string, country: string, bigVenue = false) => ev(id, name, false, { country, upcomingSale: true, bigVenue });
+  it("también giras grandes a punto de salir a la venta (estadio, o arenas en 2 países); no las locales", () => {
+    const sale = (id: string, name: string, country: string, extra: object = {}) => ev(id, name, false, { country, upcomingSale: true, ...extra });
     const got = discoverHot(
       [
-        sale("T", "Gira Estadios", "ES", true), sale("T", "Gira Estadios", "MX", true),
-        sale("M", "Gira Mixta", "ES", true), sale("M", "Gira Mixta", "FR"), sale("M", "Gira Mixta", "FR"),
-        sale("L", "Gira Salas", "ES"), sale("L", "Gira Salas", "FR"), sale("L", "Gira Salas", "IT"),
+        sale("S", "Gira Estadio", "ES", { bigVenue: true, stadium: true }),
+        sale("A", "Gira Arenas", "ES", { bigVenue: true }), sale("A", "Gira Arenas", "FR", { bigVenue: true }),
+        sale("M", "Arena Un País", "MX", { bigVenue: true }), sale("M", "Arena Un País", "MX", { bigVenue: true }),
+        sale("L", "Lucha Libre CMLL", "MX", { bigVenue: true, segment: "Sports" }), sale("L", "Lucha Libre CMLL", "ES", { bigVenue: true, segment: "Sports" }),
+        sale("N", "Navidad en las montañas", "MX", { bigVenue: true, stadium: true }),
+        sale("C", "Corona Capital Festival", "MX", { bigVenue: true, stadium: true }),
       ],
       new Set(),
     );
-    expect(got.map((d) => d.name)).toEqual(["Gira Estadios", "Gira Mixta"]);
+    expect(got.map((d) => d.name)).toEqual(["Gira Estadio", "Gira Arenas"]);
   });
   it("recinto grande por nombre", async () => {
     const { BIG_VENUE } = await import("../src/feed-radar-lib");

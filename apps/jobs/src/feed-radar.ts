@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { localDateIn, MADRID, normalizeFeedEvent, type Show } from "@gira/core";
-import { BIG_VENUE, chunkByArtist, diffFeed, discoverHot, pickFollowed } from "./feed-radar-lib";
+import { BIG_VENUE, STADIUM, chunkByArtist, diffFeed, discoverHot, pickFollowed } from "./feed-radar-lib";
 import { FEED_COUNTRIES, iterateFeed } from "./tm-feed";
 
 const KEY = process.env.TICKETMASTER_API_KEY;
@@ -25,11 +25,14 @@ const nowMs = Date.now();
 
 const all: Show[] = [];
 const failed: string[] = [];
-for (const cc of FEED_COUNTRIES) {
+// Países con catálogo pequeño o con límite de descargas: uno por pasada, por turnos y sin reintentos.
+const ROTATING = ["AR", "CL", "CO", "PE", "UY"];
+const extra = ROTATING[Math.floor(Date.now() / 3600_000) % ROTATING.length]!;
+for (const cc of [...FEED_COUNTRIES, extra]) {
   let total = 0;
   const mine: Show[] = [];
   try {
-    for await (const raw of iterateFeed(cc, KEY)) {
+    for await (const raw of iterateFeed(cc, KEY, cc === extra ? 1 : 3)) {
       total++;
       const s = normalizeFeedEvent(raw);
       if (s && s.localDate >= today) {
@@ -39,7 +42,7 @@ for (const cc of FEED_COUNTRIES) {
         if (s.hot || upcomingSale) {
           const att = (raw as { attractions?: { attraction?: { attractionId?: string; attractionName?: string } }[] }).attractions?.[0]?.attraction;
           if (att?.attractionId && !followed.has(att.attractionId)) {
-            hotSeen.push({ attractionId: att.attractionId, attractionName: att.attractionName ?? null, hot: s.hot === true, country: s.venue.country, segment: s.segment, isPackage: s.isPackage, upcomingSale, bigVenue: BIG_VENUE.test(s.venue.name) });
+            hotSeen.push({ attractionId: att.attractionId, attractionName: att.attractionName ?? null, hot: s.hot === true, country: s.venue.country, segment: s.segment, isPackage: s.isPackage, upcomingSale, bigVenue: BIG_VENUE.test(s.venue.name), stadium: STADIUM.test(s.venue.name) });
           }
         }
       }
@@ -89,7 +92,7 @@ for (const chunk of chunkByArtist(changed, 40)) alerts += (await post({ shows: c
 // Solo con una lectura completa (todos los países) las entidades quedan "arrancadas" (también las
 // que no tienen fechas, para que su primera gira futura sí avise).
 // Latinoamérica es nueva: si algún país suyo falla, no bloquea el arranque (Europa sí).
-const LATAM = new Set(["MX", "BR", "AR", "CL", "CO", "PE", "UY", "CR", "PA", "GT", "DO", "PR"]);
+const LATAM = new Set(["MX", "BR", ...ROTATING]);
 if (failed.filter((cc) => !LATAM.has(cc)).length === 0) {
   const ids = [...followed];
   for (let i = 0; i < ids.length; i += 500) await post({ shows: [], markBootstrapped: ids.slice(i, i + 500) });

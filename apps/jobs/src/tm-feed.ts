@@ -8,12 +8,12 @@ import Pick from "stream-json/filters/Pick.js";
 import StreamArray from "stream-json/streamers/StreamArray.js";
 
 /**
- * Países con Discovery Feed: Europa (Portugal no lo tiene) y Latinoamérica donde vende Ticketmaster.
- * Un país sin feed responde 404 y se salta sin error.
+ * Países con Discovery Feed en cada pasada: Europa (Portugal no lo tiene), México y Brasil. El resto de
+ * Latinoamérica va por turnos (feed-radar.ts). Un país sin feed (404/400) se salta sin error.
  */
 export const FEED_COUNTRIES = [
   "GB", "IE", "ES", "FR", "DE", "IT", "NL", "BE", "AT", "CH", "DK", "SE", "NO", "FI", "PL", "CZ", "TR",
-  "MX", "BR", "AR", "CL", "CO", "PE", "UY", "CR", "PA", "GT", "DO", "PR",
+  "MX", "BR",
 ];
 
 /**
@@ -27,7 +27,7 @@ export async function* iterateFeed(countryCode: string, apiKey: string, attempts
   for (let i = 1; i <= attempts && !file; i++) {
     try {
       const res = await fetch(`https://app.ticketmaster.com/discovery-feed/v2/events.json?apikey=${apiKey}&countryCode=${countryCode}`);
-      if (res.status === 404) return;
+      if (res.status === 404 || res.status === 400) return;
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       gz = (res.headers.get("content-type") ?? "").includes("gzip");
       const path = join(tmpdir(), `gira-feed-${countryCode}-${process.pid}.json${gz ? ".gz" : ""}`);
