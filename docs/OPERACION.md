@@ -47,3 +47,6 @@ Worker sobre la rama por defecto (`claude/vigilant-euler-pkmop0`): fusionar ahí
 - Worker: 10 ms de CPU por ejecución → como mucho 8 fichas por pasada y fichas ya renderizadas para la app.
 - 50 subpeticiones por ejecución → como mucho 4 artistas con cambios en Discord por pasada.
 - Ticketmaster: 5.000 llamadas/día, freno al 80 %.
+- D1: 100.000 filas escritas al día (se reinicia a las 00:00 UTC). Uso normal < 10.000. La semilla de
+  artistas solo se carga si cambia y no reescribe filas iguales (el 8-nov se agotó el cupo por
+  recargarla en cada despliegue). Si se agota, el Worker solo lee hasta las 01:00/02:00 de Madrid.
