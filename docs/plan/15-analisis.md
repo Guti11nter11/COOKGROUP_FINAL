@@ -26,6 +26,18 @@ cuándo, dónde registrarse y cómo entrar, con coste mínimo (≤ 1 $/día).
 - Instagram oficial de los artistas ⭐⭐⭐ (fase R7) dentro del presupuesto: 28 cuentas localizadas en
   MusicBrainz; primera pasada, 8 publicaciones de las últimas 24 h y 1 accionable.
 
+### Por la tarde (tras revisar la vista previa de las fichas y las noticias del día)
+
+- Instagram: la IA a veces cruzaba publicaciones (una de Blueticket sobre Amon Amarth salió como
+  "Metallica"). Ahora lo que devuelve tiene que encajar con la cuenta: en la de un artista, solo
+  avisos del propio artista; en una ticketera, el artista tiene que aparecer en el texto.
+- Noticias y redes: fuera ofertas de hotel, paquetes y hospitality (Wimbledon, dardos…). Las ya
+  guardadas se han borrado.
+- Historial de reventa: solo datos que nombran al artista (salía una ley de Massachusetts en Noah
+  Kahan) y sin frases cortadas a media palabra.
+- Mercado de reventa de otro país (U2 en São Paulo): ahora se marca "otro país, para comparar".
+- Revisado: The Game tiene canal porque está en la lista semilla (⭐) y vende el lunes 9.
+
 ## Gasto real de hoy
 
 Apify, a las 13:30: **0,08 $** (dos pasadas de redes con 29 cuentas incluidas). Ayer 1,43 $ por las
