@@ -46,8 +46,8 @@ const chan = (s: SaleSlot) => (s.channelId ? ` → <#${s.channelId}>` : "");
 const dayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: MADRID, weekday: "long", day: "numeric", month: "long" });
 const dayKey = new Intl.DateTimeFormat("en-CA", { timeZone: MADRID, year: "numeric", month: "2-digit", day: "2-digit" });
 
-export function renderReminder(slot: SaleSlot, text: string): string {
-  return `⏰ **${slot.artist}** · ${slot.label} ${text} — **${formatHHmm(slot.startsAt, MADRID)}** Madrid · ${formatHHmm(slot.startsAt, LONDON)} Londres · <t:${Date.parse(slot.startsAt) / 1000}:R>\n${cities(slot)}${chan(slot)}`;
+export function renderReminder(slot: SaleSlot, text: string, labels: string[] = [slot.label]): string {
+  return `⏰ **${slot.artist}** · ${labels.join(" · ")} ${text} — **${formatHHmm(slot.startsAt, MADRID)}** Madrid · ${formatHHmm(slot.startsAt, LONDON)} Londres · <t:${Date.parse(slot.startsAt) / 1000}:R>\n${cities(slot)}${chan(slot)}`;
 }
 
 /** Ventas agrupadas por día (hora de Madrid), en orden. */

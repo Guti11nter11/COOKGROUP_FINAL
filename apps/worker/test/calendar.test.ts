@@ -62,6 +62,19 @@ describe("reloj de GIRA", () => {
     expect(at("C_REC")).toHaveLength(0);
   });
 
+  it("varias preventas del mismo artista a la misma hora → un solo recordatorio", async () => {
+    const extra = show("3", "2026-11-10T09:00:00Z");
+    extra.sales[0]!.label = "Live Nation Presale";
+    await env.DB.prepare(
+      `INSERT INTO show (source_id, show_key, artist_id, country, local_date, is_package, hash, snapshot_json, first_seen_at, updated_at)
+       VALUES ('3', 'k3', 'a1', 'ES', ?, 0, 'h', ?, 'x', 'x')`,
+    ).bind(extra.localDate, JSON.stringify(extra)).run();
+    await runCalendar(env, new Date("2026-11-10T08:05:00Z"));
+    const rec = at("C_REC");
+    expect(rec).toHaveLength(1);
+    expect(rec[0]!.body.content).toContain("Artist Presale · Live Nation Presale en 1 hora");
+  });
+
   it("resumen de las 21:00 una sola vez; esta semana se publica y luego se edita", async () => {
     await runCalendar(env, new Date("2026-11-09T20:02:00Z"));
     expect(at("C_DAY").map((p) => p.body.content).join("\n")).toContain("Resumen de la noche");

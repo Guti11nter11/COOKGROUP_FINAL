@@ -102,22 +102,31 @@ export async function runCalendar(env: Env, now: Date): Promise<{ reminders: num
     .all<{ key: string }>();
   const due = remindersDue(slots, new Set(sentRows.map((r) => r.key)), now);
   const rec = due.length ? await guild.byName("recordatorios") : undefined;
-  for (const d of due.slice(0, 8)) {
+  // Un solo mensaje por artista, hora y tipo de recordatorio (p. ej. 4 preventas de RAYE a las 11:00).
+  const groups = new Map<string, typeof due>();
+  for (const d of due) {
+    const k = `${d.slot.artistId}|${d.slot.startsAt}|${d.reminder.key}`;
+    groups.set(k, [...(groups.get(k) ?? []), d]);
+  }
+  for (const group of [...groups.values()].slice(0, 6)) {
     if (!rec) break;
+    const d = group[0]!;
+    const labels = [...new Set(group.map((g) => g.slot.label))];
+    const merged = { ...d.slot, dates: [...new Map(group.flatMap((g) => g.slot.dates).map((x) => [x.url, x])).values()] };
     // De noche (01–08) el de 24 h va en silencio; los de 1 h y 10 min siempre suenan (son urgentes).
     const silent = d.reminder.key === "24h" && isQuietTime(now);
-    if (!(await post(env, rec.id, renderReminder(d.slot, d.reminder.text), silent))) break;
+    if (!(await post(env, rec.id, renderReminder(merged, d.reminder.text, labels), silent))) break;
     const iso = now.toISOString();
     await env.DB.batch(
-      [`${d.slot.artistId}|${d.slot.label.toLowerCase()}|${d.slot.startsAt}|${d.reminder.key}`, ...d.skip].map((k) =>
-        env.DB.prepare("INSERT OR IGNORE INTO reminder_sent (key, sent_at) VALUES (?, ?)").bind(k, iso),
-      ),
+      group
+        .flatMap((g) => [`${g.slot.artistId}|${g.slot.label.toLowerCase()}|${g.slot.startsAt}|${g.reminder.key}`, ...g.skip])
+        .map((k) => env.DB.prepare("INSERT OR IGNORE INTO reminder_sent (key, sent_at) VALUES (?, ?)").bind(k, iso)),
     );
     result.reminders++;
     if (!silent) {
       await pushAll(env, {
         title: `${d.slot.artist} · ${d.reminder.text}`,
-        body: `${d.slot.label} a las ${formatHHmm(d.slot.startsAt, MADRID)} (Madrid) · ${d.slot.dates.map((x) => x.city).filter((c, i, a) => a.indexOf(c) === i).join(", ")}`,
+        body: `${labels.join(", ")} a las ${formatHHmm(d.slot.startsAt, MADRID)} (Madrid) · ${merged.dates.map((x) => x.city).filter((c, i, a) => a.indexOf(c) === i).join(", ")}`,
         url: "/app/",
         tag: `r-${d.slot.artistId}-${d.reminder.key}`,
       }).catch(() => 0);
