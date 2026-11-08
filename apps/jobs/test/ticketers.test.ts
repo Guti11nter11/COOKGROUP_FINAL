@@ -34,3 +34,14 @@ describe("AXS por sitemap", async () => {
     expect(axsEventsFor(`<loc>https://www.axs.com/uk/events/5/u2-tickets</loc>`, "U2").map((e) => e.id)).toEqual([5]);
   });
 });
+
+describe("AXS: una pasada para todos los artistas", async () => {
+  const { axsMatchAll } = await import("../src/ticketers-lib");
+  it("prefijo más largo, sin tributos; nombres cortos solo con -tickets", () => {
+    const xml = `<loc>https://www.axs.com/uk/events/1/metallica-tickets</loc><loc>https://www.axs.com/uk/events/2/metallica-reloaded-tickets</loc>
+<loc>https://www.axs.com/uk/events/3/u2-tickets</loc><loc>https://www.axs.com/uk/events/4/u2-tribute-night</loc>
+<loc>https://www.axs.com/uk/events/5/guns-n-roses-tickets</loc>`;
+    const got = axsMatchAll(xml, ["Metallica", "U2", "Guns N' Roses"]);
+    expect([...got].map(([a, e]) => `${a}:${e.map((x) => x.id).join(",")}`)).toEqual(["Metallica:1", "U2:3", "Guns N' Roses:5"]);
+  });
+});

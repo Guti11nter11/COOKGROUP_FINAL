@@ -74,3 +74,29 @@ export function axsEventsFor(xml: string, artist: string): { url: string; id: nu
   }
   return out;
 }
+
+export const axsSlug = (name: string) =>
+  name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/**
+ * Una sola pasada por el sitemap: cada evento se asigna al artista cuyo nombre es el prefijo más largo
+ * de la URL ("metallica-tickets" → Metallica). Nombres cortos solo con "-tickets" justo detrás.
+ */
+export function axsMatchAll(xml: string, artists: string[]): Map<string, { url: string; id: number }[]> {
+  const bySlug = new Map(artists.map((a) => [axsSlug(a), a] as const).filter(([sl]) => sl.length >= 2));
+  const out = new Map<string, { url: string; id: number }[]>();
+  for (const m of xml.matchAll(/<loc>(https:\/\/www\.axs\.com\/[a-z]{2}\/events\/(\d+)\/([a-z0-9-]+))<\/loc>/g)) {
+    const seg = m[3]!;
+    if (AXS_NOT_ARTIST.test(seg)) continue;
+    const parts = seg.split("-");
+    for (let n = Math.min(parts.length - 1, 8); n >= 1; n--) {
+      const slug = parts.slice(0, n).join("-");
+      const artist = bySlug.get(slug);
+      if (!artist) continue;
+      if (slug.length < 4 && parts[n] !== "tickets") break;
+      out.set(artist, [...(out.get(artist) ?? []), { url: m[1]!, id: Number(m[2]) }]);
+      break;
+    }
+  }
+  return out;
+}

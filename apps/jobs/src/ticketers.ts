@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { gira } from "./gira-client";
-import { axsEventsFor, listingsFor, TICKETERS } from "./ticketers-lib";
+import { axsMatchAll, listingsFor, TICKETERS } from "./ticketers-lib";
 
 /**
  * Ticketeras sin API (Entradas.com/Eventim, El Corte Inglés, See Tickets, AXS): dos veces al día, por
@@ -63,7 +63,7 @@ if (state.axsDay !== day) {
   const found = new Map<string, { url: string; id: number }[]>();
   for (const map of maps) {
     const xml = await fetch(map, { headers: { "User-Agent": "GIRA/0.1 (+https://github.com/Guti11nter11/COOKGROUP_FINAL)" } }).then((r) => (r.ok ? r.text() : "")).catch(() => "");
-    for (const artist of followed) for (const e of axsEventsFor(xml, artist)) found.set(artist, [...(found.get(artist) ?? []), e]);
+    for (const [artist, events] of axsMatchAll(xml, followed)) found.set(artist, [...(found.get(artist) ?? []), ...events]);
     await new Promise((r) => setTimeout(r, 2000)); // Crawl-delay: 2
   }
   let nuevas = 0;
@@ -71,10 +71,18 @@ if (state.axsDay !== day) {
     const before = state.axs[artist];
     const fresh = before ? events.filter((e) => !before.includes(e.id)) : [];
     state.axs[artist] = [...new Set([...(before ?? []), ...events.map((e) => e.id)])].slice(-300);
-    for (const f of fresh.slice(0, 5)) {
-      nuevas++;
-      const name = decodeURIComponent(f.url.split("/").pop()!).replace(/-tickets$/, "").replace(/-/g, " ");
-      news.push({ artistName: artist, title: name, url: f.url, source: "AXS", category: "on_sale", summary: `Nueva ficha en AXS: ${name}` });
+    if (fresh.length) {
+      // Un solo aviso por artista y día (ABBA Voyage, por ejemplo, añade fechas a menudo).
+      nuevas += fresh.length;
+      const names = [...new Set(fresh.map((f) => decodeURIComponent(f.url.split("/").pop()!).replace(/-tickets.*$/, "").replace(/-/g, " ")))];
+      news.push({
+        artistName: artist,
+        title: names[0]!,
+        url: fresh[0]!.url,
+        source: "AXS",
+        category: "on_sale",
+        summary: `${fresh.length === 1 ? "Nueva ficha" : `${fresh.length} fichas nuevas`} en AXS: ${names.slice(0, 3).join(", ")}${names.length > 3 ? "…" : ""}`,
+      });
     }
   }
   state.axsDay = day;
