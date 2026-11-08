@@ -288,8 +288,8 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
           // Discord limita las ediciones (~5 cada 5 s por canal): se espera lo que pide y se reintenta.
           const send = async (method: "POST" | "PATCH", path: string) => {
             let r = await once(method, path);
-            for (let t = 0; t < 3 && r.status === 429; t++) {
-              await new Promise((ok) => setTimeout(ok, Math.min(6000, retryAfterMs(r))));
+            for (let t = 0; t < 3 && r.status === 429 && retryAfterMs(r) <= 6000; t++) {
+              await new Promise((ok) => setTimeout(ok, retryAfterMs(r)));
               r = await once(method, path);
             }
             return r;
@@ -392,10 +392,10 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
 
 const PRICES_HEADER = "## 💶 Precios oficiales";
 
-/** Espera que pide Discord en un 429 (cabecera Retry-After, en segundos); 2 s si no la da. */
+/** Espera que pide Discord en un 429 (cabecera Retry-After, en segundos); infinita si no la da (no se reintenta). */
 function retryAfterMs(r: Response): number {
   const s = Number(r.headers.get("retry-after") ?? r.headers.get("x-ratelimit-reset-after"));
-  return Number.isFinite(s) && s > 0 ? Math.ceil(s * 1000) + 100 : 2000;
+  return Number.isFinite(s) && s > 0 ? Math.ceil(s * 1000) + 100 : Infinity;
 }
 
 /** Imagen de precios guardada en trozos binarios (se juntan sin decodificar nada). */
