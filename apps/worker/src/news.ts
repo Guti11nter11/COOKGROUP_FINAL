@@ -1,6 +1,7 @@
 import { isQuietTime } from "@gira/core";
 import { discordFetch } from "./discord-client";
 import type { Env } from "./env";
+import { pushAll } from "./push";
 import { Guild } from "./sheets";
 
 export interface NewsInput {
@@ -68,6 +69,12 @@ async function postNews(env: Env, fresh: (NewsInput["items"][number] & { artistI
       allowed_mentions: { parse: [] },
       ...(silent ? { flags: 4096 } : {}),
     });
+  }
+  // Push al iPhone de lo importante (registros, preventas, fechas extra); de noche, nada.
+  if (!silent) {
+    for (const n of fresh.filter((x) => IMPORTANT.has(x.category)).slice(0, 3)) {
+      await pushAll(env, { title: `${ICON[n.category]} ${n.artistName}`, body: n.summary, url: "/app/#noticias", tag: `news-${n.artistName}`.slice(0, 30) }).catch(() => 0);
+    }
   }
   return posted;
 }
