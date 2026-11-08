@@ -5,6 +5,7 @@ import { announceSignups, applyEnrichment, discover, enrichTodo, followIds } fro
 import { ingestNews, type NewsInput } from "./news";
 import { handleAuth } from "./auth";
 import { handleApi } from "./app-api";
+import { handleInteraction, verifyDiscord } from "./interactions";
 import { announceCalendar, calendarIcs, icsToken, runCalendar, updateStatusPanel } from "./calendar";
 import type { Env, SweepJob } from "./env";
 
@@ -78,6 +79,11 @@ export default {
         return Response.json({ venues: r.venues, prices: r.prices, resale: r.resale, signups: r.signups });
       }
       return new Response("No encontrado", { status: 404 });
+    }
+    if (url.pathname === "/discord/interactions" && req.method === "POST") {
+      const raw = await req.text();
+      if (!(await verifyDiscord(env, req, raw))) return new Response("Firma no válida", { status: 401 });
+      return handleInteraction(env, raw, new Date());
     }
     // App GIRA (PWA privada): ficheros públicos sin datos; los datos van por /api con sesión.
     if (url.pathname === "/robots.txt") return new Response("User-agent: *\nDisallow: /\n", { headers: { "content-type": "text/plain" } });

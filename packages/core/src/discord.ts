@@ -176,3 +176,11 @@ export function renderAlertMessage(
   const silent = decideDelivery(a, nowUtc) === "silent";
   return { content: "", embeds: [embed], ...(silent ? { flags: 4096 as const } : {}) };
 }
+
+/** Definición de los comandos (la registra el trabajo de montaje de Discord). */
+export const DISCORD_COMMANDS = [
+  { name: "proximas", description: "Próximas preventas y ventas (hora de Madrid)" },
+  { name: "gira", description: "Ir al canal de un artista", options: [{ type: 3, name: "artista", description: "Nombre", required: true }] },
+  { name: "seguir", description: "Seguir a un artista o evento (⭐⭐⭐)", options: [{ type: 3, name: "artista", description: "Nombre en Ticketmaster", required: true }] },
+  { name: "dejar", description: "Dejar de seguir a un artista", options: [{ type: 3, name: "artista", description: "Nombre", required: true }] },
+];

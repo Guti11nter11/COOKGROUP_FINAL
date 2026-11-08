@@ -13,7 +13,9 @@ export default defineWorkersConfig(async () => {
           isolatedStorage: true,
           wrangler: { configPath: "./wrangler.jsonc" },
           miniflare: {
-            bindings: { TEST_MIGRATIONS: migrations, TICKETMASTER_API_KEY: "test-key", DISCORD_BOT_TOKEN: "test-token", DELIVERY_PAUSED: "0" },
+            bindings: { TEST_MIGRATIONS: migrations, TICKETMASTER_API_KEY: "test-key", DISCORD_BOT_TOKEN: "test-token", DELIVERY_PAUSED: "0",
+              // Clave pública de pruebas (la privada solo está en test/interactions.test.ts).
+              DISCORD_PUBLIC_KEY: "ff83de1af4d440a473ff29e34c36df14f87af04baa3f72b3055fe5c8bd08c45b" },
           },
         },
       },

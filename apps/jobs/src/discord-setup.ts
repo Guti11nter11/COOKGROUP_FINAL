@@ -28,3 +28,13 @@ for (const op of ops) {
   await sleep(1000);
 }
 console.log(ops.length ? "Listo." : "0 cambios: el servidor ya tiene la estructura completa.");
+
+// Comandos (/proximas, /gira, /seguir, /dejar): registro idempotente en el servidor.
+const appId = process.env.DISCORD_APPLICATION_ID;
+if (appId) {
+  const { DISCORD_COMMANDS } = await import("@gira/core");
+  await discord(token, "PUT", `/applications/${appId}/guilds/${guild}/commands`, DISCORD_COMMANDS);
+  console.log(`Comandos registrados: ${DISCORD_COMMANDS.map((c) => `/${c.name}`).join(" ")}`);
+} else {
+  console.log("Sin DISCORD_APPLICATION_ID: no se registran comandos");
+}

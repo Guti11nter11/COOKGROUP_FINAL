@@ -71,8 +71,9 @@ jobs:
         env:
           TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+          DISCORD_PUBLIC_KEY: ${{ secrets.DISCORD_PUBLIC_KEY }}
         run: |
-          python3 -c "import json,os;print(json.dumps({k: os.environ[k] for k in ['TICKETMASTER_API_KEY','DISCORD_BOT_TOKEN']}))" > /tmp/secrets.json
+          python3 -c "import json,os;print(json.dumps({k: os.environ[k] for k in ['TICKETMASTER_API_KEY','DISCORD_BOT_TOKEN','DISCORD_PUBLIC_KEY'] if os.environ.get(k)}))" > /tmp/secrets.json
           npx wrangler secret bulk /tmp/secrets.json
           rm -f /tmp/secrets.json
 

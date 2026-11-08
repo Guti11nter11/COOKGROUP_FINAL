@@ -1,7 +1,7 @@
 name: Montar servidor de Discord
 
-# Crea las categorías y canales que falten en el servidor GIRA. Idempotente: nunca borra ni
-# renombra nada, y nunca crea canales por artista o por concierto.
+# Crea las categorías y canales temáticos que falten en el servidor GIRA y registra los comandos.
+# Idempotente: nunca borra ni renombra nada (los canales por artista los gestiona el Worker).
 
 on:
   workflow_dispatch:
@@ -27,4 +27,5 @@ jobs:
         env:
           DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
           DISCORD_GUILD_ID: "1568641743853715516"
+          DISCORD_APPLICATION_ID: ${{ secrets.DISCORD_APPLICATION_ID }}
         run: npx tsx apps/jobs/src/discord-setup.ts
