@@ -11,7 +11,7 @@ const ACCOUNT = process.env.CLOUDFLARE_ACCOUNT_ID;
 const TOKEN = process.env.CLOUDFLARE_API_TOKEN;
 if (!ACCOUNT || !TOKEN) throw new Error("Faltan CLOUDFLARE_ACCOUNT_ID / CLOUDFLARE_API_TOKEN");
 const STATE = ".ticketers-state/state.json";
-const PER_RUN = Number(process.env.ARTISTS_PER_RUN ?? 8);
+const PER_RUN = Number(process.env.ARTISTS_PER_RUN ?? 4); // 4 artistas × 4 ticketeras × 2 pasadas ≈ 8 min de navegador al día
 
 type State = { cursor: number; seen: Record<string, string[]> };
 const state: State = existsSync(STATE) ? JSON.parse(readFileSync(STATE, "utf8")) : { cursor: 0, seen: {} };
@@ -23,7 +23,8 @@ async function render(url: string): Promise<string | null> {
   const res = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ACCOUNT}/browser-rendering/content`, {
     method: "POST",
     headers: { authorization: `Bearer ${TOKEN}`, "content-type": "application/json" },
-    body: JSON.stringify({ url, gotoOptions: { waitUntil: "networkidle2", timeout: 40000 }, rejectResourceTypes: ["image", "media", "font"] }),
+    body: JSON.stringify({ url, gotoOptions: { waitUntil: "networkidle2", timeout: 30000 }, rejectResourceTypes: ["image", "media", "font"] }),
+    signal: AbortSignal.timeout(70_000),
   }).catch(() => null);
   if (!res?.ok) {
     console.log(`  ✗ ${url} → HTTP ${res?.status ?? "sin respuesta"}`);
