@@ -54,27 +54,6 @@ export function listingsFor(html: string, base: string, artist: string, t: Ticke
 
 const AXS_NOT_ARTIST = /(tribute|parking|hotel|hospitality|package|vip|experience|reloaded|legacy|the-music-of|celebrating|-pass-|2-day|camping|shuttle|coach)/i;
 
-/** Eventos de AXS de un artista en un sitemap (la URL lleva el nombre: /uk/events/123/metallica-tickets). */
-export function axsEventsFor(xml: string, artist: string): { url: string; id: number; lastmod: string | null }[] {
-  const s = artist
-    .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
-    .toLowerCase()
-    .replace(/['’]/g, "")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
-  if (s.length < 2) return [];
-  // Nombres cortos ("u2"): solo la ficha exacta "u2-tickets…" (si no, cualquier cosa encaja).
-  const tail = s.length < 4 ? "tickets[^<]*" : "[^<]*";
-  const out: { url: string; id: number; lastmod: string | null }[] = [];
-  const re = new RegExp(`<loc>(https://www\\.axs\\.com/[a-z]{2}/events/(\\d+)/(${s}-${tail}))</loc>\\s*(?:<lastmod>([^<]+)</lastmod>)?`, "g");
-  for (const m of xml.matchAll(re)) {
-    if (AXS_NOT_ARTIST.test(m[3]!)) continue;
-    out.push({ url: m[1]!, id: Number(m[2]), lastmod: m[4] ?? null });
-  }
-  return out;
-}
-
 export const axsSlug = (name: string) =>
   name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/['’]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
