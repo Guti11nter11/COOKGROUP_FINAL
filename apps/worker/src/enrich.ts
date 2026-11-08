@@ -1,4 +1,4 @@
-import { localDateIn, MADRID, sheetShows, type EnrichInput, type EnrichTodo, type Show } from "@gira/core";
+import { localDateIn, MADRID, sheetShows, type EnrichInput, type EnrichTodo, type Show, type SignupLink } from "@gira/core";
 import type { Env } from "./env";
 
 const VENUE_RECHECK_DAYS = 30;
@@ -91,7 +91,11 @@ export async function enrichTodo(env: Env, now: Date): Promise<EnrichTodo> {
 }
 
 /** Guarda lo encontrado y marca las fichas afectadas para regenerarlas. */
-export async function applyEnrichment(env: Env, input: EnrichInput, now: Date): Promise<{ venues: number; prices: number; resale: number; signups: number }> {
+export async function applyEnrichment(
+  env: Env,
+  input: EnrichInput,
+  now: Date,
+): Promise<{ venues: number; prices: number; resale: number; signups: number; freshSignups?: { artistId: string; links: SignupLink[] }[] }> {
   const iso = now.toISOString();
   const stmts: D1PreparedStatement[] = [];
   const venues = (input.venues ?? []).filter((v) => v.tmId && v.name && (v.capacity === null || (v.capacity > 0 && v.capacity < 400_000)));
@@ -127,7 +131,13 @@ export async function applyEnrichment(env: Env, input: EnrichInput, now: Date): 
     );
   }
   const signups = (input.signups ?? []).filter((x) => x.artistId);
+  const freshSignups: { artistId: string; links: SignupLink[] }[] = [];
   for (const x of signups) {
+    const { results: before } = await env.DB.prepare("SELECT url FROM artist_signup WHERE artist_id = ?").bind(x.artistId).all<{ url: string }>();
+    const known = new Set(before.map((b) => b.url));
+    // Enlaces que no estaban (la primera lectura de un artista también avisa: son registros abiertos).
+    const added = x.links.filter((l) => !known.has(l.url));
+    if (added.length) freshSignups.push({ artistId: x.artistId, links: added });
     if (x.homepage !== undefined) stmts.push(env.DB.prepare("UPDATE artist SET homepage = COALESCE(?, homepage) WHERE id = ?").bind(x.homepage, x.artistId));
     stmts.push(env.DB.prepare("DELETE FROM artist_signup WHERE artist_id = ?").bind(x.artistId));
     for (const l of x.links.filter((l) => /^https:\/\//.test(l.url) && !/queueittoken/i.test(l.url)).slice(0, 30)) {
@@ -168,7 +178,7 @@ export async function applyEnrichment(env: Env, input: EnrichInput, now: Date): 
   }
   for (const r of resale) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(r.artistId, iso));
   for (let i = 0; i < stmts.length; i += 50) await env.DB.batch(stmts.slice(i, i + 50));
-  return { venues: venues.length, prices: prices.length, resale: resale.length, signups: signups.length };
+  return { venues: venues.length, prices: prices.length, resale: resale.length, signups: signups.length, ...(freshSignups.length ? { freshSignups } : {}) };
 }
 
 /** Entidades seguidas (ids de Ticketmaster), incluidas las descubiertas, para el radar del feed. */
@@ -193,4 +203,25 @@ export async function discover(env: Env, body: { entities?: { tmAttractionId: st
     if (r[1]!.meta.changes) added++;
   }
   return { added };
+}
+
+/** Avisa en #registros-abiertos de los enlaces de registro nuevos (agrupados por artista). */
+export async function announceSignups(env: Env, fresh: { artistId: string; links: SignupLink[] }[]): Promise<number> {
+  if (env.DELIVERY_PAUSED === "1" || !fresh.length) return 0;
+  const { Guild } = await import("./sheets");
+  const { discordFetch } = await import("./discord-client");
+  const ch = await new Guild(env).byName("registros-abiertos");
+  if (!ch) return 0;
+  let sent = 0;
+  for (const f of fresh.slice(0, 10)) {
+    const a = await env.DB.prepare("SELECT a.name, h.channel_id FROM artist a LEFT JOIN sheet h ON h.artist_id = a.id AND h.status = 'active' WHERE a.id = ?")
+      .bind(f.artistId)
+      .first<{ name: string; channel_id: string | null }>();
+    if (!a) continue;
+    const day = (d: string) => new Intl.DateTimeFormat("es-ES", { timeZone: "UTC", day: "numeric", month: "short" }).format(new Date(`${d}T12:00:00Z`));
+    const lines = f.links.slice(0, 8).map((l) => `• [${l.label}${l.city ? ` · ${l.city}` : ""}${l.localDate ? ` ${day(l.localDate)}` : ""}](${l.url})`);
+    const content = [`📝 **${a.name}** · registro para la preventa${a.channel_id ? ` → <#${a.channel_id}>` : ""}`, ...lines].join("\n");
+    if ((await discordFetch(env, "POST", `/channels/${ch.id}/messages`, { content, allowed_mentions: { parse: [] }, flags: 4 })).ok) sent++;
+  }
+  return sent;
 }

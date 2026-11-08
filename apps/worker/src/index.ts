@@ -1,7 +1,7 @@
 import { ingestShows, processPage, runCycle } from "./cycle";
 import { publishSheets, refreshActiveSheets, renderSheetFor } from "./sheets";
 import type { EnrichInput } from "@gira/core";
-import { applyEnrichment, discover, enrichTodo, followIds } from "./enrich";
+import { announceSignups, applyEnrichment, discover, enrichTodo, followIds } from "./enrich";
 import { ingestNews, type NewsInput } from "./news";
 import { handleAuth } from "./auth";
 import { handleApi } from "./app-api";
@@ -73,7 +73,9 @@ export default {
       if (url.pathname === "/enrich/news" && req.method === "POST") return Response.json(await ingestNews(env, (await req.json()) as NewsInput, now));
       if (url.pathname === "/enrich" && req.method === "POST") {
         // Las fichas marcadas se regeneran en el siguiente ciclo (cada 5 min), sin ráfagas a Discord.
-        return Response.json(await applyEnrichment(env, (await req.json()) as EnrichInput, now));
+        const r = await applyEnrichment(env, (await req.json()) as EnrichInput, now);
+        if (r.freshSignups) ctx.waitUntil(announceSignups(env, r.freshSignups).catch(() => 0));
+        return Response.json({ venues: r.venues, prices: r.prices, resale: r.resale, signups: r.signups });
       }
       return new Response("No encontrado", { status: 404 });
     }
