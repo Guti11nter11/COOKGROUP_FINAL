@@ -107,6 +107,8 @@ export interface SheetExtras {
   resale?: ResaleInfo | null;
   /** Límite de entradas por persona encontrado en prensa, por país. */
   limits?: Record<string, number>;
+  /** Otras ticketeras de venta oficial del artista (SeatGeek en EE. UU…), con su página. */
+  ticketers?: { name: string; url: string }[];
 }
 
 const REQUIREMENT: Record<SaleKind, string> = {
@@ -309,8 +311,8 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
     ...(r?.difficulty ? [`**Dificultad para conseguir entrada:** ${r.difficulty}`] : []),
     ...(r ? [`**Reventa estimada:** ${times(r.low)}–${times(r.high)} sobre el oficial`] : []),
     `**Reventa (para comparar):** [Viagogo](https://www.viagogo.com/secure/search?q=${q}) · [StubHub](https://www.stubhub.com/secure/search?q=${q}) · [Vivid Seats](https://www.vividseats.com/search?searchTerm=${q})`,
-    ...(official.length || extras.homepage
-      ? ["", "**Enlaces oficiales**", [...(extras.homepage ? [`[Web oficial](${extras.homepage})`] : []), ...official.map(([n, u]) => `[${n}](${u})`)].join(" · ")]
+    ...(official.length || extras.homepage || extras.ticketers?.length
+      ? ["", "**Enlaces oficiales**", [...(extras.homepage ? [`[Web oficial](${extras.homepage})`] : []), ...official.map(([n, u]) => `[${n}](${u})`), ...(extras.ticketers ?? []).map((t) => `[${t.name}](${t.url})`)].join(" · ")]
       : []),
   ].join("\n");
 

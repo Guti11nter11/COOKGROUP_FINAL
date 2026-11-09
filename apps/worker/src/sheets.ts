@@ -112,7 +112,7 @@ const placeholders = (n: number) => Array.from({ length: n }, () => "?").join(",
 async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<SheetExtras> {
   const venueIds = [...new Set(shows.map((s) => s.venue.tmId))].slice(0, 90);
   const showIds = shows.map((s) => s.sourceId).slice(0, 90);
-  const [v, p, r, sg, hp, lm] = await env.DB.batch([
+  const [v, p, r, sg, hp, lm, tk] = await env.DB.batch([
     env.DB.prepare(`SELECT tm_venue_id, capacity FROM venue_info WHERE capacity IS NOT NULL AND tm_venue_id IN (${placeholders(venueIds.length)})`).bind(...venueIds),
     env.DB.prepare(`SELECT source_id, min, max, currency, source, zones_json FROM show_price WHERE source_id IN (${placeholders(showIds.length)})`).bind(...showIds),
     env.DB.prepare("SELECT json FROM artist_resale WHERE artist_id = ?").bind(artistId),
@@ -123,7 +123,9 @@ async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<Sh
     ).bind(artistId),
     env.DB.prepare("SELECT homepage FROM artist WHERE id = ?").bind(artistId),
     env.DB.prepare("SELECT country, ticket_limit FROM artist_limit WHERE artist_id = ?").bind(artistId),
+    env.DB.prepare("SELECT name, url FROM artist_ticketer WHERE artist_id = ? ORDER BY name").bind(artistId),
   ]);
+  const ticketers = (tk!.results ?? []) as { name: string; url: string }[];
   const limits: Record<string, number> = {};
   for (const row of (lm!.results ?? []) as { country: string; ticket_limit: number }[]) limits[row.country] = row.ticket_limit;
   const signups: SignupLink[] = ((sg!.results ?? []) as { url: string; label: string; city: string | null; local_date: string | null }[]).map((x) => ({
@@ -140,7 +142,7 @@ async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<Sh
     prices[row.source_id] = { min: row.min, max: row.max, currency: row.currency, source: row.source, ...(row.zones_json ? { zones: JSON.parse(row.zones_json) } : {}) };
   }
   const resaleRow = (r!.results ?? [])[0] as { json: string } | undefined;
-  return { venues, prices, signups, homepage, limits, resale: resaleRow ? (JSON.parse(resaleRow.json) as ResaleInfo) : null };
+  return { venues, prices, signups, homepage, limits, ticketers, resale: resaleRow ? (JSON.parse(resaleRow.json) as ResaleInfo) : null };
 }
 
 const dayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: MADRID, weekday: "short", day: "numeric", month: "short" });

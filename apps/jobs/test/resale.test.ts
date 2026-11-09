@@ -37,3 +37,15 @@ describe("historial de reventa", () => {
   });
 });
 
+
+import { seatGeekPage } from "../src/enrich-ticketers";
+describe("SeatGeek como ticketera oficial", () => {
+  it("solo el artista exacto y con eventos", () => {
+    const ps = [
+      { name: "Noah Kahan Tribute", url: "https://seatgeek.com/noah-kahan-tribute-tickets", has_upcoming_events: true },
+      { name: "Noah Kahan", url: "https://seatgeek.com/noah-kahan-tickets", has_upcoming_events: true },
+    ];
+    expect(seatGeekPage("Noah Kahan", ps)).toBe("https://seatgeek.com/noah-kahan-tickets");
+    expect(seatGeekPage("Noah Kahan", [{ name: "Noah Kahan", url: "https://seatgeek.com/noah-kahan-tickets", has_upcoming_events: false }])).toBeNull();
+  });
+});

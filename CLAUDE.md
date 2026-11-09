@@ -65,8 +65,8 @@ trata de los eventos y de cómo conseguir las entradas.
   UEFA, Wimbledon, Roland-Garros, Mutua Madrid Open, F1, NFL.
 - Ticketeras sin API (revisar ficha de evento): AXS, Eventim/Fansale/TicketOne, Blueticket,
   See Tickets, Dice, Fnac, eTicketing, Vivaticket, Ticketportal, Puntoticket, LaLiga/clubes…
-- SeatGeek: **ticketera de venta oficial** (sobre todo EE. UU., fase 2), no fuente de reventa
-  (decisión del propietario, 2026-11-08); API oficial con `SEATGEEK_CLIENT_ID`.
+- SeatGeek: **ticketera de venta oficial** (sobre todo EE. UU.), no fuente de reventa (decisión del
+  propietario, 2026-11-08); API oficial con `SEATGEEK_CLIENT_ID` → enlace en la ficha.
 - Noticias (Google News RSS, NME, Billboard, Los40, Mondosonoro…), feeds RSS de YouTube.
 - Redes vía **Apify** (plan FREE: 5 $/mes de crédito, medido el 2026-11-07; dosificar): `apify/instagram-scraper`,
   `clockworks/tiktok-scraper`, el mejor scraper de X mantenido. Meta Business Discovery como
@@ -75,8 +75,9 @@ trata de los eventos y de cómo conseguir las entradas.
 
 ## Qué vigilar
 
-- **Cobertura por fases:** 1) Europa (incl. Reino Unido) y Latinoamérica (adelantada a petición
-  del propietario, 2026-11-08) → 2) EE. UU. → 3) Australia → 4) Asia.
+- **Cobertura por fases:** 1) Europa (incl. Reino Unido), Latinoamérica y EE. UU./Canadá (activadas
+  a petición del propietario, 2026-11-08/09; de EE. UU./Canadá solo música y deporte internacional)
+  → 2) Australia → 3) Asia. La primera lectura de cada zona o país nuevo es solo línea base.
 - ~100 artistas de referencia (semilla en `data/artists.seed.json` cuando exista; plan maestro en `docs/plan/00-LEEME.md`): U2, Harry Styles, Oasis, Bad Bunny,
   Metallica, The Weeknd, Bruno Mars, Sabrina Carpenter, Olivia Rodrigo, Ariana Grande, Shakira,
   Springsteen, Foo Fighters, Guns N' Roses, Radiohead, BTS, Twice, aespa, Quevedo, Raye,

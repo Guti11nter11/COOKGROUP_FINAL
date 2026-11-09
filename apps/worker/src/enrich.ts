@@ -159,6 +159,17 @@ export async function applyEnrichment(
       ).bind(l.artistId, l.country, l.limit, iso),
     );
   }
+  const ticketers = (input.ticketers ?? []).filter((t) => t.artistId && t.name && (t.url === null || /^https:\/\//.test(t.url)));
+  for (const t of ticketers) {
+    // Solo se escribe si cambia (cada fila escrita cuenta para el cupo diario de D1).
+    stmts.push(
+      t.url
+        ? env.DB.prepare(
+            "INSERT INTO artist_ticketer (artist_id, name, url, updated_at) VALUES (?, ?, ?, ?) ON CONFLICT (artist_id, name) DO UPDATE SET url = excluded.url, updated_at = excluded.updated_at WHERE artist_ticketer.url IS NOT excluded.url",
+          ).bind(t.artistId, t.name.slice(0, 40), t.url, iso)
+        : env.DB.prepare("DELETE FROM artist_ticketer WHERE artist_id = ? AND name = ?").bind(t.artistId, t.name),
+    );
+  }
   const signups = (input.signups ?? []).filter((x) => x.artistId);
   const freshSignups: { artistId: string; links: SignupLink[] }[] = [];
   for (const x of signups) {
@@ -206,6 +217,7 @@ export async function applyEnrichment(
     );
   }
   for (const r of resale) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(r.artistId, iso));
+  for (const a of new Set(ticketers.map((t) => t.artistId))) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(a, iso));
   for (const a of new Set(limits.map((l) => l.artistId))) stmts.push(env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(a, iso));
   for (let i = 0; i < stmts.length; i += 50) await env.DB.batch(stmts.slice(i, i + 50));
   return { venues: venues.length, prices: prices.length, resale: resale.length, signups: signups.length, limits: limits.length, ...(freshSignups.length ? { freshSignups } : {}) };

@@ -208,7 +208,7 @@ export async function updateStatusPanel(env: Env, now: Date): Promise<boolean> {
     `## ${ok ? "🟢" : "🟠"} Estado de GIRA`,
     `Último ciclo: <t:${Math.floor(Date.parse(last?.started_at ?? now.toISOString()) / 1000)}:R>${ok ? "" : " · revisar"}`,
     `Seguidos: **${c?.follows ?? 0}** (sin tope: cada gira grande que sale se añade sola) · fechas futuras: **${c?.shows ?? 0}**`,
-    `Catálogo de Ticketmaster: Europa y Latinoamérica completos, 11 veces al día`,
+    `Catálogo de Ticketmaster: Europa, Latinoamérica y EE. UU./Canadá, 11 veces al día`,
     `Canales de gira activos: **${c?.sheets ?? 0}** · archivados: ${c?.archived ?? 0}`,
     `Noticias (24 h): ${c?.news24 ?? 0} · avisos pendientes: ${c?.pending ?? 0}`,
     `Ticketmaster hoy: ${c?.tm ?? 0} / 5.000 llamadas · fechas con precio: ${c?.priced ?? 0} · recintos con aforo: ${c?.venues ?? 0}`,

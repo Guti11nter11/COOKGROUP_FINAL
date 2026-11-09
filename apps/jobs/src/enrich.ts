@@ -6,6 +6,7 @@ import { findSignups } from "./enrich-signups";
 import { estimateAll } from "./enrich-resale";
 import { findLimits } from "./enrich-limits";
 import { uploadPriceImages } from "./enrich-price-images";
+import { findTicketers } from "./enrich-ticketers";
 
 /**
  * Enriquecimiento de las fichas activas: aforo de recintos (Wikidata), precios oficiales (prensa con
@@ -28,6 +29,7 @@ const steps: [string, () => Promise<EnrichInput>][] = [
   ["aforos", async () => ({ venues: await findCapacities(todo.venues) })],
   ["registros", async () => ({ signups: await findSignups(todo.artists) })],
   ["límites", async () => ({ limits: await findLimits(todo.artists) })],
+  ["ticketeras oficiales (SeatGeek)", async () => ({ ticketers: await findTicketers(todo.artists) })],
   ["registros sin fechas", async () => ({ signups: await findSignups(watchTurn(todo.watch ?? []), 8, true) })],
   ["precios", async () => ({ prices: await findPrices(todo.shows) })],
   // La reventa va al final: usa los precios oficiales ya guardados (la siguiente pasada los tiene todos).

@@ -41,5 +41,7 @@ export interface EnrichInput {
   resale?: { artistId: string; info: ResaleInfo }[];
   /** Límite de entradas por persona encontrado en prensa. */
   limits?: { artistId: string; country: string; limit: number }[];
+  /** Otras ticketeras de venta oficial (url null = ya no vende nada del artista). */
+  ticketers?: { artistId: string; name: string; url: string | null }[];
 }
 

@@ -212,3 +212,11 @@ describe("utilidades", () => {
     expect(isSheetActive([shows[3]!], NOW)).toBe(false);
   });
 });
+
+describe("ticketeras oficiales", () => {
+  it("SeatGeek sale en enlaces oficiales (no en reventa)", () => {
+    const head = renderArtistSheet({ name: "U2" }, shows, NOW, { ticketers: [{ name: "SeatGeek", url: "https://seatgeek.com/u2-tickets" }] })[0]!;
+    expect(head).toContain("[SeatGeek](https://seatgeek.com/u2-tickets)");
+    expect(head.split("**Enlaces oficiales**")[1]).toContain("SeatGeek");
+  });
+});

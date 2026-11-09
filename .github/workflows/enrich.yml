@@ -37,5 +37,6 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           APIFY_TOKEN: ${{ secrets.APIFY_TOKEN }}
+          SEATGEEK_CLIENT_ID: ${{ secrets.SEATGEEK_CLIENT_ID }}
           LASTFM_API_KEY: ${{ secrets.LASTFM_API_KEY }}
         run: npx tsx apps/jobs/src/enrich.ts
