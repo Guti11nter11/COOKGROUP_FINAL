@@ -35,7 +35,8 @@ export async function askJson<T>(env: Env, prompt: string): Promise<T | null> {
       if (out) return out;
     }
   }
-  if (env.AI) {
+  // En las pruebas no se llama a la IA (AI_OFF): la binding de Workers AI saldría a la cuenta real.
+  if (env.AI && env.AI_OFF !== "1") {
     const r = (await env.AI.run("@cf/meta/llama-3.3-70b-instruct-fp8-fast", { messages: [{ role: "user", content: prompt }], max_tokens: 300 }).catch(() => null)) as { response?: string } | null;
     const out = parse(r?.response);
     if (out) return out;

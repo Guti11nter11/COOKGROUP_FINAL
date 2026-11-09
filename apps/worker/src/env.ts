@@ -21,6 +21,8 @@ export interface Env {
   GROQ_API_KEY?: string;
   GEMINI_API_KEY?: string;
   AI?: Ai;
+  /** "1" en las pruebas: sin Workers AI. */
+  AI_OFF?: string;
   /** "1" = no publicar en Discord (los avisos se guardan igualmente). */
   DELIVERY_PAUSED?: string;
 }
