@@ -214,6 +214,10 @@ describe("cómo se entra en cada venta", () => {
     expect(block("Mastercard Presale")).toContain("(https://tm.example/1)");
   });
   it("venta general → página del evento", () => expect(block("Venta general")).toContain("(https://tm.example/1)"));
+  it("Reserved by Spotify (por invitación) → enlace único", () => {
+    const s = show("2", "US", "Tampa", "2027-06-01", [["platform", "Reserved by Spotify", "2026-11-11T14:00:00Z"]]);
+    expect(renderArtistSheet({ name: "U2" }, [s], NOW).join("\n")).toContain("🔑 Enlace único");
+  });
 });
 
 describe("utilidades", () => {

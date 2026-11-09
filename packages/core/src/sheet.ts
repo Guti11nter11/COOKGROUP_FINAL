@@ -388,7 +388,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
   };
   const blocks = ordered.map(({ w, shows: ss }) => {
     const when = w.startsAt ? `🕙 ${ts(w.startsAt)}` : "📅 Fecha y hora por confirmar";
-    const unique = UNIQUE_LINK.has(w.kind);
+    const unique = UNIQUE_LINK.has(w.kind) || /reserved by spotify|verified fan|invite/i.test(w.label);
     const how =
       w.kind === "general"
         ? []
