@@ -58,3 +58,20 @@ describe("esta semana: un día largo se ve igual que uno corto", () => {
     expect(msgs.every((m) => m.length <= 1900)).toBe(true);
   });
 });
+
+describe("una línea por artista y día", () => {
+  it("junta las ventas de la misma hora y añade las de otra hora en la misma línea", async () => {
+    const { artistLines } = await import("../src/calendar");
+    const mk = (label: string, at: string, city: string, cc = "DE") => ({ artistId: "nk", artist: "Noah Kahan", channelId: "NK", label, startsAt: at, dates: [{ city, country: cc, localDate: "2027-07-02", url: `u-${city}` }] });
+    const lines = artistLines([
+      mk("Artist Presale", "2026-11-10T11:00:00Z", "Berlin"),
+      mk("Telekom Prio Tickets", "2026-11-10T11:00:00Z", "Berlin"),
+      mk("Venta general", "2026-11-10T17:00:00Z", "Tampa", "US"),
+      { artistId: "u2", artist: "U2", channelId: "U2", label: "Venta general", startsAt: "2026-11-10T09:00:00Z", dates: [{ city: "Milano", country: "IT", localDate: "2027-07-09", url: "m" }] },
+    ]);
+    expect(lines).toEqual([
+      "`10:00` **U2** · Venta general · 🇮🇹 Milano → <#U2>",
+      "`12:00` **Noah Kahan** · Artist Presale · Telekom Prio Tickets · 🇩🇪 Berlin — `18:00` Venta general · 🇺🇸 Tampa → <#NK>",
+    ]);
+  });
+});

@@ -66,7 +66,29 @@ function byDay(slots: SaleSlot[]): [string, SaleSlot[]][] {
   return [...days];
 }
 
-const line = (s: SaleSlot) => `\`${formatHHmm(s.startsAt, MADRID)}\` **${s.artist}** · ${s.label} · ${cities(s)}${chan(s)}`;
+/**
+ * Una línea por artista y día: sus ventas a la misma hora juntas (etiquetas y ciudades sin repetir) y,
+ * si tiene otra hora ese día, en la misma línea tras "—". En orden por la primera hora.
+ */
+export function artistLines(list: SaleSlot[]): string[] {
+  const byArtist = new Map<string, SaleSlot[]>();
+  for (const s of list) byArtist.set(s.artistId, [...(byArtist.get(s.artistId) ?? []), s]);
+  return [...byArtist.values()]
+    .sort((a, b) => a[0]!.startsAt.localeCompare(b[0]!.startsAt))
+    .map((ss) => {
+      const times = [...new Set(ss.map((s) => s.startsAt))].sort();
+      const segs = times.map((t) => {
+        const at = ss.filter((s) => s.startsAt === t);
+        const labels = [...new Set(at.map((s) => s.label))];
+        const places = [...new Map(at.flatMap((s) => s.dates).map((d) => [d.city, `${flag(d.country)} ${d.city}`])).values()];
+        const shown = places.length > 6 ? `${places.slice(0, 6).join(", ")} y ${places.length - 6} más` : places.join(", ");
+        return `\`${formatHHmm(t, MADRID)}\` ${labels.join(" · ")} · ${shown}`;
+      });
+      const [first, ...rest] = segs;
+      const head = first!.replace(/^(`[^`]+`) /, `$1 **${ss[0]!.artist}** · `);
+      return [head, ...rest].join(" — ") + chan(ss[0]!);
+    });
+}
 
 /** Resumen diario (una vez, a las 22:00): ventas de las próximas 48 h y giras nuevas del día. */
 export function renderDigest(slots: SaleSlot[], news: { artist: string; text: string; channelId: string | null }[], now: Date): string[] {
@@ -75,7 +97,7 @@ export function renderDigest(slots: SaleSlot[], news: { artist: string; text: st
   const parts: string[] = [`# 🌙 Resumen del día · ${dayFmt.format(now)}`];
   if (news.length) parts.push(["## 🆕 Novedades", ...news.slice(0, 15).map((n) => `• **${n.artist}** · ${n.text}${n.channelId ? ` → <#${n.channelId}>` : ""}`)].join("\n"));
   if (next.length) {
-    for (const [, list] of byDay(next)) parts.push([`## 📅 ${dayFmt.format(new Date(list[0]!.startsAt))}`, ...list.map(line)].join("\n"));
+    for (const [, list] of byDay(next)) parts.push([`## 📅 ${dayFmt.format(new Date(list[0]!.startsAt))}`, ...artistLines(list)].join("\n"));
   } else parts.push("Sin preventas ni ventas en las próximas 48 h.");
   parts.push("-# Horas de Madrid · GIRA · solo información, compras tú");
   return packText(parts);
@@ -87,7 +109,7 @@ export function renderWeek(slots: SaleSlot[], now: Date): string[] {
   const next = slots.filter((s) => Date.parse(s.startsAt) > now.getTime() && Date.parse(s.startsAt) <= horizon);
   const parts = [`# 🗓️ Esta semana · ventas de los próximos 7 días`];
   if (!next.length) parts.push("Nada a la vista todavía.");
-  for (const [, list] of byDay(next)) parts.push([`## ${dayFmt.format(new Date(list[0]!.startsAt))}`, ...list.map(line)].join("\n"));
+  for (const [, list] of byDay(next)) parts.push([`## ${dayFmt.format(new Date(list[0]!.startsAt))}`, ...artistLines(list)].join("\n"));
   parts.push(`-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · horas de Madrid`);
   return packText(parts);
 }
