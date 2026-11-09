@@ -92,10 +92,27 @@ export function renderWeek(slots: SaleSlot[], now: Date): string[] {
   return packText(parts);
 }
 
+/**
+ * Empaqueta bloques en mensajes de ≤ max caracteres: entre bloques (días) una línea en blanco y, si un
+ * día no cabe entero, se parte por líneas sin huecos entre ellas (como un día corto).
+ */
 function packText(blocks: string[], max = 1900): string[] {
+  const pieces = blocks.flatMap((b) => {
+    if (b.length <= max) return [b];
+    const parts: string[] = [];
+    let cur = "";
+    for (const line of b.split("\n")) {
+      if (cur && cur.length + 1 + line.length > max) {
+        parts.push(cur);
+        cur = line;
+      } else cur = cur ? `${cur}\n${line}` : line;
+    }
+    if (cur) parts.push(cur);
+    return parts;
+  });
   const out: string[] = [];
   let cur = "";
-  for (const b of blocks.flatMap((x) => (x.length > max ? x.split("\n") : [x]))) {
+  for (const b of pieces) {
     const add = cur ? `\n\n${b}` : b;
     if (cur && cur.length + add.length > max) {
       out.push(cur);

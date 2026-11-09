@@ -45,3 +45,16 @@ describe("resúmenes y calendario", () => {
     expect(ics.split("\r\n").every((l) => l.length <= 75)).toBe(true);
   });
 });
+
+describe("esta semana: un día largo se ve igual que uno corto", () => {
+  it("sin líneas en blanco entre las ventas de un mismo día", () => {
+    const many = Array.from({ length: 40 }, (_, i) => ({
+      artistId: `a${i}`, artist: `Artista número ${i} con nombre largo`, channelId: "C", label: "Live Nation Presale",
+      startsAt: "2026-11-11T09:00:00Z", dates: [{ city: "Ciudad", country: "US", localDate: "2027-07-01", url: "u" }],
+    }));
+    const msgs = renderWeek(many, new Date("2026-11-09T12:00:00Z"));
+    expect(msgs.length).toBeGreaterThan(1);
+    for (const m of msgs) expect(m).not.toMatch(/\*\*Artista número \d+[^\n]*\n\n`/);
+    expect(msgs.every((m) => m.length <= 1900)).toBe(true);
+  });
+});
