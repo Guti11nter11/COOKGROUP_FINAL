@@ -35,6 +35,10 @@ trata de los eventos y de cómo conseguir las entradas.
    separados para cabecera, precios oficiales por país (en imagen), sign up (dónde registrarse en
    cada preventa) y ventas; la hora solo como marca de Discord; reventa solo como multiplicador;
    sin fuentes, sin aforo total. En el canal del artista solo vive su ficha (nada de noticias).
+   **Solo salidas de entradas** (2026-11-09): si la venta general ya empezó, nada posterior cuenta;
+   promociones ("Holiday Gift Guide", "Day of Show", ofertas…) nunca. Regla única en
+   `actionableSales` (fichas, avisos, recordatorios, agenda). Un registro se publica solo si la página
+   existe y es de un país cubierto. **Todo lo publicado lo verifica Claude** (revisión 09:47 y 17:47).
 3. **Calendario `.ics`** suscribible.
 
 **Horas de silencio:** 01:00–08:00 Europe/Madrid. Solo se notifica en ese tramo si es urgente
