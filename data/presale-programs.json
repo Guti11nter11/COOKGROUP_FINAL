@@ -2,6 +2,40 @@
   "_doc": "Cómo entrar en cada programa de preventa conocido. 'match' es una expresión regular sobre la etiqueta de la venta. 'url' solo cuando es la página oficial del programa. Revisar cuando cambie un programa.",
   "programs": [
     {
+      "match": "verified ?fan",
+      "how": "Ticketmaster Verified Fan: registrarse ANTES en el enlace del artista; si te seleccionan, el código llega por SMS la víspera (es por sorteo, no por orden de llegada)"
+    },
+    {
+      "match": "\\bciti\\b|citibank|citi card",
+      "how": "Tarjeta Citi (EE. UU.): Citi Entertainment; se validan los 6 primeros dígitos de la tarjeta y se paga con ella"
+    },
+    {
+      "match": "capital ?one",
+      "how": "Tarjeta Capital One (EE. UU.): se meten los 6 primeros dígitos de la tarjeta como código y se paga con ella",
+      "url": "https://www.capitalone.com/credit-cards/benefits/entertainment/presales"
+    },
+    {
+      "match": "\\bchase\\b",
+      "how": "Tarjeta Chase (EE. UU.): se validan los primeros dígitos de la tarjeta y se paga con ella"
+    },
+    {
+      "match": "bank of america|\\bbofa\\b|wells fargo|cash app",
+      "how": "Tarjeta del banco indicado (EE. UU.): se validan los primeros dígitos de la tarjeta y se paga con ella"
+    },
+    {
+      "match": "verizon",
+      "how": "Cliente de Verizon: Verizon Access en la app My Verizon (por orden de llegada; máximo 4 entradas salvo que el artista ponga menos)",
+      "url": "https://www.verizon.com/my-access-rewards/"
+    },
+    {
+      "match": "t-?mobile|magenta status|t-life",
+      "how": "Cliente de T-Mobile (EE. UU.): preventa en la app T-Life"
+    },
+    {
+      "match": "sirius ?xm",
+      "how": "Suscriptor de SiriusXM: el código sale en la app SXM"
+    },
+    {
       "match": "mastercard|priceless",
       "how": "Pagar con una Mastercard: se accede desde Priceless o metiendo los primeros dígitos de la tarjeta en Ticketmaster",
       "url": "https://www.priceless.com/"
@@ -100,7 +134,9 @@
         "NL": "https://www.livenation.nl/",
         "DE": "https://www.livenation.de/",
         "IT": "https://www.livenation.it/",
-        "BE": "https://www.livenation.be/"
+        "BE": "https://www.livenation.be/",
+        "US": "https://www.livenation.com/",
+        "CA": "https://www.livenation.com/"
       }
     },
     {
@@ -114,7 +150,10 @@
         "DE": "https://www.ticketmaster.de/",
         "IT": "https://www.ticketmaster.it/",
         "BE": "https://www.ticketmaster.be/",
-        "IE": "https://www.ticketmaster.ie/"
+        "IE": "https://www.ticketmaster.ie/",
+        "US": "https://www.ticketmaster.com/",
+        "CA": "https://www.ticketmaster.ca/",
+        "MX": "https://www.ticketmaster.com.mx/"
       }
     },
     {

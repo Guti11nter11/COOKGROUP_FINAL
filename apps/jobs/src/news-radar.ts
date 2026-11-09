@@ -41,20 +41,21 @@ artista: homónimos, palabras normales…), la categoría (${CATEGORIES.join(", 
 línea en español con lo accionable (fechas, ciudades, cuándo es la preventa o venta). Sin inventar.
 "europe" es true solo si afecta a fechas o ventas en Europa o Reino Unido (o es una gira mundial que
 incluye Europa). "latam" es true si afecta a fechas o ventas en Latinoamérica (México, Centroamérica,
-Caribe o Sudamérica). Ambos false si solo trata de EE. UU./Canadá, Asia u Oceanía.
-Responde en JSON: {"items":[{"i":0,"artist":"","category":"","summary":"","europe":true,"latam":false}]}`;
+Caribe o Sudamérica). "usa" es true si afecta a fechas o ventas en EE. UU. o Canadá. Todos false si
+solo trata de Asia u Oceanía.
+Responde en JSON: {"items":[{"i":0,"artist":"","category":"","summary":"","europe":true,"latam":false,"usa":false}]}`;
 
 const out: { artistName: string; title: string; url: string; source: string; category: NewsCategory; summary: string; publishedAt: string | null }[] = [];
 for (let i = 0; i < fresh.length; i += 20) {
   const batch = fresh.slice(i, i + 20);
   const user = batch.map((b, j) => `${j}. [candidatos: ${b.candidates.join(", ")}] ${b.title} — ${b.description.slice(0, 280)}`).join("\n");
-  const res = await aiJson<{ items?: { i: number; artist: string | null; category: string; summary: string; europe?: boolean; latam?: boolean }[] }>(SYSTEM, user);
+  const res = await aiJson<{ items?: { i: number; artist: string | null; category: string; summary: string; europe?: boolean; latam?: boolean; usa?: boolean }[] }>(SYSTEM, user);
   for (const r of res?.items ?? []) {
     const b = batch[r.i];
     if (!b || !r.artist || !b.candidates.includes(r.artist)) continue;
     if (!CATEGORIES.includes(r.category as NewsCategory) || r.category === "other") continue;
-    // Europa, Reino Unido y Latinoamérica (EE. UU., Asia y Oceanía llegarán en sus fases).
-    if (r.europe !== true && r.latam !== true) continue;
+    // Europa, Reino Unido, Latinoamérica y EE. UU./Canadá (Asia y Oceanía llegarán en sus fases).
+    if (r.europe !== true && r.latam !== true && r.usa !== true) continue;
     // Una sola noticia por artista y tipo al día (la misma historia sale en muchos medios).
     const dup = `dup|${r.artist.toLowerCase()}|${r.category}|${new Date(now).toISOString().slice(0, 10)}`;
     if (seen[dup] || out.some((o) => o.artistName === r.artist && o.category === r.category)) continue;

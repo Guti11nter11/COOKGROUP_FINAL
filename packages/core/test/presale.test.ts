@@ -1,4 +1,4 @@
-import { it, expect } from "vitest";
+import { describe, it, expect } from "vitest";
 import { classifySaleLabel } from "../src/presale";
 
 it.each([
@@ -29,3 +29,17 @@ it.each([
   ["Ticketmaster Fan-to-Fan Resale", "official_resale", 95],
   ["Algo raro", "unknown", 99],
 ])("%s → %s", (label, kind, rank) => expect(classifySaleLabel(label)).toEqual({ kind, orderRank: rank }));
+
+describe("preventas de EE. UU.", () => {
+  it("guía y tipo de Verified Fan, Citi, Capital One y Verizon", async () => {
+    const { presaleGuide, classifySaleLabel } = await import("../src/presale");
+    expect(presaleGuide("Ticketmaster Verified Fan Presale")?.how).toMatch(/Verified Fan/);
+    expect(presaleGuide("Citi Cardmember Presale")?.how).toMatch(/Citi/);
+    expect(presaleGuide("Capital One Cardholder Presale")?.url).toContain("capitalone.com");
+    expect(presaleGuide("Verizon Presale")?.url).toContain("verizon.com");
+    expect(presaleGuide("Live Nation Presale", "US")?.url).toBe("https://www.livenation.com/");
+    expect(classifySaleLabel("Verizon Presale").kind).toBe("telco");
+    expect(classifySaleLabel("Chase Cardholder Presale").kind).toBe("card");
+    expect(classifySaleLabel("SiriusXM Presale").kind).toBe("platform");
+  });
+});

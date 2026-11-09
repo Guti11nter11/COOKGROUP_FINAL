@@ -1,21 +1,67 @@
 {
   "ranks": {
-    "fanclub": 10, "artist": 20, "card": 30, "telco": 40, "platform": 45, "promoter": 50,
-    "ticketer": 55, "venue": 60, "registration": 70, "lottery": 80, "general": 90,
-    "official_resale": 95, "unknown": 99
+    "fanclub": 10,
+    "artist": 20,
+    "card": 30,
+    "telco": 40,
+    "platform": 45,
+    "promoter": 50,
+    "ticketer": 55,
+    "venue": 60,
+    "registration": 70,
+    "lottery": 80,
+    "general": 90,
+    "official_resale": 95,
+    "unknown": 99
   },
   "rules": [
-    { "kind": "registration", "pattern": "registr|registo|inscri|verified fan|sign ?up" },
-    { "kind": "lottery", "pattern": "ballot|lottery|sorteo|sorteio|tirage" },
-    { "kind": "official_resale", "pattern": "fan-to-fan|fan to fan|\\bresale\\b|\\breventa\\b|\\brevenda\\b" },
-    { "kind": "card", "pattern": "american express|amex|visa|mastercard|citi|cardmember|banamex|santander|bbva|caixa|banco|bank|barclaycard|capital one" },
-    { "kind": "platform", "pattern": "spotify|paypal|amazon|apple music|deezer" },
-    { "kind": "telco", "pattern": "\\bo2\\b|three\\+|\\bthree\\b|telekom|vodafone|movistar|orange|\\bee\\b|meo|nos\\b|swisscom" },
-    { "kind": "fanclub", "pattern": "fan ?club|fanclub|membership|member presale|socios|club de fans" },
-    { "kind": "promoter", "pattern": "live ?nation|\\bmcd\\b|promoter|promotor|aeg|sjm|dhp|doctor music|last tour|madness live" },
-    { "kind": "ticketer", "pattern": "ticketmaster|eventim|axs|see tickets|dice|entradas\\.com" },
-    { "kind": "venue", "pattern": "venue|recinto|arena presale|stadium presale" },
-    { "kind": "artist", "pattern": "artist|artista|album|álbum|official presale" },
-    { "kind": "general", "pattern": "general|public onsale|venta al p[uú]blico|venda geral|public sale" }
+    {
+      "kind": "registration",
+      "pattern": "registr|registo|inscri|verified fan|sign ?up"
+    },
+    {
+      "kind": "lottery",
+      "pattern": "ballot|lottery|sorteo|sorteio|tirage"
+    },
+    {
+      "kind": "official_resale",
+      "pattern": "fan-to-fan|fan to fan|\\bresale\\b|\\breventa\\b|\\brevenda\\b"
+    },
+    {
+      "kind": "card",
+      "pattern": "american express|amex|visa|mastercard|citi|cardmember|banamex|santander|bbva|caixa|banco|bank|barclaycard|capital one|chase|wells fargo|bank of america|\\bbofa\\b|cash app|discover|scotiabank|\\brbc\\b"
+    },
+    {
+      "kind": "platform",
+      "pattern": "spotify|paypal|amazon|apple music|deezer|sirius ?xm|pandora|rakuten"
+    },
+    {
+      "kind": "telco",
+      "pattern": "\\bo2\\b|three\\+|\\bthree\\b|telekom|vodafone|movistar|orange|\\bee\\b|meo|nos\\b|swisscom|verizon|t-?mobile|at&t|rogers|\\bbell\\b|telus"
+    },
+    {
+      "kind": "fanclub",
+      "pattern": "fan ?club|fanclub|membership|member presale|socios|club de fans"
+    },
+    {
+      "kind": "promoter",
+      "pattern": "live ?nation|\\bmcd\\b|promoter|promotor|aeg|sjm|dhp|doctor music|last tour|madness live"
+    },
+    {
+      "kind": "ticketer",
+      "pattern": "ticketmaster|eventim|axs|see tickets|dice|entradas\\.com"
+    },
+    {
+      "kind": "venue",
+      "pattern": "venue|recinto|arena presale|stadium presale"
+    },
+    {
+      "kind": "artist",
+      "pattern": "artist|artista|album|álbum|official presale"
+    },
+    {
+      "kind": "general",
+      "pattern": "general|public onsale|venta al p[uú]blico|venda geral|public sale"
+    }
   ]
 }

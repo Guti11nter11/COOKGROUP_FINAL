@@ -182,6 +182,8 @@ export function money(n: number, currency: string): string {
 }
 const times = (n: number) => `×${n.toFixed(1).replace(".", ",")}`;
 
+/** A partir de cuántas fechas la ficha usa el formato compacto. */
+const COMPACT_FROM = 8;
 const ARTIST_KINDS = new Set<SaleKind>(["artist", "fanclub", "registration", "unknown", "lottery"]);
 const linkDay = (d: string) => clean(new Intl.DateTimeFormat("es-ES", { timeZone: "UTC", day: "numeric", month: "short" }).format(new Date(`${d}T12:00:00Z`)));
 const ts = (iso: string, style = "F") => `<t:${Math.floor(Date.parse(iso) / 1000)}:${style}>`;
@@ -346,10 +348,18 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
     ? ["## 📝 Sign up · cómo entrar en cada preventa", ...[...byLabel.values()].map(({ w, shows: ss }) => `**${w.label}** → ${howToJoin(w, ss, extras)}`)].join("\n")
     : null;
 
+  // Giras largas (típicas de EE. UU.): las fechas con enlace y recinto van una sola vez en su propio
+  // mensaje y cada venta las cita en corto (ciudad y día, por país); si no, la ficha serían 10+ mensajes.
+  const compact = live.length > COMPACT_FROM;
+  const shortDates = (ss: Show[]) =>
+    [...new Set(ss.map((s) => s.venue.country))]
+      .map((cc) => `${flag(cc)} ${ss.filter((s) => s.venue.country === cc).map((s) => `${s.venue.city} ${linkDay(s.localDate)}`).join(" · ")}`)
+      .join("\n");
+  const datesMsg = compact ? [`## 📍 Fechas (${live.length})`, ...live.map(dateLine)].join("\n") : null;
   const blocks = ordered.map(({ w, shows: ss }) => {
     const when = w.startsAt ? `🕙 ${ts(w.startsAt)}` : "📅 Fecha y hora por confirmar";
     // Solo el momento de salida (decisión del propietario: nunca "hasta").
-    return [`## 🎟️ ${w.label}`, when, ...ss.map(dateLine)].join("\n");
+    return [`## 🎟️ ${w.label}`, when, ...(compact ? [shortDates(ss)] : ss.map(dateLine))].join("\n");
   });
-  return sections(head, renderPrices(live, extras.prices ?? {}), signup, [...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
+  return sections(head, renderPrices(live, extras.prices ?? {}), signup, datesMsg, [...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
 }

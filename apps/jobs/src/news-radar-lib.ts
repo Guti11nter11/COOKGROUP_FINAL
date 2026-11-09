@@ -44,6 +44,11 @@ export const GENERAL_QUERIES: [string, string][] = [
   ["CO", "boletas concierto 2027 preventa Colombia"],
   ["PE", "entradas concierto 2027 preventa Lima"],
   ["BR", "ingressos show 2027 pré-venda"],
+  // EE. UU. y Canadá.
+  ["US", "2027 tour presale tickets announced"],
+  ["US", "announces North American stadium tour 2027"],
+  ["US", "adds new dates due to overwhelming demand"],
+  ["US", "Verified Fan registration tour"],
 ];
 
 /** Deporte y festivales de alta demanda: nombres con los que aparecen en prensa (además de las entidades seguidas). */

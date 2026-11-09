@@ -49,11 +49,11 @@ export interface Discovery {
 
 /** Estadios y grandes recintos al aire libre (por nombre): una fecha basta para considerarla gira grande. */
 export const STADIUM =
-  /\b(stadium|stadion|stadio|estadio|est[aá]dio|stade|foro sol|ippodromo|hip[oó]dromo|aut[oó]dromo|hyde park|marlay park|wembley|san siro|bernab[eé]u|metropolitano|cartuja|allianz)\b/i;
+  /\b(stadium|stadion|stadio|estadio|est[aá]dio|stade|foro sol|ippodromo|hip[oó]dromo|aut[oó]dromo|hyde park|marlay park|wembley|san siro|bernab[eé]u|metropolitano|cartuja|allianz|field|fenway park|rose bowl|metlife|sofi)\b/i;
 
 /** Recintos de arena o estadio (por nombre): lo que define una gira grande. */
 export const BIG_VENUE =
-  /\b(arena|stadium|stadion|stadio|estadio|est[aá]dio|stade|dome|palacio de (los )?deportes|palau sant jordi|wizink|ziggo|accor|the o2|o2 arena|forum|sportpaleis|unipol|ippodromo|hip[oó]dromo|aut[oó]dromo|foro sol|hyde park|marlay park|velodrom|olympiahalle|lanxess|uber arena|mercedes-benz|movistar arena|allianz|wembley|san siro|bernab[eé]u|metropolitano|cartuja)\b/i;
+  /\b(arena|stadium|stadion|stadio|estadio|est[aá]dio|stade|dome|palacio de (los )?deportes|palau sant jordi|wizink|ziggo|accor|the o2|o2 arena|forum|sportpaleis|unipol|ippodromo|hip[oó]dromo|aut[oó]dromo|foro sol|hyde park|marlay park|velodrom|olympiahalle|lanxess|uber arena|mercedes-benz|movistar arena|allianz|wembley|san siro|bernab[eé]u|metropolitano|cartuja|madison square garden|td garden|united center|barclays center|chase center|kia forum|sphere|field|bowl)\b/i;
 
 /**
  * Descubrimiento sin lista cerrada: entidades no seguidas con fechas de alta demanda (hotEvent) o con

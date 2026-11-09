@@ -56,19 +56,19 @@ merchandising y publicaciones sin evento. "major" es true solo si es un artista 
 (artista internacional o muy conocido, festival grande, pabellón o estadio); false para conciertos
 locales pequeños, teatro o música de cámara.
 "europe" es true si afecta a fechas o ventas en Europa o Reino Unido (o es una gira mundial que la
-incluye); "latam" es true si afecta a Latinoamérica. La categoría "signup" es un registro abierto para
-una preventa.
-Responde en JSON: {"items":[{"i":0,"artist":"","category":"","summary":"","major":true,"europe":true,"latam":false}]}`;
-const res = await aiJson<{ items?: { i: number; artist: string; category: string; summary: string; major?: boolean; europe?: boolean; latam?: boolean }[] }>(
+incluye); "latam" es true si afecta a Latinoamérica; "usa" es true si afecta a EE. UU. o Canadá. La
+categoría "signup" es un registro abierto para una preventa.
+Responde en JSON: {"items":[{"i":0,"artist":"","category":"","summary":"","major":true,"europe":true,"latam":false,"usa":false}]}`;
+const res = await aiJson<{ items?: { i: number; artist: string; category: string; summary: string; major?: boolean; europe?: boolean; latam?: boolean; usa?: boolean }[] }>(
   SYSTEM,
   fresh.map((p, i) => `${i}. @${p.ownerUsername}: ${p.caption!.slice(0, 600)}`).join("\n\n"),
 );
 const items = (res?.items ?? [])
   .filter((r) => {
     const acc = cfg.instagram.find((a) => a.handle.toLowerCase() === fresh[r.i]?.ownerUsername?.toLowerCase());
-    // Artistas: solo lo que afecta a Europa o Latinoamérica. Ticketeras: solo eventos grandes.
+    // Artistas: lo que afecta a Europa, Latinoamérica o EE. UU./Canadá. Ticketeras: solo eventos grandes.
     // La IA a veces cruza índices: lo devuelto tiene que encajar con la cuenta y el texto de esa publicación.
-    return fresh[r.i] && r.artist && itemConsistent(r, fresh[r.i]!.caption!, acc) && !isTravelOffer(fresh[r.i]!.caption!) && (acc?.artist ? r.europe === true || r.latam === true : r.major === true) && ["tour_announced", "presale", "on_sale", "extra_date", "sold_out", "signup"].includes(r.category);
+    return fresh[r.i] && r.artist && itemConsistent(r, fresh[r.i]!.caption!, acc) && !isTravelOffer(fresh[r.i]!.caption!) && (acc?.artist ? r.europe === true || r.latam === true || r.usa === true : r.major === true) && ["tour_announced", "presale", "on_sale", "extra_date", "sold_out", "signup"].includes(r.category);
   })
   .map((r) => {
     const p = fresh[r.i]!;

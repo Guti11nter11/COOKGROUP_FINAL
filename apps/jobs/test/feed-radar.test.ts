@@ -76,3 +76,12 @@ describe("descubrimiento de giras de alta demanda", async () => {
     expect(["Sala Riviera", "TivoliVredenburg", "Teatro Real"].some((v) => BIG_VENUE.test(v))).toBe(false);
   });
 });
+
+describe("recintos grandes de EE. UU.", () => {
+  it("estadios y pabellones", async () => {
+    const { BIG_VENUE, STADIUM } = await import("../src/feed-radar-lib");
+    expect(["MetLife Stadium", "SoFi Stadium", "Soldier Field", "Fenway Park", "Rose Bowl"].every((v) => STADIUM.test(v))).toBe(true);
+    expect(["Madison Square Garden", "United Center", "Barclays Center", "Kia Forum", "Sphere"].every((v) => BIG_VENUE.test(v))).toBe(true);
+    expect(["The Fillmore", "Bowery Ballroom"].some((v) => BIG_VENUE.test(v))).toBe(false);
+  });
+});

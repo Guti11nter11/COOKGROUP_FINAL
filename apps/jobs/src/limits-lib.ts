@@ -56,4 +56,6 @@ export const LIMIT_QUERY: Record<string, string> = {
   NL: "maximaal tickets per persoon",
   PT: "limite bilhetes por pessoa",
   MX: "límite de boletos por persona",
+  US: "ticket limit per person",
+  CA: "ticket limit per person",
 };

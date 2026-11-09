@@ -182,6 +182,22 @@ describe("dónde registrarse en cada preventa (mensaje de sign up)", () => {
   });
 });
 
+describe("giras largas (EE. UU.)", () => {
+  const cities = ["Atlanta", "Chicago", "Dallas", "Denver", "Houston", "Miami", "Boston", "Seattle", "Phoenix", "Detroit"];
+  const list = cities.map((c, i) =>
+    show(`us${i}`, "US", c, `2027-07-${String(i + 1).padStart(2, "0")}`, [["registration", "Verified Fan Presale", "2026-11-12T15:00:00Z"], ["general", "General Onsale", "2026-11-14T15:00:00Z"]], { name: "Gira Grande" }),
+  );
+  const msgs = renderArtistSheet({ name: "Gira Grande", tier: 3 }, list, NOW);
+  it("las fechas con enlace salen una vez y cada venta las cita en corto", () => {
+    const dates = msgs.find((m) => m.startsWith("## 📍 Fechas (10)"))!;
+    expect(dates).toContain("[Atlanta · ");
+    const vf = msgs.join("\n").split(/\n(?=## )/).find((b) => b.startsWith("## 🎟️ Verified Fan Presale"))!;
+    expect(vf).toContain("🇺🇸 Atlanta 1 jul · Chicago 2 jul · Dallas 3 jul");
+    expect(vf).not.toContain("https://");
+    expect(msgs.length).toBeLessThanOrEqual(5);
+  });
+});
+
 describe("utilidades", () => {
   it("channelSlug", () => {
     expect(channelSlug("Guns N' Roses")).toBe("guns-n-roses");
