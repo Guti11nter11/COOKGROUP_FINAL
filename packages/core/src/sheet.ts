@@ -296,12 +296,28 @@ export function renderPrices(live: Show[], prices: Record<string, PriceInfo>): s
 }
 
 /** Cómo entrar en una preventa: programa conocido, enlace propio o registro del artista. Una línea. */
-function howToJoin(w: SaleWindow, ss: Show[], extras: SheetExtras): string {
+const PRESALE_WORDS = /\b(pre-?\s?sales?|presales?|preventas?|pre-?ventes?|venta de|ventas?|vorverkauf|prevendita|voorverkoop|forsalg|forslag|forsaljning|tickets?|access|acceso)\b/g;
+const GENERIC = new Set(["artist", "fan", "fans", "official", "oficial", "exclusive", "early", "seated", "laylo", "the", "de", "del", "la", "el"]);
+
+/** ¿Es una preventa del propio artista? (sin nombre de un recinto, promotora o socio en la etiqueta). */
+function artistish(label: string, artist: string): boolean {
+  const own = new Set(fold(artist).split(/[^\p{L}\p{N}]+/u));
+  return fold(label)
+    .replace(/[®™©]/g, "")
+    .replace(PRESALE_WORDS, " ")
+    .split(/[^\p{L}\p{N}]+/u)
+    .filter((t) => t && !own.has(t) && !GENERIC.has(t.replace(/(e|a)$/, "")) && !GENERIC.has(t)).length === 0;
+}
+
+function howToJoin(w: SaleWindow, ss: Show[], extras: SheetExtras, artist = ""): string {
   const parts: string[] = [];
   const guide = presaleGuide(w.label, ss[0]?.venue.country);
   if (guide) parts.push(`${guide.how}${guide.url ? ` **[AQUÍ](${guide.url})**` : ""}`);
   if (w.url) parts.push(`[enlace de la preventa](${w.url})`);
-  if (!guide && ARTIST_KINDS.has(w.kind)) {
+  if (!guide && w.kind === "unknown" && !artistish(w.label, artist)) {
+    const who = w.label.replace(/[®™©]/g, "").replace(new RegExp(PRESALE_WORDS.source, "gi"), " ").replace(/\s+/g, " ").trim();
+    parts.push(`Registro o boletín de **${who}** (recinto, promotora o socio)`);
+  } else if (!guide && ARTIST_KINDS.has(w.kind)) {
     const cities = new Set(ss.map((s) => fold(s.venue.city)));
     const dates = new Set(ss.map((s) => s.localDate));
     const all = extras.signups ?? [];
@@ -365,15 +381,29 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
   // Una sola entrada por preventa (decisión del propietario, 2026-11-09: nada repetido). La misma preventa
   // a otra hora (otra zona horaria, otro país) va dentro de su bloque, con su hora y sus fechas. Las
   // etiquetas que solo cambian en ®/™ o espacios son la misma preventa.
-  const labelKey = (l: string) => l.toLowerCase().replace(/[®™©]/g, "").replace(/\s+/g, " ").trim();
+  const labelKey = (l: string) => {
+    const k = fold(l)
+      .replace(/[®™©]/g, "")
+      .replace(PRESALE_WORDS, " ")
+      .replace(/\bartist[ae]?s?\b/g, "artist")
+      .replace(/\btm\b/g, "ticketmaster")
+      .replace(/[^\p{L}\p{N}&+]+/gu, " ")
+      .trim();
+    return k || fold(l).replace(/\s+/g, " ").trim();
+  };
+  // Etiqueta a mostrar: la que dice "Presale" sin palabras de otro idioma; a igualdad, la más completa.
+  const display = (a: string, b: string) => {
+    const score = (x: string) => (/presale/i.test(x) && !/pr[ée]vente|preventa|venta|forsalg|forslag|vorverkauf/i.test(x) ? 0 : 1);
+    return (score(a) - score(b) || b.length - a.length) <= 0 ? a : b;
+  };
   const groups = new Map<string, { w: SaleWindow; shows: Show[]; times: Map<string, Show[]> }>();
   for (const s of live) {
     for (const w of actionableSales(s, now)) {
       const k = labelKey(w.label);
       const g = groups.get(k) ?? { w, shows: [], times: new Map<string, Show[]>() };
       // La ventana de referencia es la primera en salir (y conserva un enlace de preventa si alguna lo trae).
-      if (w.startsAt && (!g.w.startsAt || w.startsAt < g.w.startsAt)) g.w = { ...w, url: w.url ?? g.w.url };
-      else if (!g.w.url && w.url) g.w = { ...g.w, url: w.url };
+      if (w.startsAt && (!g.w.startsAt || w.startsAt < g.w.startsAt)) g.w = { ...w, url: w.url ?? g.w.url, label: display(g.w.label, w.label) };
+      else g.w = { ...g.w, url: g.w.url ?? w.url, label: display(g.w.label, w.label) };
       if (!g.shows.includes(s)) g.shows.push(s);
       const t = w.startsAt ?? "";
       const at = g.times.get(t) ?? [];
@@ -397,7 +427,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
     byLabel.set(k, g);
   }
   // Las preventas sin registro localizado van juntas en una línea (no la misma frase repetida).
-  const joins = [...byLabel.values()].map(({ w, shows: ss }) => ({ w, how: howToJoin(w, ss, extras) }));
+  const joins = [...byLabel.values()].map(({ w, shows: ss }) => ({ w, how: howToJoin(w, ss, extras, artist.name) }));
   const missing = joins.filter((j) => j.how.startsWith("registro aún no localizado"));
   const found = joins.filter((j) => !missing.includes(j));
   const signup = byLabel.size
@@ -429,7 +459,8 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
   };
   // Un acceso del correo sin tipo claro (p. ej. "Bewitched presale" por Laylo) va a la primera preventa con
   // enlace único que no tenga el suyo.
-  const isUnique = (w: SaleWindow) => UNIQUE_LINK.has(w.kind) || /reserved by spotify|verified fan|invite/i.test(w.label);
+  const isUnique = (w: SaleWindow) =>
+    (UNIQUE_LINK.has(w.kind) && (w.kind !== "unknown" || artistish(w.label, artist.name))) || /reserved by spotify|verified fan|invite/i.test(w.label);
   const loose = (extras.access ?? []).filter((a) => a.kind === "unknown" && !ordered.some(({ w }) => accessFor(w, [a])));
   const looseFor = ordered.find(({ w }) => isUnique(w) && !accessFor(w, extras.access ?? []))?.w;
   const blocks = ordered.map(({ w, shows: ss, times }) => {

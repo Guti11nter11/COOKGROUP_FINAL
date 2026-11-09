@@ -204,6 +204,14 @@
       "match": "el corte ingl",
       "how": "Venta en El Corte Inglés (cuenta en su web)",
       "url": "https://www.elcorteingles.es/entradas/"
+    },
+    {
+      "match": "\\bsupport\\b|telonero",
+      "how": "Preventa del telonero: código o enlace en su boletín y redes"
+    },
+    {
+      "match": "\\bradio\\b",
+      "how": "Preventa de radio: código que da la emisora (en antena, web o redes)"
     }
   ]
 }

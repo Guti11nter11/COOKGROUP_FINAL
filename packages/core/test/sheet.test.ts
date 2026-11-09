@@ -300,9 +300,32 @@ describe("solo salidas de entradas (nunca promociones de algo ya a la venta)", (
 
 describe("sign up sin repeticiones", () => {
   it("las preventas sin registro localizado van en una sola línea", () => {
-    const s = [show("1", "US", "Toronto", "2027-06-02", [["unknown", "Support Presale", "2026-11-11T15:00:00Z"], ["venue", "Blossom Music Center Presale", "2026-11-11T15:00:00Z"], ["unknown", "Radio Presale", "2026-11-12T17:00:00Z"]])];
+    const s = [show("1", "US", "Toronto", "2027-06-02", [["artist", "Artist Presale", "2026-11-11T15:00:00Z"], ["venue", "Blossom Music Center Presale", "2026-11-11T15:00:00Z"], ["unknown", "Official Presale", "2026-11-12T17:00:00Z"]])];
     const su = renderArtistSheet({ name: "Kings of Leon" }, s, NOW).find((m) => m.startsWith("## 📝 Sign up"))!;
     expect(su.match(/aún no localizad/g)).toHaveLength(1);
-    expect(su).toContain("**Support Presale** · **Radio Presale** → registros aún no localizados");
+    expect(su).toContain("**Artist Presale** · **Official Presale** → registros aún no localizados");
+  });
+});
+
+describe("revisión 17:47: idiomas y registros de terceros", () => {
+  it("la misma preventa en otro idioma es un solo bloque (con la etiqueta en inglés)", () => {
+    const s = [
+      show("1", "GB", "London", "2027-06-01", [["artist", "Artist Presale", "2026-11-12T10:00:00Z"], ["ticketer", "TM Presale", "2026-11-13T10:00:00Z"]]),
+      show("2", "FR", "Paris", "2027-06-03", [["artist", "Prévente Artiste", "2026-11-12T09:00:00Z"], ["ticketer", "Ticketmaster Presale", "2026-11-13T09:00:00Z"]]),
+      show("3", "ES", "Madrid", "2027-06-05", [["artist", "Preventa artista", "2026-11-12T09:00:00Z"]]),
+      show("4", "MX", "Monterrey", "2027-06-07", [["artist", "Venta De Artista", "2026-11-12T16:00:00Z"]]),
+    ];
+    const t = renderArtistSheet({ name: "Feid" }, s, NOW).join("\n");
+    const heads = t.match(/^## 🎟️ .+$/gm)!;
+    expect(heads).toEqual(["## 🎟️ Artist Presale", "## 🎟️ Ticketmaster Presale"]);
+  });
+
+  it("las preventas de promotora, recinto o telonero no llevan el registro del artista", () => {
+    const s = [show("1", "GB", "London", "2027-07-01", [["unknown", "BST Presale", "2026-11-12T10:00:00Z"], ["unknown", "Support Presale", "2026-11-12T10:00:00Z"], ["unknown", "Depot Presale", "2026-11-12T10:00:00Z"], ["artist", "Artist Presale", "2026-11-11T10:00:00Z"]])];
+    const extras = { signups: [{ url: "https://muse.os.fan/signup-embed", label: "Registro", city: null, localDate: null }] };
+    const su = renderArtistSheet({ name: "Muse" }, s, NOW, extras).find((m) => m.startsWith("## 📝 Sign up"))!;
+    expect(su).toContain("**Artist Presale** → Registro **[AQUÍ](https://muse.os.fan/signup-embed)**");
+    expect(su.match(/muse\.os\.fan/g)).toHaveLength(1);
+    expect(su).toContain("**Support Presale** → Preventa del telonero");
   });
 });

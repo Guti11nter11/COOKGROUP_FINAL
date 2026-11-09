@@ -45,15 +45,15 @@
     },
     {
       "kind": "promoter",
-      "pattern": "live ?nation|\\bmcd\\b|promoter|promotor|aeg|sjm|dhp|doctor music|last tour|madness live"
+      "pattern": "live ?nation|\\bmcd\\b|promoter|promotor|aeg|sjm|dhp|doctor music|last tour|madness live|cuffe|kilimanjaro|\\bsjm\\b|festival republic|goldenvoice|\\bbst\\b"
     },
     {
       "kind": "ticketer",
-      "pattern": "ticketmaster|eventim|axs|see tickets|dice|entradas\\.com"
+      "pattern": "ticketmaster|eventim|axs|see tickets|dice|entradas\\.com|\\btm\\b"
     },
     {
       "kind": "venue",
-      "pattern": "venue|recinto|arena presale|stadium presale"
+      "pattern": "venue|recinto|arena presale|stadium presale|music cent(er|re)|amphithea|\\bdepot\\b|roundhay|credit union|\\bco-?op\\b"
     },
     {
       "kind": "artist",

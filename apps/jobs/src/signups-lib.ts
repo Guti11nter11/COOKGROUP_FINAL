@@ -83,6 +83,8 @@ export function pickSignups(raw: RawLink[], shows: { city: string; localDate: st
 }
 
 const PRESALE_WORDS = /\b(pre-?sale|presale|preventa|pr[ée]vente|vorverkauf|early access|get access|tour|tickets?|entradas|boletos|concerts?|live|sphere|stadium|estadio|arena)\b/i;
+const STRONG = /\b(pre-?sale|presale|preventa|pr[ée]vente|vorverkauf|early access|get access|on ?sale)\b/i;
+const MENU = /\b(shop|store|merch|videos|home)\b/i;
 const NOT_PRESALE = /\b(newsletter|merch|store|shop|tienda|podcast|contest|competition|sorteo|giveaway)\b/i;
 
 /**
@@ -98,7 +100,11 @@ export function presaleSignal(link: SignupLink, raw?: RawLink): boolean {
   if (NOT_PRESALE.test(text)) return false;
   // Enlaces "inteligentes" (lnk.to, linktr.ee…): casi siempre música; solo si el texto habla de preventa.
   if (/(^|\.)(lnk\.to|linktr\.ee|ffm\.to|smarturl\.it|found\.ee|hypeddit\.com)$/.test(host)) return /\b(pre-?sale|preventa|early access)\b/i.test(text);
-  return PRESALE_WORDS.test(`${text} ${raw?.context ?? ""}`);
+  if (PRESALE_WORDS.test(text)) return true;
+  // El texto de alrededor solo cuenta si habla de preventa o venta, o si no es el menú de la web
+  // ("Home Music Videos Tour Shop Sign Up": la palabra "Tour" del menú no hace preventa a una newsletter).
+  const ctx = raw?.context ?? "";
+  return STRONG.test(ctx) || (PRESALE_WORDS.test(ctx) && !MENU.test(ctx));
 }
 
 /** Registros de países que GIRA no cubre (Australia, Nueva Zelanda, Asia): no sirven. Pura. */

@@ -52,6 +52,8 @@ describe("registros de artistas sin fechas todavía", () => {
     expect(presaleSignal(l("https://store.artist.com/register"), { text: "Register", href: "", context: "store" })).toBe(false);
     expect(presaleSignal(l("https://oasismusic.lnk.to/live"), { text: "Live 25", href: "", context: "tour tickets" })).toBe(false);
     expect(presaleSignal(l("https://artist.lnk.to/presale"), { text: "Presale sign up", href: "", context: "" })).toBe(true);
+    // La palabra "Tour" del menú de la web no convierte la newsletter en registro de preventa.
+    expect(presaleSignal(l("https://www.sabrinacarpenter.com/sign-up/"), { text: "Sign Up", href: "", context: "Home Music Videos Tour Shop Sign Up Instagram TikTok" })).toBe(false);
   });
 });
 
