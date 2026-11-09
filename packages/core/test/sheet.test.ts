@@ -51,15 +51,19 @@ describe("renderArtistSheet (formato tipo Akari)", () => {
     expect(head).toContain("[Ticketmaster UK](https://www.ticketmaster.co.uk/u2-tickets/artist/736365)");
   });
 
-  it("un bloque por preventa y hora, solo con la hora de Discord y sus fechas", () => {
-    const esBlock = all.split(/\n(?=## )/).find((m) => m.includes("Artist Presale") && m.includes("Sevilla"))!;
-    expect(esBlock).toContain(`## 🎟️ Artist Presale\n🕙 ${T("2026-11-10T09:00:00Z")}\n`);
-    expect(esBlock).not.toContain("Madrid ·");
-    expect(esBlock).not.toContain("Registro");
+  it("un bloque por preventa (nada repetido): cada hora con sus fechas, solo con la hora de Discord", () => {
+    const blocks = all.split(/\n(?=## )/).filter((m) => m.startsWith("## 🎟️ Artist Presale"));
+    expect(blocks).toHaveLength(1);
+    const b = blocks[0]!;
+    expect(b).not.toContain("Madrid ·");
+    expect(b).not.toContain("Registro");
     // Preventa del artista: enlace único; mientras no llegue al correo, el enlace general de cada fecha.
-    expect(esBlock).toContain("🔑 Enlace único");
-    expect(esBlock).toContain("🇪🇸 [Barcelona · jue 13 may 2027](");
-    expect(esBlock.indexOf("Barcelona")).toBeLessThan(esBlock.indexOf("Sevilla"));
+    expect(b).toContain("## 🎟️ Artist Presale\n🔑 Enlace único");
+    expect(b).toContain(`🕙 ${T("2026-11-10T09:00:00Z")}\n🇪🇸 [Barcelona · jue 13 may 2027](`);
+    // La misma preventa en Reino Unido, a otra hora, dentro del mismo bloque y después.
+    expect(b.indexOf(T("2026-11-10T10:00:00Z"))).toBeGreaterThan(b.indexOf("Sevilla"));
+    expect(b.indexOf("London")).toBeGreaterThan(b.indexOf(T("2026-11-10T10:00:00Z")));
+    expect(b.indexOf("Barcelona")).toBeLessThan(b.indexOf("Sevilla"));
   });
 
   it("sign up en su propio mensaje, una línea por preventa (sin la venta general)", () => {
@@ -73,10 +77,14 @@ describe("renderArtistSheet (formato tipo Akari)", () => {
 
   it("no muestra ventas que ya pasaron", () => expect(all).not.toContain("https://tm.example/4"));
 
-  it("las ventas de la misma hora pero en otro país van en su propio bloque", () => {
-    const uk = all.split(/\n(?=## )/).find((m) => m.includes("Artist Presale") && m.includes("London"))!;
-    expect(uk).toContain(T("2026-11-10T10:00:00Z"));
-    expect(uk).not.toContain("Sevilla");
+  it("etiquetas que solo cambian en ® o espacios son la misma preventa", () => {
+    const s = [
+      show("8", "US", "New York", "2027-10-15", [["card", "Citi® Cardmember Preferred Tickets", "2026-11-13T15:00:00Z"]]),
+      show("9", "US", "Cuyahoga Falls", "2027-05-14", [["card", "Citi ® Cardmember Preferred Tickets", "2026-11-13T15:00:00Z"]]),
+    ];
+    const t = renderArtistSheet({ name: "Kings of Leon" }, s, NOW).join("\n");
+    expect(t.match(/## 🎟️ Citi/g)).toHaveLength(1);
+    expect(t.match(/\*\*Citi/g)).toHaveLength(1); // y una sola línea en Sign up
   });
 });
 
@@ -287,5 +295,14 @@ describe("solo salidas de entradas (nunca promociones de algo ya a la venta)", (
     const s = show("v", "US", "Atlanta", "2027-07-01", []);
     s.sales = [w("registration", "Verified Fan Presale", "2026-11-12T15:00:00Z"), w("general", "General Onsale", "2026-11-14T15:00:00Z")];
     expect(isSheetActive([s], NOW)).toBe(true);
+  });
+});
+
+describe("sign up sin repeticiones", () => {
+  it("las preventas sin registro localizado van en una sola línea", () => {
+    const s = [show("1", "US", "Toronto", "2027-06-02", [["unknown", "Support Presale", "2026-11-11T15:00:00Z"], ["venue", "Blossom Music Center Presale", "2026-11-11T15:00:00Z"], ["unknown", "Radio Presale", "2026-11-12T17:00:00Z"]])];
+    const su = renderArtistSheet({ name: "Kings of Leon" }, s, NOW).find((m) => m.startsWith("## 📝 Sign up"))!;
+    expect(su.match(/aún no localizad/g)).toHaveLength(1);
+    expect(su).toContain("**Support Presale** · **Radio Presale** → registros aún no localizados");
   });
 });

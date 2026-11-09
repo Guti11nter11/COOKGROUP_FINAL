@@ -362,13 +362,23 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
     return `${flag(s.venue.country)} [${s.venue.city} · ${showDay(s.localDate)}](${s.url}) · ${s.venue.name}${cap ? ` (${num(cap)})` : ""}`;
   };
 
-  // Agrupar ventanas futuras por etiqueta + hora (una venta UK a otra hora va en su propio bloque).
-  const groups = new Map<string, { w: SaleWindow; shows: Show[] }>();
+  // Una sola entrada por preventa (decisión del propietario, 2026-11-09: nada repetido). La misma preventa
+  // a otra hora (otra zona horaria, otro país) va dentro de su bloque, con su hora y sus fechas. Las
+  // etiquetas que solo cambian en ®/™ o espacios son la misma preventa.
+  const labelKey = (l: string) => l.toLowerCase().replace(/[®™©]/g, "").replace(/\s+/g, " ").trim();
+  const groups = new Map<string, { w: SaleWindow; shows: Show[]; times: Map<string, Show[]> }>();
   for (const s of live) {
     for (const w of actionableSales(s, now)) {
-      const k = `${w.label.toLowerCase()}|${w.startsAt ?? ""}`;
-      const g = groups.get(k) ?? { w, shows: [] };
+      const k = labelKey(w.label);
+      const g = groups.get(k) ?? { w, shows: [], times: new Map<string, Show[]>() };
+      // La ventana de referencia es la primera en salir (y conserva un enlace de preventa si alguna lo trae).
+      if (w.startsAt && (!g.w.startsAt || w.startsAt < g.w.startsAt)) g.w = { ...w, url: w.url ?? g.w.url };
+      else if (!g.w.url && w.url) g.w = { ...g.w, url: w.url };
       if (!g.shows.includes(s)) g.shows.push(s);
+      const t = w.startsAt ?? "";
+      const at = g.times.get(t) ?? [];
+      if (!at.includes(s)) at.push(s);
+      g.times.set(t, at);
       groups.set(k, g);
     }
   }
@@ -380,14 +390,26 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
   const byLabel = new Map<string, { w: SaleWindow; shows: Show[] }>();
   for (const { w, shows: ss } of ordered) {
     if (w.kind === "general" || w.kind === "official_resale") continue;
-    const k = w.label.toLowerCase();
+    const k = labelKey(w.label);
     const g = byLabel.get(k) ?? { w, shows: [] };
     for (const s of ss) if (!g.shows.includes(s)) g.shows.push(s);
     if (!g.w.url && w.url) g.w = w;
     byLabel.set(k, g);
   }
+  // Las preventas sin registro localizado van juntas en una línea (no la misma frase repetida).
+  const joins = [...byLabel.values()].map(({ w, shows: ss }) => ({ w, how: howToJoin(w, ss, extras) }));
+  const missing = joins.filter((j) => j.how.startsWith("registro aún no localizado"));
+  const found = joins.filter((j) => !missing.includes(j));
   const signup = byLabel.size
-    ? ["## 📝 Sign up · cómo entrar en cada preventa", ...[...byLabel.values()].map(({ w, shows: ss }) => `**${w.label}** → ${howToJoin(w, ss, extras)}`)].join("\n")
+    ? [
+        "## 📝 Sign up · cómo entrar en cada preventa",
+        ...found.map(({ w, how }) => `**${w.label}** → ${how}`),
+        ...(missing.length === 1
+          ? [`**${missing[0]!.w.label}** → ${missing[0]!.how}`]
+          : missing.length
+            ? [`**${missing.map((j) => j.w.label).join("** · **")}** → ${missing[0]!.how.replace("registro aún no localizado", "registros aún no localizados")}`]
+            : []),
+      ].join("\n")
     : null;
 
   // Giras largas (típicas de EE. UU.): las fechas con enlace y recinto van una sola vez en su propio
@@ -410,8 +432,8 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
   const isUnique = (w: SaleWindow) => UNIQUE_LINK.has(w.kind) || /reserved by spotify|verified fan|invite/i.test(w.label);
   const loose = (extras.access ?? []).filter((a) => a.kind === "unknown" && !ordered.some(({ w }) => accessFor(w, [a])));
   const looseFor = ordered.find(({ w }) => isUnique(w) && !accessFor(w, extras.access ?? []))?.w;
-  const blocks = ordered.map(({ w, shows: ss }) => {
-    const when = w.startsAt ? `🕙 ${ts(w.startsAt)}` : "📅 Fecha y hora por confirmar";
+  const blocks = ordered.map(({ w, shows: ss, times }) => {
+    const whenOf = (t: string) => (t ? `🕙 ${ts(t)}` : "📅 Fecha y hora por confirmar");
     const unique = isUnique(w);
     // Lo que ha llegado al correo del propietario (un código y un enlace como mucho por preventa).
     const mine = accessFor(w, extras.access ?? []) ?? (w === looseFor ? (loose[0] ?? null) : null);
@@ -425,9 +447,14 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
             : [`🔑 Enlace único por email o SMS a quien se registró (ver Sign up); mientras no llegue, el enlace general de cada fecha${w.url ? ` · [enlace de la preventa](${w.url})` : ""}`, ...own]
           : [codeLine(w, ss[0]?.venue.country), ...own];
     // Sin tu enlace único, el enlace general de cada fecha (decisión del propietario, 2026-11-09).
-    const dates = compact ? [shortDates(ss)] : ss.map(unique && mine?.url ? plainLine : dateLine);
-    // Solo el momento de salida (decisión del propietario: nunca "hasta").
-    return [`## 🎟️ ${w.label}`, when, ...how, ...dates].join("\n");
+    const datesOf = (list: Show[]) => (compact ? [shortDates(list)] : list.map(unique && mine?.url ? plainLine : dateLine));
+    const slots = [...times.entries()].sort(([a], [b]) => (a || "9999").localeCompare(b || "9999"));
+    // Solo el momento de salida (decisión del propietario: nunca "hasta"). Con varias horas, cada una con sus fechas.
+    const body =
+      slots.length === 1
+        ? [whenOf(slots[0]![0]), ...how, ...datesOf(slots[0]![1])]
+        : [...how, ...slots.flatMap(([t, list]) => [whenOf(t), ...datesOf(list)])];
+    return [`## 🎟️ ${w.label}`, ...body].join("\n");
   });
   return sections(head, renderPrices(live, extras.prices ?? {}), signup, datesMsg, [...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
 }
