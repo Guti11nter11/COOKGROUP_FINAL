@@ -38,7 +38,7 @@ describe("registros en la web oficial", () => {
   });
 });
 
-import { presaleSignal } from "../src/signups-lib";
+import { deadPage, outOfScope, presaleSignal } from "../src/signups-lib";
 describe("registros de artistas sin fechas todavía", () => {
   const l = (url: string, label = "Sign up") => ({ url, label, city: null, localDate: null });
   it("plataformas de preventa y enlaces de gira sí", () => {
@@ -52,5 +52,15 @@ describe("registros de artistas sin fechas todavía", () => {
     expect(presaleSignal(l("https://store.artist.com/register"), { text: "Register", href: "", context: "store" })).toBe(false);
     expect(presaleSignal(l("https://oasismusic.lnk.to/live"), { text: "Live 25", href: "", context: "tour tickets" })).toBe(false);
     expect(presaleSignal(l("https://artist.lnk.to/presale"), { text: "Presale sign up", href: "", context: "" })).toBe(true);
+  });
+});
+
+describe("registros que no sirven", () => {
+  it("países no cubiertos y páginas que ya no existen", () => {
+    expect(outOfScope("https://signup.ticketmaster.com.au/brunomars")).toBe(true);
+    expect(outOfScope("https://signup.ticketmaster.com/noahkahan")).toBe(false);
+    expect(presaleSignal({ url: "https://signup.ticketmaster.com.au/brunomars", label: "Ticketmaster (registro)", city: null, localDate: null })).toBe(false);
+    expect(deadPage("PAGE NOT FOUND Sorry! Looks like the tour you were looking for isn't on this page.")).toBe(true);
+    expect(deadPage("Register for Verified Fan access")).toBe(false);
   });
 });

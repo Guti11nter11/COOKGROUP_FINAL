@@ -183,4 +183,13 @@ export const DISCORD_COMMANDS = [
   { name: "gira", description: "Ir al canal de un artista", options: [{ type: 3, name: "artista", description: "Nombre", required: true }] },
   { name: "seguir", description: "Seguir a un artista o evento (⭐⭐⭐)", options: [{ type: 3, name: "artista", description: "Nombre en Ticketmaster", required: true }] },
   { name: "dejar", description: "Dejar de seguir a un artista", options: [{ type: 3, name: "artista", description: "Nombre", required: true }] },
+  {
+    name: "registro",
+    description: "Añadir a mano el enlace de registro de una preventa (sale en su ficha al momento)",
+    options: [
+      { type: 3, name: "artista", description: "Nombre del artista", required: true },
+      { type: 3, name: "url", description: "Enlace de registro (https://…)", required: true },
+      { type: 3, name: "texto", description: "Qué es (p. ej. Artist presale, tienda oficial)", required: false },
+    ],
+  },
 ];

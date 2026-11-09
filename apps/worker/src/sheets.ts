@@ -116,7 +116,11 @@ async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<Sh
     env.DB.prepare(`SELECT tm_venue_id, capacity FROM venue_info WHERE capacity IS NOT NULL AND tm_venue_id IN (${placeholders(venueIds.length)})`).bind(...venueIds),
     env.DB.prepare(`SELECT source_id, min, max, currency, source, zones_json FROM show_price WHERE source_id IN (${placeholders(showIds.length)})`).bind(...showIds),
     env.DB.prepare("SELECT json FROM artist_resale WHERE artist_id = ?").bind(artistId),
-    env.DB.prepare("SELECT url, label, city, local_date FROM artist_signup WHERE artist_id = ? ORDER BY local_date, url").bind(artistId),
+    // Los añadidos a mano (/registro) van primero: el propietario los ha comprobado.
+    env.DB.prepare(
+      `SELECT url, label, NULL AS city, NULL AS local_date, 0 AS ord FROM artist_signup_manual WHERE artist_id = ?1
+       UNION ALL SELECT url, label, city, local_date, 1 AS ord FROM artist_signup WHERE artist_id = ?1 ORDER BY ord, local_date, url`,
+    ).bind(artistId),
     env.DB.prepare("SELECT homepage FROM artist WHERE id = ?").bind(artistId),
     env.DB.prepare("SELECT country, ticket_limit FROM artist_limit WHERE artist_id = ?").bind(artistId),
   ]);

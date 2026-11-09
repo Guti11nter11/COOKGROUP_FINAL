@@ -3,7 +3,7 @@ import { loadSlots } from "./calendar";
 import type { Env } from "./env";
 
 /**
- * Comandos de Discord (/seguir, /dejar, /proximas, /gira). Discord firma cada petición con Ed25519;
+ * Comandos de Discord (/seguir, /dejar, /proximas, /gira, /registro). Discord firma cada petición con Ed25519;
  * sin firma válida se responde 401 (Discord lo exige para aceptar la URL de interacciones).
  */
 const hex = (h: string) => Uint8Array.from(h.match(/../g) ?? [], (b) => parseInt(b, 16));
@@ -84,6 +84,20 @@ export async function handleInteraction(env: Env, raw: string, now: Date): Promi
     const name = opt("artista");
     const r = await env.DB.prepare("DELETE FROM follow WHERE artist_id IN (SELECT id FROM artist WHERE lower(name) = lower(?))").bind(name).run();
     return reply(r.meta.changes ? `Dejo de seguir a **${name}**. Su canal se archivará cuando pasen sus ventas.` : `No seguía a «${name}».`);
+  }
+  if (i.data.name === "registro") {
+    const name = opt("artista");
+    const url = opt("url");
+    const label = (opt("texto") || "Registro (añadido a mano)").slice(0, 60);
+    if (!/^https:\/\/[^\s]+$/.test(url) || /queueittoken/i.test(url)) return reply("El enlace tiene que empezar por https:// (y nunca un pase de cola).");
+    const a = await env.DB.prepare("SELECT id, name FROM artist WHERE lower(name) = lower(?) LIMIT 1").bind(name).first<{ id: string; name: string }>();
+    if (!a) return reply(`No sigo a «${name}». Usa \`/seguir\` primero.`);
+    const iso = now.toISOString();
+    await env.DB.batch([
+      env.DB.prepare("INSERT INTO artist_signup_manual (artist_id, url, label, added_at) VALUES (?, ?, ?, ?) ON CONFLICT (artist_id, url) DO UPDATE SET label = excluded.label").bind(a.id, url, label, iso),
+      env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(a.id, iso),
+    ]);
+    return reply(`📝 Registro de **${a.name}** guardado: ${label}. Sale en su ficha en el próximo repaso (unos minutos).`);
   }
   return reply("Comando desconocido.");
 }

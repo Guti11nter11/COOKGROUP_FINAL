@@ -10,6 +10,11 @@ const HOSTS: [RegExp, string][] = [
   [/(^|\.)seated\.com$/, "Seated"],
   [/(^|\.)fanclub|(^|\.)fan-club/, "Fan club"],
   [/^presale\./, "Preventa oficial"],
+  // Tiendas oficiales donde comprar o reservar el disco da el código de la preventa (sobre todo Reino Unido).
+  [/(^|\.)tmstor\.es$/, "Tienda oficial (código de preventa)"],
+  [/(^|\.)townsendmusic\.com$/, "Tienda oficial (código de preventa)"],
+  [/(^|\.)musicglue\.(com|store)$/, "Tienda oficial (código de preventa)"],
+  [/(^|\.)myshopify\.com$/, "Tienda oficial"],
 ];
 const SOCIAL = /(instagram|facebook|twitter|x\.com|tiktok|youtube|spotify|apple\.com|music\.amazon|deezer|soundcloud|threads\.net|snapchat|discord)\b/i;
 const TEXT = /\b(pre-?sale|presale|sign ?up|register|registr|preventa|pr[ée]vente|vorverkauf|fan ?club|get access|early access|join the list|mailing list)\b/i;
@@ -85,6 +90,7 @@ const NOT_PRESALE = /\b(newsletter|merch|store|shop|tienda|podcast|contest|compe
  * registro conocidas o texto/contexto de gira), no la newsletter genérica de la web. Pura.
  */
 export function presaleSignal(link: SignupLink, raw?: RawLink): boolean {
+  if (outOfScope(link.url)) return false;
   const host = new URL(link.url).hostname.replace(/^www\./, "");
   const known = HOSTS.find(([re]) => re.test(host));
   if (known && known[1] !== "Bandsintown") return true;
@@ -94,3 +100,13 @@ export function presaleSignal(link: SignupLink, raw?: RawLink): boolean {
   if (/(^|\.)(lnk\.to|linktr\.ee|ffm\.to|smarturl\.it|found\.ee|hypeddit\.com)$/.test(host)) return /\b(pre-?sale|preventa|early access)\b/i.test(text);
   return PRESALE_WORDS.test(`${text} ${raw?.context ?? ""}`);
 }
+
+/** Registros de países que GIRA no cubre (Australia, Nueva Zelanda, Asia): no sirven. Pura. */
+export function outOfScope(url: string): boolean {
+  const host = new URL(url).hostname;
+  return /\.(com\.au|co\.nz|com\.sg|co\.jp|jp|com\.hk|co\.kr|com\.my|co\.th|com\.ph|ae)$/.test(host);
+}
+
+/** ¿El texto de la página dice que el registro ya no existe? Pura. */
+export const deadPage = (text: string) =>
+  /(page not found|isn['’]t on this page|no longer available|this (page|tour) (does not|doesn['’]t) exist|registration (is )?(now )?closed|404)/i.test(text);

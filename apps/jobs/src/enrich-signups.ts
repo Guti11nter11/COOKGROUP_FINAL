@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 import type { EnrichInput, EnrichTodo } from "@gira/core";
 import { getJson } from "./gira-client";
 import { readFileSync } from "node:fs";
-import { cleanUrl, pickSignups, presaleSignal, type RawLink } from "./signups-lib";
+import { cleanUrl, deadPage, outOfScope, pickSignups, presaleSignal, type RawLink } from "./signups-lib";
 
 /** Registros que el propietario ya conoce (data/watchlist.json): se añaden siempre a su ficha. */
 type Watch = { entity: string; kind: string; url?: string };
@@ -54,6 +54,22 @@ async function linksOf(browser: Browser, url: string): Promise<RawLink[]> {
   }
 }
 
+/** El enlace abre una página que existe (no "page not found"). Ante la duda, se considera vivo. */
+async function isAlive(browser: Browser, url: string): Promise<boolean> {
+  const page = await browser.newPage({ userAgent: "Mozilla/5.0 (compatible; GIRA personal tour radar; +https://github.com/Guti11nter11/COOKGROUP_FINAL)" });
+  try {
+    const res = (await page.goto(url, { waitUntil: "networkidle", timeout: 30000 }).catch(() => null)) as { status?: () => number } | null;
+    if (res?.status && res.status() === 404) return false;
+    await page.waitForTimeout(1500);
+    const text = await page.$$eval("body", (b) => (b[0] as HTMLElement | undefined)?.innerText ?? "");
+    return !deadPage(text.slice(0, 3000));
+  } catch {
+    return true;
+  } finally {
+    await page.close();
+  }
+}
+
 /** Busca dónde registrarse para las preventas del artista en su web oficial (y su página de gira). */
 export async function findSignups(artists: EnrichTodo["artists"], max = 15, onlyPresale = false): Promise<NonNullable<EnrichInput["signups"]>> {
   const todo = artists.filter((a) => a.needsSignup).slice(0, max);
@@ -84,7 +100,10 @@ export async function findSignups(artists: EnrichTodo["artists"], max = 15, only
       const picked = pickSignups(raw, a.when, host);
       // Sin fechas todavía: solo lo que apunta a una preventa o gira, no la newsletter de siempre.
       const found = onlyPresale ? picked.filter((f) => presaleSignal(f, raw.find((r) => cleanUrl(r.href) === f.url))) : picked;
-      const links = [...known, ...found.filter((f) => !known.some((k) => k.url === f.url))];
+      // Solo enlaces vivos y de países cubiertos (un registro antiguo de Australia no sirve).
+      const alive: typeof found = [];
+      for (const f of found.filter((x) => !outOfScope(x.url)).slice(0, 8)) if (await isAlive(browser, f.url)) alive.push(f);
+      const links = [...known, ...alive.filter((f) => !known.some((k) => k.url === f.url))];
       out.push({ artistId: a.artistId, homepage, links });
       console.log(`${links.length ? "✓" : "·"} ${a.name} (${homepage}): ${links.map((l) => `${l.label}${l.city ? ` ${l.city}` : ""}`).join(", ") || "sin enlaces de registro"}`);
       await pause(1000);
