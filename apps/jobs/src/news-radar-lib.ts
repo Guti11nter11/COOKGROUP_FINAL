@@ -14,9 +14,24 @@ export interface NameMatcher {
 export function nameMatcher(names: string[]): NameMatcher {
   const rules = names
     .filter((n) => n.trim().length >= 2)
-    .map((n) => ({ name: n, re: new RegExp(`(^|[^\\p{L}\\p{N}])${esc(fold(n))}(?=$|[^\\p{L}\\p{N}])`, n.length <= 4 ? "u" : "iu") }));
+    .map((n) => {
+      const word = esc(fold(n));
+      // Nombres que son palabras normales ("After", "Muse", "Queen"…): además, una palabra de música cerca.
+      const common = COMMON_WORDS.has(fold(n).toLowerCase());
+      const near = `(?:[^\\p{L}\\p{N}]+[\\p{L}\\p{N}'’]+){0,3}?[^\\p{L}\\p{N}]+${MUSIC}`;
+      const src = common
+        ? `(^|[^\\p{L}\\p{N}])(?:${word}${near}|${MUSIC}(?:[^\\p{L}\\p{N}]+[\\p{L}\\p{N}'’]+){0,3}?[^\\p{L}\\p{N}]+${word})(?=$|[^\\p{L}\\p{N}])`
+        : `(^|[^\\p{L}\\p{N}])${word}(?=$|[^\\p{L}\\p{N}])`;
+      return { name: n, re: new RegExp(src, n.length <= 4 ? "u" : "iu") };
+    });
   return { match: (text) => [...new Set(rules.filter((r) => r.re.test(fold(text))).map((r) => r.name))] };
 }
+
+/** Artistas cuyo nombre es una palabra corriente (inglés/español): solo cuentan con contexto musical. */
+const COMMON_WORDS = new Set(
+  "after live love yes train kiss heart queen muse air cream genesis journey boston america chicago europe garbage texas berlin sublime blur eagles doors police cars cult ash low war free bush wings traffic poison survivor foreigner extreme wednesday tomorrow today hoy mañana noche amor fuego luz".split(" "),
+);
+const MUSIC = "(?:tour|tours|gira|giras|tourn[ée]e|concert|concerts|concierto|conciertos|band|banda|tickets?|entradas|presale|preventa|album|álbum|setlist|stadium|estadio|arena|festival|live at|en vivo|world tour|reunion|frontman|singer|cantante)";
 
 export const CATEGORIES = ["tour_announced", "extra_date", "presale", "signup", "on_sale", "sold_out", "price", "other"] as const;
 export type NewsCategory = (typeof CATEGORIES)[number];

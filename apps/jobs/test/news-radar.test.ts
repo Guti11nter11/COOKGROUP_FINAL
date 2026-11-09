@@ -14,6 +14,13 @@ describe("radar de noticias: artistas en titulares", () => {
     expect(m.match("yes we can")).toEqual([]);
     expect(m.match("Su2 nuevo disco")).toEqual([]);
   });
+  it("nombres que son palabras corrientes necesitan contexto musical cerca", () => {
+    const c = nameMatcher(["After", "Muse"]);
+    expect(c.match("Operation Mincemeat Extends West End Run After Huge Demand")).toEqual([]);
+    expect(c.match("Muse announce stadium tour for 2027")).toEqual(["Muse"]);
+    expect(c.match("Gira de After en España: entradas a la venta")).toEqual(["After"]);
+    expect(c.match("The museum reopens")).toEqual([]);
+  });
 });
 
 describe("ofertas de viaje (fuera de alcance)", () => {
