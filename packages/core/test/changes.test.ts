@@ -107,7 +107,8 @@ describe("detectAlerts: solo lo accionable (nada del pasado)", () => {
   const c = { ...ctx, now: NOW };
   const withSales = (dates: (string | null)[]): Show => {
     const s = clone(base);
-    s.sales = dates.map((d, i) => ({ kind: "general", label: `V${i}`, startsAt: d, endsAt: null, url: null, orderRank: 90 }));
+    // Preventas y, la última, la venta general (como en una ficha real).
+    s.sales = dates.map((d, i) => ({ kind: i < dates.length - 1 ? "artist" : "general", label: `V${i}`, startsAt: d, endsAt: null, url: null, orderRank: 90 }));
     return s;
   };
   it("fecha nueva cuyas ventas ya pasaron hace días → sin aviso", () =>
@@ -118,11 +119,11 @@ describe("detectAlerts: solo lo accionable (nada del pasado)", () => {
     expect(detectAlerts(null, withSales(["2026-11-08T09:00:00Z"]), c).map((a) => a.kind)).toEqual(["new_event"]));
   it("fecha nueva sin ventas anunciadas → aviso", () => expect(detectAlerts(null, withSales([]), c).map((a) => a.kind)).toEqual(["new_event"]));
   it("preventa añadida que ya empezó → sin aviso; futura → aviso", () => {
-    const prev = withSales(["2026-11-20T09:00:00Z"]);
-    const next = withSales(["2026-11-20T09:00:00Z", "2026-10-01T09:00:00Z"]);
-    expect(detectAlerts(prev, next, c)).toEqual([]);
-    const next2 = withSales(["2026-11-20T09:00:00Z", "2026-11-19T09:00:00Z"]);
-    expect(detectAlerts(prev, next2, c).map((a) => a.kind)).toEqual(["sale_added"]);
+    const general = { kind: "general" as const, label: "General", startsAt: "2026-11-20T09:00:00Z", endsAt: null, url: null, orderRank: 90 };
+    const pre = (at: string) => ({ kind: "artist" as const, label: "Artist Presale", startsAt: at, endsAt: null, url: null, orderRank: 20 });
+    const prev = { ...clone(base), sales: [general] };
+    expect(detectAlerts(prev, { ...clone(base), sales: [general, pre("2026-10-01T09:00:00Z")] }, c)).toEqual([]);
+    expect(detectAlerts(prev, { ...clone(base), sales: [general, pre("2026-11-19T09:00:00Z")] }, c).map((a) => a.kind)).toEqual(["sale_added"]);
   });
   it("aparece la venta general 'por confirmar' en una fecha conocida → sin aviso; cuando tiene hora → aviso", () => {
     const prev = withSales(["2026-11-20T09:00:00Z"]);
@@ -142,5 +143,18 @@ describe("detectAlerts: solo lo accionable (nada del pasado)", () => {
     const can = clone(base);
     can.status = "cancelled";
     expect(detectAlerts(base, can, c).map((a) => a.kind)).toEqual(["status_changed"]);
+  });
+});
+
+describe("promociones de eventos ya a la venta no avisan", () => {
+  it("fecha 'nueva' ya a la venta con promo de Navidad → sin aviso; promo añadida → sin aviso", async () => {
+    const { detectAlerts } = await import("../src/changes");
+    const now = new Date("2026-11-09T09:00:00Z");
+    const base = { source: "ticketmaster", sourceId: "x", name: "Hunxho", attractionIds: ["K"], venue: { tmId: "V", name: "Ace of Spades", city: "Sacramento", country: "US", tz: "America/Los_Angeles" }, startsAt: "2026-12-14T03:00:00Z", localDate: "2026-12-13", status: "onsale", ticketLimit: null, url: "u", isPackage: false } as never;
+    const w = (kind: string, label: string, startsAt: string) => ({ kind, label, startsAt, endsAt: null, url: null, orderRank: 0 });
+    const next = { ...(base as object), sales: [w("general", "Public Onsale", "2026-10-01T17:00:00Z"), w("unknown", "Ticketmaster's Holiday Gift Guide", "2026-11-27T18:00:00Z")] } as never;
+    expect(detectAlerts(null, next, { bootstrap: false, knownDatesInCountry: 0, artistName: "Hunxho", tier: 1, now })).toEqual([]);
+    const prev = { ...(base as object), sales: [w("general", "Public Onsale", "2026-10-01T17:00:00Z")] } as never;
+    expect(detectAlerts(prev, next, { bootstrap: false, knownDatesInCountry: 0, artistName: "Hunxho", tier: 1, now })).toEqual([]);
   });
 });

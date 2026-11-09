@@ -7,6 +7,7 @@ import {
   renderReminder,
   renderWeek,
   sheetShows,
+  actionableSales,
   stableHash,
   toIcs,
   type Alert,
@@ -37,8 +38,8 @@ export async function loadSlots(env: Env, now: Date): Promise<SaleSlot[]> {
   const slots = new Map<string, SaleSlot>();
   for (const [artistId, e] of byArtist) {
     for (const s of sheetShows(e.name, e.shows)) {
-      for (const w of s.sales) {
-        if (!w.startsAt || w.kind === "official_resale" || Date.parse(w.startsAt) <= now.getTime()) continue;
+      for (const w of actionableSales(s, now)) {
+        if (!w.startsAt) continue;
         const k = `${artistId}|${w.label.toLowerCase()}|${w.startsAt}`;
         const slot = slots.get(k) ?? { artistId, artist: e.name, channelId: e.channel, label: w.label, startsAt: w.startsAt, dates: [] };
         if (!slot.dates.some((d) => d.url === s.url)) slot.dates.push({ city: s.venue.city, country: s.venue.country, localDate: s.localDate, url: s.url });

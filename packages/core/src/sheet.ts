@@ -56,12 +56,32 @@ export function sheetShows(artistName: string, shows: Show[]): Show[] {
   return kept.filter((s) => byDate.get(`${s.venue.tmId}|${s.localDate}`) === s);
 }
 
-/** Ventana que importa para conseguir entradas: futura y que no sea reventa. */
-const upcoming = (w: SaleWindow, now: Date) => w.kind !== "official_resale" && (!w.startsAt || Date.parse(w.startsAt) > now.getTime());
+/** Promociones sobre un evento ya a la venta (no son una salida de entradas). */
+export const PROMO =
+  /(holiday|gift|black friday|cyber monday|day of show|promo|\boffer\b|discount|\bdeal\b|flash sale|2 ?for ?1|\bbogo\b|buy one|student|military|teacher|nurse|first responder|group sales?|upsell|add-?on|parking|merch|hotel|package|upgrade|last chance|lucky seat|ticket drop|\$\d+ tickets|value tickets|price drop)/i;
+
+/**
+ * Ventanas que sirven para conseguir entradas: preventas y venta general por llegar. Si la venta
+ * general ya empezó, el evento ya está a la venta y lo que venga después (promociones, ofertas) no
+ * cuenta. Tampoco la reventa oficial ni las promociones. Regla única para fichas, avisos y calendario.
+ */
+export function actionableSales(show: Pick<Show, "sales">, now: Date): SaleWindow[] {
+  const t = now.getTime();
+  if (show.sales.some((w) => w.kind === "general" && w.startsAt && Date.parse(w.startsAt) <= t)) return [];
+  return show.sales.filter(
+    (w) =>
+      w.kind !== "official_resale" &&
+      !PROMO.test(w.label) &&
+      (w.kind !== "unknown" || SALE_WORDS.test(w.label)) &&
+      (!w.startsAt || Date.parse(w.startsAt) > t),
+  );
+}
+/** Una etiqueta desconocida solo cuenta si dice claramente que es una venta. */
+const SALE_WORDS = /(pre-?sale|preventa|pré-?vente|vorverkauf|prevendita|on ?sale|onsale|public sale|venta|early access|verified|exclusive access|fan access|tickets? (go )?on sale)/i;
 
 /** Una ficha está activa si alguna preventa o venta general está por llegar. */
 export function isSheetActive(shows: Show[], now: Date): boolean {
-  return shows.some((s) => s.sales.some((w) => upcoming(w, now)));
+  return shows.some((s) => actionableSales(s, now).length > 0);
 }
 
 /** Datos de enriquecimiento de una ficha (cada uno con su fuente). */
@@ -286,7 +306,7 @@ const sections = (...xs: (string | string[] | null)[]) => xs.flatMap((x) => (x =
 export function renderArtistSheet(artist: { name: string; tier?: number }, shows: Show[], now: Date, extras: SheetExtras = {}): string[] {
   // Solo las fechas con alguna preventa o venta general por llegar: lo demás ya no es accionable.
   const live = sheetShows(artist.name, shows)
-    .filter((s) => s.sales.some((w) => upcoming(w, now)))
+    .filter((s) => actionableSales(s, now).length > 0)
     .sort((a, b) => a.localDate.localeCompare(b.localDate));
   const tour = mostCommon(live.map((s) => s.name.replace(/\s*\|.*$/, "").trim())) ?? artist.name;
   const title = fold(tour).startsWith(fold(artist.name)) ? tour.slice(artist.name.length).replace(/^\s*[-–:]\s*/, "") || tour : tour;
@@ -324,8 +344,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
   // Agrupar ventanas futuras por etiqueta + hora (una venta UK a otra hora va en su propio bloque).
   const groups = new Map<string, { w: SaleWindow; shows: Show[] }>();
   for (const s of live) {
-    for (const w of s.sales) {
-      if (!upcoming(w, now)) continue;
+    for (const w of actionableSales(s, now)) {
       const k = `${w.label.toLowerCase()}|${w.startsAt ?? ""}`;
       const g = groups.get(k) ?? { w, shows: [] };
       if (!g.shows.includes(s)) g.shows.push(s);

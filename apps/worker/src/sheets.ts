@@ -1,4 +1,5 @@
 import {
+  actionableSales,
   channelSlug,
   decideDelivery,
   flag,
@@ -161,8 +162,8 @@ function noticeText(name: string, alerts: Alert[], shows: Show[], channelId: str
   const ids = new Set(alerts.map((a) => a.sourceId));
   const places = [...new Set(shows.filter((s) => ids.has(s.sourceId)).map((s) => `${flag(s.venue.country)} ${s.venue.city}`))].slice(0, 6);
   const next = shows
-    .flatMap((s) => s.sales)
-    .filter((w) => w.kind !== "official_resale" && w.startsAt && Date.parse(w.startsAt) > now.getTime())
+    .flatMap((s) => actionableSales(s, now))
+    .filter((w) => w.startsAt)
     .sort((a, b) => a.startsAt!.localeCompare(b.startsAt!))[0];
   // En Discord, marca de hora (cada uno la ve en su zona); en el iPhone, la hora escrita.
   const when = next
@@ -345,7 +346,7 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
         .bind(...claimed.map((c) => c.alert_id))
         .all<{ payload_json: string }>();
       // Solo avisos de fechas que están en la ficha (nada de hoteles, festivales ajenos ni ventas pasadas).
-      const inSheet = new Set(shows.filter((s) => s.sales.some((w) => w.kind !== "official_resale" && (!w.startsAt || Date.parse(w.startsAt) > now.getTime()))).map((s) => s.sourceId));
+      const inSheet = new Set(shows.filter((s) => actionableSales(s, now).length > 0).map((s) => s.sourceId));
       const alerts = payloads.map((p) => (JSON.parse(p.payload_json) as { alert: Alert }).alert).filter((a) => inSheet.has(a.sourceId));
       const channels = claimed.map((c) => c.channel);
       const target =

@@ -220,3 +220,27 @@ describe("ticketeras oficiales", () => {
     expect(head.split("**Enlaces oficiales**")[1]).toContain("SeatGeek");
   });
 });
+
+describe("solo salidas de entradas (nunca promociones de algo ya a la venta)", () => {
+  const w = (kind: string, label: string, startsAt: string) => ({ kind: kind as never, label, startsAt, endsAt: null, url: null, orderRank: 0 });
+  it("evento ya a la venta + 'Holiday Gift Guide' / 'Day of Show' → no hay ficha", () => {
+    const hunxho = show("h", "US", "Sacramento", "2026-12-13", []);
+    hunxho.sales = [w("general", "Public Onsale", "2026-10-01T17:00:00Z"), w("unknown", "Ticketmaster's Holiday Gift Guide", "2026-11-27T18:00:00Z")];
+    const pmj = show("p", "US", "Boise", "2026-11-20", []);
+    pmj.sales = [w("unknown", "Day of Show", "2026-11-20T10:00:00Z"), w("unknown", "TM Holiday Promo", "2026-11-27T16:00:00Z")];
+    expect(isSheetActive([hunxho], NOW)).toBe(false);
+    expect(isSheetActive([pmj], NOW)).toBe(false);
+  });
+  it("una etiqueta rara sin palabra de venta no cuenta; 'Insider Presale' sí", () => {
+    const a = show("r", "US", "Austin", "2027-03-01", []);
+    a.sales = [w("unknown", "Special Event", "2026-11-20T15:00:00Z")];
+    expect(isSheetActive([a], NOW)).toBe(false);
+    a.sales = [w("unknown", "Insider Presale", "2026-11-20T15:00:00Z")];
+    expect(isSheetActive([a], NOW)).toBe(true);
+  });
+  it("una preventa de verdad sí", () => {
+    const s = show("v", "US", "Atlanta", "2027-07-01", []);
+    s.sales = [w("registration", "Verified Fan Presale", "2026-11-12T15:00:00Z"), w("general", "General Onsale", "2026-11-14T15:00:00Z")];
+    expect(isSheetActive([s], NOW)).toBe(true);
+  });
+});

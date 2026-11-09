@@ -1,3 +1,4 @@
+import { PROMO } from "./sheet";
 import type { AlertKind } from "./quiet";
 import { showKey, type SaleWindow, type Show } from "./ticketmaster";
 import { formatHHmm, MADRID } from "./time";
@@ -60,9 +61,11 @@ export function detectAlerts(prev: Show | null, next: Show, ctx: ChangeContext):
   if (!prev) {
     if (ctx.bootstrap) return [];
     // Una fecha "nueva" cuyas ventas pasaron hace más de 24 h no es noticia (ya estaba a la venta).
-    const timed = next.sales.filter((w) => w.startsAt);
+    const timed = next.sales.filter((w) => w.startsAt && !PROMO.test(w.label) && w.kind !== "official_resale");
+    // Ya a la venta (la venta general empezó hace más de 24 h): no es noticia aunque traiga promociones.
+    const onSaleLongAgo = now !== undefined && next.sales.some((w) => w.kind === "general" && w.startsAt && Date.parse(w.startsAt) <= now - RECENT_ONSALE_MS);
     const actionable =
-      now === undefined || timed.length === 0 || next.sales.some((w) => !w.startsAt || Date.parse(w.startsAt) > now - RECENT_ONSALE_MS);
+      !onSaleLongAgo && (now === undefined || timed.length === 0 || timed.some((w) => Date.parse(w.startsAt!) > now - RECENT_ONSALE_MS) || next.sales.some((w) => !w.startsAt && w.kind === "general"));
     if (!actionable) return [];
     const firstSale = next.sales.find((s) => s.startsAt)?.startsAt ?? null;
     const kind: AlertKind = ctx.knownDatesInCountry > 0 ? "extra_date" : "new_event";
@@ -92,6 +95,11 @@ export function detectAlerts(prev: Show | null, next: Show, ctx: ChangeContext):
     if (!future(w.startsAt)) {
       if (i >= 0) orphans.splice(i, 1);
       continue; // ventana que ya empezó: no es accionable
+    }
+    // Promociones u ofertas de un evento que ya está a la venta: no son una salida de entradas.
+    if (PROMO.test(w.label) || (now !== undefined && next.sales.some((g) => g.kind === "general" && g.startsAt && Date.parse(g.startsAt) <= now))) {
+      if (i >= 0) orphans.splice(i, 1);
+      continue;
     }
     if (i < 0) {
       alerts.push(make("sale_added", { label: w.label, kind: w.kind, at: madrid(w.startsAt) }, w.startsAt));

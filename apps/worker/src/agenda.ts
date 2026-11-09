@@ -1,4 +1,4 @@
-import { flag, localDateIn, MADRID, topicOf, type Show } from "@gira/core";
+import { actionableSales, flag, localDateIn, MADRID, topicOf, type Show } from "@gira/core";
 import { discordFetch } from "./discord-client";
 import type { Env } from "./env";
 import { Guild } from "./sheets";
@@ -28,8 +28,8 @@ function tmLines(shows: Show[], topic: string, now: Date): string[] {
     .filter((s) => topicOf(s) === topic)
     .slice(0, 12)
     .map((s) => {
-      const next = s.sales
-        .filter((w) => w.kind !== "official_resale" && w.startsAt && Date.parse(w.startsAt) > now.getTime())
+      const next = actionableSales(s, now)
+        .filter((w) => w.startsAt)
         .sort((a, b) => a.startsAt!.localeCompare(b.startsAt!))[0];
       const sale = next ? `${next.label}: ${ts(next.startsAt!, "f")}` : s.status === "onsale" ? "a la venta" : "venta por anunciar";
       const when = s.startsAt ? ts(s.startsAt, "D") : s.localDate;
