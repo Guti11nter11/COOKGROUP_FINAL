@@ -204,6 +204,8 @@ export function money(n: number, currency: string): string {
 }
 const times = (n: number) => `×${n.toFixed(1).replace(".", ",")}`;
 
+/** Preventas que se abren con un enlace único enviado al registrado (no con la página del evento). */
+const UNIQUE_LINK = new Set<SaleKind>(["fanclub", "artist", "registration", "lottery", "unknown"]);
 /** A partir de cuántas fechas la ficha usa el formato compacto. */
 const COMPACT_FROM = 8;
 const ARTIST_KINDS = new Set<SaleKind>(["artist", "fanclub", "registration", "unknown", "lottery"]);
@@ -377,10 +379,25 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
       .map((cc) => `${flag(cc)} ${ss.filter((s) => s.venue.country === cc).map((s) => `${s.venue.city} ${linkDay(s.localDate)}`).join(" · ")}`)
       .join("\n");
   const datesMsg = compact ? [`## 📍 Fechas (${live.length})`, ...live.map(dateLine)].join("\n") : null;
+  // Cómo se entra en cada venta: las preventas de fan club, artista o registro van por un enlace único
+  // que llega por email/SMS (la página del evento no sirve); las de tarjeta, operadora o promotora se
+  // abren en la página del evento con el código; la venta general, en la página del evento.
+  const plainLine = (s: Show) => {
+    const cap = capacity(s);
+    return `${flag(s.venue.country)} ${s.venue.city} · ${showDay(s.localDate)} · ${s.venue.name}${cap ? ` (${num(cap)})` : ""}`;
+  };
   const blocks = ordered.map(({ w, shows: ss }) => {
     const when = w.startsAt ? `🕙 ${ts(w.startsAt)}` : "📅 Fecha y hora por confirmar";
+    const unique = UNIQUE_LINK.has(w.kind);
+    const how =
+      w.kind === "general"
+        ? []
+        : unique
+          ? [`🔑 Enlace único: llega por email o SMS a quien se registró (ver Sign up)${w.url ? ` · [enlace de la preventa](${w.url})` : ""}`]
+          : [`🔢 Se entra en la página del evento con el código o la tarjeta${w.url ? ` · [condiciones](${w.url})` : ""}`];
+    const dates = compact ? [shortDates(ss)] : ss.map(unique ? plainLine : dateLine);
     // Solo el momento de salida (decisión del propietario: nunca "hasta").
-    return [`## 🎟️ ${w.label}`, when, ...(compact ? [shortDates(ss)] : ss.map(dateLine))].join("\n");
+    return [`## 🎟️ ${w.label}`, when, ...how, ...dates].join("\n");
   });
   return sections(head, renderPrices(live, extras.prices ?? {}), signup, datesMsg, [...blocks, `-# Actualizado <t:${Math.floor(now.getTime() / 1000)}:R> · GIRA · solo información, compras tú`]);
 }

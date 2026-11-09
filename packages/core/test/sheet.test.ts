@@ -56,7 +56,10 @@ describe("renderArtistSheet (formato tipo Akari)", () => {
     expect(esBlock).toContain(`## 🎟️ Artist Presale\n🕙 ${T("2026-11-10T09:00:00Z")}\n`);
     expect(esBlock).not.toContain("Madrid ·");
     expect(esBlock).not.toContain("Registro");
-    expect(esBlock).toContain("[Barcelona · jue 13 may 2027](https://tm.example/2) · Estadio Barcelona");
+    // Preventa del artista: enlace único (no la página del evento).
+    expect(esBlock).toContain("🔑 Enlace único");
+    expect(esBlock).toContain("🇪🇸 Barcelona · jue 13 may 2027 · Estadio Barcelona");
+    expect(esBlock).not.toContain("https://tm.example/2");
     expect(esBlock.indexOf("Barcelona")).toBeLessThan(esBlock.indexOf("Sevilla"));
   });
 
@@ -196,6 +199,21 @@ describe("giras largas (EE. UU.)", () => {
     expect(vf).not.toContain("https://");
     expect(msgs.length).toBeLessThanOrEqual(5);
   });
+});
+
+describe("cómo se entra en cada venta", () => {
+  const sales: [string, string, string][] = [["fanclub", "Fan Club Presale", "2026-11-10T09:00:00Z"], ["card", "Mastercard Presale", "2026-11-11T09:00:00Z"], ["general", "Venta general", "2026-11-13T09:00:00Z"]];
+  const all = renderArtistSheet({ name: "U2" }, [show("1", "ES", "Barcelona", "2027-05-13", sales)], NOW).join("\n");
+  const block = (label: string) => all.split(/\n(?=## )/).find((b) => b.startsWith(`## 🎟️ ${label}`))!;
+  it("fan club / artista / registro → enlace único, sin el enlace del evento", () => {
+    expect(block("Fan Club Presale")).toContain("🔑 Enlace único");
+    expect(block("Fan Club Presale")).not.toContain("https://tm.example/1");
+  });
+  it("tarjeta → página del evento con el código o la tarjeta", () => {
+    expect(block("Mastercard Presale")).toContain("🔢 Se entra en la página del evento");
+    expect(block("Mastercard Presale")).toContain("(https://tm.example/1)");
+  });
+  it("venta general → página del evento", () => expect(block("Venta general")).toContain("(https://tm.example/1)"));
 });
 
 describe("utilidades", () => {
