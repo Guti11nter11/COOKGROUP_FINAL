@@ -204,6 +204,22 @@ export function money(n: number, currency: string): string {
 }
 const times = (n: number) => `×${n.toFixed(1).replace(".", ",")}`;
 
+/** Preventas con código o tarjeta: se entra en la página del evento y aquí se dice de dónde sale el código. */
+function codeLine(w: SaleWindow, country?: string): string {
+  const guide = presaleGuide(w.label, country);
+  const extra = w.url ? ` · [enlace de la preventa](${w.url})` : "";
+  if (guide) return `🔢 Página del evento + código: ${guide.how}${guide.url ? ` **[AQUÍ](${guide.url})**` : ""}${extra}`;
+  const generic: Partial<Record<SaleKind, string>> = {
+    card: "los primeros dígitos de la tarjeta indicada (se paga con ella)",
+    telco: "el código de la app o web de la operadora",
+    platform: "el código que manda la plataforma",
+    promoter: "el código de la promotora (suele publicarse en su web o boletín la víspera)",
+    ticketer: "el código de la ticketera (cuenta y seguir al artista)",
+    venue: "el código del boletín del recinto (suscribirse en su web)",
+  };
+  return `🔢 Página del evento + código: ${generic[w.kind] ?? "el código del programa (ver Sign up)"}${extra}`;
+}
+
 /** Preventas que se abren con un enlace único enviado al registrado (no con la página del evento). */
 const UNIQUE_LINK = new Set<SaleKind>(["fanclub", "artist", "registration", "lottery", "unknown"]);
 /** A partir de cuántas fechas la ficha usa el formato compacto. */
@@ -394,7 +410,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
         ? []
         : unique
           ? [`🔑 Enlace único: llega por email o SMS a quien se registró (ver Sign up)${w.url ? ` · [enlace de la preventa](${w.url})` : ""}`]
-          : [`🔢 Se entra en la página del evento con el código o la tarjeta${w.url ? ` · [condiciones](${w.url})` : ""}`];
+          : [codeLine(w, ss[0]?.venue.country)];
     const dates = compact ? [shortDates(ss)] : ss.map(unique ? plainLine : dateLine);
     // Solo el momento de salida (decisión del propietario: nunca "hasta").
     return [`## 🎟️ ${w.label}`, when, ...how, ...dates].join("\n");

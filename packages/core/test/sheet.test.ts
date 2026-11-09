@@ -210,10 +210,17 @@ describe("cómo se entra en cada venta", () => {
     expect(block("Fan Club Presale")).not.toContain("https://tm.example/1");
   });
   it("tarjeta → página del evento con el código o la tarjeta", () => {
-    expect(block("Mastercard Presale")).toContain("🔢 Se entra en la página del evento");
+    expect(block("Mastercard Presale")).toContain("🔢 Página del evento + código: Pagar con una Mastercard");
     expect(block("Mastercard Presale")).toContain("(https://tm.example/1)");
   });
   it("venta general → página del evento", () => expect(block("Venta general")).toContain("(https://tm.example/1)"));
+  it("Live Nation, SiriusXM y recinto dicen de dónde sale el código", () => {
+    const s = show("3", "US", "South Bend", "2027-10-02", [["promoter", "LIVE NATION PRESALE", "2026-11-11T15:00:00Z"], ["platform", "SiriusXM Presale", "2026-11-11T15:00:00Z"], ["venue", "Venue Presale", "2026-11-11T15:00:00Z"]]);
+    const t = renderArtistSheet({ name: "Bon Jovi" }, [s], NOW).join("\n");
+    expect(t).toContain("🔢 Página del evento + código: Cuenta de Live Nation: el código de la preventa se publica en su web el día antes **[AQUÍ](https://www.livenation.com/)**");
+    expect(t).toContain("🔢 Página del evento + código: Suscriptor de SiriusXM");
+    expect(t).toContain("🔢 Página del evento + código: el código del boletín del recinto");
+  });
   it("Reserved by Spotify (por invitación) → enlace único", () => {
     const s = show("2", "US", "Tampa", "2027-06-01", [["platform", "Reserved by Spotify", "2026-11-11T14:00:00Z"]]);
     expect(renderArtistSheet({ name: "U2" }, [s], NOW).join("\n")).toContain("🔑 Enlace único");
