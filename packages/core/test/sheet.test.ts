@@ -56,10 +56,9 @@ describe("renderArtistSheet (formato tipo Akari)", () => {
     expect(esBlock).toContain(`## 🎟️ Artist Presale\n🕙 ${T("2026-11-10T09:00:00Z")}\n`);
     expect(esBlock).not.toContain("Madrid ·");
     expect(esBlock).not.toContain("Registro");
-    // Preventa del artista: enlace único (no la página del evento).
+    // Preventa del artista: enlace único; mientras no llegue al correo, el enlace general de cada fecha.
     expect(esBlock).toContain("🔑 Enlace único");
-    expect(esBlock).toContain("🇪🇸 Barcelona · jue 13 may 2027 · Estadio Barcelona");
-    expect(esBlock).not.toContain("https://tm.example/2");
+    expect(esBlock).toContain("🇪🇸 [Barcelona · jue 13 may 2027](");
     expect(esBlock.indexOf("Barcelona")).toBeLessThan(esBlock.indexOf("Sevilla"));
   });
 
@@ -205,9 +204,26 @@ describe("cómo se entra en cada venta", () => {
   const sales: [string, string, string][] = [["fanclub", "Fan Club Presale", "2026-11-10T09:00:00Z"], ["card", "Mastercard Presale", "2026-11-11T09:00:00Z"], ["general", "Venta general", "2026-11-13T09:00:00Z"]];
   const all = renderArtistSheet({ name: "U2" }, [show("1", "ES", "Barcelona", "2027-05-13", sales)], NOW).join("\n");
   const block = (label: string) => all.split(/\n(?=## )/).find((b) => b.startsWith(`## 🎟️ ${label}`))!;
-  it("fan club / artista / registro → enlace único, sin el enlace del evento", () => {
+  it("fan club / artista / registro → enlace único y, mientras no llegue, el enlace general", () => {
     expect(block("Fan Club Presale")).toContain("🔑 Enlace único");
-    expect(block("Fan Club Presale")).not.toContain("https://tm.example/1");
+    expect(block("Fan Club Presale")).toContain("(https://tm.example/1)");
+  });
+  it("con el acceso de tu correo: tu enlace y tu código (uno de cada), sin el enlace general", () => {
+    const access = [{ kind: "fanclub" as const, label: "Fan Club Presale", code: "U2FAN26", url: "https://www.ticketmaster.es/event/x?did=fan", receivedAt: "2026-11-09T09:00:00Z" }];
+    const t = renderArtistSheet({ name: "U2" }, [show("1", "ES", "Barcelona", "2027-05-13", sales)], NOW, { access }).join("\n");
+    const b = t.split(/\n(?=## )/).find((x) => x.startsWith("## 🎟️ Fan Club Presale"))!;
+    expect(b).toContain("🔐 **Tu acceso** (de tu correo): **[AQUÍ](https://www.ticketmaster.es/event/x?did=fan)** · código `U2FAN26`");
+    expect(b).not.toContain("🔑");
+    expect(b).not.toContain("https://tm.example/1");
+    // La de Mastercard no es de ese correo: sigue igual.
+    expect(t.split(/\n(?=## )/).find((x) => x.startsWith("## 🎟️ Mastercard Presale"))).not.toContain("🔐");
+  });
+  it("solo con código (sin enlace): el código y el enlace general", () => {
+    const access = [{ kind: "card" as const, label: "Mastercard Presale", code: "MC123", url: null, receivedAt: "2026-11-09T09:00:00Z" }];
+    const t = renderArtistSheet({ name: "U2" }, [show("1", "ES", "Barcelona", "2027-05-13", sales)], NOW, { access }).join("\n");
+    const b = t.split(/\n(?=## )/).find((x) => x.startsWith("## 🎟️ Mastercard Presale"))!;
+    expect(b).toContain("🔐 **Tu acceso** (de tu correo): código `MC123`");
+    expect(b).toContain("(https://tm.example/1)");
   });
   it("tarjeta → página del evento con el código o la tarjeta", () => {
     expect(block("Mastercard Presale")).toContain("🔢 Página del evento + código: Pagar con una Mastercard");

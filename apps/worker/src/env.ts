@@ -17,6 +17,10 @@ export interface Env {
   GH_DISPATCH_TOKEN?: string;
   /** Clave pública de la aplicación de Discord (verifica la firma de los comandos). */
   DISCORD_PUBLIC_KEY?: string;
+  /** IA para leer los correos de preventa (Groq → Gemini → Workers AI). */
+  GROQ_API_KEY?: string;
+  GEMINI_API_KEY?: string;
+  AI?: Ai;
   /** "1" = no publicar en Discord (los avisos se guardan igualmente). */
   DELIVERY_PAUSED?: string;
 }

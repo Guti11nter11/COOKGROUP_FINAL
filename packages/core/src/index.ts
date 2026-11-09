@@ -11,3 +11,4 @@ export * from "./enrich";
 export * from "./resale";
 export * from "./calendar";
 export * from "./schedule";
+export * from "./inbox";

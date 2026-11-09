@@ -1,3 +1,4 @@
+import { loadAccess } from "./inbox";
 import {
   actionableSales,
   channelSlug,
@@ -110,7 +111,7 @@ interface SheetRow {
 const placeholders = (n: number) => Array.from({ length: n }, () => "?").join(",");
 
 /** Aforos, precios y reventa guardados por los trabajos de enriquecimiento. */
-async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<SheetExtras> {
+async function loadExtras(env: Env, artistId: string, shows: Show[], now: Date): Promise<SheetExtras> {
   const venueIds = [...new Set(shows.map((s) => s.venue.tmId))].slice(0, 90);
   const showIds = shows.map((s) => s.sourceId).slice(0, 90);
   const [v, p, r, sg, hp, lm, tk] = await env.DB.batch([
@@ -143,7 +144,8 @@ async function loadExtras(env: Env, artistId: string, shows: Show[]): Promise<Sh
     prices[row.source_id] = { min: row.min, max: row.max, currency: row.currency, source: row.source, ...(row.zones_json ? { zones: JSON.parse(row.zones_json) } : {}) };
   }
   const resaleRow = (r!.results ?? [])[0] as { json: string } | undefined;
-  return { venues, prices, signups, homepage, limits, ticketers, resale: resaleRow ? (JSON.parse(resaleRow.json) as ResaleInfo) : null };
+  const access = await loadAccess(env, artistId, now);
+  return { access, venues, prices, signups, homepage, limits, ticketers, resale: resaleRow ? (JSON.parse(resaleRow.json) as ResaleInfo) : null };
 }
 
 const dayFmt = new Intl.DateTimeFormat("es-ES", { timeZone: MADRID, weekday: "short", day: "numeric", month: "short" });
@@ -221,7 +223,7 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
       continue;
     }
     // Ficha activa sin cambios ni avisos pendientes: no hace falta Discord (no gasta cupo de la pasada).
-    const msgs = active ? renderArtistSheet({ name: artist.name, tier: artist.tier }, shows, now, await loadExtras(env, artist_id, shows)) : [];
+    const msgs = active ? renderArtistSheet({ name: artist.name, tier: artist.tier }, shows, now, await loadExtras(env, artist_id, shows, now)) : [];
     // Imagen de precios (si el trabajo de enriquecer la generó): sustituye al texto del mensaje de precios.
     const img = active ? await env.DB.prepare("SELECT hash, mime FROM price_image WHERE artist_id = ?").bind(artist_id).first<{ hash: string; mime: string }>() : null;
     const hash = stableHash(msgs.join("\u0000").replace(/-# Actualizado <t:\d+:R>/, "") + (img ? `|img:${img.hash}` : ""));
@@ -447,7 +449,7 @@ export async function renderSheetFor(env: Env, artistId: string, now: Date): Pro
     .all<{ snapshot_json: string }>();
   const shows = sheetShows(artist.name, rows.map((r) => JSON.parse(r.snapshot_json) as Show));
   if (!isSheetActive(shows, now)) return null;
-  return { name: artist.name, messages: renderArtistSheet({ name: artist.name, tier: artist.tier }, shows, now, await loadExtras(env, artistId, shows)) };
+  return { name: artist.name, messages: renderArtistSheet({ name: artist.name, tier: artist.tier }, shows, now, await loadExtras(env, artistId, shows, now)) };
 }
 
 /**

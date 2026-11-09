@@ -1,5 +1,6 @@
 import { presaleGuide, type SaleKind } from "./presale";
 import type { SaleWindow, Show } from "./ticketmaster";
+import { accessFor, type PresaleAccess } from "./inbox";
 
 /** Nombre de canal de Discord para una entidad: "Guns N' Roses" → "guns-n-roses". */
 export function channelSlug(name: string): string {
@@ -129,6 +130,8 @@ export interface SheetExtras {
   limits?: Record<string, number>;
   /** Otras ticketeras de venta oficial del artista (SeatGeek en EE. UU…), con su página. */
   ticketers?: { name: string; url: string }[];
+  /** Códigos y enlaces de preventa que han llegado al correo del propietario (privado, nunca en registros públicos). */
+  access?: PresaleAccess[];
 }
 
 const REQUIREMENT: Record<SaleKind, string> = {
@@ -402,16 +405,27 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
     const cap = capacity(s);
     return `${flag(s.venue.country)} ${s.venue.city} · ${showDay(s.localDate)} · ${s.venue.name}${cap ? ` (${num(cap)})` : ""}`;
   };
+  // Un acceso del correo sin tipo claro (p. ej. "Bewitched presale" por Laylo) va a la primera preventa con
+  // enlace único que no tenga el suyo.
+  const isUnique = (w: SaleWindow) => UNIQUE_LINK.has(w.kind) || /reserved by spotify|verified fan|invite/i.test(w.label);
+  const loose = (extras.access ?? []).filter((a) => a.kind === "unknown" && !ordered.some(({ w }) => accessFor(w, [a])));
+  const looseFor = ordered.find(({ w }) => isUnique(w) && !accessFor(w, extras.access ?? []))?.w;
   const blocks = ordered.map(({ w, shows: ss }) => {
     const when = w.startsAt ? `🕙 ${ts(w.startsAt)}` : "📅 Fecha y hora por confirmar";
-    const unique = UNIQUE_LINK.has(w.kind) || /reserved by spotify|verified fan|invite/i.test(w.label);
+    const unique = isUnique(w);
+    // Lo que ha llegado al correo del propietario (un código y un enlace como mucho por preventa).
+    const mine = accessFor(w, extras.access ?? []) ?? (w === looseFor ? (loose[0] ?? null) : null);
+    const own = mine ? [`🔐 **Tu acceso** (de tu correo):${mine.url ? ` **[AQUÍ](${mine.url})**` : ""}${mine.url && mine.code ? " ·" : ""}${mine.code ? ` código \`${mine.code}\`` : ""}`] : [];
     const how =
       w.kind === "general"
         ? []
         : unique
-          ? [`🔑 Enlace único: llega por email o SMS a quien se registró (ver Sign up)${w.url ? ` · [enlace de la preventa](${w.url})` : ""}`]
-          : [codeLine(w, ss[0]?.venue.country)];
-    const dates = compact ? [shortDates(ss)] : ss.map(unique ? plainLine : dateLine);
+          ? mine?.url
+            ? own
+            : [`🔑 Enlace único por email o SMS a quien se registró (ver Sign up); mientras no llegue, el enlace general de cada fecha${w.url ? ` · [enlace de la preventa](${w.url})` : ""}`, ...own]
+          : [codeLine(w, ss[0]?.venue.country), ...own];
+    // Sin tu enlace único, el enlace general de cada fecha (decisión del propietario, 2026-11-09).
+    const dates = compact ? [shortDates(ss)] : ss.map(unique && mine?.url ? plainLine : dateLine);
     // Solo el momento de salida (decisión del propietario: nunca "hasta").
     return [`## 🎟️ ${w.label}`, when, ...how, ...dates].join("\n");
   });

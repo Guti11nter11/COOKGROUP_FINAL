@@ -13,6 +13,7 @@
     "consumers": [{ "queue": "gira-sweep", "max_batch_size": 1, "max_batch_timeout": 1, "max_retries": 5, "max_concurrency": 1 }]
   },
   "vars": { "DISCORD_GUILD_ID": "1568641743853715516", "DELIVERY_PAUSED": "0" },
+  "ai": { "binding": "AI" },
   "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": true },
   "observability": { "enabled": true }
 }

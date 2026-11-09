@@ -40,4 +40,11 @@ describe("comandos de Discord", () => {
     const r = (await (await SELF.fetch(await signed({ type: 2, data: { name: "proximas" } }))).json()) as { data: { content: string } };
     expect(r.data.content).toContain("No hay preventas");
   });
+  it("/gmail: solo administradores; la clave va en mensaje efímero", async () => {
+    const no = (await (await SELF.fetch(await signed({ type: 2, member: { permissions: "0" }, data: { name: "gmail" } }))).json()) as { data: { content: string } };
+    expect(no.data.content).toContain("Solo el propietario");
+    const yes = (await (await SELF.fetch(await signed({ type: 2, member: { permissions: "8" }, data: { name: "gmail" } }))).json()) as { data: { content: string; flags: number } };
+    expect(yes.data.content).toContain("GIRA_TOKEN");
+    expect(yes.data.flags & 64).toBe(64);
+  });
 });

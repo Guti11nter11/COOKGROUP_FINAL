@@ -72,6 +72,9 @@ trata de los eventos y de cómo conseguir las entradas.
 - SeatGeek: **ticketera de venta oficial** (sobre todo EE. UU.), no fuente de reventa (decisión del
   propietario, 2026-11-08); API oficial con `SEATGEEK_CLIENT_ID` → enlace en la ficha.
 - Noticias (Google News RSS, NME, Billboard, Los40, Mondosonoro…), feeds RSS de YouTube.
+- **Gmail del propietario** (2 cuentas, solo lectura, script de Google en cada una →
+  `POST /inbox`): la IA saca un código y un enlace por preventa, comprobados contra el correo, y van a
+  la ficha (🔐, nunca en registros públicos). Ver `docs/plan/18-gmail.md`.
 - Redes vía **Apify** (plan FREE: 5 $/mes de crédito, medido el 2026-11-07; dosificar): `apify/instagram-scraper`,
   `clockworks/tiktok-scraper`, el mejor scraper de X mantenido. Meta Business Discovery como
   respaldo oficial para Instagram.

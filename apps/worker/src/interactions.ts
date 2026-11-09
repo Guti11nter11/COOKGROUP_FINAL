@@ -1,9 +1,12 @@
 import { formatHHmm, MADRID } from "@gira/core";
 import { loadSlots } from "./calendar";
 import type { Env } from "./env";
+import { inboxToken } from "./inbox";
+
+const GMAIL_SCRIPT = "https://github.com/Guti11nter11/COOKGROUP_FINAL/blob/claude/vigilant-euler-pkmop0/tools/gmail/gira-gmail.gs";
 
 /**
- * Comandos de Discord (/seguir, /dejar, /proximas, /gira, /registro). Discord firma cada petición con Ed25519;
+ * Comandos de Discord (/seguir, /dejar, /proximas, /gira, /registro, /gmail). Discord firma cada petición con Ed25519;
  * sin firma válida se responde 401 (Discord lo exige para aceptar la URL de interacciones).
  */
 const hex = (h: string) => Uint8Array.from(h.match(/../g) ?? [], (b) => parseInt(b, 16));
@@ -20,7 +23,7 @@ export async function verifyDiscord(env: Env, req: Request, body: string): Promi
   }
 }
 
-type Interaction = { type: number; data?: { name: string; options?: { name: string; value: string }[] } };
+type Interaction = { type: number; member?: { permissions?: string }; data?: { name: string; options?: { name: string; value: string }[] } };
 const reply = (content: string) => Response.json({ type: 4, data: { content, flags: 64 | 4, allowed_mentions: { parse: [] } } });
 
 /** Busca una entidad en Ticketmaster (atracciones) y devuelve la que mejor encaja con el nombre. */
@@ -98,6 +101,22 @@ export async function handleInteraction(env: Env, raw: string, now: Date): Promi
       env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(a.id, iso),
     ]);
     return reply(`📝 Registro de **${a.name}** guardado: ${label}. Sale en su ficha en el próximo repaso (unos minutos).`);
+  }
+  if (i.data.name === "gmail") {
+    // Solo administradores (el propietario): la clave permite mandar correos al Worker. La respuesta es efímera.
+    if (!i.member?.permissions || (BigInt(i.member.permissions) & 8n) === 0n) return reply("Solo el propietario del servidor puede usar este comando.");
+    return reply(
+      [
+        "📬 **Conectar tu Gmail** (solo lectura; solo lo ves tú)",
+        "1. Abre <https://script.google.com> con la cuenta de Gmail donde te registras en las preventas → **Nuevo proyecto**.",
+        `2. Pega el script: <${GMAIL_SCRIPT}> (botón *Raw*, copiar todo).`,
+        "3. ⚙️ **Configuración del proyecto → Propiedades del script → Añadir**: `GIRA_TOKEN` =",
+        `\`${await inboxToken(env)}\``,
+        "4. Arriba elige la función `instalar` → **Ejecutar** → acepta los permisos de Google (leer Gmail y conectar con GIRA).",
+        "Desde ese momento, cada 5 min lee tus correos nuevos de preventas y pone **un** código y **un** enlace por preventa en la ficha (🔐 Tu acceso). No guarda los correos.",
+        "-# No compartas esta clave. Si la pierdes, vuelve a usar /gmail.",
+      ].join("\n"),
+    );
   }
   return reply("Comando desconocido.");
 }

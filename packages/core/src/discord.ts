@@ -192,4 +192,5 @@ export const DISCORD_COMMANDS = [
       { type: 3, name: "texto", description: "Qué es (p. ej. Artist presale, tienda oficial)", required: false },
     ],
   },
+  { name: "gmail", description: "Conectar tu Gmail (solo lectura) para poner tus códigos y enlaces de preventa en las fichas", default_member_permissions: "8" },
 ];

@@ -8,6 +8,7 @@ import { handleApi } from "./app-api";
 import { handleInteraction, verifyDiscord } from "./interactions";
 import { dispatchJobs } from "./dispatch";
 import { postAgenda } from "./agenda";
+import { ingestInbox, inboxToken, redactAccess } from "./inbox";
 import { isSweepTick } from "@gira/core";
 import { announceCalendar, calendarIcs, icsToken, runCalendar, updateStatusPanel } from "./calendar";
 import type { Env, SweepJob } from "./env";
@@ -66,6 +67,12 @@ export default {
       if (r.stored > 0) ctx.waitUntil(publishSheets(env, now));
       return Response.json(r);
     }
+    if (url.pathname === "/inbox" && req.method === "POST") {
+      // Correos de preventa del propietario, enviados por su script de Google (token propio, distinto del de ingesta).
+      const auth = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
+      if (!sameString(auth, await inboxToken(env))) return new Response("No autorizado", { status: 401 });
+      return Response.json(await ingestInbox(env, (await req.json()) as never, new Date()));
+    }
     if (url.pathname.startsWith("/enrich")) {
       const auth = req.headers.get("authorization")?.replace(/^Bearer\s+/i, "") ?? "";
       if (!sameString(auth, await ingestToken(env))) return new Response("No autorizado", { status: 401 });
@@ -76,7 +83,8 @@ export default {
         const { results } = await env.DB.prepare(
           "SELECT a.name, h.rendered_json FROM sheet h JOIN artist a ON a.id = h.artist_id WHERE h.status = 'active' AND h.rendered_json IS NOT NULL LIMIT 20",
         ).all<{ name: string; rendered_json: string }>();
-        return Response.json(results.map((r) => ({ name: r.name, messages: JSON.parse(r.rendered_json) as string[] })));
+        // Los registros de GitHub Actions son públicos: el acceso personal (códigos y enlaces del correo) se oculta.
+        return Response.json(results.map((r) => ({ name: r.name, messages: (JSON.parse(r.rendered_json) as string[]).map(redactAccess) })));
       }
       // Fuerza una pasada de publicación y devuelve el resultado (con errores de Discord, si los hay).
       if (url.pathname === "/enrich/publish" && req.method === "POST") {
