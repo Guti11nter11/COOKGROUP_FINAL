@@ -59,7 +59,7 @@ export function sheetShows(artistName: string, shows: Show[]): Show[] {
 
 /** Promociones sobre un evento ya a la venta (no son una salida de entradas). */
 export const PROMO =
-  /(holiday|gift|black friday|cyber monday|day of show|promo|\boffer\b|discount|\bdeal\b|flash sale|2 ?for ?1|\bbogo\b|buy one|student|military|teacher|nurse|first responder|group sales?|upsell|add-?on|parking|merch|hotel|package|paquetes?|upgrade|last chance|lucky seat|ticket drop|\$\d+ tickets|value tickets|price drop)/i;
+  /(holiday|gift|black friday|cyber monday|day of show|promo|\boffer\b|discount|\bdeal\b|flash sale|2 ?for ?1|\bbogo\b|buy one|student|military|teacher|nurse|first responder|group sales?|upsell|add-?on|parking|merch|hotel|package|paquetes?|\bplatinum\b|upgrade|last chance|lucky seat|ticket drop|\$\d+ tickets|value tickets|price drop)/i;
 
 /**
  * Ventanas que sirven para conseguir entradas: preventas y venta general por llegar. Si la venta

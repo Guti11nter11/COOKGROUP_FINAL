@@ -224,6 +224,10 @@
     {
       "match": "\\blocal\\b",
       "how": "Preventa local: para quien vive cerca (código del boletín del recinto o de la promotora de la zona)"
+    },
+    {
+      "match": "three ?\\+|^three presale|from three",
+      "how": "Cliente de Three (Reino Unido): la preventa sale en la app Three+"
     }
   ]
 }

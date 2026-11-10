@@ -339,4 +339,10 @@ describe("revisión 09:47 (10-11)", () => {
     expect(t).toContain("**Preferred Seating Presale** → Asientos preferentes de tarjeta");
     expect(t).toContain("**Local Presale** → Preventa local");
   });
+  it("Platinum es la misma venta a precio dinámico (no se repite); Three+ dice cómo se entra", () => {
+    const s = [show("1", "GB", "London", "2027-06-07", [["artist", "Artist Presale", "2026-11-12T10:00:00Z"], ["artist", "Artist Presale Platinum", "2026-11-12T10:00:00Z"], ["unknown", "Platinum Onsale", "2026-11-13T10:00:00Z"], ["telco", "Three+ Presale", "2026-11-12T10:00:00Z"]])];
+    const t = renderArtistSheet({ name: "Fall Out Boy" }, s, NOW).join("\n");
+    expect(t).not.toContain("Platinum");
+    expect(t).toContain("**Three+ Presale** → Cliente de Three (Reino Unido)");
+  });
 });
