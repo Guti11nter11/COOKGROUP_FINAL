@@ -81,7 +81,7 @@ export default {
       if (url.pathname === "/enrich/preview") {
         // Texto de las fichas activas (solo datos públicos: fechas, precios, enlaces oficiales) para revisarlas.
         const { results } = await env.DB.prepare(
-          "SELECT a.name, h.rendered_json FROM sheet h JOIN artist a ON a.id = h.artist_id WHERE h.status = 'active' AND h.rendered_json IS NOT NULL LIMIT 20",
+          "SELECT a.name, h.rendered_json FROM sheet h JOIN artist a ON a.id = h.artist_id WHERE h.status = 'active' AND h.rendered_json IS NOT NULL ORDER BY h.updated_at DESC LIMIT 60",
         ).all<{ name: string; rendered_json: string }>();
         // Los registros de GitHub Actions son públicos: el acceso personal (códigos y enlaces del correo) se oculta.
         return Response.json(results.map((r) => ({ name: r.name, messages: (JSON.parse(r.rendered_json) as string[]).map(redactAccess) })));

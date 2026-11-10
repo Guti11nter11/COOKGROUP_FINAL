@@ -212,6 +212,18 @@
     {
       "match": "\\bradio\\b",
       "how": "Preventa de radio: código que da la emisora (en antena, web o redes)"
+    },
+    {
+      "match": "banamex",
+      "how": "Tarjeta Citibanamex (México): se validan los primeros dígitos y se paga con ella"
+    },
+    {
+      "match": "preferred seating|preferred tickets",
+      "how": "Asientos preferentes de tarjeta (Amex, Citi o Chase según la fecha): se validan los primeros dígitos de la tarjeta"
+    },
+    {
+      "match": "\\blocal\\b",
+      "how": "Preventa local: para quien vive cerca (código del boletín del recinto o de la promotora de la zona)"
     }
   ]
 }

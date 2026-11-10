@@ -329,3 +329,14 @@ describe("revisión 17:47: idiomas y registros de terceros", () => {
     expect(su).toContain("**Support Presale** → Preventa del telonero");
   });
 });
+
+describe("revisión 09:47 (10-11)", () => {
+  it("paquetes VIP no son salidas de entradas; Banamex, Preferred Seating y Local dicen cómo se entra", () => {
+    const s = [show("1", "MX", "Monterrey", "2027-06-07", [["card", "Preventa Banamex", "2026-11-12T16:00:00Z"], ["card", "Preventa Banamex Paquetes VIP", "2026-11-12T16:00:00Z"], ["unknown", "Preferred Seating Presale", "2026-11-12T16:00:00Z"], ["unknown", "Local Presale", "2026-11-12T16:00:00Z"]])];
+    const t = renderArtistSheet({ name: "Feid" }, s, NOW).join("\n");
+    expect(t).not.toContain("Paquetes VIP");
+    expect(t).toContain("**Preventa Banamex** → Tarjeta Citibanamex (México)");
+    expect(t).toContain("**Preferred Seating Presale** → Asientos preferentes de tarjeta");
+    expect(t).toContain("**Local Presale** → Preventa local");
+  });
+});
