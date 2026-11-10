@@ -69,6 +69,7 @@ export function pickSignups(raw: RawLink[], shows: { city: string; localDate: st
     const known = HOSTS.find(([re]) => re.test(host));
     if (known && known[1] === "Bandsintown" && !BIT_OK.test(url)) continue;
     if (new URL(url).pathname.replace(/\/+$/, "") === "") continue; // portada de la plataforma, no un registro
+    if (/\.ics$|add-to-calendar|\/calendar\//i.test(new URL(url).pathname)) continue; // archivo de calendario, no un registro
     if (!known && !TEXT.test(`${r.text} ${new URL(url).pathname}`)) continue;
     if (!known && /ticketmaster\.|livenation\.|axs\.com|seetickets|eventim|dice\.fm/.test(host)) continue; // fichas de venta: ya las tenemos
     const ctx = fold(r.context);
@@ -76,7 +77,7 @@ export function pickSignups(raw: RawLink[], shows: { city: string; localDate: st
     const dated = shows.filter((s) => (!city || s.city === city) && mentionsDate(r.context, s.localDate));
     // Enlaces por fecha de plataformas de giras (Bandsintown /t/, link.seated.com): solo si son de una fecha nuestra.
     if (!city && (/bandsintown\.com\/t\//.test(url) || /^link\.seated\.com$/.test(host))) continue;
-    const label = known?.[1] ?? (host === pageHost ? (r.text.trim().slice(0, 40) || "Registro en la web oficial") : host);
+    const label = known?.[1] ?? (host === pageHost ? (r.text.replace(/\s+/g, " ").trim().slice(0, 40) || "Registro en la web oficial") : host);
     out.set(url, { url, label, city, localDate: dated.length === 1 ? dated[0]!.localDate : null });
   }
   return [...out.values()];

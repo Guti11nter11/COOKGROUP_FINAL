@@ -345,4 +345,13 @@ describe("revisión 09:47 (10-11)", () => {
     expect(t).not.toContain("Platinum");
     expect(t).toContain("**Three+ Presale** → Cliente de Three (Reino Unido)");
   });
+  it("bancos (HSBC, Citizens), sièges préférentiels, waitlist y redes dicen cómo se entra", () => {
+    const s = [show("1", "MX", "Monterrey", "2027-06-07", [["unknown", "Gran Venta HSBC-Crédito y Débito", "2026-11-12T16:00:00Z"], ["unknown", "Citizens Bank Presale", "2026-11-12T16:00:00Z"], ["unknown", "Prévente Sièges Préférentiels", "2026-11-12T16:00:00Z"], ["unknown", "Waitlist Presale", "2026-11-12T16:00:00Z"], ["unknown", "Social Media Presale", "2026-11-12T16:00:00Z"]])];
+    const t = renderArtistSheet({ name: "Gorillaz" }, s, NOW).join("\n");
+    expect(t).toContain("**Gran Venta HSBC-Crédito y Débito** → Tarjeta HSBC");
+    expect(t).toContain("**Citizens Bank Presale** → Tarjeta de Citizens Bank");
+    expect(t).toContain("**Prévente Sièges Préférentiels** → Asientos preferentes");
+    expect(t).toContain("**Social Media Presale** → Preventa en redes del artista");
+    expect(t).not.toContain("Registro o boletín de **Waitlist**");
+  });
 });

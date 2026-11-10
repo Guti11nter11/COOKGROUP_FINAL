@@ -297,7 +297,7 @@ export function renderPrices(live: Show[], prices: Record<string, PriceInfo>): s
 
 /** Cómo entrar en una preventa: programa conocido, enlace propio o registro del artista. Una línea. */
 const PRESALE_WORDS = /\b(pre-?\s?sales?|presales?|preventas?|pre-?ventes?|venta de|ventas?|vorverkauf|prevendita|voorverkoop|forsalg|forslag|forsaljning|tickets?|access|acceso)\b/g;
-const GENERIC = new Set(["artist", "fan", "fans", "official", "oficial", "exclusive", "early", "seated", "laylo", "the", "de", "del", "la", "el"]);
+const GENERIC = new Set(["artist", "fan", "fans", "waitlist", "list", "official", "oficial", "exclusive", "early", "seated", "laylo", "the", "de", "del", "la", "el"]);
 
 /** ¿Es una preventa del propio artista? (sin nombre de un recinto, promotora o socio en la etiqueta). */
 function artistish(label: string, artist: string): boolean {

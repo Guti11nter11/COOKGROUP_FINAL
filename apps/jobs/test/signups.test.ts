@@ -66,3 +66,17 @@ describe("registros que no sirven", () => {
     expect(deadPage("Register for Verified Fan access")).toBe(false);
   });
 });
+
+describe("revisión 17:47 (10-11)", () => {
+  it("un archivo de calendario no es un registro; etiquetas sin saltos de línea", async () => {
+    const { pickSignups } = await import("../src/signups-lib");
+    const raw = [
+      { text: "10 Nov, Tue at 10:00AM (local)", href: "https://www.bryanadams.com/add-to-calendar/1922/presale.ics", context: "presale" },
+      { text: "Join the mailing list\n                  ", href: "https://www.bryanadams.com/mailing-list", context: "presale sign up" },
+    ];
+    const out = pickSignups(raw, [], "bryanadams.com");
+    expect(out.map((o) => o.url)).toEqual(["https://www.bryanadams.com/mailing-list"]);
+    expect(out[0]!.label).toBe("Join the mailing list");
+  });
+});
+

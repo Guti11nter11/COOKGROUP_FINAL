@@ -228,6 +228,22 @@
     {
       "match": "three ?\\+|^three presale|from three",
       "how": "Cliente de Three (Reino Unido): la preventa sale en la app Three+"
+    },
+    {
+      "match": "hsbc",
+      "how": "Tarjeta HSBC (crédito o débito): se validan los primeros dígitos y se paga con ella"
+    },
+    {
+      "match": "citizens bank",
+      "how": "Tarjeta de Citizens Bank (EE. UU.): se validan los primeros dígitos y se paga con ella"
+    },
+    {
+      "match": "si[eè]ges pr[ée]f[ée]rentiels",
+      "how": "Asientos preferentes de tarjeta (Amex, Citi o Chase según la fecha): se validan los primeros dígitos de la tarjeta"
+    },
+    {
+      "match": "social media",
+      "how": "Preventa en redes del artista: el código se publica en sus redes (Instagram, X, TikTok) poco antes"
     }
   ]
 }
