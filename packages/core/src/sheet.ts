@@ -33,7 +33,8 @@ export function ticketLimitNumber(texts: (string | null | undefined)[]): number 
   return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0] - b[0])[0]?.[0] ?? null;
 }
 
-const FESTIVAL_RE = /\b(festival|fest|weekend|day pass|\d[- ]?day|tagesticket|dagsbillett|dagbillett|abono|pase de \d|camping)\b/i;
+const FESTIVAL_RE =
+  /\b(festival|fest|weekend|day pass|\d[- ]?day|tagesticket|dagsbillett|dagbillett|abono|pase de \d|camping|metal meeting|open air|combi|combo|full pass|day tickets?|(mon|tues|wednes|thurs|fri|satur|sun)day tickets?|dagticket|tageskarte|graspop|hellfest|wacken|rock am ring|rock im park|nova rock|download)\b/i;
 const fold = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
 /**

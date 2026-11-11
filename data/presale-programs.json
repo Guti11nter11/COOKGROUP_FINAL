@@ -244,6 +244,14 @@
     {
       "match": "social media",
       "how": "Preventa en redes del artista: el código se publica en sus redes (Instagram, X, TikTok) poco antes"
+    },
+    {
+      "match": "caesars rewards",
+      "how": "Socio de Caesars Rewards (casinos de EE. UU.): la preventa sale en tu cuenta de Caesars Rewards"
+    },
+    {
+      "match": "\\bmarketing\\b",
+      "how": "Preventa de marketing: el código lo reparten la promotora o el recinto (boletín o redes) poco antes"
     }
   ]
 }

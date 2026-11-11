@@ -146,6 +146,8 @@ describe("qué fechas van en la ficha", () => {
     ];
     expect(sheetShows("Robbie Williams", list).map((s) => s.sourceId)).toEqual(["a", "e"]);
     expect(sheetShows("Creamfields", [rw("f", "Creamfields 2027 - Weekend Camping")]).map((s) => s.sourceId)).toEqual(["f"]);
+    // Entradas de día o combinadas de un festival ajeno (Graspop) tampoco son del artista.
+    expect(sheetShows("Evanescence", [rw("g", "Graspop Metal Meeting 2027 | Friday Tickets"), rw("h", "Graspop Metal Meeting 2027 | Combi 17 - 20 June Tickets")])).toEqual([]);
   });
   it("fuera paquetes por URL y duplicados de la misma fecha (se queda el del artista)", () => {
     const base = show("p1", "FR", "Paris", "2027-07-09", [["general", "Général", "2026-12-01T10:00:00Z"]], { name: "Jamiroquai", url: "https://www.ticketmaster.fr/fr/manifestation/jamiroquai-billet/idmanif/1" });
