@@ -39,6 +39,9 @@ trata de los eventos y de cómo conseguir las entradas.
    promociones ("Holiday Gift Guide", "Day of Show", ofertas…) nunca. Regla única en
    `actionableSales` (fichas, avisos, recordatorios, agenda). Un registro se publica solo si la página
    existe y es de un país cubierto. **Todo lo publicado lo verifica Claude** (revisión 09:47 y 17:47).
+   **Enlaces siempre de las entradas normales** (2026-11-11): nunca "Premium", palcos (Suite/Logen),
+   paquetes ni páginas de cola (queue-it). En #esta-semana y el resumen, un país con varias horas el
+   mismo día (EE. UU., Canadá) va en un tramo con su rango de horas, sin repetir ciudades.
 3. **Calendario `.ics`** suscribible.
 
 **Horas de silencio:** 01:00–08:00 Europe/Madrid. Solo se notifica en ese tramo si es urgente

@@ -1,5 +1,5 @@
 import { presaleGuide, type SaleKind } from "./presale";
-import type { SaleWindow, Show } from "./ticketmaster";
+import { isPackageName, type SaleWindow, type Show } from "./ticketmaster";
 import { accessFor, type PresaleAccess } from "./inbox";
 
 /** Nombre de canal de Discord para una entidad: "Guns N' Roses" → "guns-n-roses". */
@@ -46,7 +46,11 @@ export function sheetShows(artistName: string, shows: Show[]): Show[] {
   const slug = me.replace(/[^a-z0-9]+/g, "-");
   const mine = (s: Show) => fold(s.name).includes(me) || fold(s.url).includes(slug);
   const kept = shows.filter(
-    (s) => !s.isPackage && !/[/-](package|packages|vip-package|hospitality)[-/]/i.test(s.url) && !(FESTIVAL_RE.test(s.name) && !fold(s.name).includes(me)),
+    (s) =>
+      !s.isPackage &&
+      !isPackageName(s.name) &&
+      !/[/-](package|packages|vip-package|hospitality|premium)[-/]|queue-it\.|eventtravel\./i.test(s.url) &&
+      !(FESTIVAL_RE.test(s.name) && !fold(s.name).includes(me)),
   );
   // Misma fecha y recinto listados dos veces (p. ej. el día del festival y el concierto): se queda el del artista.
   const byDate = new Map<string, Show>();
@@ -60,7 +64,7 @@ export function sheetShows(artistName: string, shows: Show[]): Show[] {
 
 /** Promociones sobre un evento ya a la venta (no son una salida de entradas). */
 export const PROMO =
-  /(holiday|gift|black friday|cyber monday|day of show|promo|\boffer\b|discount|\bdeal\b|flash sale|2 ?for ?1|\bbogo\b|buy one|student|military|teacher|nurse|first responder|group sales?|upsell|add-?on|parking|merch|hotel|package|paquetes?|\bplatinum\b|upgrade|last chance|lucky seat|ticket drop|\$\d+ tickets|value tickets|price drop)/i;
+  /(holiday|gift|black friday|cyber monday|day of show|promo|\boffer\b|discount|\bdeal\b|flash sale|2 ?for ?1|\bbogo\b|buy one|student|military|teacher|nurse|first responder|group sales?|upsell|add-?on|parking|merch|hotel|package|paquetes?|\bplatinum\b|\bpremium\b|meet ?(&|and) ?greet|upgrade|last chance|lucky seat|ticket drop|\$\d+ tickets|value tickets|price drop)/i;
 
 /**
  * Ventanas que sirven para conseguir entradas: preventas y venta general por llegar. Si la venta

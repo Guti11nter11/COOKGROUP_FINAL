@@ -2,7 +2,7 @@
  * Calendario de ventas: recordatorios (T-24 h, T-1 h, T-10 min), resumen diario, "esta semana" y .ics.
  * Todo parte de las ventanas de venta futuras de las fichas activas. Funciones puras.
  */
-import { flag } from "./sheet";
+import { countryName, flag } from "./sheet";
 import { formatHHmm, LONDON, MADRID } from "./time";
 
 export interface SaleSlot {
@@ -68,23 +68,61 @@ function byDay(slots: SaleSlot[]): [string, SaleSlot[]][] {
 
 /**
  * Una línea por artista y día: sus ventas a la misma hora juntas (etiquetas y ciudades sin repetir) y,
- * si tiene otra hora ese día, en la misma línea tras "—". En orden por la primera hora.
+ * si tiene otra hora ese día, en la misma línea tras "—". Un país con varias horas ese día (EE. UU.,
+ * Canadá: la misma venta a las 10:00 de cada zona) va en un solo tramo con su rango de horas y sin
+ * ciudades (decisión del propietario, 2026-11-11). En orden por la primera hora.
  */
 export function artistLines(list: SaleSlot[]): string[] {
   const byArtist = new Map<string, SaleSlot[]>();
   for (const s of list) byArtist.set(s.artistId, [...(byArtist.get(s.artistId) ?? []), s]);
+  const hh = (t: string) => formatHHmm(t, MADRID);
+  // Etiquetas sin repetir (las que solo cambian en ®/™ o espacios son la misma); se queda la primera.
+  const uniq = (labels: string[]) => {
+    const seen = new Map<string, string>();
+    for (const l of labels) {
+      const k = l.toLowerCase().replace(/[®™©]/g, "").replace(/\s+/g, " ").trim();
+      if (!seen.has(k)) seen.set(k, l);
+    }
+    return [...seen.values()];
+  };
   return [...byArtist.values()]
-    .sort((a, b) => a[0]!.startsAt.localeCompare(b[0]!.startsAt))
+    .sort((a, b) => a.reduce((m, s) => (s.startsAt < m ? s.startsAt : m), a[0]!.startsAt).localeCompare(b.reduce((m, s) => (s.startsAt < m ? s.startsAt : m), b[0]!.startsAt)))
     .map((ss) => {
-      const times = [...new Set(ss.map((s) => s.startsAt))].sort();
-      const segs = times.map((t) => {
-        const at = ss.filter((s) => s.startsAt === t);
-        const labels = [...new Set(at.map((s) => s.label))];
-        const places = [...new Map(at.flatMap((s) => s.dates).map((d) => [d.city, `${flag(d.country)} ${d.city}`])).values()];
-        const shown = places.length > 6 ? `${places.slice(0, 6).join(", ")} y ${places.length - 6} más` : places.join(", ");
-        return `\`${formatHHmm(t, MADRID)}\` ${labels.join(" · ")} · ${shown}`;
-      });
-      const [first, ...rest] = segs;
+      ss = [...ss].sort((a, b) => a.startsAt.localeCompare(b.startsAt));
+      // Horas por país: los que tienen más de una forman el tramo agrupado.
+      const times = new Map<string, Set<string>>();
+      for (const s of ss) for (const d of s.dates) times.set(d.country, (times.get(d.country) ?? new Set()).add(s.startsAt));
+      const multi = [...times].filter(([, t]) => t.size > 1).map(([cc]) => cc);
+      const lo = multi.length ? [...multi.flatMap((cc) => [...times.get(cc)!])].sort()[0]! : "";
+      const hi = multi.length ? [...multi.flatMap((cc) => [...times.get(cc)!])].sort().at(-1)! : "";
+      const grouped = new Set([...times].filter(([cc, t]) => multi.includes(cc) || (multi.length && [...t].every((x) => x >= lo && x <= hi))).map(([cc]) => cc));
+      type Seg = { at: string; labels: string[]; places: string[] };
+      const segs = new Map<string, Seg>();
+      const seg = (at: string) => segs.get(at) ?? segs.set(at, { at, labels: [], places: [] }).get(at)!;
+      for (const s of ss) {
+        const own = s.dates.filter((d) => !grouped.has(d.country));
+        if (own.length) {
+          const g = seg(s.startsAt);
+          g.labels.push(s.label);
+          for (const d of own) g.places.push(`${flag(d.country)} ${d.city}`);
+        }
+        if (s.dates.some((d) => grouped.has(d.country))) seg(lo).labels.push(s.label);
+      }
+      if (grouped.size) {
+        const g = seg(lo);
+        for (const cc of [...grouped].sort((a, b) => [...times.get(a)!].sort()[0]!.localeCompare([...times.get(b)!].sort()[0]!))) {
+          const t = [...times.get(cc)!].sort();
+          g.places.push(`${flag(cc)} ${countryName(cc)} ${t.length > 1 ? `${hh(t[0]!)}–${hh(t.at(-1)!)}` : hh(t[0]!)}`);
+        }
+      }
+      const parts = [...segs.values()]
+        .sort((a, b) => a.at.localeCompare(b.at))
+        .map((g) => {
+          const places = [...new Set(g.places)];
+          const shown = places.length > 6 ? `${places.slice(0, 6).join(", ")} y ${places.length - 6} más` : places.join(", ");
+          return `\`${hh(g.at)}\` ${uniq(g.labels).join(" · ")} · ${shown}`;
+        });
+      const [first, ...rest] = parts;
       const head = first!.replace(/^(`[^`]+`) /, `$1 **${ss[0]!.artist}** · `);
       return [head, ...rest].join(" — ") + chan(ss[0]!);
     });

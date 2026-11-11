@@ -146,6 +146,16 @@ describe("qué fechas van en la ficha", () => {
     ];
     expect(sheetShows("Robbie Williams", list).map((s) => s.sourceId)).toEqual(["a", "e"]);
     expect(sheetShows("Creamfields", [rw("f", "Creamfields 2027 - Weekend Camping")]).map((s) => s.sourceId)).toEqual(["f"]);
+    // Entradas premium, palcos y paquetes de viaje: nunca; siempre el enlace de las entradas normales.
+    expect(
+      sheetShows("Rush", [
+        rw("p1", "Venue Premium - Rush: Fifty Something Tour"),
+        rw("p2", "Rush | Logen-Seat in der Ticketmaster Suite"),
+        rw("p3", "U2: The Greatest Show On Earth World Tour | Premium"),
+        rw("p4", "Official Premium Ticket & Hotel Experiences"),
+        rw("p5", "Rush: Fifty Something Tour"),
+      ]).map((s) => s.sourceId),
+    ).toEqual(["p5"]);
     // Entradas de día o combinadas de un festival ajeno (Graspop) tampoco son del artista.
     expect(sheetShows("Evanescence", [rw("g", "Graspop Metal Meeting 2027 | Friday Tickets"), rw("h", "Graspop Metal Meeting 2027 | Combi 17 - 20 June Tickets")])).toEqual([]);
   });

@@ -75,3 +75,23 @@ describe("una línea por artista y día", () => {
     ]);
   });
 });
+
+describe("países con varias horas el mismo día (EE. UU., Canadá)", () => {
+  it("un solo tramo con el rango de horas, sin repetir ciudades ni etiquetas", async () => {
+    const { artistLines } = await import("../src/calendar");
+    const mk = (label: string, at: string, places: [string, string][]) => ({ artistId: "bb", artist: "Beach Bunny", channelId: "BB", label, startsAt: at, dates: places.map(([city, country]) => ({ city, country, localDate: "2027-04-01", url: city })) });
+    const lines = artistLines([
+      mk("Venta general", "2026-11-13T09:00:00Z", [["Zürich", "CH"]]),
+      mk("Citi® Cardmember Preferred Tickets", "2026-11-13T15:00:00Z", [["Atlanta", "US"], ["Detroit", "US"]]),
+      mk("Venta general", "2026-11-13T15:00:00Z", [["Atlanta", "US"], ["Detroit", "US"]]),
+      mk("T-Mobile® Concert Perks", "2026-11-13T16:00:00Z", [["Chicago", "US"]]),
+      mk("Citi ® Cardmember Preferred Tickets", "2026-11-13T16:00:00Z", [["Chicago", "US"]]),
+      mk("Venta general", "2026-11-13T17:00:00Z", [["Denver", "US"], ["Vancouver", "CA"]]),
+      mk("Venta general", "2026-11-13T18:00:00Z", [["Los Angeles", "US"]]),
+    ]);
+    expect(lines).toEqual([
+      "`10:00` **Beach Bunny** · Venta general · 🇨🇭 Zürich — `16:00` Citi® Cardmember Preferred Tickets · Venta general · T-Mobile® Concert Perks · 🇺🇸 EE. UU. 16:00–19:00, 🇨🇦 CANADÁ 18:00 → <#BB>",
+    ]);
+  });
+});
+
