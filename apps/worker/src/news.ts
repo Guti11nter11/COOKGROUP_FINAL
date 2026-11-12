@@ -1,4 +1,4 @@
-import { isQuietTime } from "@gira/core";
+import { actionableSales, isQuietTime, uncoveredPresale, type Show } from "@gira/core";
 import { discordFetch } from "./discord-client";
 import type { Env } from "./env";
 import { pushAll } from "./push";
@@ -15,11 +15,12 @@ const SPORT_CHANNELS = new Set(["futbol", "tenis", "f1", "nfl", "otros-deportes"
 /** Lo que merece un aviso: cambia cómo o cuándo conseguir entradas. */
 const IMPORTANT = new Set(["tour_announced", "extra_date", "presale", "signup", "on_sale"]);
 
-type Fresh = NewsInput["items"][number] & { artistId: string | null; channelId: string | null };
+type Fresh = NewsInput["items"][number] & { artistId: string | null; channelId: string | null; uncovered?: string | null };
 
 /**
  * Guarda las noticias nuevas (la app las ve todas) y publica en #noticias solo las importantes de
  * artistas sin ficha activa: lo que ya está en una ficha no se repite, y nunca va al canal del artista.
+ * Excepción: una preventa que la prensa anuncia y la ficha no tiene va a #preventas.
  */
 export async function ingestNews(env: Env, body: NewsInput, now: Date): Promise<{ stored: number; posted: number }> {
   const iso = now.toISOString();
@@ -36,7 +37,18 @@ export async function ingestNews(env: Env, body: NewsInput, now: Date): Promise<
     )
       .bind(n.url, a?.id ?? null, n.artistName, n.title.slice(0, 300), n.source ?? null, n.category, n.summary.slice(0, 300), n.publishedAt ?? null, iso)
       .run();
-    if (r.meta.changes) fresh.push({ ...n, artistId: a?.id ?? null, channelId: a?.channel_id ?? null });
+    if (!r.meta.changes) continue;
+    // Artista con ficha: solo interesa si la noticia da una preventa que la ficha no tiene (p. ej. la de
+    // Live Nation en España, que no sale en la API de Ticketmaster).
+    let uncovered: string | null = null;
+    if (a?.channel_id && (n.category === "presale" || n.category === "signup")) {
+      const { results } = await env.DB.prepare("SELECT snapshot_json FROM show WHERE artist_id = ? AND local_date >= ? AND is_package = 0")
+        .bind(a.id, iso.slice(0, 10))
+        .all<{ snapshot_json: string }>();
+      const labels = results.flatMap((s) => actionableSales(JSON.parse(s.snapshot_json) as Show, now).map((w) => w.label));
+      uncovered = uncoveredPresale(`${n.title} ${n.summary}`, labels);
+    }
+    fresh.push({ ...n, artistId: a?.id ?? null, channelId: a?.channel_id ?? null, uncovered });
   }
   const worth = newsWorthPosting(fresh);
   if (!worth.length || env.DELIVERY_PAUSED === "1") return { stored: fresh.length, posted: 0 };
@@ -49,10 +61,12 @@ export async function ingestNews(env: Env, body: NewsInput, now: Date): Promise<
 }
 
 /** Importantes, de artistas sin ficha activa (la ficha ya lo cuenta todo) y una por artista. */
-export function newsWorthPosting<T extends { artistName: string; category: string; channelId: string | null }>(fresh: T[]): T[] {
+export function newsWorthPosting<T extends { artistName: string; category: string; channelId: string | null; uncovered?: string | null }>(fresh: T[]): T[] {
   const seen = new Set<string>();
   return fresh.filter((n) => {
-    if (!IMPORTANT.has(n.category) || n.channelId) return false;
+    if (!IMPORTANT.has(n.category)) return false;
+    // Con ficha activa, solo una preventa que la ficha no tiene (va a #preventas con enlace al canal).
+    if (n.channelId && !n.uncovered) return false;
     const k = n.artistName.toLowerCase();
     if (seen.has(k)) return false;
     seen.add(k);
@@ -69,7 +83,8 @@ async function postNews(env: Env, fresh: Fresh[], now: Date): Promise<number> {
   const silent = isQuietTime(now);
   let posted = 0;
   // Deporte a su canal (#futbol, #tenis…); registros a #registros-abiertos; lo demás a #noticias.
-  const target = (n: Fresh) => (n.channel && SPORT_CHANNELS.has(n.channel) ? n.channel : n.category === "signup" ? "registros-abiertos" : "noticias");
+  const target = (n: Fresh) =>
+    n.channel && SPORT_CHANNELS.has(n.channel) ? n.channel : n.uncovered ? "preventas" : n.category === "signup" ? "registros-abiertos" : "noticias";
   const byTarget = new Map<string, Fresh[]>();
   for (const n of fresh) byTarget.set(target(n), [...(byTarget.get(target(n)) ?? []), n]);
   for (const [name, list] of byTarget) {
@@ -82,7 +97,7 @@ async function postNews(env: Env, fresh: Fresh[], now: Date): Promise<number> {
       msg = "";
     };
     for (const n of list) {
-      const l = newsLine(n);
+      const l = newsLine(n) + (n.uncovered && n.channelId ? ` → <#${n.channelId}>` : "");
       if (msg.length + l.length + 1 > 1900) await flush();
       msg += (msg ? "\n" : "") + l;
     }

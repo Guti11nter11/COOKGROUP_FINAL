@@ -1,6 +1,6 @@
 /**
  * Webs oficiales de entradas de deporte (Real Madrid, Barça, Atleti, UEFA, Wimbledon, Roland-Garros,
- * Mutua Madrid Open, F1, NFL…): dos veces al día se compara cada página con la lectura anterior y, si
+ * Mutua Madrid Open, F1, NFL…) y de recintos o artistas que no venden por Ticketmaster (Movistar Arena): dos veces al día se compara cada página con la lectura anterior y, si
  * aparece una venta, preventa, sorteo o registro, la IA lo resume (con cita literal comprobada) y el
  * Worker lo publica en el canal del deporte. Respeta robots.txt y los bloqueos (403/429 → se salta).
  */
@@ -44,12 +44,13 @@ async function rendered(url: string): Promise<string> {
   }
 }
 
-const SYSTEM = `Lees líneas NUEVAS de la web oficial de entradas de un club, torneo o competición para un radar
-personal que busca conseguir entradas. Devuelve solo lo accionable: una venta o preventa con fecha,
-un sorteo (ballot) que abre o cierra, un registro, la apertura para socios o abonados, entradas de una
-final o un partido concreto. Ignora menús, tienda, museo, tours del estadio, hospitality y paquetes de
-viaje u hotel. "summary" en español, una frase con fechas y horas si aparecen. "quote" es una línea
-LITERAL de las dadas. "category": presale, on_sale, signup u other. No inventes nada.
+const SYSTEM = `Lees líneas NUEVAS de la web oficial de entradas de un club, torneo, competición, recinto de
+conciertos o artista para un radar personal que busca conseguir entradas. Devuelve solo lo accionable:
+una venta o preventa con fecha, un sorteo (ballot) que abre o cierra, un registro, la apertura para
+socios o abonados, entradas de una final o un partido concreto, un concierto o fecha nueva, entradas
+que vuelven a estar disponibles. Ignora menús, tienda, museo, tours del estadio, hospitality y paquetes
+de viaje u hotel. "summary" en español, una frase con fechas y horas si aparecen. "quote" es una línea
+LITERAL de las dadas. "category": presale, on_sale, signup, extra_date u other. No inventes nada.
 Responde en JSON: {"items":[{"summary":"","quote":"","category":""}]}`;
 
 const out: { artistName: string; title: string; url: string; source: string; category: string; summary: string; channel: string }[] = [];
@@ -83,7 +84,7 @@ for (const p of pages) {
     continue;
   }
   const res = await aiJson<{ items?: { summary: string; quote: string; category: string }[] }>(SYSTEM, `Web: ${p.name}\nLíneas nuevas:\n${added.slice(0, 60).join("\n")}`.slice(0, 8000));
-  const ok = (res?.items ?? []).filter((i) => i.summary && i.quote && ["presale", "on_sale", "signup"].includes(i.category) && added.some((l) => l.toLowerCase().includes(i.quote.toLowerCase().trim())));
+  const ok = (res?.items ?? []).filter((i) => i.summary && i.quote && ["presale", "on_sale", "signup", "extra_date"].includes(i.category) && added.some((l) => l.toLowerCase().includes(i.quote.toLowerCase().trim())));
   for (const i of ok.slice(0, 3)) {
     const h = createHash("sha1").update(i.quote).digest("hex").slice(0, 10);
     out.push({ artistName: p.name, title: i.quote.slice(0, 200), url: `${p.url}#gira-${h}`, source: p.name, category: i.category, summary: i.summary.slice(0, 220), channel: p.channel });

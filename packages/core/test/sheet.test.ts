@@ -375,3 +375,14 @@ describe("revisión 09:47 (10-11)", () => {
     expect(heads).toEqual(["## 🎟️ Mastercard Preferred Tickets"]);
   });
 });
+
+describe("preventas de la prensa que la ficha no tiene", () => {
+  it("Live Nation de U2 (no está en Ticketmaster); la Visa ya está; el Movistar Arena no es Movistar", async () => {
+    const { uncoveredPresale } = await import("../src/presale");
+    const labels = ["U2.com Subscriber Presale", "Visa Presale", "Venta general"];
+    expect(uncoveredPresale("Preventa de Live Nation para U2 el jueves 12 a las 10:00", labels)).toBe("Live Nation");
+    expect(uncoveredPresale("La preventa Visa de U2 empieza el martes", labels)).toBeNull();
+    expect(uncoveredPresale("Dani Martín, preventa en el Movistar Arena", [])).toBeNull();
+  });
+});
+

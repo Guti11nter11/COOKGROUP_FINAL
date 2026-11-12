@@ -1,14 +1,60 @@
 {
-  "_comment": "Webs oficiales de entradas de deporte que vigila GIRA (2 veces al día, respetando robots.txt y bloqueos). channel = canal de Discord del deporte.",
+  "_comment": "Webs oficiales de entradas que vigila GIRA (2 veces al día, respetando robots.txt y bloqueos): deporte (channel = canal del deporte) y recintos/artistas sin Ticketmaster (channel = noticias).",
   "pages": [
-    { "name": "Real Madrid", "channel": "futbol", "url": "https://www.realmadrid.com/es-ES/entradas" },
-    { "name": "FC Barcelona", "channel": "futbol", "url": "https://www.fcbarcelona.es/es/entradas" },
-    { "name": "Atlético de Madrid", "channel": "futbol", "url": "https://www.atleticodemadrid.com/entradas" },
-    { "name": "UEFA (Champions, Europa League, finales)", "channel": "futbol", "url": "https://www.uefa.com/tickets/" },
-    { "name": "Wimbledon", "channel": "tenis", "url": "https://www.wimbledon.com/en_GB/tickets/index.html" },
-    { "name": "Roland-Garros", "channel": "tenis", "url": "https://www.rolandgarros.com/en-us/page/tickets" },
-    { "name": "Mutua Madrid Open", "channel": "tenis", "url": "https://mutuamadridopen.com/entradas/" },
-    { "name": "Fórmula 1", "channel": "f1", "url": "https://tickets.formula1.com/en" },
-    { "name": "NFL internacional", "channel": "nfl", "url": "https://www.nfl.com/international/" }
+    {
+      "name": "Real Madrid",
+      "channel": "futbol",
+      "url": "https://www.realmadrid.com/es-ES/entradas"
+    },
+    {
+      "name": "FC Barcelona",
+      "channel": "futbol",
+      "url": "https://www.fcbarcelona.es/es/entradas"
+    },
+    {
+      "name": "Atlético de Madrid",
+      "channel": "futbol",
+      "url": "https://www.atleticodemadrid.com/entradas"
+    },
+    {
+      "name": "UEFA (Champions, Europa League, finales)",
+      "channel": "futbol",
+      "url": "https://www.uefa.com/tickets/"
+    },
+    {
+      "name": "Wimbledon",
+      "channel": "tenis",
+      "url": "https://www.wimbledon.com/en_GB/tickets/index.html"
+    },
+    {
+      "name": "Roland-Garros",
+      "channel": "tenis",
+      "url": "https://www.rolandgarros.com/en-us/page/tickets"
+    },
+    {
+      "name": "Mutua Madrid Open",
+      "channel": "tenis",
+      "url": "https://mutuamadridopen.com/entradas/"
+    },
+    {
+      "name": "Fórmula 1",
+      "channel": "f1",
+      "url": "https://tickets.formula1.com/en"
+    },
+    {
+      "name": "NFL internacional",
+      "channel": "nfl",
+      "url": "https://www.nfl.com/international/"
+    },
+    {
+      "name": "Dani Martín",
+      "channel": "noticias",
+      "url": "https://www.movistararena.es/programacion/evento/dani-mart-n-las-ltimas-14-noches-de-la-gira-25-pts-a-os"
+    },
+    {
+      "name": "Movistar Arena (Madrid)",
+      "channel": "noticias",
+      "url": "https://www.movistararena.es/programacion"
+    }
   ]
 }

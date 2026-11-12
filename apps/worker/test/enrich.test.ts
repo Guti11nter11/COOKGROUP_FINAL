@@ -117,6 +117,10 @@ describe("qué noticias se publican", () => {
     const out = newsWorthPosting([n("U2", "extra_date", "CH_U2"), n("Maluma", "tour_announced"), n("Maluma", "presale"), n("NFL", "price"), n("Feid", "signup")]);
     expect(out.map((x) => `${x.artistName}|${x.category}`)).toEqual(["Maluma|tour_announced", "Feid|signup"]);
   });
+  it("con ficha activa, solo una preventa que la ficha no tiene (la de Live Nation de U2 en España)", () => {
+    const out = newsWorthPosting([{ ...n("U2", "presale", "CH_U2"), uncovered: "Live Nation" }, { ...n("U2", "presale", "CH_U2"), uncovered: null }]);
+    expect(out).toHaveLength(1);
+  });
   it("sin fuente; los registros llevan enlace para apuntarse", () => {
     expect(newsLine(n("Maluma", "tour_announced"))).toBe("🆕 **Maluma** · Gira 2027 en Madrid");
     expect(newsLine(n("Feid", "signup"))).toBe("📝 **Feid** · Gira 2027 en Madrid · [más info](<https://x.example/a>)");
