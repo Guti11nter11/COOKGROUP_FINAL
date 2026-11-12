@@ -392,13 +392,18 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
       .replace(PRESALE_WORDS, " ")
       .replace(/\bartist[ae]?s?\b/g, "artist")
       .replace(/\btm\b/g, "ticketmaster")
+      .replace(/\bbillets? preferentiels?\b/g, "preferred")
+      .replace(/\bsieges preferentiels?\b/g, "preferred seating")
       .replace(/[^\p{L}\p{N}&+]+/gu, " ")
-      .trim();
+      .trim()
+      .split(" ")
+      .sort()
+      .join(" ");
     return k || fold(l).replace(/\s+/g, " ").trim();
   };
   // Etiqueta a mostrar: la que dice "Presale" sin palabras de otro idioma; a igualdad, la más completa.
   const display = (a: string, b: string) => {
-    const score = (x: string) => (/presale/i.test(x) && !/pr[ée]vente|preventa|venta|forsalg|forslag|vorverkauf/i.test(x) ? 0 : 1);
+    const score = (x: string) => (/presale/i.test(x) && !/pr[ée]vente|preventa|venta|forsalg|forslag|vorverkauf|billets?|pr[ée]f[ée]rentiel/i.test(x) ? 0 : 1) + (/pr[ée]vente|preventa|venta|forsalg|forslag|vorverkauf|billets?|pr[ée]f[ée]rentiel/i.test(x) ? 1 : 0);
     return (score(a) - score(b) || b.length - a.length) <= 0 ? a : b;
   };
   const groups = new Map<string, { w: SaleWindow; shows: Show[]; times: Map<string, Show[]> }>();

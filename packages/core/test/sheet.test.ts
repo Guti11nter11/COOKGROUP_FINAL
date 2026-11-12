@@ -366,4 +366,12 @@ describe("revisión 09:47 (10-11)", () => {
     expect(t).toContain("**Social Media Presale** → Preventa en redes del artista");
     expect(t).not.toContain("Registro o boletín de **Waitlist**");
   });
+  it("Billet Préférentiels Mastercard = Mastercard Preferred Tickets (un solo bloque, en inglés)", () => {
+    const s = [
+      show("1", "FR", "Paris", "2027-06-07", [["card", "Billet Préférentiels Mastercard", "2026-11-14T09:00:00Z"]]),
+      show("2", "GB", "London", "2027-06-09", [["card", "Mastercard Preferred Tickets", "2026-11-14T10:00:00Z"]]),
+    ];
+    const heads = renderArtistSheet({ name: "Noah Kahan" }, s, NOW).join("\n").match(/^## 🎟️ .+$/gm);
+    expect(heads).toEqual(["## 🎟️ Mastercard Preferred Tickets"]);
+  });
 });
