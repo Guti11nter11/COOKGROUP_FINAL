@@ -1,0 +1,3 @@
+-- Solo lectura: ¿la prensa dio la preventa de Live Nation de U2? (sin texto, solo si la menciona). Y seguimiento de Dani Martín
+SELECT n.category, substr(n.created_at, 6, 11) AS cuando, (lower(n.summary) LIKE '%live nation%' OR lower(n.title) LIKE '%live nation%') AS menciona_ln, substr(n.url, 1, 60) AS fuente FROM news n WHERE n.artist_name = 'U2' AND n.created_at >= '2026-11-10T00:00:00Z' ORDER BY n.created_at;
+SELECT a.id, a.name, f.tier, (SELECT COUNT(*) FROM show s WHERE s.artist_id = a.id AND s.local_date >= '2026-11-12') AS fechas FROM artist a LEFT JOIN follow f ON f.artist_id = a.id WHERE a.name LIKE 'Dani Mart%';
