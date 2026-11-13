@@ -386,3 +386,12 @@ describe("preventas de la prensa que la ficha no tiene", () => {
   });
 });
 
+describe("revisión 09:47 (13-11)", () => {
+  it("un recinto con nombre de banco es preventa del recinto, no de tarjeta", () => {
+    const s = [show("1", "US", "San Antonio", "2027-05-01", [["card", "Frost Bank Center Presale", "2026-11-14T15:00:00Z"]])];
+    const t = renderArtistSheet({ name: "Deftones" }, s, NOW).join("\n");
+    expect(t).toContain("**Frost Bank Center Presale** → Registro o newsletter del recinto");
+    expect(t).not.toContain("tarjeta indicada");
+  });
+});
+

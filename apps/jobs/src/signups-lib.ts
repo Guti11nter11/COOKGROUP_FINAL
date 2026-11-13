@@ -70,6 +70,7 @@ export function pickSignups(raw: RawLink[], shows: { city: string; localDate: st
     if (known && known[1] === "Bandsintown" && !BIT_OK.test(url)) continue;
     if (new URL(url).pathname.replace(/\/+$/, "") === "") continue; // portada de la plataforma, no un registro
     if (/\.ics$|add-to-calendar|\/calendar\//i.test(new URL(url).pathname)) continue; // archivo de calendario, no un registro
+    if (/^\/(terms|privacy|cookies?|legal|help|faq|about|support|contact)(\/|$|-)/i.test(new URL(url).pathname)) continue; // páginas legales o de ayuda de la plataforma
     if (!known && !TEXT.test(`${r.text} ${new URL(url).pathname}`)) continue;
     if (!known && /ticketmaster\.|livenation\.|axs\.com|seetickets|eventim|dice\.fm/.test(host)) continue; // fichas de venta: ya las tenemos
     const ctx = fold(r.context);

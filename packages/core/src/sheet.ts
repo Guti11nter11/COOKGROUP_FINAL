@@ -337,6 +337,15 @@ function howToJoin(w: SaleWindow, ss: Show[], extras: SheetExtras, artist = ""):
   return parts.join(" · ");
 }
 
+/**
+ * Recintos con nombre de banco o patrocinador ("Frost Bank Center", "Utah First Credit Union
+ * Amphitheatre"): su preventa es la del recinto (boletín), no la de una tarjeta.
+ */
+const VENUE_WORDS = /\b(center|centre|arena|amphitheat(er|re)|stadium|coliseum|pavilion|hall|theat(er|re)|ballroom|garden|dome|field|park)\b/i;
+function venueKind(w: SaleWindow): SaleWindow {
+  return (w.kind === "card" || w.kind === "unknown") && VENUE_WORDS.test(w.label) ? { ...w, kind: "venue" } : w;
+}
+
 /** Empaqueta cada sección por separado: precios, sign up y ventas nunca comparten mensaje. */
 const sections = (...xs: (string | string[] | null)[]) => xs.flatMap((x) => (x === null ? [] : pack(Array.isArray(x) ? x : [x])));
 
@@ -408,7 +417,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
   };
   const groups = new Map<string, { w: SaleWindow; shows: Show[]; times: Map<string, Show[]> }>();
   for (const s of live) {
-    for (const w of actionableSales(s, now)) {
+    for (const w of actionableSales(s, now).map(venueKind)) {
       const k = labelKey(w.label);
       const g = groups.get(k) ?? { w, shows: [], times: new Map<string, Show[]>() };
       // La ventana de referencia es la primera en salir (y conserva un enlace de preventa si alguna lo trae).

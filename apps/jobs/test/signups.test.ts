@@ -80,3 +80,11 @@ describe("revisión 17:47 (10-11)", () => {
   });
 });
 
+describe("revisión 09:47 (13-11)", () => {
+  it("las páginas legales de la plataforma (términos, cookies, privacidad) no son registros", async () => {
+    const { pickSignups } = await import("../src/signups-lib");
+    const raw = ["https://laylo.com/samfender/m/sY0U7F", "https://laylo.com/terms", "https://laylo.com/cookies", "https://laylo.com/privacy"].map((href) => ({ text: "Laylo", href, context: "presale" }));
+    expect(pickSignups(raw, [], "samfender.com").map((o) => o.url)).toEqual(["https://laylo.com/samfender/m/sY0U7F"]);
+  });
+});
+
