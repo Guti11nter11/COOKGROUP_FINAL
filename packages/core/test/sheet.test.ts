@@ -395,3 +395,15 @@ describe("revisión 09:47 (13-11)", () => {
   });
 });
 
+describe("revisión 17:47 (13-11)", () => {
+  it("una errata en la etiqueta (Offical) no duplica la preventa; el título no lleva espacios de más", () => {
+    const s = [
+      show("1", "US", "Austin", "2027-05-01", [["artist", "Official Artist Presale - Day 2", "2026-11-14T15:00:00Z"]], { name: "Monster Jam 2027" }),
+      show("2", "US", "Dallas", "2027-05-03", [["artist", "Offical Artist Presale - Day 2", "2026-11-14T15:00:00Z"]], { name: "Monster Jam 2027" }),
+    ];
+    const t = renderArtistSheet({ name: "Monster Jam" }, s, NOW).join("\n");
+    expect(t.match(/^## 🎟️ .*Day 2$/gm)).toHaveLength(1);
+    expect(t).toContain("# 🎤 Monster Jam — 2027");
+  });
+});
+

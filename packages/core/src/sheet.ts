@@ -360,7 +360,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
     .filter((s) => actionableSales(s, now).length > 0)
     .sort((a, b) => a.localDate.localeCompare(b.localDate));
   const tour = mostCommon(live.map((s) => s.name.replace(/\s*\|.*$/, "").trim())) ?? artist.name;
-  const title = fold(tour).startsWith(fold(artist.name)) ? tour.slice(artist.name.length).replace(/^\s*[-–:]\s*/, "") || tour : tour;
+  const title = fold(tour).startsWith(fold(artist.name)) ? tour.slice(artist.name.length).replace(/^\s*[-–:]?\s*/, "") || tour : tour;
   const countries = [...new Map(live.map((s) => [s.venue.country, flag(s.venue.country)])).values()];
   const limit = limitText(live, extras.limits ?? {});
   // Página del artista en cada ticketera, solo si es de verdad la suya (no la del festival en que actúa).
@@ -401,6 +401,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
       .replace(PRESALE_WORDS, " ")
       .replace(/\bartist[ae]?s?\b/g, "artist")
       .replace(/\btm\b/g, "ticketmaster")
+      .replace(/\boffical\b/g, "official")
       .replace(/\bbillets? preferentiels?\b/g, "preferred")
       .replace(/\bsieges preferentiels?\b/g, "preferred seating")
       .replace(/[^\p{L}\p{N}&+]+/gu, " ")
