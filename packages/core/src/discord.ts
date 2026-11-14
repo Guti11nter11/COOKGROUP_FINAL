@@ -192,5 +192,10 @@ export const DISCORD_COMMANDS = [
       { type: 3, name: "texto", description: "Qué es (p. ej. Artist presale, tienda oficial)", required: false },
     ],
   },
+  {
+    name: "livenation",
+    description: "Seguir las preventas de una página de evento de Live Nation (y del resto de fechas de su gira)",
+    options: [{ type: 3, name: "url", description: "Enlace de la página del evento (livenation.es/event/…-edp…)", required: true }],
+  },
   { name: "gmail", description: "Conectar tu Gmail (solo lectura) para poner tus códigos y enlaces de preventa en las fichas", default_member_permissions: "8" },
 ];

@@ -1,0 +1,33 @@
+name: Preventas de Live Nation
+
+# 4 veces al día (lo lanza el Worker): páginas públicas de evento de Live Nation guardadas con
+# /livenation (y las demás fechas de su gira). Trae las preventas que Ticketmaster no publica en su API.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/magical-franklin-u415fe]
+    paths: [.github/workflows/livenation.yml, apps/jobs/src/livenation.ts, packages/core/src/livenation.ts]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: livenation
+  cancel-in-progress: false
+
+jobs:
+  livenation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Leer páginas de evento
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+        run: npx tsx apps/jobs/src/livenation.ts

@@ -2,6 +2,15 @@
   "_doc": "Cómo entrar en cada programa de preventa conocido. 'match' es una expresión regular sobre la etiqueta de la venta. 'url' solo cuando es la página oficial del programa. Revisar cuando cambie un programa.",
   "programs": [
     {
+      "match": "s\\.?\\s?s\\.?\\s?music|santander",
+      "how": "Clientes de Banco Santander con tarjeta Mastercard (Santander SMusic): entran pagando con esa tarjeta"
+    },
+    {
+      "match": "registrados livenation|livenation\\.es",
+      "how": "Registrados en LiveNation.es: con la sesión iniciada en livenation.es aparece el botón «Entradas en Preventa» en la página del evento",
+      "url": "https://www.livenation.es/"
+    },
+    {
       "match": "verified ?fan",
       "how": "Ticketmaster Verified Fan: registrarse ANTES en el enlace del artista; si te seleccionan, el código llega por SMS la víspera (es por sorteo, no por orden de llegada)"
     },

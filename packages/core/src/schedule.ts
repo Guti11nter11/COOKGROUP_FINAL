@@ -40,6 +40,7 @@ export const JOB_SLOTS: Record<string, string[]> = {
   "ticketers.yml": ["10:00", "20:00"],
   "social.yml": ["11:30"],
   "sports.yml": ["09:45", "18:45"],
+  "livenation.yml": ["08:40", "12:40", "17:40", "21:10"],
 };
 
 /**

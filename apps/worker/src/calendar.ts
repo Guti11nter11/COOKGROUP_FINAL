@@ -1,3 +1,4 @@
+import { attachExtraSales } from "./livenation";
 import {
   formatHHmm,
   localDateIn,
@@ -37,7 +38,7 @@ export async function loadSlots(env: Env, now: Date): Promise<SaleSlot[]> {
   }
   const slots = new Map<string, SaleSlot>();
   for (const [artistId, e] of byArtist) {
-    for (const s of sheetShows(e.name, e.shows)) {
+    for (const s of sheetShows(e.name, await attachExtraSales(env, e.shows))) {
       for (const w of actionableSales(s, now)) {
         if (!w.startsAt) continue;
         const k = `${artistId}|${w.label.toLowerCase()}|${w.startsAt}`;

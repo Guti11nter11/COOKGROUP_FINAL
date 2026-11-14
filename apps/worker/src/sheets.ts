@@ -1,3 +1,4 @@
+import { attachExtraSales } from "./livenation";
 import { loadAccess } from "./inbox";
 import {
   actionableSales,
@@ -213,7 +214,7 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
     const { results: rows } = await env.DB.prepare("SELECT snapshot_json FROM show WHERE artist_id = ? AND local_date >= ? AND is_package = 0")
       .bind(artist_id, today)
       .all<{ snapshot_json: string }>();
-    const shows = artist ? sheetShows(artist.name, rows.map((r) => JSON.parse(r.snapshot_json) as Show)) : [];
+    const shows = artist ? sheetShows(artist.name, await attachExtraSales(env, rows.map((r) => JSON.parse(r.snapshot_json) as Show))) : [];
     const sheet = await env.DB.prepare("SELECT * FROM sheet WHERE artist_id = ?").bind(artist_id).first<SheetRow>();
     // Solo interesa lo accionable: canal mientras quede alguna preventa o venta general por llegar.
     const active = isSheetActive(shows, now);
@@ -447,7 +448,7 @@ export async function renderSheetFor(env: Env, artistId: string, now: Date): Pro
   const { results: rows } = await env.DB.prepare("SELECT snapshot_json FROM show WHERE artist_id = ? AND local_date >= ? AND is_package = 0")
     .bind(artistId, localDateIn(now, MADRID))
     .all<{ snapshot_json: string }>();
-  const shows = sheetShows(artist.name, rows.map((r) => JSON.parse(r.snapshot_json) as Show));
+  const shows = sheetShows(artist.name, await attachExtraSales(env, rows.map((r) => JSON.parse(r.snapshot_json) as Show)));
   if (!isSheetActive(shows, now)) return null;
   return { name: artist.name, messages: renderArtistSheet({ name: artist.name, tier: artist.tier }, shows, now, await loadExtras(env, artistId, shows, now)) };
 }

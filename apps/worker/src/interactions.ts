@@ -2,11 +2,12 @@ import { formatHHmm, MADRID } from "@gira/core";
 import { loadSlots } from "./calendar";
 import type { Env } from "./env";
 import { inboxToken } from "./inbox";
+import { addLnPage } from "./livenation";
 
 const GMAIL_SCRIPT = "https://github.com/Guti11nter11/COOKGROUP_FINAL/blob/claude/vigilant-euler-pkmop0/tools/gmail/gira-gmail.gs";
 
 /**
- * Comandos de Discord (/seguir, /dejar, /proximas, /gira, /registro, /gmail). Discord firma cada petición con Ed25519;
+ * Comandos de Discord (/seguir, /dejar, /proximas, /gira, /registro, /gmail, /livenation). Discord firma cada petición con Ed25519;
  * sin firma válida se responde 401 (Discord lo exige para aceptar la URL de interacciones).
  */
 const hex = (h: string) => Uint8Array.from(h.match(/../g) ?? [], (b) => parseInt(b, 16));
@@ -101,6 +102,11 @@ export async function handleInteraction(env: Env, raw: string, now: Date): Promi
       env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(a.id, iso),
     ]);
     return reply(`📝 Registro de **${a.name}** guardado: ${label}. Sale en su ficha en el próximo repaso (unos minutos).`);
+  }
+  if (i.data.name === "livenation") {
+    const url = opt("url").replace(/[?#].*$/, "");
+    if (!(await addLnPage(env, url, now))) return reply("Pásame el enlace de la página del evento de Live Nation (p. ej. https://www.livenation.es/event/…-edp1708667).");
+    return reply("🎟️ Hecho: GIRA leerá esa página y las demás fechas de la gira 4 veces al día; sus preventas (con su hora) entrarán en la ficha y en los recordatorios.");
   }
   if (i.data.name === "gmail") {
     // Solo administradores (el propietario): la clave permite mandar correos al Worker. La respuesta es efímera.

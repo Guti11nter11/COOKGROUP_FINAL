@@ -9,6 +9,7 @@ import { handleInteraction, verifyDiscord } from "./interactions";
 import { dispatchJobs } from "./dispatch";
 import { postAgenda } from "./agenda";
 import { ingestInbox, inboxToken, redactAccess } from "./inbox";
+import { ingestLnSales, lnPages } from "./livenation";
 import { isSweepTick } from "@gira/core";
 import { announceCalendar, calendarIcs, icsToken, runCalendar, updateStatusPanel } from "./calendar";
 import type { Env, SweepJob } from "./env";
@@ -94,6 +95,8 @@ export default {
         if (!queued?.n) await env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) SELECT artist_id, ? FROM sheet WHERE status = 'active'").bind(now.toISOString()).run();
         return Response.json(await publishSheets(env, now));
       }
+      if (url.pathname === "/enrich/ln-pages") return Response.json(await lnPages(env, now));
+      if (url.pathname === "/enrich/ln-sales" && req.method === "POST") return Response.json(await ingestLnSales(env, (await req.json()) as never, now));
       if (url.pathname === "/enrich/agenda" && req.method === "POST") return Response.json(await postAgenda(env, (await req.json()) as never, now));
       if (url.pathname === "/enrich/follows") return Response.json({ ids: await followIds(env) });
       if (url.pathname === "/enrich/discover" && req.method === "POST") return Response.json(await discover(env, (await req.json()) as never, now));
