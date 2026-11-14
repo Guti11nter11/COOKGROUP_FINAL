@@ -45,6 +45,12 @@ describe("correos de preventa (/inbox)", () => {
     expect(r).toEqual({ read: 2, stored: 0 });
   });
 
+  it("un enlace de evento de Live Nation en el correo se empieza a seguir", async () => {
+    const t = await token();
+    await send([mail("m9", "Live Nation newsletter", "Nuevas fechas", [{ text: "Ver evento", href: "https://www.livenation.es/event/u2-world-tour-sevilla-tickets-edp1708683?utm=x" }])], t);
+    expect(await env.DB.prepare("SELECT url FROM ln_event").all()).toMatchObject({ results: [{ url: "https://www.livenation.es/event/u2-world-tour-sevilla-tickets-edp1708683" }] });
+  });
+
   it("la vista previa pública oculta las líneas de acceso personal", () => {
     expect(redactAccess("## 🎟️ Fan Club\n🔐 **Tu acceso** (de tu correo): código `BJ2027`\n🇺🇸 x")).toBe("## 🎟️ Fan Club\n🔐 (acceso personal: oculto en la vista previa)\n🇺🇸 x");
   });

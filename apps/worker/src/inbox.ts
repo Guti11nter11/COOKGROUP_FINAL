@@ -1,5 +1,6 @@
 import { findArtist, inboxPrompt, looksLikePresaleMail, readPresaleMail, verifyAiAccess, type AiAccess, type InboxMail, type PresaleAccess } from "@gira/core";
 import { askJson } from "./ai";
+import { addLnPage } from "./livenation";
 import type { Env } from "./env";
 import { pushAll } from "./push";
 
@@ -29,6 +30,8 @@ export async function ingestInbox(env: Env, body: { mails?: InboxMail[] }, now: 
   const fresh: string[] = [];
   for (const raw of mails) {
     const m = { ...raw, from: String(raw.from ?? ""), links: Array.isArray(raw.links) ? raw.links.slice(0, 200) : [] };
+    // Enlaces de evento de Live Nation en el correo: GIRA empieza a leer esa página (y su gira).
+    for (const l of m.links.slice(0, 200)) if (typeof l?.href === "string") await addLnPage(env, l.href.replace(/[?#].*$/, ""), now);
     if (!looksLikePresaleMail(m) || !findArtist(m, artists)) continue;
     // Cada correo es distinto: lo lee la IA y lo que dice se comprueba contra el correo. Sin IA, las reglas.
     const ai = await askJson<AiAccess>(env, inboxPrompt(m)).catch(() => null);
