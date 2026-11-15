@@ -56,7 +56,7 @@ beforeEach(async () => {
   posts = [];
   await env.DB.batch([
     env.DB.prepare("INSERT INTO artist (id, name, tm_attraction_id) VALUES ('a_jake', 'Jake Bugg', 'K8vZ917COCV'), ('a_nfl', 'NFL', 'K8vZ9178NNV')"),
-    env.DB.prepare("INSERT INTO follow (artist_id, tier) VALUES ('a_jake', 1), ('a_nfl', 1)"),
+    env.DB.prepare("INSERT INTO follow (artist_id, tier) VALUES ('a_jake', 2), ('a_nfl', 2)"),
   ]);
 });
 afterEach(() => undefined);

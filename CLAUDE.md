@@ -40,7 +40,9 @@ trata de los eventos y de cómo conseguir las entradas.
    `actionableSales` (fichas, avisos, recordatorios, agenda). Un registro se publica solo si la página
    existe y es de un país cubierto. **Todo lo publicado lo verifica Claude** (revisión 09:47 y 17:47).
    **Enlaces siempre de las entradas normales** (2026-11-11): nunca "Premium", palcos (Suite/Logen),
-   paquetes ni páginas de cola (queue-it). En #esta-semana y el resumen, un país con varias horas el
+   paquetes ni páginas de cola (queue-it).
+   **Artistas ⭐: solo conciertos en España** (2026-11-15): fichas, canales, avisos, recordatorios,
+   resúmenes, noticias y registros; ⭐⭐ y ⭐⭐⭐ en todos los países cubiertos. En #esta-semana y el resumen, un país con varias horas el
    mismo día (EE. UU., Canadá) va en un tramo con su rango de horas, sin repetir ciudades.
 3. **Calendario `.ics`** suscribible.
 

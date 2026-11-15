@@ -257,10 +257,14 @@ export async function announceSignups(env: Env, fresh: { artistId: string; links
   if (!ch) return 0;
   let sent = 0;
   for (const f of fresh.slice(0, 10)) {
-    const a = await env.DB.prepare("SELECT a.name, h.channel_id FROM artist a LEFT JOIN sheet h ON h.artist_id = a.id AND h.status = 'active' WHERE a.id = ?")
+    const a = await env.DB.prepare(
+      `SELECT a.name, h.channel_id, f.tier, (SELECT COUNT(*) FROM show s WHERE s.artist_id = a.id AND s.country = 'ES' AND s.local_date >= date('now')) AS es
+         FROM artist a LEFT JOIN sheet h ON h.artist_id = a.id AND h.status = 'active' LEFT JOIN follow f ON f.artist_id = a.id WHERE a.id = ?`,
+    )
       .bind(f.artistId)
-      .first<{ name: string; channel_id: string | null }>();
+      .first<{ name: string; channel_id: string | null; tier: number | null; es: number }>();
     if (!a) continue;
+    if (a.tier === 1 && !a.es) continue; // Artistas ⭐: solo si tienen conciertos en España
     const day = (d: string) => new Intl.DateTimeFormat("es-ES", { timeZone: "UTC", day: "numeric", month: "short" }).format(new Date(`${d}T12:00:00Z`));
     const lines = f.links.slice(0, 8).map((l) => `• [${l.label}${l.city ? ` · ${l.city}` : ""}${l.localDate ? ` ${day(l.localDate)}` : ""}](${l.url})`);
     const content = [`📝 **${a.name}** · registro para la preventa${a.channel_id ? ` → <#${a.channel_id}>` : ""}`, ...lines].join("\n");

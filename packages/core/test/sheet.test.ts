@@ -407,3 +407,23 @@ describe("revisión 17:47 (13-11)", () => {
   });
 });
 
+
+describe("artistas ⭐: solo conciertos en España (2026-11-15)", () => {
+  const list = [
+    show("1", "ES", "Madrid", "2027-05-01", [["general", "Venta general", "2026-11-20T09:00:00Z"]]),
+    show("2", "GB", "London", "2027-05-03", [["general", "Venta general", "2026-11-20T10:00:00Z"]]),
+  ];
+  it("⭐ se queda solo con España; ⭐⭐ y ⭐⭐⭐ con todo", () => {
+    expect(sheetShows("X", list, 1).map((s) => s.venue.country)).toEqual(["ES"]);
+    expect(sheetShows("X", list, 2).map((s) => s.venue.country)).toEqual(["ES", "GB"]);
+    expect(sheetShows("X", [list[1]!], 1)).toEqual([]);
+    expect(renderArtistSheet({ name: "X", tier: 1 }, list, NOW).join("\n")).not.toContain("London");
+  });
+  it("sin avisos de ⭐ fuera de España", async () => {
+    const { detectAlerts } = await import("../src/changes");
+    const ctx = (tier: 1 | 2) => ({ bootstrap: false, knownDatesInCountry: 0, artistName: "X", tier, now: NOW });
+    expect(detectAlerts(null, list[1]!, ctx(1))).toEqual([]);
+    expect(detectAlerts(null, list[1]!, ctx(2)).length).toBeGreaterThan(0);
+    expect(detectAlerts(null, list[0]!, ctx(1)).length).toBeGreaterThan(0);
+  });
+});

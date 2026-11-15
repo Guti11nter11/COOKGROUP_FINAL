@@ -214,11 +214,17 @@ export async function publishSheets(env: Env, now: Date, maxDiscordArtists = 3, 
     const { results: rows } = await env.DB.prepare("SELECT snapshot_json FROM show WHERE artist_id = ? AND local_date >= ? AND is_package = 0")
       .bind(artist_id, today)
       .all<{ snapshot_json: string }>();
-    const shows = artist ? sheetShows(artist.name, await attachExtraSales(env, rows.map((r) => JSON.parse(r.snapshot_json) as Show))) : [];
+    const shows = artist ? sheetShows(artist.name, await attachExtraSales(env, rows.map((r) => JSON.parse(r.snapshot_json) as Show)), artist.tier) : [];
     const sheet = await env.DB.prepare("SELECT * FROM sheet WHERE artist_id = ?").bind(artist_id).first<SheetRow>();
     // Solo interesa lo accionable: canal mientras quede alguna preventa o venta general por llegar.
     const active = isSheetActive(shows, now);
 
+    // Canal archivado que no debía existir (p. ej. artista ⭐ sin fechas en España): se borra.
+    if (!active && sheet?.status === "archived" && !sheet.tracked_sale) {
+      await guild.remove(sheet.channel_id);
+      await env.DB.prepare("DELETE FROM sheet WHERE artist_id = ?").bind(artist_id).run();
+      continue;
+    }
     if (!artist || (!active && sheet?.status !== "active")) {
       await env.DB.prepare("UPDATE delivery SET status = 'failed', last_error = 'sin ventas por llegar' WHERE artist_id = ? AND status = 'pending'").bind(artist_id).run();
       continue;
@@ -448,7 +454,7 @@ export async function renderSheetFor(env: Env, artistId: string, now: Date): Pro
   const { results: rows } = await env.DB.prepare("SELECT snapshot_json FROM show WHERE artist_id = ? AND local_date >= ? AND is_package = 0")
     .bind(artistId, localDateIn(now, MADRID))
     .all<{ snapshot_json: string }>();
-  const shows = sheetShows(artist.name, await attachExtraSales(env, rows.map((r) => JSON.parse(r.snapshot_json) as Show)));
+  const shows = sheetShows(artist.name, await attachExtraSales(env, rows.map((r) => JSON.parse(r.snapshot_json) as Show)), artist.tier);
   if (!isSheetActive(shows, now)) return null;
   return { name: artist.name, messages: renderArtistSheet({ name: artist.name, tier: artist.tier }, shows, now, await loadExtras(env, artistId, shows, now)) };
 }

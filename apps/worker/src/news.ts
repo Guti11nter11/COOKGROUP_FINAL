@@ -11,11 +11,12 @@ export interface NewsInput {
 const ICON: Record<string, string> = {
   tour_announced: "🆕", extra_date: "➕", presale: "🎟️", signup: "📝", on_sale: "🛒", sold_out: "🔥", price: "💶",
 };
+export const SPAIN = /(españa|spain|espagne|spanien|madrid|barcelona|valencia|sevilla|bilbao|málaga|malaga|zaragoza|murcia|granada|alicante|valladolid|santiago de compostela|a coruña|donostia|san sebasti[aá]n|pamplona|oviedo|gij[oó]n|santander|palma|tenerife|gran canaria|c[oó]rdoba|benidorm|marbella|vigo|salamanca|burgos|le[oó]n|almer[ií]a|c[aá]diz|huelva|ja[eé]n|castell[oó]n|tarragona|girona|lleida|logro[ñn]o|vitoria)/i;
 const SPORT_CHANNELS = new Set(["futbol", "tenis", "f1", "nfl", "otros-deportes"]);
 /** Lo que merece un aviso: cambia cómo o cuándo conseguir entradas. */
 const IMPORTANT = new Set(["tour_announced", "extra_date", "presale", "signup", "on_sale"]);
 
-type Fresh = NewsInput["items"][number] & { artistId: string | null; channelId: string | null; uncovered?: string | null };
+type Fresh = NewsInput["items"][number] & { artistId: string | null; channelId: string | null; uncovered?: string | null; notSpain?: boolean };
 
 /**
  * Guarda las noticias nuevas (la app las ve todas) y publica en #noticias solo las importantes de
@@ -28,10 +29,10 @@ export async function ingestNews(env: Env, body: NewsInput, now: Date): Promise<
   const fresh: Fresh[] = [];
   for (const n of items) {
     const a = await env.DB.prepare(
-      "SELECT a.id, h.channel_id FROM artist a LEFT JOIN sheet h ON h.artist_id = a.id AND h.status = 'active' WHERE lower(a.name) = lower(?) LIMIT 1",
+      "SELECT a.id, h.channel_id, f.tier FROM artist a LEFT JOIN sheet h ON h.artist_id = a.id AND h.status = 'active' LEFT JOIN follow f ON f.artist_id = a.id WHERE lower(a.name) = lower(?) LIMIT 1",
     )
       .bind(n.artistName)
-      .first<{ id: string; channel_id: string | null }>();
+      .first<{ id: string; channel_id: string | null; tier: number | null }>();
     const r = await env.DB.prepare(
       `INSERT OR IGNORE INTO news (url, artist_id, artist_name, title, source, category, summary, published_at, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     )
@@ -48,7 +49,9 @@ export async function ingestNews(env: Env, body: NewsInput, now: Date): Promise<
       const labels = results.flatMap((s) => actionableSales(JSON.parse(s.snapshot_json) as Show, now).map((w) => w.label));
       uncovered = uncoveredPresale(`${n.title} ${n.summary}`, labels);
     }
-    fresh.push({ ...n, artistId: a?.id ?? null, channelId: a?.channel_id ?? null, uncovered });
+    // Artistas ⭐: solo noticias de conciertos en España (decisión del propietario, 2026-11-15).
+    const notSpain = a?.tier === 1 && !SPAIN.test(`${n.title} ${n.summary}`);
+    fresh.push({ ...n, artistId: a?.id ?? null, channelId: a?.channel_id ?? null, uncovered, notSpain });
   }
   const worth = newsWorthPosting(fresh);
   if (!worth.length || env.DELIVERY_PAUSED === "1") return { stored: fresh.length, posted: 0 };
@@ -61,10 +64,10 @@ export async function ingestNews(env: Env, body: NewsInput, now: Date): Promise<
 }
 
 /** Importantes, de artistas sin ficha activa (la ficha ya lo cuenta todo) y una por artista. */
-export function newsWorthPosting<T extends { artistName: string; category: string; channelId: string | null; uncovered?: string | null }>(fresh: T[]): T[] {
+export function newsWorthPosting<T extends { artistName: string; category: string; channelId: string | null; uncovered?: string | null; notSpain?: boolean }>(fresh: T[]): T[] {
   const seen = new Set<string>();
   return fresh.filter((n) => {
-    if (!IMPORTANT.has(n.category)) return false;
+    if (!IMPORTANT.has(n.category) || n.notSpain) return false;
     // Con ficha activa, solo una preventa que la ficha no tiene (va a #preventas con enlace al canal).
     if (n.channelId && !n.uncovered) return false;
     const k = n.artistName.toLowerCase();

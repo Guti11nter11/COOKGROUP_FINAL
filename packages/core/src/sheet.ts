@@ -41,7 +41,9 @@ const fold = (t: string) => t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").t
  * Fechas que pertenecen a la ficha de un artista: sin variantes (VIP, hotel, parking…) ni listados de
  * festivales ajenos en los que solo actúa (esos van en la ficha del festival).
  */
-export function sheetShows(artistName: string, shows: Show[]): Show[] {
+export function sheetShows(artistName: string, shows: Show[], tier?: number): Show[] {
+  // Artistas ⭐: solo sus conciertos en España (decisión del propietario, 2026-11-15).
+  if (tier === 1) shows = shows.filter((s) => s.venue.country === "ES");
   const me = fold(artistName);
   const slug = me.replace(/[^a-z0-9]+/g, "-");
   const mine = (s: Show) => fold(s.name).includes(me) || fold(s.url).includes(slug);
@@ -356,7 +358,7 @@ const sections = (...xs: (string | string[] | null)[]) => xs.flatMap((x) => (x =
  */
 export function renderArtistSheet(artist: { name: string; tier?: number }, shows: Show[], now: Date, extras: SheetExtras = {}): string[] {
   // Solo las fechas con alguna preventa o venta general por llegar: lo demás ya no es accionable.
-  const live = sheetShows(artist.name, shows)
+  const live = sheetShows(artist.name, shows, artist.tier)
     .filter((s) => actionableSales(s, now).length > 0)
     .sort((a, b) => a.localDate.localeCompare(b.localDate));
   const tour = mostCommon(live.map((s) => s.name.replace(/\s*\|.*$/, "").trim())) ?? artist.name;

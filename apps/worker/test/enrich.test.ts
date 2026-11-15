@@ -126,3 +126,14 @@ describe("qué noticias se publican", () => {
     expect(newsLine(n("Feid", "signup"))).toBe("📝 **Feid** · Gira 2027 en Madrid · [más info](<https://x.example/a>)");
   });
 });
+
+describe("noticias de artistas ⭐", () => {
+  it("solo se publican si hablan de España", async () => {
+    const { newsWorthPosting, SPAIN } = await import("../src/news");
+    const n = (notSpain: boolean) => ({ artistName: "X", category: "tour_announced", channelId: null, notSpain, summary: "", url: "https://x.example" });
+    expect(newsWorthPosting([n(true)])).toEqual([]);
+    expect(newsWorthPosting([n(false)])).toHaveLength(1);
+    expect(SPAIN.test("Concierto en el WiZink de Madrid")).toBe(true);
+    expect(SPAIN.test("UK arena tour in London")).toBe(false);
+  });
+});

@@ -44,6 +44,8 @@ const madrid = (iso: string | null) => (iso ? formatHHmm(iso, MADRID) : "por con
 /** Avisos que provoca pasar de `prev` (lo guardado) a `next` (lo recién leído). */
 export function detectAlerts(prev: Show | null, next: Show, ctx: ChangeContext): Alert[] {
   if (next.isPackage) return [];
+  // Artistas ⭐: solo avisos de conciertos en España (decisión del propietario, 2026-11-15).
+  if (ctx.tier === 1 && next.venue.country !== "ES") return [];
   const make = (kind: AlertKind, detail: Record<string, string>, startsAt?: string | null): Alert => ({
     kind,
     showKey: showKey(next),

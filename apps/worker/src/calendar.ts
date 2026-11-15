@@ -24,21 +24,22 @@ import { Guild } from "./sheets";
 /** Ventas por llegar de las fichas activas, agrupadas por artista + etiqueta + hora. */
 export async function loadSlots(env: Env, now: Date): Promise<SaleSlot[]> {
   const { results } = await env.DB.prepare(
-    `SELECT s.artist_id, a.name, h.channel_id, s.snapshot_json FROM show s
+    `SELECT s.artist_id, a.name, h.channel_id, s.snapshot_json, COALESCE(f.tier, 1) AS tier FROM show s
        JOIN sheet h ON h.artist_id = s.artist_id AND h.status = 'active' JOIN artist a ON a.id = s.artist_id
+       LEFT JOIN follow f ON f.artist_id = s.artist_id
       WHERE s.local_date >= ? AND s.is_package = 0`,
   )
     .bind(localDateIn(now, MADRID))
-    .all<{ artist_id: string; name: string; channel_id: string; snapshot_json: string }>();
-  const byArtist = new Map<string, { name: string; channel: string; shows: Show[] }>();
+    .all<{ artist_id: string; name: string; channel_id: string; snapshot_json: string; tier: number }>();
+  const byArtist = new Map<string, { name: string; channel: string; tier: number; shows: Show[] }>();
   for (const r of results) {
-    const e = byArtist.get(r.artist_id) ?? { name: r.name, channel: r.channel_id, shows: [] };
+    const e = byArtist.get(r.artist_id) ?? { name: r.name, channel: r.channel_id, tier: r.tier, shows: [] };
     e.shows.push(JSON.parse(r.snapshot_json) as Show);
     byArtist.set(r.artist_id, e);
   }
   const slots = new Map<string, SaleSlot>();
   for (const [artistId, e] of byArtist) {
-    for (const s of sheetShows(e.name, await attachExtraSales(env, e.shows))) {
+    for (const s of sheetShows(e.name, await attachExtraSales(env, e.shows), e.tier)) {
       for (const w of actionableSales(s, now)) {
         if (!w.startsAt) continue;
         const k = `${artistId}|${w.label.toLowerCase()}|${w.startsAt}`;
