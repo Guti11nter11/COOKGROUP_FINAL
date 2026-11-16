@@ -51,7 +51,7 @@ export function sheetShows(artistName: string, shows: Show[], tier?: number): Sh
     (s) =>
       !s.isPackage &&
       !isPackageName(s.name) &&
-      !/[/-](package|packages|vip-package|hospitality|premium)[-/]|queue-it\.|eventtravel\./i.test(s.url) &&
+      !/[/-](package|packages|vip-package|hospitality|premium)[-/]|\/(mastercard|amex|citi)?-?preferred(-seating|-tickets)?(\/|\?|$)|queue-it\.|eventtravel\./i.test(s.url) &&
       !(FESTIVAL_RE.test(s.name) && !fold(s.name).includes(me)),
   );
   // Misma fecha y recinto listados dos veces (p. ej. el día del festival y el concierto): se queda el del artista.
@@ -363,6 +363,8 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
     .sort((a, b) => a.localDate.localeCompare(b.localDate));
   const tour = mostCommon(live.map((s) => s.name.replace(/\s*\|.*$/, "").trim())) ?? artist.name;
   const title = fold(tour).startsWith(fold(artist.name)) ? tour.slice(artist.name.length).replace(/^\s*[-–:]?\s*/, "") || tour : tour;
+  // "Evanescence + TBA", "… with special guests": eso no es un título de gira.
+  const noTitle = /^[+&,]?\s*(with\s+)?(tba|tbc|special guests?|guests?|support)\.?$/i.test(title.trim());
   const countries = [...new Map(live.map((s) => [s.venue.country, flag(s.venue.country)])).values()];
   const limit = limitText(live, extras.limits ?? {});
   // Página del artista en cada ticketera, solo si es de verdad la suya (no la del festival en que actúa).
@@ -377,7 +379,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
   const stars = artist.tier ? ` ${"⭐".repeat(Math.min(3, artist.tier))}` : "";
 
   const head = [
-    `${fold(title) === fold(artist.name) ? `# 🎤 ${artist.name}` : `# 🎤 ${artist.name} — ${title}`}${stars}`,
+    `${noTitle || fold(title) === fold(artist.name) ? `# 🎤 ${artist.name}` : `# 🎤 ${artist.name} — ${title}`}${stars}`,
     `${countries.join(" ")} · ${live.length} ${live.length === 1 ? "fecha" : "fechas"}`,
     "",
     `**Límite de entradas:** ${limit ?? "sin confirmar todavía"}`,

@@ -427,3 +427,13 @@ describe("artistas ⭐: solo conciertos en España (2026-11-15)", () => {
     expect(detectAlerts(null, list[0]!, ctx(1)).length).toBeGreaterThan(0);
   });
 });
+
+describe("revisión 17:47 (16-11)", () => {
+  it("el listado «Mastercard Preferred» de una fecha no es el enlace de las entradas normales; «+ TBA» no es título", () => {
+    const base = show("1", "IT", "Firenze", "2027-06-26", [["general", "Venta generale", "2026-11-20T09:00:00Z"]], { name: "Evanescence + TBA", url: "https://www.ticketmaster.it/biglietti/evanescence-firenze-26-06-2027/event/98jswvq485vh" });
+    const mc = { ...base, sourceId: "2", url: `${base.url}/mastercard-preferred`, venue: { ...base.venue, tmId: "V2" } };
+    expect(sheetShows("Evanescence", [base, mc]).map((s) => s.sourceId)).toEqual(["1"]);
+    expect(renderArtistSheet({ name: "Evanescence", tier: 2 }, [base, mc], NOW)[0]).toMatch(/^# 🎤 Evanescence ⭐⭐/);
+  });
+});
+
