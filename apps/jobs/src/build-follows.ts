@@ -10,7 +10,19 @@ if (!TM || !LASTFM) throw new Error("Faltan TICKETMASTER_API_KEY o LASTFM_API_KE
 const LIMIT = Number(process.env.GIRA_ENTITIES ?? 2000);
 const UA = "GIRA/0.1 (+https://github.com/Guti11nter11/COOKGROUP_FINAL)";
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-const getJson = async (url: string) => (await fetch(url, { headers: { "User-Agent": UA } })).json() as Promise<any>;
+/** GET JSON con reintentos: un corte puntual (502, "upstream connect error"…) ya no tumba la reconstrucción semanal. */
+const getJson = async (url: string): Promise<any> => {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(url, { headers: { "User-Agent": UA }, signal: AbortSignal.timeout(20000) });
+      if (res.ok) return await res.json();
+    } catch {
+      /* se reintenta */
+    }
+    await new Promise((r) => setTimeout(r, 2000 * attempt));
+  }
+  return {};
+};
 
 // 1) Candidatos por popularidad (Last.fm): global y por país.
 const cands: Candidate[] = [];
