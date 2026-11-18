@@ -261,6 +261,10 @@
     {
       "match": "\\bmarketing\\b",
       "how": "Preventa de marketing: el código lo reparten la promotora o el recinto (boletín o redes) poco antes"
+    },
+    {
+      "match": "\\breward(s)?\\b.*presale|rewards? (member|club)|\\b(onyx|diamond|platinum|gold|silver|copper|turquoise)/\\w+ reward",
+      "how": "Socios del programa de puntos del casino o recinto (según el nivel indicado): la preventa sale en su cuenta de socio"
     }
   ]
 }

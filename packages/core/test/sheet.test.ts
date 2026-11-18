@@ -437,3 +437,10 @@ describe("revisión 17:47 (16-11)", () => {
   });
 });
 
+describe("revisión 09:47 (18-11)", () => {
+  it("las preventas por nivel de socio (Gold/Turquoise Reward) son del programa de puntos del casino o recinto", () => {
+    const s = [show("1", "US", "Albuquerque", "2027-05-01", [["unknown", "Gold/Turquoise Reward Presale", "2026-11-20T16:00:00Z"]])];
+    expect(renderArtistSheet({ name: "The Temptations", tier: 2 }, s, NOW).join("\n")).toContain("**Gold/Turquoise Reward Presale** → Socios del programa de puntos");
+  });
+});
+
