@@ -444,3 +444,12 @@ describe("revisión 09:47 (18-11)", () => {
   });
 });
 
+describe("revisión 17:47 (18-11)", () => {
+  it("un listado de paquetes con guion («- Ultimate Bar Packages») no es la fecha normal", async () => {
+    const { isPackageName } = await import("../src/ticketmaster");
+    expect(isPackageName("Amex Presents BST Hyde Park - Raye - Ultimate Bar Packages")).toBe(true);
+    expect(isPackageName("U2: The Greatest Show On Earth World Tour")).toBe(false);
+    expect(isPackageName("Foo Fighters - Take Cover Tour 2027")).toBe(false);
+  });
+});
+

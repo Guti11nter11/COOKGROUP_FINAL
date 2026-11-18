@@ -60,7 +60,7 @@ export function priceOf(raw: unknown): ShowPrice | null {
  * fechas nuevas ni entradas normales (decisión del propietario, 2026-11-11: siempre el enlace de las normales).
  */
 const PACKAGE_RE =
-  /\|\s*[^|]*\b(VIP|Packages?|Paquetes?)\b|\b(hospitality|parking|aparcamiento|estacionamento|car park|hotell?rom|hotel ?rooms?|hotelzimmer|hotel package|accommodation|alojamiento|overnatting|shuttle|coach travel|bus package|merch(andise)? bundle|upgrade|premium|suites?|logen(-seat)?|box seats?|club seats?|lounge|meet ?(&|and) ?greet)\b/i;
+  /[|\-–]\s*[^|\-–]*\b(VIP|Packages?|Paquetes?)\b|\b(hospitality|parking|aparcamiento|estacionamento|car park|hotell?rom|hotel ?rooms?|hotelzimmer|hotel package|accommodation|alojamiento|overnatting|shuttle|coach travel|bus package|merch(andise)? bundle|upgrade|premium|suites?|logen(-seat)?|box seats?|club seats?|lounge|meet ?(&|and) ?greet)\b/i;
 const STATUS: Record<string, ShowStatus> = {
   onsale: "onsale",
   offsale: "offsale",
