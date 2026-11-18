@@ -12,6 +12,7 @@ on:
       - apps/worker/**
       - packages/core/src/**
       - data/presale-kinds.json
+      - data/presale-programs.json
       - .github/workflows/deploy-worker.yml
 
 permissions:
