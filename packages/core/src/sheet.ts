@@ -328,11 +328,13 @@ function howToJoin(w: SaleWindow, ss: Show[], extras: SheetExtras, artist = ""):
     const cities = new Set(ss.map((s) => fold(s.venue.city)));
     const dates = new Set(ss.map((s) => s.localDate));
     const all = extras.signups ?? [];
-    const specific = all.filter((l) => (l.localDate && dates.has(l.localDate)) || (l.city && cities.has(fold(l.city))));
+    // Un registro con fecha solo vale para esa fecha (Seated tiene uno por concierto); sin fecha, por ciudad.
+    const specific = all.filter((l) => (l.localDate ? dates.has(l.localDate) : !!l.city && cities.has(fold(l.city))));
     const generic = all.filter((l) => !l.localDate && !l.city);
-    const links = (specific.length ? specific : generic).slice(0, 6);
+    const label = (l: (typeof all)[number]) => `${l.label}${l.city ? ` · ${l.city}` : ""}${l.localDate ? ` ${linkDay(l.localDate)}` : ""}`;
+    const links = (specific.length ? specific : generic).filter((l, i, a) => a.findIndex((o) => label(o) === label(l)) === i).slice(0, 6);
     if (links.length === 1) parts.push(`Registro **[AQUÍ](${links[0]!.url})**`);
-    else if (links.length) parts.push(`Registro: ${links.map((l) => `[${l.label}${l.city ? ` · ${l.city}` : ""}${l.localDate ? ` ${linkDay(l.localDate)}` : ""}](${l.url})`).join(" · ")}`);
+    else if (links.length) parts.push(`Registro: ${links.map((l) => `[${label(l)}](${l.url})`).join(" · ")}`);
     else parts.push(`registro aún no localizado${extras.homepage ? ` — mira la [web oficial](${extras.homepage})` : " (GIRA lo sigue buscando)"}`);
   }
   if (!parts.length) parts.push(REQUIREMENT[w.kind]);
@@ -358,7 +360,7 @@ const sections = (...xs: (string | string[] | null)[]) => xs.flatMap((x) => (x =
  */
 export function renderArtistSheet(artist: { name: string; tier?: number }, shows: Show[], now: Date, extras: SheetExtras = {}): string[] {
   // Solo las fechas con alguna preventa o venta general por llegar: lo demás ya no es accionable.
-  const live = sheetShows(artist.name, shows, artist.tier)
+  const live = sheetShows(artist.name, shows.map((s) => (s.venue.city === s.venue.city.trim() ? s : { ...s, venue: { ...s.venue, city: s.venue.city.trim() } })), artist.tier)
     .filter((s) => actionableSales(s, now).length > 0)
     .sort((a, b) => a.localDate.localeCompare(b.localDate));
   const tour = mostCommon(live.map((s) => s.name.replace(/\s*\|.*$/, "").trim())) ?? artist.name;

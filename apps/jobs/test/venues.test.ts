@@ -41,3 +41,11 @@ describe("aforo desde el cuadro de datos de Wikipedia", async () => {
     expect(capacityFromWikitext("| opened = 2023")).toBeNull();
   });
 });
+
+describe("revisión 17:47 (20-11)", () => {
+  it("un casino o resort no toma el aforo de un pabellón con el mismo nombre", () => {
+    const arena: WdEntity = { id: "Q3", labels: { en: { value: "Footprint Center" } }, aliases: { en: [{ value: "Talking Stick Resort Arena" }] }, claims: { P1083: [cap("+19023")], P17: [country("Q30")] } };
+    expect(pickVenue([arena], { name: "Talking Stick Resort", country: "US" })).toBeNull();
+    expect(pickVenue([arena], { name: "Talking Stick Resort Arena", country: "US" })).toEqual({ id: "Q3", capacity: 19023 });
+  });
+});

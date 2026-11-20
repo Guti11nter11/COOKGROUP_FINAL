@@ -50,6 +50,8 @@ export function matchesVenue(e: WdEntity, venue: { name: string; country: string
   return names.some((n) => tokens(n).some((w) => mine.has(w)));
 }
 
+const names = (e: WdEntity) => [...Object.values(e.labels ?? {}).map((l) => l.value), ...Object.values(e.aliases ?? {}).flat().map((a) => a.value)];
+
 const KIND: [RegExp, string][] = [
   [/stadium|stadion|estadio|stade|stadio|estadi\b|field|ground|park/i, "stadium"],
   [/arena|dome|hall|centre|center|palacio|palau|pavilion|forum|o2\b/i, "arena"],
@@ -72,6 +74,8 @@ export function pickVenue(candidates: WdEntity[], venue: { name: string; country
   for (const e of candidates) {
     const capacity = capacityOf(e);
     if (!capacity || !matchesVenue(e, venue)) continue;
+    // Un casino u hotel ("Talking Stick Resort") no es el pabellón que lleva su nombre ("… Resort Arena").
+    if (/\b(resort|casino|hotel)\b/i.test(venue.name) && !kindOf(venue.name) && !names(e).some((n) => tokens(n).join(" ") === tokens(venue.name).join(" ") && !kindOf(n))) continue;
     const sc = score(e, venue);
     if (!best || sc > best.score) best = { id: e.id, capacity, score: sc };
   }

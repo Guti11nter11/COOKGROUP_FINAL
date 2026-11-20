@@ -128,7 +128,7 @@ export function normalizeTmEvent(raw: unknown): Show | null {
     venue: {
       tmId: venueId,
       name: str(v.name) ?? "",
-      city: str(obj(v.city).name) ?? "",
+      city: (str(obj(v.city).name) ?? "").trim(),
       country: str(obj(v.country).countryCode) ?? "",
       tz: str(v.timezone) ?? str(obj(e.dates).timezone),
     },

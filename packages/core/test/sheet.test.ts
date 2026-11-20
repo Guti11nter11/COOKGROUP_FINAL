@@ -460,3 +460,24 @@ describe("revisión 09:47 (20-11)", () => {
   });
 });
 
+
+describe("revisión 17:47 (20-11)", () => {
+  const tulsa = (id: string, date: string) => show(id, "US", "Tulsa", date, [["artist", "Artist Presale", "2026-11-21T15:00:00Z"]], { name: "Tame Impala" });
+  const seated = (n: number, localDate: string | null) => ({ url: `https://link.seated.com/${n}`, label: "Seated", city: "Tulsa", localDate });
+  const signup = (signups: ReturnType<typeof seated>[]) =>
+    renderArtistSheet({ name: "Tame Impala" }, [tulsa("t2", "2027-02-11")], NOW, { signups }).find((m) => m.startsWith("## 📝 Sign up"))!;
+  it("un registro de otra fecha en la misma ciudad no vale para esta preventa", () => {
+    const su = signup([seated(1, "2027-02-10"), seated(2, "2027-02-10")]);
+    expect(su).not.toContain("link.seated.com");
+    expect(su).toContain("registro aún no localizado");
+  });
+  it("los de su fecha sí, y sin repetir la misma etiqueta", () => {
+    const su = signup([seated(1, "2027-02-10"), seated(3, "2027-02-11"), seated(4, "2027-02-11")]);
+    expect(su).toContain("Registro **[AQUÍ](https://link.seated.com/3)**");
+    expect(su).not.toContain("seated.com/1");
+  });
+  it("la ciudad sin espacios sobrantes", () => {
+    const s = show("lv", "US", "Las Vegas ", "2027-05-22", [["general", "Venta general", "2026-11-21T18:00:00Z"]]);
+    expect(renderArtistSheet({ name: "Shaun Cassidy" }, [s], NOW).join("\n")).toContain("[Las Vegas · sáb 22 may 2027]");
+  });
+});
