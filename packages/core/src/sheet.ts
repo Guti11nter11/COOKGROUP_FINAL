@@ -364,7 +364,8 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
   const tour = mostCommon(live.map((s) => s.name.replace(/\s*\|.*$/, "").trim())) ?? artist.name;
   const title = fold(tour).startsWith(fold(artist.name)) ? tour.slice(artist.name.length).replace(/^\s*[-–:]?\s*/, "") || tour : tour;
   // "Evanescence + TBA", "… with special guests": eso no es un título de gira.
-  const noTitle = /^[+&,]?\s*(with\s+)?(tba|tbc|special guests?|guests?|support)\.?$/i.test(title.trim());
+  const noThe = (t: string) => fold(t).replace(/^the\s+/, "").trim();
+  const noTitle = /^[+&,]?\s*(with\s+)?(tba|tbc|special guests?|guests?|support)\.?$/i.test(title.trim()) || noThe(title) === noThe(artist.name);
   const countries = [...new Map(live.map((s) => [s.venue.country, flag(s.venue.country)])).values()];
   const limit = limitText(live, extras.limits ?? {});
   // Página del artista en cada ticketera, solo si es de verdad la suya (no la del festival en que actúa).

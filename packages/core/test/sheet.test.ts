@@ -453,3 +453,10 @@ describe("revisión 17:47 (18-11)", () => {
   });
 });
 
+describe("revisión 09:47 (20-11)", () => {
+  it("el nombre del artista con «The» delante no se repite como título", () => {
+    const s = [show("1", "GB", "Belfast", "2027-02-21", [["general", "Venta general", "2026-11-27T10:00:00Z"]], { name: "The Harlem Globetrotters" })];
+    expect(renderArtistSheet({ name: "Harlem Globetrotters", tier: 2 }, s, NOW)[0]).toMatch(/^# 🎤 Harlem Globetrotters ⭐⭐/);
+  });
+});
+
