@@ -363,7 +363,10 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
   const live = sheetShows(artist.name, shows.map((s) => (s.venue.city === s.venue.city.trim() ? s : { ...s, venue: { ...s.venue, city: s.venue.city.trim() } })), artist.tier)
     .filter((s) => actionableSales(s, now).length > 0)
     .sort((a, b) => a.localDate.localeCompare(b.localDate));
-  const tour = mostCommon(live.map((s) => s.name.replace(/\s*\|.*$/, "").trim())) ?? artist.name;
+  const esc = artist.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  // "American Express presents BST Hyde Park - Billie Eilish" → "BST Hyde Park": sin patrocinador ni el artista al final.
+  const clean = (n: string) => n.replace(/\s*\|.*$/, "").replace(/^.{2,40}?\s+presents?:?\s+/i, "").replace(new RegExp(`\\s*[-–:]\\s*${esc}\\s*$`, "i"), "").trim();
+  const tour = mostCommon(live.map((s) => clean(s.name) || s.name)) ?? artist.name;
   const title = fold(tour).startsWith(fold(artist.name)) ? tour.slice(artist.name.length).replace(/^\s*[-–:]?\s*/, "") || tour : tour;
   // "Evanescence + TBA", "… with special guests": eso no es un título de gira.
   const noThe = (t: string) => fold(t).replace(/^the\s+/, "").trim();

@@ -481,3 +481,10 @@ describe("revisión 17:47 (20-11)", () => {
     expect(renderArtistSheet({ name: "Shaun Cassidy" }, [s], NOW).join("\n")).toContain("[Las Vegas · sáb 22 may 2027]");
   });
 });
+
+describe("revisión 09:47 (21-11)", () => {
+  it("el título quita el patrocinador («X presents») y el nombre del artista al final", () => {
+    const s = [show("b", "GB", "London", "2027-07-03", [["general", "Venta general", "2026-11-27T10:00:00Z"]], { name: "American Express presents BST Hyde Park - Billie Eilish" })];
+    expect(renderArtistSheet({ name: "Billie Eilish", tier: 2 }, s, NOW)[0]).toMatch(/^# 🎤 Billie Eilish — BST Hyde Park ⭐⭐\n/);
+  });
+});
