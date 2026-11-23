@@ -1,0 +1,2 @@
+-- Revisión 09:47 del 23-11 (e): ventas futuras de TesseracT (solo metadatos)
+SELECT s.country, s.local_date, json_extract(s.snapshot_json, '$.name') AS evento, json_extract(j.value, '$.kind') AS tipo, json_extract(j.value, '$.label') AS venta, json_extract(j.value, '$.startsAt') AS sale FROM show s JOIN artist a ON a.id = s.artist_id, json_each(s.snapshot_json, '$.sales') j WHERE a.name = 'TesseracT' AND json_extract(j.value, '$.startsAt') > '2026-11-23T09:00:00Z';
