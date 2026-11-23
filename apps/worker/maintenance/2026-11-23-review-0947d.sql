@@ -1,0 +1,3 @@
+-- Revisión 09:47 del 23-11 (d): por qué los shows nuevos de Hairball y TesseracT no salen en ficha (solo metadatos)
+SELECT a.name, s.country, s.local_date, json_extract(s.snapshot_json, '$.name') AS evento, json_extract(s.snapshot_json, '$.venue.name') AS recinto, json_extract(j.value, '$.kind') AS tipo, json_extract(j.value, '$.label') AS venta, json_extract(j.value, '$.startsAt') AS sale FROM show s JOIN artist a ON a.id = s.artist_id, json_each(s.snapshot_json, '$.sales') j WHERE a.name IN ('Hairball', 'TesseracT') AND s.first_seen_at >= '2026-11-21T00:00:00Z' ORDER BY a.name, s.local_date LIMIT 40;
+SELECT COUNT(*) AS pendientes, MIN(since) AS desde FROM sheet_dirty;
