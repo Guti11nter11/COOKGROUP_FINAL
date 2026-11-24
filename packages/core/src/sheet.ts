@@ -1,5 +1,5 @@
 import { presaleGuide, type SaleKind } from "./presale";
-import { isPackageName, type SaleWindow, type Show } from "./ticketmaster";
+import { isPackageName, stripQueueToken, type SaleWindow, type Show } from "./ticketmaster";
 import { accessFor, type PresaleAccess } from "./inbox";
 
 /** Nombre de canal de Discord para una entidad: "Guns N' Roses" → "guns-n-roses". */
@@ -61,7 +61,13 @@ export function sheetShows(artistName: string, shows: Show[], tier?: number): Sh
     const prev = byDate.get(k);
     if (!prev || (!mine(prev) && mine(s))) byDate.set(k, s);
   }
-  return kept.filter((s) => byDate.get(`${s.venue.tmId}|${s.localDate}`) === s);
+  const once = kept.filter((s) => byDate.get(`${s.venue.tmId}|${s.localDate}`) === s);
+  // Ticketmaster lista a veces el mismo concierto también desde otra fuente (ids que empiezan por «Z»,
+  // otro id de recinto y una venta general de relleno): si existe el listado propio, ese sobra.
+  const other = (s: Show) => /^Z/.test(s.sourceId);
+  const at = (s: Show) => `${fold(s.venue.city).trim()}|${s.localDate}`;
+  const own = new Set(once.filter((s) => !other(s)).map(at));
+  return once.filter((s) => !other(s) || !own.has(at(s)));
 }
 
 /** Promociones sobre un evento ya a la venta (no son una salida de entradas). */
@@ -360,7 +366,7 @@ const sections = (...xs: (string | string[] | null)[]) => xs.flatMap((x) => (x =
  */
 export function renderArtistSheet(artist: { name: string; tier?: number }, shows: Show[], now: Date, extras: SheetExtras = {}): string[] {
   // Solo las fechas con alguna preventa o venta general por llegar: lo demás ya no es accionable.
-  const live = sheetShows(artist.name, shows.map((s) => (s.venue.city === s.venue.city.trim() ? s : { ...s, venue: { ...s.venue, city: s.venue.city.trim() } })), artist.tier)
+  const live = sheetShows(artist.name, shows.map((s) => ({ ...s, url: stripQueueToken(s.url), venue: { ...s.venue, city: s.venue.city.trim() } })), artist.tier)
     .filter((s) => actionableSales(s, now).length > 0)
     .sort((a, b) => a.localDate.localeCompare(b.localDate));
   const esc = artist.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

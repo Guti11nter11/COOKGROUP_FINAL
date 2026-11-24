@@ -185,10 +185,12 @@ describe("fichas por artista en Discord", () => {
   it("en el canal solo queda la ficha: se borran copias antiguas y novedades del bot", async () => {
     const a = show("1", "2027-05-10", "2026-11-20T09:00:00Z");
     await storeShow(a); await alertFor(a);
+    // El borrado en bloque de Discord mira la edad real de los mensajes (< 14 días), no el reloj del test.
+    const recent = new Date().toISOString();
     channelMessages = [
-      { id: "OLD1", timestamp: NOW.toISOString(), author: { bot: true } },
-      { id: "OLD2", timestamp: NOW.toISOString(), author: { bot: true } },
-      { id: "HUMANO", timestamp: NOW.toISOString(), author: { bot: false } },
+      { id: "OLD1", timestamp: recent, author: { bot: true } },
+      { id: "OLD2", timestamp: recent, author: { bot: true } },
+      { id: "HUMANO", timestamp: recent, author: { bot: false } },
     ];
     await publishSheets(env, NOW);
     const bulk = discordCalls("POST", /\/messages\/bulk-delete$/)[0];

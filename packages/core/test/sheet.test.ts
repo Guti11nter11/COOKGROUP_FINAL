@@ -488,3 +488,12 @@ describe("revisión 09:47 (21-11)", () => {
     expect(renderArtistSheet({ name: "Billie Eilish", tier: 2 }, s, NOW)[0]).toMatch(/^# 🎤 Billie Eilish — BST Hyde Park ⭐⭐\n/);
   });
 });
+
+describe("revisión 17:47 (24-11)", () => {
+  it("la misma fecha y ciudad listada dos veces (otra fuente, otro id de recinto) sale una sola vez: la que trae las preventas", () => {
+    const ghost = show("Z7r", "US", "Baltimore", "2027-08-20", [["general", "Venta general", "2027-01-31T15:00:00Z"]], { name: "U2 w/ Stephen Wilson Jr." });
+    const real = show("1A4", "US", "Baltimore", "2027-08-20", [["unknown", "U2.com Subscriber Presale", "2026-11-30T15:00:00Z"], ["card", "Visa Presale", "2026-12-02T15:00:00Z"], ["general", "Venta general", "2026-11-27T15:00:00Z"]]);
+    expect(sheetShows("U2", [ghost, real]).map((s) => s.sourceId)).toEqual(["1A4"]);
+    expect(sheetShows("U2", [real, ghost]).map((s) => s.sourceId)).toEqual(["1A4"]);
+  });
+});

@@ -77,7 +77,23 @@ const str = (v: unknown): string | null => (typeof v === "string" && v.length > 
 /** Quita parámetros de cola (`queueittoken`) de una URL oficial: nunca se comparten pases de cola. */
 export const isPackageName = (name: string) => PACKAGE_RE.test(name);
 
+/** Enlace real dentro de uno envuelto por un filtro de correo (Proofpoint urldefense v2/v3). */
+export function unwrapUrlDefense(url: string): string {
+  const v3 = /^https?:\/\/urldefense\.com\/v3\/__(.+?)__;/i.exec(url);
+  if (v3 && !v3[1]!.includes("*")) return v3[1]!;
+  const v2 = /^https?:\/\/urldefense\.proofpoint\.com\/v2\/url\?(?:.*&)?u=([^&]+)/i.exec(url);
+  if (v2) {
+    try {
+      return decodeURIComponent(v2[1]!.replace(/_/g, "/").replace(/-([0-9A-F]{2})/g, "%$1"));
+    } catch {
+      return url;
+    }
+  }
+  return url;
+}
+
 export function stripQueueToken(url: string): string {
+  url = unwrapUrlDefense(url);
   try {
     const u = new URL(url);
     for (const k of [...u.searchParams.keys()]) if (k.toLowerCase() === "queueittoken") u.searchParams.delete(k);

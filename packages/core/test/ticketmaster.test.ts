@@ -113,3 +113,13 @@ describe("venta general por confirmar", () => {
     expect(normalizeTmEvent(e)!.sales).toEqual([{ kind: "general", label: "Venta general", startsAt: null, endsAt: null, url: null, orderRank: 90 }]);
   });
 });
+
+describe("enlaces envueltos por un filtro de correo (urldefense)", () => {
+  it("se desenvuelven al enlace real", async () => {
+    const { stripQueueToken } = await import("../src/ticketmaster");
+    expect(stripQueueToken("https://urldefense.com/v3/__https://seatgeek.com/u2-tickets/baltimore-maryland-m-t-bank-stadium-2027-08-20-7-30-pm/concert/18589981__;!!Abc123$")).toBe(
+      "https://seatgeek.com/u2-tickets/baltimore-maryland-m-t-bank-stadium-2027-08-20-7-30-pm/concert/18589981",
+    );
+    expect(stripQueueToken("https://urldefense.proofpoint.com/v2/url?u=https-3A__www.ticketmaster.com_event_1-3Fdid-3Dx&d=DwM&c=abc")).toBe("https://www.ticketmaster.com/event/1?did=x");
+  });
+});
