@@ -41,7 +41,7 @@
     },
     {
       "kind": "fanclub",
-      "pattern": "fan ?club|fanclub|membership|member presale|socios|club de fans"
+      "pattern": "fan ?club|fanclub|membership|member presale|socios|club de fans|\\b[a-z0-9]+\\.com subscriber|subscriber presale"
     },
     {
       "kind": "promoter",

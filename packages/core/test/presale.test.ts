@@ -43,3 +43,11 @@ describe("preventas de EE. UU.", () => {
     expect(classifySaleLabel("SiriusXM Presale").kind).toBe("platform");
   });
 });
+
+describe("revisión 17:47 (24-11)", () => {
+  it("los suscriptores de la web del artista son su club de fans", async () => {
+    const { classifySaleLabel } = await import("../src/presale");
+    expect(classifySaleLabel("U2.com Subscriber Presale: Hype Group").kind).toBe("fanclub");
+    expect(classifySaleLabel("Subscriber Presale").kind).toBe("fanclub");
+  });
+});

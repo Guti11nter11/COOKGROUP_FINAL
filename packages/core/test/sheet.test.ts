@@ -497,3 +497,18 @@ describe("revisión 17:47 (24-11)", () => {
     expect(sheetShows("U2", [real, ghost]).map((s) => s.sourceId)).toEqual(["1A4"]);
   });
 });
+
+describe("revisión 17:47 (24-11): preventas de suscriptores de la web del artista", () => {
+  const u2 = (id: string, city: string, label: string, at: string) => show(id, "US", city, "2027-08-13", [["unknown", label, at], ["general", "Venta general", "2026-12-04T15:00:00Z"]]);
+  const msgs = renderArtistSheet({ name: "U2", tier: 3 }, [
+    u2("m", "Miami", "U2.com Subscriber Presale:The Hype Group", "2026-12-01T15:00:00Z"),
+    u2("a", "Atlanta", "U2.com Presale: Hype Group", "2026-12-01T15:00:00Z"),
+    u2("b", "Baltimore", "U2.com Subscriber Presale: Hype Group", "2026-12-01T15:00:00Z"),
+  ], NOW, { homepage: "https://www.u2.com/" });
+  const all = msgs.join("\n");
+  it("son del club de fans del artista, no de un recinto o socio", () => {
+    expect(all).not.toContain("recinto, promotora o socio");
+    expect(all).toContain("web oficial](https://www.u2.com/)");
+  });
+  it("las variantes de la misma preventa van en un solo bloque", () => expect(all.match(/^## 🎟️ .*Hype Group/gm)).toHaveLength(1));
+});

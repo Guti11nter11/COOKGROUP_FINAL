@@ -314,6 +314,9 @@ const GENERIC = new Set(["artist", "fan", "fans", "waitlist", "list", "official"
 
 /** ¿Es una preventa del propio artista? (sin nombre de un recinto, promotora o socio en la etiqueta). */
 function artistish(label: string, artist: string): boolean {
+  // "U2.com Subscriber Presale: Hype Group": la web del propio artista (sus suscriptores o club de fans).
+  const domain = fold(artist).replace(/[^\p{L}\p{N}]+/gu, "");
+  if (domain && new RegExp(`(^|[^\\p{L}\\p{N}])${domain}\\.com\\b`, "u").test(fold(label))) return true;
   const own = new Set(fold(artist).split(/[^\p{L}\p{N}]+/u));
   return fold(label)
     .replace(/[®™©]/g, "")
@@ -418,6 +421,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
       .replace(/\bartist[ae]?s?\b/g, "artist")
       .replace(/\btm\b/g, "ticketmaster")
       .replace(/\boffical\b/g, "official")
+      .replace(/\b(the|subscribers?)\b/g, " ")
       .replace(/\bbillets? preferentiels?\b/g, "preferred")
       .replace(/\bsieges preferentiels?\b/g, "preferred seating")
       .replace(/[^\p{L}\p{N}&+]+/gu, " ")
