@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import type { Show } from "../src/ticketmaster";
-import { renderArtistSheet, channelSlug, flag, ticketLimitNumber, isSheetActive, sheetShows, money } from "../src/sheet";
+import { renderArtistSheet, actionableSales, channelSlug, flag, ticketLimitNumber, isSheetActive, sheetShows, money } from "../src/sheet";
 
 const NOW = new Date("2026-11-08T12:00:00Z");
 const show = (id: string, cc: string, city: string, date: string, sales: [string, string, string | null][], extra: Partial<Show> = {}): Show => ({
@@ -511,4 +511,26 @@ describe("revisión 17:47 (24-11): preventas de suscriptores de la web del artis
     expect(all).toContain("web oficial](https://www.u2.com/)");
   });
   it("las variantes de la misma preventa van en un solo bloque", () => expect(all.match(/^## 🎟️ .*Hype Group/gm)).toHaveLength(1));
+});
+
+describe("revisión 17:47 (24-11): venta general anterior a sus preventas", () => {
+  const balt = show("b", "US", "Baltimore", "2027-08-20", [
+    ["general", "Venta general", "2026-11-27T15:00:00Z"],
+    ["card", "Visa Presale", "2026-12-02T15:00:00Z"],
+    ["artist", "Artist Presale", "2026-12-03T15:00:00Z"],
+  ]);
+  it("una venta general que Ticketmaster pone antes de las preventas del artista o de tarjeta no las borra", () => {
+    const after = new Date("2026-11-28T12:00:00Z");
+    expect(actionableSales(balt, after).map((w) => w.label)).toEqual(["Visa Presale", "Artist Presale"]);
+  });
+  it("las promociones tras la venta general siguen sin contar", () => {
+    const promo = show("h", "US", "Chicago", "2027-01-22", [["general", "Venta general", "2026-10-30T15:00:00Z"], ["unknown", "Black Friday/Cyber Monday Deal", "2026-11-27T16:00:00Z"]]);
+    expect(actionableSales(promo, NOW)).toEqual([]);
+  });
+  it("«I2.com» (errata de Ticketmaster) va con la preventa de suscriptores de la web del artista", () => {
+    const u2 = (id: string, city: string, label: string) => show(id, "US", city, "2027-08-13", [[ "unknown", label, "2026-11-30T15:00:00Z"], ["general", "Venta general", "2026-12-04T15:00:00Z"]]);
+    const all = renderArtistSheet({ name: "U2", tier: 3 }, [u2("m", "Miami", "U2.com Subscriber Presale:Feedback Group"), u2("a", "Arlington", "I2.com Subscriber Presale:Feedback Group")], NOW, { homepage: "https://www.u2.com/" }).join("\n");
+    expect(all.match(/^## 🎟️ .*Feedback Group/gm)).toHaveLength(1);
+    expect(all).not.toContain("recinto, promotora o socio");
+  });
 });

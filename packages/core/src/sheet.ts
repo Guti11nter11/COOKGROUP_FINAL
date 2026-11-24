@@ -81,9 +81,14 @@ export const PROMO =
  */
 export function actionableSales(show: Pick<Show, "sales">, now: Date): SaleWindow[] {
   const t = now.getTime();
-  if (show.sales.some((w) => w.kind === "general" && w.startsAt && Date.parse(w.startsAt) <= t)) return [];
+  // Una venta general que Ticketmaster pone antes de preventas conocidas (artista, tarjeta, operadora…)
+  // es un dato de relleno (p. ej. U2 en recintos de SeatGeek): ni cuenta como salida ni las borra.
+  const presales = show.sales.filter((w) => w.startsAt && !["general", "official_resale", "unknown"].includes(w.kind) && !PROMO.test(w.label));
+  const bogus = (w: SaleWindow) => w.kind === "general" && !!w.startsAt && presales.some((p) => Date.parse(p.startsAt!) > Date.parse(w.startsAt!));
+  if (show.sales.some((w) => w.kind === "general" && w.startsAt && Date.parse(w.startsAt) <= t && !bogus(w))) return [];
   return show.sales.filter(
     (w) =>
+      !bogus(w) &&
       w.kind !== "official_resale" &&
       !PROMO.test(w.label) &&
       (w.kind !== "unknown" || SALE_WORDS.test(w.label)) &&
@@ -317,6 +322,8 @@ function artistish(label: string, artist: string): boolean {
   // "U2.com Subscriber Presale: Hype Group": la web del propio artista (sus suscriptores o club de fans).
   const domain = fold(artist).replace(/[^\p{L}\p{N}]+/gu, "");
   if (domain && new RegExp(`(^|[^\\p{L}\\p{N}])${domain}\\.com\\b`, "u").test(fold(label))) return true;
+  // Suscriptores de una web que no es un programa conocido (eso se mira antes): la del artista, aunque venga con errata.
+  if (/\.com subscribers?\b/.test(fold(label))) return true;
   const own = new Set(fold(artist).split(/[^\p{L}\p{N}]+/u));
   return fold(label)
     .replace(/[®™©]/g, "")
@@ -421,6 +428,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
       .replace(/\bartist[ae]?s?\b/g, "artist")
       .replace(/\btm\b/g, "ticketmaster")
       .replace(/\boffical\b/g, "official")
+      .replace(/\b[a-z0-9]+\.com\b/g, "site")
       .replace(/\b(the|subscribers?)\b/g, " ")
       .replace(/\bbillets? preferentiels?\b/g, "preferred")
       .replace(/\bsieges preferentiels?\b/g, "preferred seating")
