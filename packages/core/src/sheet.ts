@@ -351,7 +351,7 @@ function howToJoin(w: SaleWindow, ss: Show[], extras: SheetExtras, artist = ""):
     const links = (specific.length ? specific : generic).filter((l, i, a) => a.findIndex((o) => label(o) === label(l)) === i).slice(0, 6);
     if (links.length === 1) parts.push(`Registro **[AQUÍ](${links[0]!.url})**`);
     else if (links.length) parts.push(`Registro: ${links.map((l) => `[${label(l)}](${l.url})`).join(" · ")}`);
-    else parts.push(`registro aún no localizado${extras.homepage ? ` — mira la [web oficial](${extras.homepage})` : " (GIRA lo sigue buscando)"}`);
+    else if (!w.url) parts.push(`registro aún no localizado${extras.homepage ? ` — mira la [web oficial](${extras.homepage})` : " (GIRA lo sigue buscando)"}`);
   }
   if (!parts.length) parts.push(REQUIREMENT[w.kind]);
   return parts.join(" · ");

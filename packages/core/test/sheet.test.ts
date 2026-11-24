@@ -534,3 +534,13 @@ describe("revisión 17:47 (24-11): venta general anterior a sus preventas", () =
     expect(all).not.toContain("recinto, promotora o socio");
   });
 });
+
+describe("revisión 17:47 (24-11): preventa con su propio enlace de registro", () => {
+  it("no dice además «registro aún no localizado»", () => {
+    const s = show("m", "US", "Miami", "2027-08-13", [["artist", "Artist Presale", "2026-12-03T15:00:00Z"]]);
+    s.sales[0]!.url = "https://signup.livenation.com/u2";
+    const su = renderArtistSheet({ name: "U2", tier: 3 }, [s], NOW, { homepage: "https://www.u2.com/" }).find((m) => m.startsWith("## 📝 Sign up"))!;
+    expect(su).toContain("[enlace de la preventa](https://signup.livenation.com/u2)");
+    expect(su).not.toContain("no localizado");
+  });
+});
