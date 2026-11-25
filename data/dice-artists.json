@@ -1,6 +1,15 @@
 {
-  "_doc": "Páginas públicas de artistas en DICE (dice.fm/artist/…). GIRA lee 4 veces al día sus eventos y la ficha de cada uno (venta, preventa, límite, precio). Para añadir uno: su URL de artista de DICE y el nombre tal como está en GIRA.",
+  "_doc": "Páginas públicas de DICE que GIRA lee 4 veces al día. «artists»: la página de un artista (dice.fm/artist/…) con su nombre tal como está en GIRA. «venues»: la página de un recinto (dice.fm/venue/…): de sus eventos entran los de artistas seguidos.",
   "artists": [
-    { "name": "Charli xcx", "url": "https://dice.fm/artist/charli-xcx-llkb" }
+    {
+      "name": "Charli xcx",
+      "url": "https://dice.fm/artist/charli-xcx-llkb"
+    }
+  ],
+  "venues": [
+    {
+      "name": "Apple Music Hall (Londres)",
+      "url": "https://dice.fm/venue/apple-music-hall-92dg7"
+    }
   ]
 }

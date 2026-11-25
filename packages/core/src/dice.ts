@@ -30,6 +30,24 @@ export function diceArtistEvents(html: string, now: Date): string[] {
   return [...new Set(out)];
 }
 
+/** Eventos futuros de la página de un recinto en DICE (JSON-LD Place.event), con su nombre. */
+export function diceVenueEvents(html: string, now: Date): { name: string; url: string }[] {
+  const out: { name: string; url: string }[] = [];
+  for (const m of html.matchAll(/<script[^>]*type="application\/ld\+json"[^>]*>([\s\S]*?)<\/script>/gi)) {
+    try {
+      const d = JSON.parse(m[1]!) as { "@type"?: string; event?: { url?: string; name?: string; startDate?: string }[] };
+      if (d["@type"] !== "Place") continue;
+      for (const e of d.event ?? []) {
+        const at = e.startDate ? Date.parse(e.startDate) : NaN;
+        if (e.url && e.name && /^https:\/\/dice\.fm\/event\//.test(e.url) && at > now.getTime() && !out.some((o) => o.url === e.url)) out.push({ name: e.name, url: e.url });
+      }
+    } catch {
+      /* bloque no válido */
+    }
+  }
+  return out;
+}
+
 const STATUS: Record<string, ShowStatus> = { "sold-out": "offsale", "off-sale": "offsale", cancelled: "cancelled", postponed: "postponed", rescheduled: "rescheduled" };
 
 /** Un evento de DICE como fecha de GIRA (mismo formato que Ticketmaster). Null si faltan datos. */

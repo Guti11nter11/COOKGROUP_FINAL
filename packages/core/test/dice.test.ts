@@ -33,3 +33,16 @@ describe("DICE (páginas públicas de artista y de evento)", () => {
     expect(s.sales.map((w) => [w.label, w.startsAt])).toEqual([["Preventa DICE", "2026-11-24T10:00:00.000Z"], ["Venta general", "2026-11-25T10:00:00.000Z"]]);
   });
 });
+
+describe("DICE: recintos", () => {
+  const venue = readFileSync(new URL("./fixtures/dice-venue.html", import.meta.url), "utf8");
+  it("la página del recinto da sus eventos futuros con nombre", async () => {
+    const { diceVenueEvents } = await import("../src/dice");
+    expect(diceVenueEvents(venue, new Date("2026-11-25T00:00:00Z"))).toEqual([
+      { name: "Chase & Status (Live)", url: "https://dice.fm/event/6aec730b2a1bb4000161052f" },
+      { name: "Charli xcx", url: "https://dice.fm/event/6aec7477b4defd0001a0ba28" },
+      { name: "Kings Of Leon", url: "https://dice.fm/event/6aec651977cbe90001eb6dcd" },
+      { name: "Jorja Smith", url: "https://dice.fm/event/6aec67e766dab8000131301f" },
+    ]);
+  });
+});

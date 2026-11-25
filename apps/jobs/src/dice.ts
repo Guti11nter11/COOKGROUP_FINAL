@@ -4,12 +4,14 @@
  * User-Agent identificado; ante un 403/429 se para. Los eventos van al Worker como fechas más.
  */
 import { readFileSync } from "node:fs";
-import { diceArtistEvents, parseDiceEvent, type Show } from "@gira/core";
+import { diceArtistEvents, diceVenueEvents, parseDiceEvent, type Show } from "@gira/core";
+import { nameMatcher } from "./news-radar-lib";
 import { gira, UA } from "./gira-client";
 import { robotsAllows } from "./sports-lib";
 
 const fold = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
-const list: { name: string; url: string }[] = JSON.parse(readFileSync("data/dice-artists.json", "utf8")).artists;
+const conf = JSON.parse(readFileSync("data/dice-artists.json", "utf8")) as { artists: { name: string; url: string }[]; venues?: { name: string; url: string }[] };
+const list = conf.artists;
 const follows: { name: string; tmAttractionId: string | null }[] = JSON.parse(readFileSync("data/artists.resolved.json", "utf8"));
 const pause = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -51,6 +53,37 @@ outer: for (const a of list) {
 }
 // Lo que ya salió a la venta entra como línea base (sin avisos): solo avisa lo que tiene una venta por llegar.
 const upcoming = (s: Show) => s.sales.some((w) => w.startsAt && Date.parse(w.startsAt) > Date.now());
+// Recintos: de sus eventos, los de artistas seguidos (el nombre del evento nombra al artista).
+const matcher = nameMatcher(follows.filter((f) => f.tmAttractionId).map((f) => f.name));
+const seen = new Set(shows.map((s) => s.url));
+const venues = (conf.venues ?? []).map((v) => v.url);
+venues: for (const v of venues.slice(0, 15)) {
+  await pause(3000);
+  const page = await get(v);
+  if (page === "blocked") {
+    console.log("· DICE bloquea lectores automáticos, se respeta");
+    break;
+  }
+  if (!page) continue;
+  const events = diceVenueEvents(page, new Date()).filter((e) => !seen.has(e.url));
+  let n = 0;
+  for (const e of events) {
+    const who = matcher.match(e.name)[0];
+    const tm = who ? follows.find((f) => f.name === who)?.tmAttractionId : null;
+    if (!tm || n >= 10) continue;
+    await pause(3000);
+    const html = await get(e.url);
+    if (html === "blocked") break venues;
+    const s = html ? parseDiceEvent(html, tm, e.url) : null;
+    if (s) {
+      shows.push(s);
+      seen.add(e.url);
+      n++;
+    }
+  }
+  console.log(`✓ recinto ${new URL(v).pathname}: ${events.length} eventos, ${n} de artistas seguidos`);
+}
+
 for (const [baseline, part] of [[false, shows.filter(upcoming)], [true, shows.filter((s) => !upcoming(s))]] as const) {
   for (let i = 0; i < part.length; i += 80) {
     const r = await gira<{ stored: number; alerts: number }>("/ingest", { shows: part.slice(i, i + 80), baseline });
