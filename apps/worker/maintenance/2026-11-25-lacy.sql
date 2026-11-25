@@ -1,0 +1,3 @@
+-- Diagnóstico (25-11): ventas de Steve Lacy en Ticketmaster (solo metadatos públicos)
+SELECT s.source_id, s.country, s.local_date, json_extract(s.snapshot_json, '$.venue.name') AS recinto, json_extract(s.snapshot_json, '$.venue.tmId') AS v, json_extract(j.value, '$.kind') AS tipo, json_extract(j.value, '$.label') AS venta, json_extract(j.value, '$.startsAt') AS sale FROM show s JOIN artist a ON a.id = s.artist_id, json_each(s.snapshot_json, '$.sales') j WHERE a.name = 'Steve Lacy' AND s.local_date >= '2026-11-25';
+SELECT v.tm_venue_id, v.name, v.capacity FROM venue_info v WHERE v.name LIKE '%O2 Arena%' OR v.name LIKE 'The O2%' LIMIT 5;
