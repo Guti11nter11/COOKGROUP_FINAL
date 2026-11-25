@@ -8,6 +8,8 @@ const HOSTS: [RegExp, string][] = [
   [/^signup\.ticketmaster\./, "Ticketmaster (registro)"],
   [/^verifiedfan\.ticketmaster\./, "Ticketmaster Verified Fan"],
   [/(^|\.)seated\.com$/, "Seated"],
+  [/^drop\.cobrand\.com$/, "Cobrand (registro)"],
+  [/(^|\.)fanlink\.(tv|to)$|(^|\.)fan\.link$/, "Registro de preventa"],
   [/(^|\.)fanclub|(^|\.)fan-club/, "Fan club"],
   [/^presale\./, "Preventa oficial"],
   // Tiendas oficiales donde comprar o reservar el disco da el código de la preventa (sobre todo Reino Unido).
@@ -59,6 +61,34 @@ export interface RawLink {
 }
 
 /** Se queda con los enlaces de registro/preventa y los asocia a ciudad y fecha cuando el contexto lo dice. */
+/** Acortadores y enlaces «inteligentes» (Linkfire, Linktree…): llevan a otra parte. */
+export const SHORT = /(^|\.)(lnk\.to|ffm\.to|smarturl\.it|found\.ee|hypeddit\.com|bit\.ly|lnkfi\.re)$/;
+
+/** Nombre de un registro según su plataforma (para un enlace corto ya resuelto). Pura. */
+export function labelFor(url: string): string | null {
+  try {
+    const host = new URL(url).hostname.replace(/^www\./, "");
+    return HOSTS.find(([re]) => re.test(host))?.[1] ?? null;
+  } catch {
+    return null;
+  }
+}
+
+/** Webs oficiales probables cuando MusicBrainz no la tiene («chaseatlantic.com»). Pura. */
+export function homepageGuesses(name: string): string[] {
+  const slug = fold(name).replace(/&/g, "and").replace(/[^a-z0-9]+/g, "");
+  if (slug.length < 3) return [];
+  return [`https://www.${slug}.com/`, `https://${slug}.com/`, `https://www.${slug}music.com/`, `https://www.${slug}official.com/`];
+}
+
+/** ¿El título de la página es la web del artista? (no un dominio aparcado ni una página por defecto). Pura. */
+export function titleMatches(title: string, name: string): boolean {
+  const t = fold(title);
+  if (/for sale|parked|domain|coming soon|welcome to nginx|index of|default (web )?page/.test(t)) return false;
+  const n = fold(name).replace(/[^a-z0-9]+/g, " ").trim();
+  return !!n && t.replace(/[^a-z0-9]+/g, " ").includes(n);
+}
+
 export function pickSignups(raw: RawLink[], shows: { city: string; localDate: string }[], pageHost: string): SignupLink[] {
   const out = new Map<string, SignupLink>();
   for (const r of raw) {
@@ -78,7 +108,10 @@ export function pickSignups(raw: RawLink[], shows: { city: string; localDate: st
     const dated = shows.filter((s) => (!city || s.city === city) && mentionsDate(r.context, s.localDate));
     // Enlaces por fecha de plataformas de giras (Bandsintown /t/, link.seated.com): solo si son de una fecha nuestra.
     if (!city && (/bandsintown\.com\/t\//.test(url) || /^link\.seated\.com$/.test(host))) continue;
-    const label = known?.[1] ?? (host === pageHost ? (r.text.replace(/\s+/g, " ").trim().slice(0, 40) || "Registro en la web oficial") : host);
+    // Enlace corto (lnk.to/presale…): es el registro de la preventa, aunque no se sepa aún adónde lleva.
+    const short = SHORT.test(host) && /pre-?sale|preventa|early-?access|sign-?up|register/i.test(new URL(url).pathname);
+    if (SHORT.test(host) && !short) continue; // lnk.to/album, linktr.ee… sin preventa: música, no registro
+    const label = known?.[1] ?? (short ? "Registro de preventa" : host === pageHost ? (r.text.replace(/\s+/g, " ").trim().slice(0, 40) || "Registro en la web oficial") : host);
     out.set(url, { url, label, city, localDate: dated.length === 1 ? dated[0]!.localDate : null });
   }
   return [...out.values()];

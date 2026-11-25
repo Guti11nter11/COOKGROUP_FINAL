@@ -2,7 +2,7 @@ import { createRequire } from "node:module";
 import type { EnrichInput, EnrichTodo } from "@gira/core";
 import { getJson } from "./gira-client";
 import { readFileSync } from "node:fs";
-import { cleanUrl, deadPage, outOfScope, pickSignups, presaleSignal, type RawLink } from "./signups-lib";
+import { cleanUrl, deadPage, homepageGuesses, labelFor, outOfScope, pickSignups, presaleSignal, SHORT, titleMatches, type RawLink } from "./signups-lib";
 
 /** Registros que el propietario ya conoce (data/watchlist.json): se añaden siempre a su ficha. */
 type Watch = { entity: string; kind: string; url?: string };
@@ -27,6 +27,42 @@ async function homepageOf(mbid: string | null): Promise<string | null> {
   const rel = data?.relations?.find((r) => r.type === "official homepage" && !r.ended && r.url?.resource.startsWith("http"));
   return rel?.url?.resource.replace(/^http:/, "https:") ?? null;
 }
+
+const UA = "Mozilla/5.0 (compatible; GIRA personal tour radar; +https://github.com/Guti11nter11/COOKGROUP_FINAL)";
+
+/** Sin web en MusicBrainz: «nombre.com» y variantes, solo si el título de la página nombra al artista. */
+async function guessHomepage(name: string): Promise<string | null> {
+  for (const url of homepageGuesses(name)) {
+    try {
+      const res = await fetch(url, { headers: { "User-Agent": UA }, redirect: "follow", signal: AbortSignal.timeout(12000) });
+      if (!res.ok) continue;
+      const title = /<title[^>]*>([^<]*)/i.exec((await res.text()).slice(0, 60000))?.[1] ?? "";
+      if (titleMatches(title, name)) return res.url || url;
+    } catch {
+      /* siguiente */
+    }
+  }
+  return null;
+}
+
+/** Adónde lleva un enlace corto (lnk.to/presale → drop.cobrand.com/…): solo se leen las redirecciones. */
+async function resolveShort(url: string): Promise<string> {
+  let cur = url;
+  for (let hop = 0; hop < 4; hop++) {
+    try {
+      const res = await fetch(cur, { method: "GET", headers: { "User-Agent": UA }, redirect: "manual", signal: AbortSignal.timeout(10000) });
+      const loc = res.headers.get("location");
+      if (res.status < 300 || res.status >= 400 || !loc) break;
+      cur = new URL(loc, cur).toString();
+    } catch {
+      break;
+    }
+  }
+  return cleanUrl(cur) ?? url;
+}
+
+/** Plataformas de registro con protección antibots: no se abren (solo se enlazan). */
+const NO_PROBE = /^(drop\.cobrand\.com|signup\.livenation\.com|signup\.ticketmaster\.[a-z.]+|verifiedfan\.ticketmaster\.[a-z.]+)$/;
 
 type Browser = { newPage: (o?: unknown) => Promise<Page>; close: () => Promise<void> };
 type Page = {
@@ -71,8 +107,12 @@ async function isAlive(browser: Browser, url: string): Promise<boolean> {
 }
 
 /** Busca dónde registrarse para las preventas del artista en su web oficial (y su página de gira). */
-export async function findSignups(artists: EnrichTodo["artists"], max = 15, onlyPresale = false): Promise<NonNullable<EnrichInput["signups"]>> {
-  const todo = artists.filter((a) => a.needsSignup).slice(0, max);
+export async function findSignups(artists: EnrichTodo["artists"], max = 25, onlyPresale = false): Promise<NonNullable<EnrichInput["signups"]>> {
+  // Primero los que tienen la preventa más cerca.
+  const todo = artists
+    .filter((a) => a.needsSignup)
+    .sort((a, b) => (a.firstSale ?? "9999").localeCompare(b.firstSale ?? "9999"))
+    .slice(0, max);
   if (!todo.length) return [];
   // Playwright se instala solo en el trabajo de Actions (no es dependencia del repo).
   const { chromium } = createRequire(import.meta.url)("playwright") as { chromium: { launch: () => Promise<Browser> } };
@@ -81,7 +121,7 @@ export async function findSignups(artists: EnrichTodo["artists"], max = 15, only
   try {
     for (const a of todo) {
       const mine = watchlist.filter((w) => fold(w.entity) === fold(a.name) && w.url);
-      const homepage = a.homepage ?? mine.find((w) => w.kind === "official_site")?.url ?? (await homepageOf(a.mbid));
+      const homepage = a.homepage ?? mine.find((w) => w.kind === "official_site")?.url ?? (await homepageOf(a.mbid)) ?? (await guessHomepage(a.name));
       const known = pickSignups(
         mine.filter((w) => w.kind === "registration" || w.kind === "drop").map((w) => ({ text: "Registro", href: w.url!, context: "" })),
         a.when,
@@ -97,12 +137,23 @@ export async function findSignups(artists: EnrichTodo["artists"], max = 15, only
       // Página de gira de la misma web, si la hay.
       const tour = raw.find((l) => /^(tour|tours|live|dates|shows|events|conciertos|gira|tickets)$/i.test(l.text) && l.href.includes(host));
       if (tour) raw.push(...(await linksOf(browser, tour.href)));
+      // Su Linktree, si la web lo enlaza (ahí suelen ir los registros de preventa).
+      const tree = raw.find((l) => /^https:\/\/(www\.)?linktr\.ee\/[^/?#]+/.test(l.href));
+      if (tree) raw.push(...(await linksOf(browser, tree.href)));
       const picked = pickSignups(raw, a.when, host);
       // Sin fechas todavía: solo lo que apunta a una preventa o gira, no la newsletter de siempre.
       const found = onlyPresale ? picked.filter((f) => presaleSignal(f, raw.find((r) => cleanUrl(r.href) === f.url))) : picked;
       // Solo enlaces vivos y de países cubiertos (un registro antiguo de Australia no sirve).
       const alive: typeof found = [];
-      for (const f of found.filter((x) => !outOfScope(x.url)).slice(0, 8)) if (await isAlive(browser, f.url)) alive.push(f);
+      for (const f of found.filter((x) => !outOfScope(x.url)).slice(0, 8)) {
+        // Enlace corto: se mira adónde lleva para nombrar la plataforma (y enlazarla directamente).
+        if (SHORT.test(new URL(f.url).hostname.replace(/^www\./, ""))) {
+          const to = await resolveShort(f.url);
+          const label = labelFor(to);
+          if (label) Object.assign(f, { url: to, label });
+        }
+        if (NO_PROBE.test(new URL(f.url).hostname) || (await isAlive(browser, f.url))) alive.push(f);
+      }
       const links = [...known, ...alive.filter((f) => !known.some((k) => k.url === f.url))];
       out.push({ artistId: a.artistId, homepage, links });
       console.log(`${links.length ? "✓" : "·"} ${a.name} (${homepage}): ${links.map((l) => `${l.label}${l.city ? ` ${l.city}` : ""}`).join(", ") || "sin enlaces de registro"}`);

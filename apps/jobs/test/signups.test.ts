@@ -88,3 +88,34 @@ describe("revisión 09:47 (13-11)", () => {
   });
 });
 
+
+describe("registros: más plataformas y enlaces cortos (25-11)", () => {
+  it("drop.cobrand.com y lnk.to/presale son registros de preventa con su nombre", () => {
+    const got = pickSignups(
+      [
+        { text: "Presale", href: "https://chaseatlantic.lnk.to/presale", context: "Tour Presale" },
+        { text: "Sign up", href: "https://drop.cobrand.com/d/ChaseAtlantic/dontlookdowneuuk2027", context: "" },
+        { text: "Listen", href: "https://chaseatlantic.lnk.to/lostinheaven", context: "New album" },
+      ],
+      shows,
+      "chaseatlantic.com",
+    );
+    expect(got.map((g) => [g.label, g.url])).toEqual([
+      ["Registro de preventa", "https://chaseatlantic.lnk.to/presale"],
+      ["Cobrand (registro)", "https://drop.cobrand.com/d/ChaseAtlantic/dontlookdowneuuk2027"],
+    ]);
+  });
+  it("nombre del enlace corto según adónde lleva", async () => {
+    const { labelFor } = await import("../src/signups-lib");
+    expect(labelFor("https://drop.cobrand.com/d/X/y")).toBe("Cobrand (registro)");
+    expect(labelFor("https://signup.livenation.com/x")).toBe("Live Nation (registro)");
+    expect(labelFor("https://example.com/presale")).toBeNull();
+  });
+  it("web oficial adivinada: solo si el título de la página nombra al artista", async () => {
+    const { homepageGuesses, titleMatches } = await import("../src/signups-lib");
+    expect(homepageGuesses("Chase Atlantic")).toEqual(["https://www.chaseatlantic.com/", "https://chaseatlantic.com/", "https://www.chaseatlanticmusic.com/", "https://www.chaseatlanticofficial.com/"]);
+    expect(titleMatches("Chase Atlantic | Official Site", "Chase Atlantic")).toBe(true);
+    expect(titleMatches("chaseatlantic.com is for sale", "Chase Atlantic")).toBe(false);
+    expect(titleMatches("Welcome to nginx", "Chase Atlantic")).toBe(false);
+  });
+});
