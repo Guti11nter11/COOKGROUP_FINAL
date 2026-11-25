@@ -79,6 +79,16 @@ describe("/enrich", () => {
     expect(todo.artists[0]!.homepage).toBe("https://www.artista.com/");
   });
 
+  it("registros de artículos de blogs oficiales: se guardan aparte (no los borra la pasada de la web) y una sola vez", async () => {
+    const body = JSON.stringify({ articleSignups: [{ artistId: "a1", url: "https://drop.cobrand.com/d/X/y", label: "Cobrand (registro)" }, { artistId: "nadie", url: "https://drop.cobrand.com/d/Z/z", label: "Cobrand (registro)" }] });
+    await call("/enrich", { method: "POST", body });
+    await call("/enrich", { method: "POST", body });
+    expect(await env.DB.prepare("SELECT COUNT(*) n FROM artist_signup_manual").first()).toEqual({ n: 1 });
+    expect(await env.DB.prepare("SELECT COUNT(*) n FROM sheet_dirty WHERE artist_id = 'a1'").first()).toEqual({ n: 1 });
+    await call("/enrich", { method: "POST", body: JSON.stringify({ signups: [{ artistId: "a1", links: [] }] }) });
+    expect((await env.DB.prepare("SELECT url, source FROM artist_signup_manual").all()).results).toEqual([{ url: "https://drop.cobrand.com/d/X/y", source: "article" }]);
+  });
+
   it("un precio de otra fuente no pisa el de Ticketmaster", async () => {
     await env.DB.prepare("INSERT INTO show_price (source_id, min, max, currency, source, updated_at) VALUES ('1', 50, 200, 'EUR', 'Ticketmaster', 'x')").run();
     await call("/enrich", { method: "POST", body: JSON.stringify({ prices: [{ sourceId: "1", min: 10, max: 20, currency: "EUR", source: "Prensa" }] }) });

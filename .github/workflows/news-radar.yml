@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
   push:
     branches: [claude/magical-franklin-u415fe]
-    paths: [.github/workflows/news-radar.yml, apps/jobs/src/news-radar*.ts]
+    paths: [.github/workflows/news-radar.yml, apps/jobs/src/news-radar*.ts, apps/jobs/src/articles*.ts]
 
 permissions:
   contents: read
@@ -41,6 +41,11 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: npx tsx apps/jobs/src/news-radar.ts
+      - name: Registros de preventa en los blogs oficiales de Ticketmaster
+        if: always()
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+        run: npx tsx apps/jobs/src/articles.ts
       - name: Guardar titulares vistos
         if: always()
         uses: actions/cache/save@v4

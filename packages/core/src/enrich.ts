@@ -36,6 +36,8 @@ export interface EnrichTodo {
 
 export interface EnrichInput {
   signups?: { artistId: string; homepage?: string | null; links: SignupLink[] }[];
+  /** Registros de preventa sacados de artículos de los blogs oficiales de Ticketmaster. */
+  articleSignups?: { artistId: string; url: string; label: string }[];
   venues?: { tmId: string; name: string; city?: string; country?: string; capacity: number | null; wikidataId?: string | null; source?: string }[];
   prices?: ({ sourceId: string } & PriceInfo)[];
   resale?: { artistId: string; info: ResaleInfo }[];

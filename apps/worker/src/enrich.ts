@@ -172,6 +172,27 @@ export async function applyEnrichment(
   }
   const signups = (input.signups ?? []).filter((x) => x.artistId);
   const freshSignups: { artistId: string; links: SignupLink[] }[] = [];
+  // Registros de artículos de blogs oficiales: se suman a los de la web (no se borran en cada pasada) y caducan a los 60 días.
+  const articles = (input.articleSignups ?? []).filter((x) => x.artistId && /^https:\/\//.test(x.url) && !/queueittoken/i.test(x.url)).slice(0, 60);
+  if (articles.length || input.articleSignups) {
+    stmts.push(env.DB.prepare("DELETE FROM artist_signup_manual WHERE source = 'article' AND added_at < ?").bind(new Date(now.getTime() - 60 * 86_400_000).toISOString()));
+  }
+  for (const a of articles) {
+    const exists = await env.DB.prepare("SELECT 1 AS x FROM artist_signup_manual WHERE artist_id = ? AND url = ? UNION SELECT 1 FROM artist_signup WHERE artist_id = ? AND url = ?")
+      .bind(a.artistId, a.url, a.artistId, a.url)
+      .first();
+    if (exists) continue;
+    const known = await env.DB.prepare("SELECT 1 AS x FROM artist WHERE id = ?").bind(a.artistId).first();
+    if (!known) continue;
+    stmts.push(
+      env.DB.prepare("INSERT OR IGNORE INTO artist_signup_manual (artist_id, url, label, added_at, source) VALUES (?, ?, ?, ?, 'article')").bind(a.artistId, a.url, a.label.slice(0, 60), iso),
+      env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(a.artistId, iso),
+    );
+    const f = freshSignups.find((x) => x.artistId === a.artistId);
+    const link: SignupLink = { url: a.url, label: a.label, city: null, localDate: null };
+    if (f) f.links.push(link);
+    else freshSignups.push({ artistId: a.artistId, links: [link] });
+  }
   for (const x of signups) {
     const { results: before } = await env.DB.prepare("SELECT url FROM artist_signup WHERE artist_id = ?").bind(x.artistId).all<{ url: string }>();
     const known = new Set(before.map((b) => b.url));
