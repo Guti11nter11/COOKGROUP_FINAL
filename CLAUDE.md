@@ -44,6 +44,10 @@ trata de los eventos y de cómo conseguir las entradas.
    **Artistas ⭐: solo conciertos en España** (2026-11-15): fichas, canales, avisos, recordatorios,
    resúmenes, noticias y registros; ⭐⭐ y ⭐⭐⭐ en todos los países cubiertos. En #esta-semana y el resumen, un país con varias horas el
    mismo día (EE. UU., Canadá) va en un tramo con su rango de horas, sin repetir ciudades.
+   Un ⭐ con fechas en recintos de **≥ 15.000** de aforo (arenas grandes, estadios) sube solo a ⭐⭐
+   (2026-11-25: Chase Atlantic, Steve Lacy… se escapaban). **Sign up:** cada registro encontrado sale
+   una vez (los que no encajan en una preventa, en «Otros registros abiertos»); las solicitudes
+   («Request», ballot, sorteos) se explican: te apuntas, a veces con tarjeta, y solo cobran si te toca.
 3. **Calendario `.ics`** suscribible.
 
 **Horas de silencio:** 01:00–08:00 Europe/Madrid. Solo se notifica en ese tramo si es urgente
@@ -74,6 +78,13 @@ trata de los eventos y de cómo conseguir las entradas.
   UEFA, Wimbledon, Roland-Garros, Mutua Madrid Open, F1, NFL.
 - Ticketeras sin API (revisar ficha de evento): AXS, Eventim/Fansale/TicketOne, Blueticket,
   See Tickets, Dice, Fnac, eTicketing, Vivaticket, Ticketportal, Puntoticket, LaLiga/clubes…
+- **DICE**: páginas públicas de artista y de recinto de `data/dice-artists.json` (4 veces al día, tras
+  Live Nation) y la de cada evento (venta, preventa, límite, precio). Nunca su búsqueda.
+- **Blogs oficiales de Ticketmaster** (UK, ES, IT, NL, IE; DE y FR prohíben el feed en robots.txt):
+  de los artículos con artista seguido en el titular salen enlaces de registro (Cobrand, Laylo, LN…).
+- Registros: web oficial (MusicBrainz o «nombre.com» comprobado por el título), su Linktree, enlaces
+  cortos de preventa (lnk.to/presale) siguiendo la redirección. Cobrand y signup.livenation/
+  ticketmaster tienen antibots: se enlazan, nunca se abren.
 - SeatGeek: **ticketera de venta oficial** (sobre todo EE. UU.), no fuente de reventa (decisión del
   propietario, 2026-11-08); API oficial con `SEATGEEK_CLIENT_ID` → enlace en la ficha.
 - Noticias (Google News RSS, NME, Billboard, Los40, Mondosonoro…), feeds RSS de YouTube.
