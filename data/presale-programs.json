@@ -2,6 +2,31 @@
   "_doc": "Cómo entrar en cada programa de preventa conocido. 'match' es una expresión regular sobre la etiqueta de la venta. 'url' solo cuando es la página oficial del programa. Revisar cuando cambie un programa.",
   "programs": [
     {
+      "match": "metropolis",
+      "how": "Boletín de Metropolis Music (promotora): el código de la preventa llega por email",
+      "url": "https://www.metropolismusic.com/"
+    },
+    {
+      "match": "kilimanjaro",
+      "how": "Boletín de Kilimanjaro Live (promotora): el código de la preventa llega por email",
+      "url": "https://www.kilimanjarolive.co.uk/"
+    },
+    {
+      "match": "\\bdhp\\b",
+      "how": "Boletín de DHP Family (promotora): el código de la preventa llega por email",
+      "url": "https://www.dhpfamily.com/"
+    },
+    {
+      "match": "academy music group|\\bamg\\b|o2 academy",
+      "how": "Boletín de Academy Music Group (salas O2 Academy): el código de la preventa llega por email",
+      "url": "https://www.academymusicgroup.com/"
+    },
+    {
+      "match": "cuffe ?(&|and) ?taylor",
+      "how": "Boletín de Cuffe & Taylor (promotora): el código de la preventa llega por email",
+      "url": "https://www.cuffeandtaylor.com/"
+    },
+    {
       "match": "s\\.?\\s?s\\.?\\s?music|santander",
       "how": "Clientes de Banco Santander con tarjeta Mastercard (Santander SMusic): entran pagando con esa tarjeta"
     },

@@ -606,3 +606,18 @@ describe("Sign up reestructurado (25-11)", () => {
     expect(classifySaleLabel("Random Selection Draw").kind).toBe("lottery");
   });
 });
+
+describe("promotoras del Reino Unido (25-11)", () => {
+  it("Metropolis, Kilimanjaro, DHP, Academy Music Group, Cuffe & Taylor: registro en su boletín, con enlace", () => {
+    const labels = ["Metropolis Presale", "Kilimanjaro Presale", "DHP Presale", "Academy Music Group Presale", "Cuffe & Taylor Presale"];
+    const s = show("o2", "GB", "London", "2027-04-26", labels.map((l): [string, string, string] => ["unknown", l, "2026-11-26T10:00:00Z"]));
+    const su = renderArtistSheet({ name: "Steve Lacy", tier: 2 }, [s], NOW).find((m) => m.startsWith("## 📝 Sign up"))!;
+    expect(su).toContain("**Metropolis Presale** → Boletín de Metropolis Music (promotora)");
+    expect(su).toContain("metropolismusic.com");
+    expect(su).toContain("kilimanjarolive.co.uk");
+    expect(su).toContain("dhpfamily.com");
+    expect(su).toContain("academymusicgroup.com");
+    expect(su).toContain("cuffeandtaylor.com");
+    expect(su).not.toContain("recinto, promotora o socio");
+  });
+});
