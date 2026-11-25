@@ -1,4 +1,4 @@
-import { ingestShows, processPage, runCycle } from "./cycle";
+import { ingestShows, processPage, promoteBigTours, runCycle } from "./cycle";
 import { publishSheets, refreshActiveSheets } from "./sheets";
 import type { EnrichInput } from "@gira/core";
 import { announceSignups, applyEnrichment, discover, enrichTodo, followIds, storePriceImage } from "./enrich";
@@ -28,11 +28,13 @@ async function scheduled(env: Env, now: Date): Promise<void> {
       return;
     }
     const cycle = await runCycle(env, now, async (j) => void (await env.SWEEP_QUEUE.send(j)));
+    // Una vez por hora: los ⭐ con gira de arenas o estadios suben a ⭐⭐.
+    const promoted = now.getUTCMinutes() < 5 ? await promoteBigTours(env, now).catch(() => []) : [];
     await refreshActiveSheets(env, now).catch(() => 0);
     const sheets = await publishSheets(env, now);
     const panel = await updateStatusPanel(env, now).catch(() => false);
     const dispatched = await dispatchJobs(env, now).catch(() => []);
-    result = { ...cycle, ...sheets, calendar, panel, ...(dispatched.length ? { dispatched } : {}) };
+    result = { ...cycle, ...sheets, calendar, panel, ...(dispatched.length ? { dispatched } : {}), ...(promoted.length ? { promoted } : {}) };
   } catch (e) {
     ok = 0;
     result = { error: String(e) };

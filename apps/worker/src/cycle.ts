@@ -137,10 +137,11 @@ export async function storeShows(
     if (followId) shows.push({ show, follow: follows.get(followId)! });
   }
 
+  const promotions = await promoteOnSight(env, shows);
   const stored = await loadShows(env.DB, shows.map((s) => s.show.sourceId));
   const stats = await loadShowStats(env.DB, [...new Set(shows.map((s) => s.follow.artistId))], todayMadrid);
   const knownBefore = now.getTime() - SAME_ANNOUNCEMENT_MS;
-  const stmts: D1PreparedStatement[] = [];
+  const stmts: D1PreparedStatement[] = [...promotions];
   let alertCount = 0;
 
   for (const { show, follow } of shows) {
@@ -202,6 +203,50 @@ export async function storeShows(
     }
   }
   return { stmts, stored: shows.length, alerts: alertCount };
+}
+
+/** Aforo desde el que un concierto es de «gran gira» (arenas grandes y estadios). */
+export const BIG_VENUE = 15_000;
+
+/**
+ * Un artista ⭐ (solo España) que anuncia conciertos en arenas grandes o estadios pasa a ⭐⭐: su gira
+ * interesa en todos los países (Chase Atlantic, Steve Lacy… se escapaban). Se aplica ya a esta tanda,
+ * así que los avisos de esa gira salen. La semilla semanal solo sube niveles, nunca los baja.
+ */
+async function promoteOnSight(env: Env, shows: { show: Show; follow: FollowRow }[]): Promise<D1PreparedStatement[]> {
+  const small = shows.filter((s) => s.follow.tier === 1 && !s.show.isPackage && s.show.venue.tmId);
+  if (!small.length) return [];
+  const ids = [...new Set(small.map((s) => s.show.venue.tmId))];
+  const caps = new Map<string, number>();
+  for (let i = 0; i < ids.length; i += 90) {
+    const part = ids.slice(i, i + 90);
+    const { results } = await env.DB.prepare(`SELECT tm_venue_id, capacity FROM venue_info WHERE capacity >= ? AND tm_venue_id IN (${part.map(() => "?").join(",")})`)
+      .bind(BIG_VENUE, ...part)
+      .all<{ tm_venue_id: string; capacity: number }>();
+    for (const r of results) caps.set(r.tm_venue_id, r.capacity);
+  }
+  const promoted = new Set<string>();
+  for (const s of small) {
+    if (!caps.has(s.show.venue.tmId)) continue;
+    s.follow.tier = 2;
+    promoted.add(s.follow.artistId);
+  }
+  return [...promoted].map((id) => env.DB.prepare("UPDATE follow SET tier = 2 WHERE artist_id = ? AND tier = 1").bind(id));
+}
+
+/** Barrido horario: los ⭐ cuyos recintos grandes se conocieron después (aforo de Wikidata) suben a ⭐⭐. */
+export async function promoteBigTours(env: Env, now: Date): Promise<string[]> {
+  const today = localDateIn(now, MADRID);
+  const { results } = await env.DB.prepare(
+    `UPDATE follow SET tier = 2 WHERE tier = 1 AND artist_id IN (
+       SELECT DISTINCT s.artist_id FROM show s JOIN venue_info v ON v.tm_venue_id = json_extract(s.snapshot_json, '$.venue.tmId')
+       WHERE s.local_date >= ? AND s.is_package = 0 AND v.capacity >= ?) RETURNING artist_id`,
+  )
+    .bind(today, BIG_VENUE)
+    .all<{ artist_id: string }>();
+  const ids = results.map((r) => r.artist_id);
+  if (ids.length) await env.DB.batch(ids.map((id) => env.DB.prepare("INSERT OR IGNORE INTO sheet_dirty (artist_id, since) VALUES (?, ?)").bind(id, now.toISOString())));
+  return ids;
 }
 
 /** Ingesta desde el Discovery Feed (GitHub Actions): fechas normalizadas y marcas de arranque. */

@@ -2,7 +2,8 @@ import { createExecutionContext, createMessageBatch, env, fetchMock, getQueueRes
 import worker from "../src/index";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import type { SweepJob } from "../src/env";
-import { processPage, runCycle } from "../src/cycle";
+import { ingestShows, processPage, promoteBigTours, runCycle } from "../src/cycle";
+import { normalizeTmEvent } from "@gira/core";
 import { publishSheets } from "../src/sheets";
 
 const GUILD = "1568641743853715516";
@@ -365,5 +366,39 @@ describe("ciclo de Ticketmaster → D1 → Discord", () => {
     mockTicketmaster(page([{ ...tmEvent("E1", "K1", "V1", "ES", "2027-05-10"), priceRanges: [{ type: "standard", currency: "EUR", min: 45, max: 250 }] }]));
     await cycleAndDrain();
     expect(await env.DB.prepare("SELECT min, max, currency, source FROM show_price WHERE source_id = 'E1'").first()).toEqual({ min: 45, max: 250, currency: "EUR", source: "Ticketmaster" });
+  });
+  // Los ⭐ y ⭐⭐ llegan por el Discovery Feed (ingestShows); el barrido por API es solo de los ⭐⭐⭐.
+  const feedShow = (id: string, venue: string, country: string, date: string) => normalizeTmEvent(tmEvent(id, "K2", venue, country, date))!;
+  async function tierOneWithBaseline() {
+    await env.DB.batch([
+      env.DB.prepare("UPDATE follow SET tier = 1, feed_bootstrapped_at = '2026-11-01T00:00:00Z' WHERE artist_id = 'a2'"),
+    ]);
+    await ingestShows(env, { shows: [feedShow("E3", "V3", "GB", "2027-06-01")] }, NOW);
+  }
+
+  it("16. un artista ⭐ que anuncia gira de arenas/estadios sube a ⭐⭐ (deja de ser solo España) y avisa", async () => {
+    await tierOneWithBaseline();
+    await env.DB.prepare("INSERT INTO venue_info (tm_venue_id, name, city, country, capacity, checked_at) VALUES ('V20', 'Big Arena', 'Köln', 'DE', 18500, '2026-11-01T00:00:00Z')").run();
+    await ingestShows(env, { shows: [feedShow("E20", "V20", "DE", "2027-04-16")] }, LATER);
+    expect(await env.DB.prepare("SELECT tier FROM follow WHERE artist_id = 'a2'").first()).toEqual({ tier: 2 });
+    expect(await count("SELECT COUNT(*) n FROM alert WHERE source_id = 'E20'")).toBe(1);
+  });
+
+  it("16b. un recinto pequeño no lo sube (y fuera de España no avisa)", async () => {
+    await tierOneWithBaseline();
+    await env.DB.prepare("INSERT INTO venue_info (tm_venue_id, name, city, country, capacity, checked_at) VALUES ('V21', 'Club', 'Köln', 'DE', 1500, '2026-11-01T00:00:00Z')").run();
+    await ingestShows(env, { shows: [feedShow("E21", "V21", "DE", "2027-04-16")] }, LATER);
+    expect(await env.DB.prepare("SELECT tier FROM follow WHERE artist_id = 'a2'").first()).toEqual({ tier: 1 });
+    expect(await count("SELECT COUNT(*) n FROM alert WHERE source_id = 'E21'")).toBe(0);
+  });
+
+  it("16c. el barrido horario sube a los ⭐ cuyos recintos grandes se conocieron después", async () => {
+    await tierOneWithBaseline();
+    await ingestShows(env, { shows: [feedShow("E22", "V22", "DE", "2027-04-16")] }, LATER);
+    await env.DB.prepare("DELETE FROM sheet_dirty").run();
+    await env.DB.prepare("INSERT INTO venue_info (tm_venue_id, name, city, country, capacity, checked_at) VALUES ('V22', 'Arena', 'Köln', 'DE', 20000, '2026-11-01T00:00:00Z')").run();
+    expect(await promoteBigTours(env, NOW)).toEqual(["a2"]);
+    expect(await env.DB.prepare("SELECT tier FROM follow WHERE artist_id = 'a2'").first()).toEqual({ tier: 2 });
+    expect(await count("SELECT COUNT(*) n FROM sheet_dirty WHERE artist_id = 'a2'")).toBe(1);
   });
 });
