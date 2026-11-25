@@ -52,7 +52,10 @@ export function sheetShows(artistName: string, shows: Show[], tier?: number): Sh
       !s.isPackage &&
       !isPackageName(s.name) &&
       !/[/-](package|packages|vip-package|hospitality|premium)[-/]|\/(mastercard|amex|citi)?-?preferred(-seating|-tickets)?(\/|\?|$)|queue-it\.|eventtravel\./i.test(s.url) &&
-      !(FESTIVAL_RE.test(s.name) && !fold(s.name).includes(me)),
+      !(FESTIVAL_RE.test(s.name) && !fold(s.name).includes(me)) &&
+      // Cartel de varios artistas que no lo nombra: es telonero en el concierto de otro (en deporte,
+      // un partido lista a los dos equipos y no se toca).
+      !(s.segment !== "Sports" && !mine(s) && s.attractionIds.length > 1),
   );
   // Misma fecha y recinto listados dos veces (p. ej. el día del festival y el concierto): se queda el del artista.
   const byDate = new Map<string, Show>();

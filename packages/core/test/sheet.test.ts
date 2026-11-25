@@ -544,3 +544,27 @@ describe("revisión 17:47 (24-11): preventa con su propio enlace de registro", (
     expect(su).not.toContain("no localizado");
   });
 });
+
+describe("revisión 09:47 (25-11)", () => {
+  it("un concierto de otro artista en el que solo es telonero no va en su ficha", () => {
+    const own = show("own", "GB", "Manchester", "2027-06-22", [["general", "Venta general", "2026-11-27T10:00:00Z"]], { name: "The Cardigans", url: "https://www.ticketmaster.co.uk/the-cardigans-manchester-22-06-2027/event/1" });
+    const support = show("msp", "GB", "Cardiff", "2027-06-19", [["general", "Venta general", "2026-11-27T10:00:00Z"]], {
+      name: "Manic Street Preachers",
+      url: "https://www.ticketmaster.co.uk/manic-street-preachers-cardiff-19-06-2027/event/2",
+      attractionIds: ["K1", "K2", "K3", "K4", "K5"],
+    });
+    expect(sheetShows("The Cardigans", [own, support]).map((s) => s.sourceId)).toEqual(["own"]);
+  });
+});
+
+describe("revisión 09:47 (25-11): deporte", () => {
+  it("un partido con dos equipos sigue en la ficha aunque no nombre la entidad seguida", () => {
+    const game = show("nfl", "GB", "London", "2027-10-10", [["general", "Venta general", "2026-12-01T10:00:00Z"]], {
+      name: "Chicago Bears vs Detroit Lions",
+      url: "https://www.ticketmaster.co.uk/chicago-bears-v-detroit-lions-london/event/3",
+      attractionIds: ["T1", "T2"],
+      segment: "Sports",
+    });
+    expect(sheetShows("NFL", [game]).map((s) => s.sourceId)).toEqual(["nfl"]);
+  });
+});
