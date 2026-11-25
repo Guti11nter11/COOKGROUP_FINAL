@@ -165,11 +165,14 @@ const REQUIREMENT: Record<SaleKind, string> = {
   ticketer: "Cuenta y registro en la ticketera",
   venue: "Registro o newsletter del recinto",
   registration: "Registro previo (no es compra)",
-  lottery: "Sorteo: inscribirse antes de la fecha límite",
+  lottery: "Inscripción antes de la fecha límite",
   general: "Abierta a todos",
   official_resale: "Reventa oficial",
   unknown: "Ver condiciones en la ficha oficial",
 };
+
+/** Solicitud («Request», ballot, sorteo): no es una compra por orden de llegada. */
+const LOTTERY = "🎲 Solicitud o sorteo: te apuntas antes del cierre (a veces dejando la tarjeta); si te toca, te cobran y te llegan las entradas";
 
 const TM_DOMAINS: Record<string, string> = {
   "ticketmaster.es": "ES", "ticketmaster.co.uk": "UK", "ticketmaster.ie": "IE", "ticketmaster.fr": "FR", "ticketmaster.de": "DE",
@@ -351,12 +354,14 @@ function howToJoin(w: SaleWindow, ss: Show[], extras: SheetExtras, artist = ""):
     const specific = all.filter((l) => (l.localDate ? dates.has(l.localDate) : !!l.city && cities.has(fold(l.city))));
     const generic = all.filter((l) => !l.localDate && !l.city);
     const label = (l: (typeof all)[number]) => `${l.label}${l.city ? ` · ${l.city}` : ""}${l.localDate ? ` ${linkDay(l.localDate)}` : ""}`;
-    const links = (specific.length ? specific : generic).filter((l, i, a) => a.findIndex((o) => label(o) === label(l)) === i).slice(0, 6);
+    // Los de su fecha o ciudad y, además, los registros generales del artista (Cobrand, Live Nation…).
+    const links = [...specific, ...generic].filter((l, i, a) => a.findIndex((o) => o.url === l.url || label(o) === label(l)) === i).slice(0, 6);
     if (links.length === 1) parts.push(`Registro **[AQUÍ](${links[0]!.url})**`);
     else if (links.length) parts.push(`Registro: ${links.map((l) => `[${label(l)}](${l.url})`).join(" · ")}`);
     else if (!w.url) parts.push(`registro aún no localizado${extras.homepage ? ` — mira la [web oficial](${extras.homepage})` : " (GIRA lo sigue buscando)"}`);
   }
   if (!parts.length) parts.push(REQUIREMENT[w.kind]);
+  if (w.kind === "lottery") parts.unshift(LOTTERY);
   return parts.join(" · ");
 }
 
@@ -481,6 +486,17 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
   const joins = [...byLabel.values()].map(({ w, shows: ss }) => ({ w, how: howToJoin(w, ss, extras, artist.name) }));
   const missing = joins.filter((j) => j.how.startsWith("registro aún no localizado"));
   const found = joins.filter((j) => !missing.includes(j));
+  // Registros encontrados que no han ido a ninguna preventa (p. ej. solo hay preventas de tarjeta): no se pierden.
+  const used = joins.map((j) => j.how).join(" ");
+  const liveDates = new Set(live.map((s) => s.localDate));
+  const liveCities = new Set(live.map((s) => fold(s.venue.city)));
+  const others = (extras.signups ?? [])
+    .filter((l) => !used.includes(l.url) && (l.localDate ? liveDates.has(l.localDate) : !l.city || liveCities.has(fold(l.city))))
+    .filter((l, i, a) => a.findIndex((o) => o.url === l.url) === i)
+    .slice(0, 6);
+  const otherLine = others.length
+    ? [`**Otros registros abiertos:** ${others.map((l) => `[${l.label}${l.city ? ` · ${l.city}` : ""}${l.localDate ? ` ${linkDay(l.localDate)}` : ""}](${l.url})`).join(" · ")}`]
+    : [];
   const signup = byLabel.size
     ? [
         "## 📝 Sign up · cómo entrar en cada preventa",
@@ -490,6 +506,7 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
           : missing.length
             ? [`**${missing.map((j) => j.w.label).join("** · **")}** → ${missing[0]!.how.replace("registro aún no localizado", "registros aún no localizados")}`]
             : []),
+        ...otherLine,
       ].join("\n")
     : null;
 
@@ -526,7 +543,9 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
         : unique
           ? mine?.url
             ? own
-            : [`🔑 Enlace único por email o SMS a quien se registró (ver Sign up); mientras no llegue, el enlace general de cada fecha${w.url ? ` · [enlace de la preventa](${w.url})` : ""}`, ...own]
+            : w.kind === "lottery"
+              ? [`${LOTTERY} (ver Sign up)${w.url ? ` · [solicitud](${w.url})` : ""}`, ...own]
+              : [`🔑 Enlace único por email o SMS a quien se registró (ver Sign up); mientras no llegue, el enlace general de cada fecha${w.url ? ` · [enlace de la preventa](${w.url})` : ""}`, ...own]
           : [codeLine(w, ss[0]?.venue.country), ...own];
     // Sin tu enlace único, el enlace general de cada fecha (decisión del propietario, 2026-11-09).
     const datesOf = (list: Show[]) => (compact ? [shortDates(list)] : list.map(unique && mine?.url ? plainLine : dateLine));

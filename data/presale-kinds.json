@@ -21,7 +21,7 @@
     },
     {
       "kind": "lottery",
-      "pattern": "ballot|lottery|sorteo|sorteio|tirage"
+      "pattern": "ballot|lottery|sorteo|sorteio|tirage|\\bticket request\\b|^request\\b|\\brequest (presale|sale|phase|window)|random (draw|selection)|\\bsolicitud\\b"
     },
     {
       "kind": "official_resale",

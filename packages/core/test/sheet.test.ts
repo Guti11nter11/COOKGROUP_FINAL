@@ -568,3 +568,41 @@ describe("revisión 09:47 (25-11): deporte", () => {
     expect(sheetShows("NFL", [game]).map((s) => s.sourceId)).toEqual(["nfl"]);
   });
 });
+
+describe("Sign up reestructurado (25-11)", () => {
+  const ca = (id: string, city: string, cc: string, date: string) =>
+    show(id, cc, city, date, [["artist", "Artist Presale", "2026-12-02T09:00:00Z"], ["platform", "Spotify Presale", "2026-12-03T11:00:00Z"], ["general", "Venta general", "2026-12-04T09:00:00Z"]], { name: "Chase Atlantic" });
+  const msgs = renderArtistSheet({ name: "Chase Atlantic", tier: 2 }, [ca("k", "Köln", "DE", "2027-04-16"), ca("m", "München", "DE", "2027-04-15")], NOW, {
+    homepage: "https://www.chaseatlantic.com/",
+    signups: [
+      { url: "https://drop.cobrand.com/d/ChaseAtlantic/dontlookdowneuuk2027", label: "Cobrand (registro)", city: null, localDate: null },
+      { url: "https://signup.livenation.com/chaseatlantic", label: "Live Nation (registro)", city: null, localDate: null },
+      { url: "https://link.seated.com/abc", label: "Seated", city: "Köln", localDate: "2027-04-16" },
+    ],
+  });
+  const su = msgs.find((m) => m.startsWith("## 📝 Sign up"))!;
+  it("la preventa del artista lleva su registro de esa fecha y los generales del artista, una vez cada uno", () => {
+    const line = su.split("\n").find((l) => l.startsWith("**Artist Presale**"))!;
+    expect(line.match(/drop\.cobrand\.com/g)).toHaveLength(1);
+    expect(line.match(/signup\.livenation\.com/g)).toHaveLength(1);
+    expect(line.match(/link\.seated\.com/g)).toHaveLength(1);
+    expect(su).not.toContain("Otros registros");
+  });
+  it("sin preventa del artista, los registros encontrados no se pierden: van en «Otros registros abiertos»", () => {
+    const only = show("c", "DE", "Köln", "2027-04-16", [["platform", "Spotify Presale", "2026-12-03T11:00:00Z"], ["general", "Venta general", "2026-12-04T09:00:00Z"]], { name: "Chase Atlantic" });
+    const s2 = renderArtistSheet({ name: "Chase Atlantic", tier: 2 }, [only], NOW, {
+      signups: [{ url: "https://drop.cobrand.com/d/ChaseAtlantic/x", label: "Cobrand (registro)", city: null, localDate: null }],
+    }).find((m) => m.startsWith("## 📝 Sign up"))!;
+    expect(s2).toContain("**Otros registros abiertos:** [Cobrand (registro)](https://drop.cobrand.com/d/ChaseAtlantic/x)");
+  });
+  it("«Request»/sorteo: se explica que metes la tarjeta y solo te cobran si te toca", () => {
+    const req = show("r", "GB", "London", "2027-07-01", [["lottery", "Ticket Request", "2026-12-01T10:00:00Z"]]);
+    const all = renderArtistSheet({ name: "U2", tier: 3 }, [req], NOW).join("\n");
+    expect(all).toContain("si te toca, te cobran");
+  });
+  it("«Request» y «random draw» se clasifican como sorteo", async () => {
+    const { classifySaleLabel } = await import("../src/presale");
+    expect(classifySaleLabel("Ticket Request").kind).toBe("lottery");
+    expect(classifySaleLabel("Random Selection Draw").kind).toBe("lottery");
+  });
+});
