@@ -2,12 +2,13 @@ name: Preventas de Live Nation
 
 # 4 veces al día (lo lanza el Worker): páginas públicas de evento de Live Nation guardadas con
 # /livenation (y las demás fechas de su gira). Trae las preventas que Ticketmaster no publica en su API.
+# Después, DICE: eventos de los artistas de data/dice-artists.json (conciertos que solo vende DICE).
 
 on:
   workflow_dispatch:
   push:
     branches: [claude/magical-franklin-u415fe]
-    paths: [.github/workflows/livenation.yml, apps/jobs/src/livenation.ts, packages/core/src/livenation.ts]
+    paths: [.github/workflows/livenation.yml, apps/jobs/src/livenation.ts, packages/core/src/livenation.ts, apps/jobs/src/dice.ts, packages/core/src/dice.ts, data/dice-artists.json]
 
 permissions:
   contents: read
@@ -31,3 +32,8 @@ jobs:
         env:
           TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
         run: npx tsx apps/jobs/src/livenation.ts
+      - name: DICE (páginas públicas de artistas y eventos)
+        if: always()
+        env:
+          TICKETMASTER_API_KEY: ${{ secrets.TICKETMASTER_API_KEY }}
+        run: npx tsx apps/jobs/src/dice.ts

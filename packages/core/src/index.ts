@@ -13,3 +13,4 @@ export * from "./calendar";
 export * from "./schedule";
 export * from "./inbox";
 export * from "./livenation";
+export * from "./dice";

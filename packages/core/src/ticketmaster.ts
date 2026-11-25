@@ -12,7 +12,7 @@ export interface SaleWindow {
 export type ShowStatus = "onsale" | "offsale" | "cancelled" | "postponed" | "rescheduled";
 
 export interface Show {
-  source: "ticketmaster";
+  source: "ticketmaster" | "dice";
   sourceId: string;
   name: string;
   attractionIds: string[];

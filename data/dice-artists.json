@@ -1,0 +1,6 @@
+{
+  "_doc": "Páginas públicas de artistas en DICE (dice.fm/artist/…). GIRA lee 4 veces al día sus eventos y la ficha de cada uno (venta, preventa, límite, precio). Para añadir uno: su URL de artista de DICE y el nombre tal como está en GIRA.",
+  "artists": [
+    { "name": "Charli xcx", "url": "https://dice.fm/artist/charli-xcx-llkb" }
+  ]
+}
