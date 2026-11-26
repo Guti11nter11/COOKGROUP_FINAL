@@ -2,6 +2,15 @@
   "_doc": "Cómo entrar en cada programa de preventa conocido. 'match' es una expresión regular sobre la etiqueta de la venta. 'url' solo cuando es la página oficial del programa. Revisar cuando cambie un programa.",
   "programs": [
     {
+      "match": "^ovo\\b|\\bovo (hydro|arena)?\\s*presale",
+      "how": "Boletín de los recintos OVO (OVO Hydro de Glasgow, OVO Arena Wembley): registrarse en la web del recinto; el código llega por email"
+    },
+    {
+      "match": "gigs in scotland",
+      "how": "Boletín de Gigs in Scotland (promotora escocesa): el código de la preventa llega por email",
+      "url": "https://www.gigsinscotland.com/"
+    },
+    {
       "match": "metropolis",
       "how": "Boletín de Metropolis Music (promotora): el código de la preventa llega por email",
       "url": "https://www.metropolismusic.com/"

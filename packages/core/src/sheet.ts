@@ -70,7 +70,23 @@ export function sheetShows(artistName: string, shows: Show[], tier?: number): Sh
   const other = (s: Show) => /^Z/.test(s.sourceId);
   const at = (s: Show) => `${fold(s.venue.city).trim()}|${s.localDate}`;
   const own = new Set(once.filter((s) => !other(s)).map(at));
-  return once.filter((s) => !other(s) || !own.has(at(s)));
+  const kept2 = once.filter((s) => !other(s) || !own.has(at(s)));
+  // La misma fecha listada aparte para una preventa (…/event/id/mastercard-presale, otro id de recinto):
+  // una sola fecha con el enlace normal (el más corto) y las ventas de las dos.
+  const out: Show[] = [];
+  const same = new Map<string, number>();
+  for (const s of kept2) {
+    const k = `${at(s)}|${fold(s.venue.name).trim()}|${s.startsAt ?? ""}`;
+    const i = same.get(k);
+    if (i === undefined) {
+      same.set(k, out.push(s) - 1);
+      continue;
+    }
+    const prev = out[i]!;
+    const [keep, drop] = prev.url.length <= s.url.length ? [prev, s] : [s, prev];
+    out[i] = { ...keep, sales: [...keep.sales, ...drop.sales.filter((w) => !keep.sales.some((x) => x.label === w.label && x.startsAt === w.startsAt))] };
+  }
+  return out;
 }
 
 /** Promociones sobre un evento ya a la venta (no son una salida de entradas). */
@@ -389,12 +405,16 @@ export function renderArtistSheet(artist: { name: string; tier?: number }, shows
     .sort((a, b) => a.localDate.localeCompare(b.localDate));
   const esc = artist.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   // "American Express presents BST Hyde Park - Billie Eilish" → "BST Hyde Park": sin patrocinador ni el artista al final.
-  const clean = (n: string) => n.replace(/\s*\|.*$/, "").replace(/^.{2,40}?\s+presents?:?\s+/i, "").replace(new RegExp(`\\s*[-–:]\\s*${esc}\\s*$`, "i"), "").trim();
+  const clean = (n: string) => n.replace(/\s*\|.*$/, "").replace(/^.{2,40}?\s+presents?:?\s+/i, "").replace(new RegExp(`\\s*[-–—:]\\s*${esc}\\s*$`, "i"), "").trim();
   const tour = mostCommon(live.map((s) => clean(s.name) || s.name)) ?? artist.name;
-  const title = fold(tour).startsWith(fold(artist.name)) ? tour.slice(artist.name.length).replace(/^\s*[-–:]?\s*/, "") || tour : tour;
+  const title = fold(tour).startsWith(fold(artist.name)) ? tour.slice(artist.name.length).replace(/^\s*[-–—:|]?\s*/, "") || tour : tour;
   // "Evanescence + TBA", "… with special guests": eso no es un título de gira.
   const noThe = (t: string) => fold(t).replace(/^the\s+/, "").trim();
-  const noTitle = /^[+&,]?\s*(with\s+)?(tba|tbc|special guests?|guests?|support)\.?$/i.test(title.trim()) || noThe(title) === noThe(artist.name);
+  const noTitle =
+    /^[+&,]?\s*(with\s+)?(tba|tbc|special guests?|guests?|support)\.?$/i.test(title.trim()) ||
+    // «With Guests Friendly Fires + …», «w/ …», «+ …»: los teloneros no son el título de la gira.
+    /^(with|w\/|\+|&|feat\.?|featuring)\s/i.test(title.trim()) ||
+    noThe(title) === noThe(artist.name);
   const countries = [...new Map(live.map((s) => [s.venue.country, flag(s.venue.country)])).values()];
   const limit = limitText(live, extras.limits ?? {});
   // Página del artista en cada ticketera, solo si es de verdad la suya (no la del festival en que actúa).

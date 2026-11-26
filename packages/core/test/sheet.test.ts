@@ -142,7 +142,7 @@ describe("qué fechas van en la ficha", () => {
       rw("b", "Isle of Wight Festival 2027 - Weekend"),
       rw("c", "Lytham Festival 2027 5 Day Pass"),
       rw("d", "Hotellrom - Robbie Williams Live 27", { isPackage: true }),
-      rw("e", "Robbie Williams - Lytham Festival 2027"),
+      rw("e", "Robbie Williams - Lytham Festival 2027", { localDate: "2027-06-18", startsAt: "2027-06-18T19:00:00Z" }),
     ];
     expect(sheetShows("Robbie Williams", list).map((s) => s.sourceId)).toEqual(["a", "e"]);
     expect(sheetShows("Creamfields", [rw("f", "Creamfields 2027 - Weekend Camping")]).map((s) => s.sourceId)).toEqual(["f"]);
@@ -619,5 +619,29 @@ describe("promotoras del Reino Unido (25-11)", () => {
     expect(su).toContain("academymusicgroup.com");
     expect(su).toContain("cuffeandtaylor.com");
     expect(su).not.toContain("recinto, promotora o socio");
+  });
+});
+
+describe("fichas de los ascendidos (25-11)", () => {
+  it("título con raya larga: sin raya doble", () => {
+    const s = [show("c", "DE", "Köln", "2027-04-16", [["general", "Venta general", "2026-12-04T09:00:00Z"]], { name: "Chase Atlantic — DON’T LOOK DOWN TOUR" })];
+    expect(renderArtistSheet({ name: "Chase Atlantic", tier: 2 }, s, NOW)[0]).toMatch(/^# 🎤 Chase Atlantic — DON’T LOOK DOWN TOUR ⭐⭐\n/);
+  });
+  it("«With Guests X + Y» no es título de gira", () => {
+    const s = [show("t", "GB", "London", "2027-06-01", [["general", "Venta general", "2026-12-04T09:00:00Z"]], { name: "Two Door Cinema Club - With Guests Friendly Fires + Danny Griffiths" })];
+    expect(renderArtistSheet({ name: "Two Door Cinema Club", tier: 2 }, s, NOW)[0]).toMatch(/^# 🎤 Two Door Cinema Club ⭐⭐\n/);
+  });
+  it("la misma fecha listada aparte para una preventa (…/event/id/mastercard-presale) se junta con la normal", () => {
+    const base = show("it1", "IT", "Milano", "2027-04-13", [["general", "Venta general", "2026-12-04T09:00:00Z"]], { name: "Chase Atlantic", url: "https://www.ticketmaster.it/biglietti/x/event/ifogf6viyn45", venue: { tmId: "V1", name: "Unipol Dome", city: "Milano", country: "IT", tz: "Europe/Rome" } });
+    const mc = show("it2", "IT", "Milano", "2027-04-13", [["card", "Mastercard Presale", "2026-12-02T09:00:00Z"]], { name: "Chase Atlantic", url: "https://www.ticketmaster.it/biglietti/x/event/ifogf6viyn45/mastercard-presale", venue: { tmId: "V2", name: "Unipol Dome", city: "Milano", country: "IT", tz: "Europe/Rome" } });
+    const got = sheetShows("Chase Atlantic", [mc, base]);
+    expect(got.map((s) => s.url)).toEqual(["https://www.ticketmaster.it/biglietti/x/event/ifogf6viyn45"]);
+    expect(got[0]!.sales.map((w) => w.label).sort()).toEqual(["Mastercard Presale", "Venta general"]);
+  });
+  it("OVO y Gigs in Scotland dicen cómo se entra", () => {
+    const s = show("g", "GB", "Glasgow", "2027-05-10", [["unknown", "OVO Presale", "2026-12-03T10:00:00Z"], ["unknown", "Gigs in Scotland Presale", "2026-12-03T10:00:00Z"]], { name: "Chase Atlantic" });
+    const su = renderArtistSheet({ name: "Chase Atlantic", tier: 2 }, [s], NOW).find((m) => m.startsWith("## 📝 Sign up"))!;
+    expect(su).toContain("**OVO Presale** → Boletín de los recintos OVO");
+    expect(su).toContain("gigsinscotland.com");
   });
 });
